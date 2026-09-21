@@ -12,6 +12,7 @@ from typing import Any
 from uuid import UUID, uuid4
 
 from fastapi import FastAPI, Header, HTTPException, Request, Response
+from fastapi.middleware.cors import CORSMiddleware
 
 from infra.foundation.metrics import (
     ApiMetricsMiddleware,
@@ -99,6 +100,15 @@ def create_app(
         title="AI Content Workflow API",
         version="0.1.0",
         description="FOUND-002 composition root; domain routes are registered by later tasks.",
+    )
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[
+            'http://127.0.0.1:8765', 'http://127.0.0.1:8766',
+            'http://localhost:8765', 'http://localhost:8766',
+        ],
+        allow_methods=['GET', 'POST', 'OPTIONS'],
+        allow_headers=['*'],
     )
     install_api_observability(app)
     app.add_middleware(ApiMetricsMiddleware, registry=metrics)
