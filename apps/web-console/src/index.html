@@ -89,6 +89,7 @@ setInterval(async()=>{try{const base=state.settings.apiBase.replace(/\/$/,'');co
       state.contents.unshift({id,title,pillar,account,status:'review',version:'v1',updated:'刚刚',body:`${body}\n\n${hashtags.join(' ')}`,hashtags,coverData:`data:image/svg+xml;charset=utf-8,${encodeURIComponent(coverSvg)}`,source:'local-template'});
       save();closeModal();renderAll();showView('content');toast('草稿、话题和封面已生成，等待审批');
     },true);
+    const coverObserver=new MutationObserver(()=>{$$('#contentGrid .content-card').forEach(card=>{if(card.querySelector('[data-cover-preview]'))return;const heading=card.querySelector('h3');const record=state.contents.find(c=>c.title===heading?.textContent);if(record?.coverData){const image=document.createElement('img');image.src=record.coverData;image.alt='草稿封面预览';image.dataset.coverPreview='true';image.style.cssText='width:100%;height:150px;object-fit:cover;border-radius:14px;margin-bottom:12px';card.prepend(image)}})});coverObserver.observe($('#contentGrid'),{childList:true});
   </script>
 </body>
 </html>
