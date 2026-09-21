@@ -37,3 +37,25 @@ def generate_cover_svg(content: DemoContent, output: Path) -> Path:
 </svg>'''
     output.write_text(svg, encoding="utf-8")
     return output
+
+
+def generate_cover_png(content: DemoContent, output: Path) -> Path:
+    """Render the deterministic cover to a normal PNG for platform upload."""
+    from PIL import Image, ImageDraw, ImageFont
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    image = Image.new('RGB', (900, 1200), '#f7efe3')
+    draw = ImageDraw.Draw(image)
+    draw.ellipse((630, 20, 890, 280), fill='#f4b183')
+    font_paths = [Path('C:/Windows/Fonts/msyh.ttc'), Path('C:/Windows/Fonts/simhei.ttf')]
+    font_path = next((p for p in font_paths if p.exists()), None)
+    title_font = ImageFont.truetype(str(font_path), 56) if font_path else ImageFont.load_default()
+    small_font = ImageFont.truetype(str(font_path), 26) if font_path else ImageFont.load_default()
+    draw.rounded_rectangle((70, 72, 230, 116), radius=22, fill='#112033')
+    draw.text((96, 82), '运营中枢', fill='white', font=small_font)
+    title = content.title[:26]
+    for index in range(0, len(title), 13):
+        draw.text((90, 250 + (index // 13) * 92), title[index:index + 13], fill='#112033', font=title_font)
+    draw.text((90, 1030), '单账号试点 · 人工审核 · 可回查', fill='#536171', font=small_font)
+    image.save(output, format='PNG')
+    return output
