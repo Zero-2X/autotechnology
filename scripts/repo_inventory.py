@@ -20,7 +20,7 @@ REPORT_VERSION = "found-000-v1"
 MAX_REPORT_AGE = timedelta(hours=24)
 SKIP_DIRS = {
     ".git", ".mypy_cache", ".next", ".pytest_cache", ".ruff_cache", ".tmp", ".tox",
-    ".venv", "__pycache__", "build", "dist", "node_modules", "venv",
+    ".local", ".venv", "__pycache__", "build", "dist", "node_modules", "venv",
 }
 MODULE_ROOTS = ("apps", "modules", "services", "src", "packages", "infra", "adapters")
 RUNTIME_ROOTS = {"apps", "modules", "services", "src"}
