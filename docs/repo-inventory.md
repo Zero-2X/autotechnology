@@ -5,18 +5,18 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-21T15:19:37+00:00`
-- Source fingerprint: `sha256:2845804a7c7af7cd30ddd3bc64866b8e2708c814e413fd158a43600f68504c33`
+- Generated at (UTC): `2026-09-21T16:32:17+00:00`
+- Source fingerprint: `sha256:7b5b80ae1a4e8464dc735171f8d7725f46df9378809ea23cbac7018faef42716`
 - Repository root: `D:/akagent`
-- Scanned files: `1627`
+- Scanned files: `2019`
 - Secret contents read: `false`
 - Freshness limit: `24 hours`
 
 ## Git status and branch
 
-- Availability: `not a git worktree`
-- Branch: `unavailable`
-- HEAD: `unavailable`
+- Availability: `git worktree`
+- Branch: `master`
+- HEAD: `8dcd2004ec4ea41f976e33b80ff86cd788b62f8c`
 
 ## Top-level directories
 
@@ -24,8 +24,9 @@ This report contains repository structure and metadata only. Sensitive filename 
 |---|---:|
 | `.ci-artifacts/` | 3 |
 | `.github/` | 1 |
+| `.local/` | 388 |
 | `.openai/` | 0 |
-| `adapters/` | 7 |
+| `adapters/` | 8 |
 | `apps/` | 31 |
 | `ci/` | 1 |
 | `deploy/` | 8 |
@@ -35,8 +36,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 | `modules/` | 244 |
 | `orchestration/` | 23 |
 | `packages/` | 522 |
-| `scripts/` | 33 |
-| `tests/` | 299 |
+| `scripts/` | 34 |
+| `tests/` | 300 |
 
 ## Existing applications and modules
 
@@ -45,7 +46,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 | `adapters/contract` | 1 | 0 |
 | `adapters/fake` | 3 | 2 |
 | `adapters/manual` | 1 | 0 |
-| `adapters/xiaohongshu` | 2 | 2 |
+| `adapters/xiaohongshu` | 3 | 3 |
 | `apps/__init__.py` | 1 | 1 |
 | `apps/api` | 4 | 3 |
 | `apps/knowledge-site` | 9 | 4 |
@@ -257,6 +258,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 | Path | Redacted type | Size |
 |---|---|---:|
+| `.local/browser-accounts/xhs-9653254890/Default/Network/Trust Tokens` | `credential-name-marker` | 36864 |
+| `.local/browser-accounts/xhs-9653254890/Default/Network/Trust Tokens-journal` | `credential-name-marker` | 0 |
 | `packages/contracts/jsonschema/token-lease.schema.json` | `credential-name-marker` | 1148 |
 | `scripts/check_secrets.py` | `credential-name-marker` | 1894 |
 
@@ -423,6 +426,7 @@ Recommended repository gate: `python -m pytest tests --maxfail=1 -q`
 - `tests/integration/test_iam_core_001_api.py`
 - `tests/integration/test_knowledge_api.py`
 - `tests/integration/test_knowledge_core_api.py`
+- `tests/integration/test_local_draft_api.py`
 - `tests/integration/test_local_recovery_drill.py`
 - `tests/integration/test_media_001.py`
 - `tests/integration/test_media_001_migration.py`
@@ -573,7 +577,7 @@ Recommended repository gate: `python -m pytest tests --maxfail=1 -q`
 
 ## Uncommitted changes
 
-Unavailable: `not a git worktree`. No clean-worktree claim is made.
+Clean worktree.
 
 ## Repository classification
 
@@ -750,6 +754,395 @@ Formal runtime source was detected under apps/modules/services/src:
 | `.ci-artifacts/sbom.cdx.json` | 2978 | `sha256:efd8dbb0be0a3b93a15918a28a4f201c2ef7eb1876f6b5e9b44cf7f6ef39ac5e` |
 | `.ci-artifacts/scan-report.json` | 139 | `sha256:d373626b817f57596ce45f22812a5eadcf0eaed18c038757e65b52c9ea1dbe58` |
 | `.github/workflows/ci.yml` | 3260 | `sha256:e6ce38893058a70b9c57f96f42ac63ab8ec3de3f0fad709bf93647d858f0e707` |
+| `.gitignore` | 115 | `sha256:1cb21f51d97101ec35fa1a6fda33ba21da12a336ed6e3967ba894d683a1d1726` |
+| `.local/browser-accounts/xhs-9653254890/BrowserMetrics/BrowserMetrics-6AB1546A-99E0.pma` | 4194304 | `sha256:b1ebd7dec743f1c830c1052dc19d2d1c6a44e1d5b0d58fbce41049c4d4e3e137` |
+| `.local/browser-accounts/xhs-9653254890/BrowserMetrics/BrowserMetrics-6AB154C7-8CE4.pma` | 4194304 | `sha256:d5186edc8f309dbd1c75f2e78084417ec614399d0bb545b0e04343c6a3c2ce2d` |
+| `.local/browser-accounts/xhs-9653254890/BrowserMetrics/BrowserMetrics-6AB154F8-8030.pma` | 4194304 | `sha256:04328d7c02d8f3a550f733c3ae2d9acbbf60029320f60a39487709b5455dd7af` |
+| `.local/browser-accounts/xhs-9653254890/Crashpad/metadata` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Crashpad/settings.dat` | 40 | `sha256:7936a335e72ff6ea92c474422907b572c0e8b73628538052a9e46a3c2e7798c0` |
+| `.local/browser-accounts/xhs-9653254890/Default/Account Web Data` | 77824 | `sha256:cba5dc747c82700f95dcd4408352f8e08340311fd52a72b064f5e78280513e25` |
+| `.local/browser-accounts/xhs-9653254890/Default/Account Web Data-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Affiliation Database` | 53248 | `sha256:5c33bd14c5379a0ae729e49774b2d7bd53b829c124e01bf2854bbf141f1173c3` |
+| `.local/browser-accounts/xhs-9653254890/Default/Affiliation Database-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/AutofillAiModelCache/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/AutofillAiModelCache/LOG` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/AutofillStrikeDatabase/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/AutofillStrikeDatabase/LOG` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/BookmarkMergedSurfaceOrdering` | 6 | `sha256:4489f9e3e454748b3521eb214e0a5694d562cff3d9ff511cb456953c8f534c00` |
+| `.local/browser-accounts/xhs-9653254890/Default/BudgetDatabase/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/BudgetDatabase/LOG` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/data_0` | 45056 | `sha256:97c278c19935e21ed968a703e3fb96f97935bc93a47e09a397f006eb1836e6c2` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/data_1` | 270336 | `sha256:b727b4e3f6ccf42c4cef3d21ffcf1600bad5dc7d245eb8368ca1b1f54c5fc524` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/data_2` | 1056768 | `sha256:b1eae289d65d62ae8db54189d1a55054bb9db4fa8ccd99495fae379a055a3b7a` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/data_3` | 4202496 | `sha256:f205678ba051d68d6301a6f59bc7133adceebddf61a37cd23d1573885e398c8a` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000001` | 42592 | `sha256:ecbcce025f138ce554fb5d810f4f1438b48bb493597d7491c89a0a52b6d9e147` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000002` | 48908 | `sha256:b8d0a119c6428a96aff3e0b8dff46451f91c0305cbfadb0bfaffe0f3b1b93947` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000003` | 30001 | `sha256:924a256c3e656963915caac07af3e1f668620c9c2640ce29329b13420ca36fad` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000004` | 176477 | `sha256:7385de99a04c0813bdb704e60469379ab7169488a366d404ddee1fde981290e3` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000005` | 443846 | `sha256:e87c294a85b795243fc080faec7a25d9055b1b1a78b615470b5b39bade740cbf` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000006` | 45719 | `sha256:9efa2a9dc541326009bab06c9c763f0268f01edbf5409ac1e51acc0554cd6a0b` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000007` | 116944 | `sha256:4759edf502a1cb2172d5929c2db1b514e0ac1832fa2677321ae8dc75a8fac79e` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000009` | 143828 | `sha256:917d763ebe44c23969269f4724026c464c87ccc6f18e76968ea70fdf346d1a80` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00000d` | 68856 | `sha256:483e29b43d93113a0b0e40bcade118c9c5da1000df49d271ce35e3a74ef406a2` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00000f` | 58644 | `sha256:1790258e8fc48c1ebf914bf6521a1291fc054a1662c28da1fd4d1305c90b0db4` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000010` | 154619 | `sha256:484e278d56051f317edd7b066b9705600cd2bafa0bc0d1d15187a033e3ab5cce` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000011` | 88234 | `sha256:28e4270b176441e29969828eb6705e3b12e4c9ed4ab7bd3807402c7995d205ff` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000014` | 207049 | `sha256:9d3fefe4964c2e02f6196a5e26071043aa4f6eb684600c2c3a4dfca9cd9e45e5` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000015` | 325056 | `sha256:4f6b14947e73217f7de75308f2868a21f0669a71500666e6771e26711fe3e84a` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000016` | 604711 | `sha256:141a9c1175ce3eb2992f3eb0331195d13252decce944b4c6a97d6316b41a65fc` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000017` | 638323 | `sha256:7017d3757d53876b3fabc0427c4aaa462213d7e05fd880d4fee123db8929d1ba` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000019` | 34223 | `sha256:4da85645e7161edb0c3bd02f2376ea7bbd902fb74963043382d4ec8ed72b8dfa` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00001a` | 372107 | `sha256:6947fd5a3899b545b06fa0ecd48c76adb968e2f479eb0e4cb430b18a0892fdeb` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00001b` | 46233 | `sha256:a39568840d4ce27c4f53484327bf82d199ef9fe40f93bd48cfffec799758e411` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00001c` | 340972 | `sha256:7629db5c706c94a1ab3e53c2dea30f5a9d66430dc7a2d0b952ca20893939846f` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00001d` | 549947 | `sha256:b077f593169ec3aa5db561301b60e5770f6017caf33077a7364c792789a18156` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00001e` | 605538 | `sha256:73f53242c9627730cb2746b84d0e13cb4efab0bd19d686bccb53711c05525074` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00001f` | 496393 | `sha256:182233991130b185ebd42acc00ef87eb9d2aea3a47f4166e85a35c46c66450dc` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000020` | 429015 | `sha256:73de083de6179fd1756bb293af2bb9194bf543c5fefc4e2c8f5244689b864cb1` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000021` | 818944 | `sha256:ca94037a2e9bf33cdb12a12b278bcc7381c553205d4a27b19cad47e4de986186` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000022` | 335705 | `sha256:118799b120b673e81d056b24c1bb65dd4dff72c59b384cddf6294a60cf696ef0` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000024` | 124011 | `sha256:e0e65adbf55ccd18be4f445d0d3c5ebed421ae8c5c62e7d637ca5678a6943cdd` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000036` | 86705 | `sha256:d8bb6a25bac0c7826e22022f01cd7b656e7b239fec932ba149d6f4c3c86dd4b3` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000037` | 31368 | `sha256:b2912c19c7653bf4f0b4d22ef1142c7398a17bca38c4127c35a242a49bdfc7eb` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000038` | 114850 | `sha256:33801e83af5826db78fa0efd4a59125a7337c817f40db2af70a53848bfc6f705` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000039` | 33389 | `sha256:420984b0782cddd99eec0b0fc33baa16650625a0541fcdcf2d56762e6cab861a` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00003a` | 27548 | `sha256:95ed3acfa6bab91bdf5ac1aaf2a691eb245a5cb288dfa06072171a00c460a11a` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00003b` | 46873 | `sha256:696d564b75500cba6f49f9dbcca396b7cdb05db629126e1dde74c013350ad171` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00003c` | 47429 | `sha256:03adc87b7165b01519df8cc25c7bcd88712d96cba3ae1df9e3c08c5b5ca072fd` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00003d` | 113061 | `sha256:6ae4fba76c60b3c3f39ce5b5e005657f37ca2d03c10f3d7b3e0c15c2f38a7c24` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00003e` | 51335 | `sha256:2ecef988b5bd3ddea878eb636c3449ef64ca22840667322fca1ee9a822f14f70` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000040` | 322611 | `sha256:cdee746d18778927ca9b8b2d2b97a37c3acd838ddf99fcd71418c5b79a84fabf` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000041` | 34304 | `sha256:95806f45e8f8220462b161505bd81bdcee951599256e9119d873856f1945271d` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000042` | 208592 | `sha256:f6881507da9732c8030108e83cde0aaec1d5ee14cbca4802cecc2b712ec50fe6` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000043` | 51624 | `sha256:0ca8007551352ef2325bbce6f9a60a63254f2fe7bff3c08d5fc08ef34509a6dd` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000044` | 26427 | `sha256:530192679c80c7c1a65347a74eca81198424cd12adfd4902a2097157ef12daf8` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000045` | 212565 | `sha256:cbe8225d7116d6c8901c8455893ebcd8c28a76e8a63e45038d2b6c4aced0c62d` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000046` | 182946 | `sha256:14a6a309adee2e3b420f76450dc40d37858ce2ef14edc7ce1f75d3875e28f56e` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000047` | 149679 | `sha256:162d823ca710d2c6fcb057b0ae389371bd3051e7fdbfeb6391d724ba3172548f` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000048` | 144366 | `sha256:250a90b55d68e9e801ae922167515e6d9d04f9ae4ff5cf8cc65e07b4778bd2bb` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000049` | 149034 | `sha256:79214c1fa06a1f6a4b9bd19bd11d94ee2da568842f37ca9a726aff7f08b43e50` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00004a` | 36935 | `sha256:9efaa4140f9d19906cb7d5616029abac69800786abce6a51dd9398f0e6f56194` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00004b` | 19674 | `sha256:0c9c96cc51b03089073ea73a9e5044345a0045fd8dd870feb9245fb11cb8e5ca` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00004c` | 31620 | `sha256:240edd8edc9299aeee874854b377d3489dbb6d446a8f41ffabac7750e8e74dd8` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00004d` | 21842 | `sha256:9d527ceacbfdaa52fe1ce26daad1d373939c527626dae2834c7482756c5a27e1` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00004e` | 27198 | `sha256:d6461ea26dca06bd81f767a68d363bfa84fde04e40942c885039b44ef2d544cb` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00004f` | 35796 | `sha256:bc5bd2c2f77cec430d7adec94b6e00d7ca6b0db6043eba13865960cf31b8c115` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000050` | 21140 | `sha256:25aead6c774a6925bc8c2e9117965a38070120ba07be2cacade2e6e7822abc2c` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000051` | 41490 | `sha256:5befe3364e5231039314d9abfebf897aca97c1b7fb7cf3c9f476bb95760b0e50` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000052` | 30611 | `sha256:c994a45ee988fa8424ac58c19ab0faaed6335869eead40ba4e745094b30b057a` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000053` | 40439 | `sha256:966f67c326d5eecbda1fbd981200a765276e3473b11d2bc8d6823fecee36499c` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000054` | 18882 | `sha256:c3fb8f2a418c7d007bc9273155a62cdcf73ee4571fc85d98a89f2da1811aa0f6` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000055` | 17948 | `sha256:08c9cc41b4264bcae6a13ad4d02d2e17cf92d8b17b65cd7620cdba42a05cfeaf` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000056` | 74170 | `sha256:931747e7dd7c8350836cd0108e7ab046a4ad94cb4f9261b13e0b91a6e28ba4ef` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000057` | 65232 | `sha256:b34d4ba55e1d36008d5b961d30439c9900e2c5f364f3064ed0764143e698c10f` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000058` | 103800 | `sha256:6a221f3383afb30bf4fa3990aab16aa0c2b2eb5235b8f07d8800e507e0f89504` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_000059` | 94400 | `sha256:30c5fdc16ae894f177feaae652b73aafc0cd8ece427db3feb1381ce6ac358660` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00005a` | 109112 | `sha256:7fb889a8749b37f29e220dfc3f6919ecb551cd9efb897924531561841896fd80` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00005b` | 77927 | `sha256:527ff7289ffc124db2d6f42a36cad2b2f5ac291751e23b9590d8fc45d63b98e1` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00005c` | 109359 | `sha256:dd3708d01f1cb2fb245d1fd3f4bfa0a241140055087e3ada29299954629c9800` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/f_00005d` | 41812 | `sha256:70a159582e7d3ce5f3374945687be85da9b9e596bf4b0e6ae884884a0afdd456` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/Cache_Data/index` | 524656 | `sha256:f6bddda5674c0e5ffd93dcc1b29ea366b923075259bd25e8228402317d4a42f5` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/No_Vary_Search/journal.baj` | 4 | `sha256:9c169428d852e25bd59b27652ed533d2a1f09f96e4c329fa5e06f47e16731543` |
+| `.local/browser-accounts/xhs-9653254890/Default/Cache/No_Vary_Search/snapshot.baf` | 20 | `sha256:0c2dd377ed0cc66161e9db8f89f7d8bcb3ad8c06c4a054bdcba214ab05f58c9a` |
+| `.local/browser-accounts/xhs-9653254890/Default/ClientCertificates/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/ClientCertificates/LOG` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/ClientCertificates/LOG.old` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/015d790c81dc6435_0` | 295 | `sha256:47708cc8533d3746dee84d7a1c94c88c8ed02e405ae48f2cfb8a5a1e9ace03c6` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/03ceb5770bd7d61b_0` | 307 | `sha256:5e746d04611f37e546e6a043c6a6a4ebbf772bd8d48de1f1814322a39aa47bc4` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/0831dd82f89b0d33_0` | 797960 | `sha256:e8cb9956169d91ba13573790e9d7cb436b6eaee99edfc416ea787f312767a6c5` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/08e8ad7d21ceb597_0` | 299 | `sha256:04e057d305283c8f1609fdebf6a43756ffa4d2d105b4a52d09f81a6c3895d3be` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/09495890f7ae84a5_0` | 308 | `sha256:c879d48b0fbe6939085059f1e834de294483c6f1c601c782d3a24a2bb603e687` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/0edcef2bcb281f13_0` | 300 | `sha256:4ad5d7800926efe13f16a5a53e7ddf37134150ca98e156d372be5a18ac2cddba` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/14d893bfbdb277cc_0` | 291 | `sha256:f0d552c01f55f0b7d9546a1a919f2dc289b698f14ebe7016da93fccb6658363c` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/16b73a4477188e61_0` | 305 | `sha256:64058bd7e8b3540ce504ef82ec290f06db08e34fe59760028963223c53010991` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/1b42e347f31ec741_0` | 79944 | `sha256:fd9a648dfbc0e336032b6f4dca741a39078c3727599005da7a88e553c776fc5b` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/1d2959c9c4276e31_0` | 308 | `sha256:104137f0762120bb0e843ad7be91f459361ff5ca387e235a0857fab3ec359b28` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/1ebf8cde913bf8ed_0` | 309 | `sha256:cf6f8466105c428c6f3c7329bb344e95403f854a87cc945914e051ce8178b00f` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/218fb31976135ed9_0` | 293 | `sha256:56c9e77a2ca17dc92e564937333974d05c8e9a49ccf3b7fae2b08732cf362560` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/2845c7f60e024c6d_0` | 1823 | `sha256:639ece69c21726d397d49484a20f2f53ce37cedb451f0ade9ed3a7b3057bf6fc` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/3011d3b547240348_0` | 834104 | `sha256:d07d0e99ffa6d40a6e58dfefd8c4dba6351a98075c76ee52920ff54dade0c64d` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/331eec86767d3e44_0` | 987 | `sha256:80c12666bc314c2c350e9cac243f0f0f557d2ec56f43c2f99855560ff3c0e061` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/3373f8134170b3aa_0` | 315 | `sha256:cd174cc28c243bfd3d6418de1d72804852ae17a863008869832a98665a4e2899` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/3874064286f87c4f_0` | 149648 | `sha256:805bc4b689614e55561980f576f7db9353579132bc6c753d80291a60121b73e5` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/3bbb5caf80313dae_0` | 306 | `sha256:c142f7fc9839aadf720c9ad59fe548c11e6955a276cde8cdacea6c7c0202bc26` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/3df6f1a225752ec4_0` | 286264 | `sha256:b54322b4269846478733264d13ac4cb059691a3c35d368fbe03758427c571a83` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/3eb48cee54b9e3a4_0` | 23232 | `sha256:5ff7ad19310a4b49eb39e75e6b56e75df4a7f36123ad9ce073c74bef3f7f9dbb` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/45510c1096b0b209_0` | 150528 | `sha256:c405a666b325b057cf256911299e8327b7f2f4fc5df8ffc9d1caf9f0eecd2cf6` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/45d65f8ffe1fb5fe_0` | 555 | `sha256:d448e18d66c2bdb6ef521f46db6de93268c5b2ed715792c5791282199e13cb7d` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/4b82dab3089ef0e2_0` | 370872 | `sha256:99a96446cb3d9032ce65b3f0a12a59424b4e35173dee5c1d31de588f02485280` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/4bb03e6bf58db092_0` | 343 | `sha256:2577b1becfb3644f228c1b407c476b16ad4abb1a218038c5d6f5c8a26cc76fc4` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/4df9c32c673ab019_0` | 291 | `sha256:624eb35b463fb6f601cf22825284e88304978abd2d99d52daa838cc1487c27f6` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/4e40b361237545d1_0` | 1453728 | `sha256:cd29b6474f4f3b64f2b89a699e5a53095cc7f17d9f96260b349d0eed9d6b34d7` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/4e48100df4d03677_0` | 271 | `sha256:1f98fc348cfc376505871e028429b62480763a038c8ae2f1d51189560fad6285` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/571aba6561bb5dd7_0` | 299 | `sha256:bdda05bd6405f207bc4cafd6a5b82bef9f7c6d0ba7036176f857f70b6a58c890` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/5781025453f36152_0` | 303 | `sha256:7eafc34d67467c6fa1f7c109860f1b28aeb7d05968bde6012def613cc732a94c` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/58f7a4d00e707d00_0` | 305 | `sha256:d3d61a3aa375c4aaae634fc747758f1e1e605ca9588d758f64b135ebcdd5cbe6` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/5fea6110207edb7f_0` | 131272 | `sha256:24a6923ec802bfb9bcc9b0acd9e7f2e541f65fcea8aeafa636f03065b4a03ac6` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/63e9979eda600d68_0` | 45168 | `sha256:54d84ec71f94c6a29a6a4d393599026cc40d87dfb1277012e150163fa50afa3b` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/64ef28cbf2e2c741_0` | 369168 | `sha256:31cf4d52dbfb20d4793b822523100903e4da688bedf4bdd7adfb6c4257140e6b` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/651d64ea76fa0e70_0` | 263 | `sha256:ca03546440dbd901e70ab05429cd465b1ed6981652b0f5395913b17904506429` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/6d5b3e7d5ff5afa4_0` | 414920 | `sha256:13488a3a76467d1fb1c0f570604f561df1b5bffc7a502f95ff3a7f5aaffdac46` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/714d846fa86f1feb_0` | 25816 | `sha256:12d321899fdc1111e624a810fa28ce66be7826444a827fadc9727f87fa42a39e` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/750d35a5f4881e62_0` | 307 | `sha256:7e6c6fda9d6049f7d59d88f1dc2d7988e0629cb009221fec097758b49021094b` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/7966bb609b55b2fe_0` | 187592 | `sha256:06b042325b7b4eff27c0cabf71173b06ced60daaef86502b2736518526f6f85b` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/7dc61707a7d72635_0` | 125136 | `sha256:0eb31d36871c3222121dd1891beafab1ca12d5b51665df4fce99bef17c6d699e` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/7eb176c2db361d52_0` | 729824 | `sha256:c6d63f859b47a5221c76ff29f074b9ec1948f5445143a653f0c87819cb272c11` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/87e58aff96e8029d_0` | 304 | `sha256:0fd8e5f6b519f500531ce2d39c2648155eac33fcbbdb89616bc449315d8027e6` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/8baa0d1dd3d85e15_0` | 391 | `sha256:ec6f93ab878d8f23b67218b53340beee137de9979928af768c7b488132b25814` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/91c0e400bd62dfd4_0` | 1924832 | `sha256:250dc1b08a9416eb39042007f44709ee95adc26a31ac2bc3b10eb6f7f19a6355` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/91db942ba3747587_0` | 302 | `sha256:145f5980edabb2fa1d4049d7c307608852d3f2dac25f380dc3327b2ff9f4a75b` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/954e4477e895a8f2_0` | 302 | `sha256:2fc8ae2901a4114f4d5edade3ba820d0db861f4c30cde0cc8585afaa0d1625b3` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/960ee9ab4d10569f_0` | 304 | `sha256:1253dcc810ee75ce59985d359f6a3c080c7407ea5ce412c993e7c86aa08ffbc7` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/97bd1103ca60db76_0` | 283 | `sha256:3b0cae929f9e73d4cd665c054f3b021fe3c0e19cd869a16e158270a9b76c5ed5` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/9d22bfe9cf6ce939_0` | 362424 | `sha256:9ef43e39f81ada3fea45ec3d50cfb6c8109718cadb8aa292aa24871db1cc6150` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/a0c202e47dc56cf0_0` | 305 | `sha256:1d789f3f95ffb8c4b4a12ccfb05120f1fe62943c4b21ae40bb24ccd54ab7c701` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/a3ec2b57858c417e_0` | 308 | `sha256:a38e9e44479bf7e9a150b1353203aca1ad82fa9b3060146a356f3a9d1ca5c4a3` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/a4bbdd05da638be5_0` | 58240 | `sha256:a2077f23a616537007e2ffa04073881d28fef098dc05873dc868032c787ba24b` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/a727446ba9ee7d07_0` | 304 | `sha256:d12fecec852990460c8dc650d3b6cf85b5cfd3f43ca3b29b4f3488a41c72986f` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/a8d0d18b14f0ace2_0` | 319 | `sha256:2f79bd8d0bbae35444a7e7b0b31b1d6183bad43f46348f25cbcc435c627667c1` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/acc4fbbeaf83fe91_0` | 272576 | `sha256:027d7aea74edce479bb313bb78be51b8b9ebe48d6203dca50495a7d465f6f951` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/b0367467b54dbb97_0` | 113448 | `sha256:1f4ea97a1e6d4a4043bcaae7db328d6c1cbcf93c0c5048672fb5f57bacc80abe` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/bc5a972a9ba87878_0` | 488184 | `sha256:c1d5b987aaeb6fe63db71b080b890354e8dc4832203eb712a93339c129e75f5c` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/c8bfd5ce469d3ce9_0` | 267 | `sha256:44f874540037369affd68c39cef3190d8613eddc7594c5b1d62837a9abd35963` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/cebcba65a1e144f2_0` | 304 | `sha256:3cadcf956ec455b889c7daca6ac9c09265d411a1f5f426ff390c4ffba6a9aff7` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/d08dd39eccdf71f1_0` | 302928 | `sha256:0918c3990d998a3db607928037f93eab4267a0e6a68b201f483fbce7538de233` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/d10df9171e103e7c_0` | 221536 | `sha256:92b8cb330023d3d139ee540bf21e4ddb10c63a270a406459c214a319f42b4ce1` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/d75480078a12f3c6_0` | 319 | `sha256:dd5f5a869bfe236cfac6f64d19e2912a3676d2b68d48a4815821450a88820403` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/dad49a8e90f78582_0` | 308 | `sha256:e81fd9d3f79c3ec73c079bacd8bf55531d9cc7512d6b828523717e8272df8c55` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/dfa026eafa9ae642_0` | 287 | `sha256:352b331e1ae1808b2aa6680f8bdbaa89bbc355619d47efb438e43a08af2d11bc` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/e09b0c4d542da5b0_0` | 305 | `sha256:63d048f09583e93848f8a20ceae18d30d67413fd6ab3f82e9a7fcb05938af421` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/e4453256a7b21a25_0` | 275 | `sha256:1937a6b0a94b218e27fdbcb7dc262c01529fe2e2f510b079b6192346bc13345d` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/e45273835f599c01_0` | 303 | `sha256:c8921483a61fb05d1bec49f704e13e72d267314511b2ccaacd2e2108f158fb2a` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/ef016b09336fa9bd_0` | 296 | `sha256:8e512a67ac2bf4865c83d64d246486222d9d2a0440382727abe6d513379c8700` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/f6256cea262ec73c_0` | 427 | `sha256:6e2d63d85821a2dbbe0ed636821383181d570420b8fd1812546adf1b146adfa1` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/fc952d562ec39f5e_0` | 294 | `sha256:3154cd6124a64536429a274083cfa42412828ab9ecb4b583f6ca56b3de5a79d0` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/fe09844a97d57106_0` | 148744 | `sha256:32f6d5dd41cdeafc21e91ea5d49f10332f8678965e26ee1bf7cd6e4953fc72d3` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/ff9b8cbfa9a3a516_0` | 557600 | `sha256:9f8080698a2166add0ec620850f48afd10ec8792ddf93aa0d66a01758b25b05c` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/index` | 24 | `sha256:fbcfe23a2ecb82b7100c50811691dde0a33aa3da8d176be9882a9db485dc0f2d` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/js/index-dir/the-real-index` | 1752 | `sha256:cbba3c6889ec0e8815234a5617330adde1755f80a0255cd3db9bebc76c9a5c7d` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/wasm/index` | 24 | `sha256:fbcfe23a2ecb82b7100c50811691dde0a33aa3da8d176be9882a9db485dc0f2d` |
+| `.local/browser-accounts/xhs-9653254890/Default/Code Cache/wasm/index-dir/the-real-index` | 48 | `sha256:40a69ca8ae026a1f994d1f7f892531c80fb34db83db1980a776dec0cbf039130` |
+| `.local/browser-accounts/xhs-9653254890/Default/DIPS` | 36864 | `sha256:4e9586edaa1eac91b28cee6617e52249f70304e56c818bb543c2fb962eb67483` |
+| `.local/browser-accounts/xhs-9653254890/Default/DawnGraphiteCache/data_0` | 8192 | `sha256:d6a5fe39cd672781b256e0e3102f7022635f1d4bb7cfcc90a80fffe4d0f3877e` |
+| `.local/browser-accounts/xhs-9653254890/Default/DawnGraphiteCache/data_1` | 270336 | `sha256:3ea23f5e5f43740d887315e237ea0afc11692ae5ccd90a4b41f0f6ec20397aa0` |
+| `.local/browser-accounts/xhs-9653254890/Default/DawnGraphiteCache/data_2` | 8192 | `sha256:ec1702806f4cc7c42a82fc2b38e89835fde7c64bb32060e0823c9077ca92efb7` |
+| `.local/browser-accounts/xhs-9653254890/Default/DawnGraphiteCache/data_3` | 8192 | `sha256:e09f42c398d688dce168570291f1f92d079987deda3099a34adb9e8c0522b30c` |
+| `.local/browser-accounts/xhs-9653254890/Default/DawnGraphiteCache/index` | 262512 | `sha256:27b588eaec4338577342d344cf253ec53fca11ec47efee92915d712396082fcd` |
+| `.local/browser-accounts/xhs-9653254890/Default/DawnWebGPUCache/data_0` | 8192 | `sha256:d6a5fe39cd672781b256e0e3102f7022635f1d4bb7cfcc90a80fffe4d0f3877e` |
+| `.local/browser-accounts/xhs-9653254890/Default/DawnWebGPUCache/data_1` | 270336 | `sha256:3a56f8e53da02dbdc0cc11751a0ba2460fe4fd8958ef75df696460b359bf027f` |
+| `.local/browser-accounts/xhs-9653254890/Default/DawnWebGPUCache/data_2` | 8192 | `sha256:ec1702806f4cc7c42a82fc2b38e89835fde7c64bb32060e0823c9077ca92efb7` |
+| `.local/browser-accounts/xhs-9653254890/Default/DawnWebGPUCache/data_3` | 8192 | `sha256:e09f42c398d688dce168570291f1f92d079987deda3099a34adb9e8c0522b30c` |
+| `.local/browser-accounts/xhs-9653254890/Default/DawnWebGPUCache/index` | 262512 | `sha256:24347124e589f98eecce07e5ea016770f476021511f7b54f6f8716f5e79375a6` |
+| `.local/browser-accounts/xhs-9653254890/Default/Extension Rules/000003.log` | 76 | `sha256:cc5dacf370f324b77b50dddf5d995fd3c7b7a587cb2f55ac9f24c929d0cd531a` |
+| `.local/browser-accounts/xhs-9653254890/Default/Extension Rules/CURRENT` | 16 | `sha256:0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443` |
+| `.local/browser-accounts/xhs-9653254890/Default/Extension Rules/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Extension Rules/LOG` | 273 | `sha256:001ea7e5d465a66a34a09a5c7754bb33d218c3ac4d36a399f2e57b712e365652` |
+| `.local/browser-accounts/xhs-9653254890/Default/Extension Rules/MANIFEST-000001` | 41 | `sha256:f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4` |
+| `.local/browser-accounts/xhs-9653254890/Default/Extension Scripts/000003.log` | 38 | `sha256:1c43a1bda1e458863c46dfae7fb43bfb3e27802169f37320399b1dd799a819ac` |
+| `.local/browser-accounts/xhs-9653254890/Default/Extension Scripts/CURRENT` | 16 | `sha256:0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443` |
+| `.local/browser-accounts/xhs-9653254890/Default/Extension Scripts/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Extension Scripts/LOG` | 277 | `sha256:25f0bb8be36a2d68a6cbd5759377f2551325c6eef2f5f47aa447a79fafbd1e41` |
+| `.local/browser-accounts/xhs-9653254890/Default/Extension Scripts/MANIFEST-000001` | 41 | `sha256:f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4` |
+| `.local/browser-accounts/xhs-9653254890/Default/Extension State/000003.log` | 114 | `sha256:e2610960c3757d1757f206c7b84378efa22d86dcf161a98096a5f0e56e1a367e` |
+| `.local/browser-accounts/xhs-9653254890/Default/Extension State/CURRENT` | 16 | `sha256:0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443` |
+| `.local/browser-accounts/xhs-9653254890/Default/Extension State/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Extension State/LOG` | 314 | `sha256:9db2940dd14288862ddf83f1dd2b761a8f9553552aae14ffbadc60e7eec90111` |
+| `.local/browser-accounts/xhs-9653254890/Default/Extension State/LOG.old` | 314 | `sha256:efff1f6369a2be9378e5671176bc3289df40c7e5cfc64612d9bf7b60b2a77f91` |
+| `.local/browser-accounts/xhs-9653254890/Default/Extension State/MANIFEST-000001` | 41 | `sha256:f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4` |
+| `.local/browser-accounts/xhs-9653254890/Default/Favicons` | 20480 | `sha256:78379c1000a623d71424c211c44d5138768a66772f720758473210420df890fc` |
+| `.local/browser-accounts/xhs-9653254890/Default/Favicons-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/File System/000/t/.usage` | 24 | `sha256:da74921979c4034fb77f61a6295c7c4d9a2196c831760d546e36ad959f240d23` |
+| `.local/browser-accounts/xhs-9653254890/Default/File System/000/t/Paths/000003.log` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/File System/000/t/Paths/CURRENT` | 16 | `sha256:0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443` |
+| `.local/browser-accounts/xhs-9653254890/Default/File System/000/t/Paths/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/File System/000/t/Paths/LOG` | 289 | `sha256:17de0eed8b7e1607d432e79972780aa5356b93ff5304f57fb608b38a600d4b93` |
+| `.local/browser-accounts/xhs-9653254890/Default/File System/000/t/Paths/MANIFEST-000001` | 41 | `sha256:f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4` |
+| `.local/browser-accounts/xhs-9653254890/Default/File System/Origins/000003.log` | 111 | `sha256:30242ec8ab45dc1d87cb490e8f139f19c2ff9c97bf7d6e16b62a8fe99a0aaa76` |
+| `.local/browser-accounts/xhs-9653254890/Default/File System/Origins/CURRENT` | 16 | `sha256:0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443` |
+| `.local/browser-accounts/xhs-9653254890/Default/File System/Origins/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/File System/Origins/LOG` | 322 | `sha256:463d1707952237929d3885deb99dd79ce176dadea41be809d507862f9592b749` |
+| `.local/browser-accounts/xhs-9653254890/Default/File System/Origins/LOG.old` | 322 | `sha256:67302236668665e372caee37bb0c4b1522f03bd52bfd61e556b9a98a0d335815` |
+| `.local/browser-accounts/xhs-9653254890/Default/File System/Origins/MANIFEST-000001` | 41 | `sha256:f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4` |
+| `.local/browser-accounts/xhs-9653254890/Default/GCM Store/000003.log` | 1157 | `sha256:435005342065726e9798422d65c728c33fa47d02c53611b616994e7a9c2b1630` |
+| `.local/browser-accounts/xhs-9653254890/Default/GCM Store/CURRENT` | 16 | `sha256:0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443` |
+| `.local/browser-accounts/xhs-9653254890/Default/GCM Store/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/GCM Store/LOG` | 261 | `sha256:29d06b9cacb3d542b532dd41e20d60fda687adc67e8879ff32a3e97ebc7a9fe6` |
+| `.local/browser-accounts/xhs-9653254890/Default/GCM Store/MANIFEST-000001` | 41 | `sha256:f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4` |
+| `.local/browser-accounts/xhs-9653254890/Default/GPUCache/data_0` | 45056 | `sha256:20685ae81ac23dc8f43983c017cdafd686f72b3f50f5a741bc32312598800a57` |
+| `.local/browser-accounts/xhs-9653254890/Default/GPUCache/data_1` | 270336 | `sha256:1e9e0efa24974238556a928e2d0cd7b0d8094a7b7b04c2ac2decebe9c7b125f1` |
+| `.local/browser-accounts/xhs-9653254890/Default/GPUCache/data_2` | 1056768 | `sha256:8d9419ce459e23a4f9d90252236c419ac155a09896ab7365ad091165f6d7a051` |
+| `.local/browser-accounts/xhs-9653254890/Default/GPUCache/data_3` | 8192 | `sha256:e09f42c398d688dce168570291f1f92d079987deda3099a34adb9e8c0522b30c` |
+| `.local/browser-accounts/xhs-9653254890/Default/GPUCache/index` | 262512 | `sha256:13bcc528bee33bd7eb671cf20e6c76ae48b5b8da397c5d85148e4152c6a1b6ed` |
+| `.local/browser-accounts/xhs-9653254890/Default/History` | 163840 | `sha256:90e2ed320ad6e84619165a11bae9c1db7687e7d14fd2f0266f1bebf36ec5f9c3` |
+| `.local/browser-accounts/xhs-9653254890/Default/History-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/IndexedDB/https_creator.xiaohongshu.com_0.indexeddb.leveldb/000003.log` | 6313 | `sha256:6c202d30929dd5f59699732e5dbefa59f7fa94c8067f9635cd6f0a57a0acde41` |
+| `.local/browser-accounts/xhs-9653254890/Default/IndexedDB/https_creator.xiaohongshu.com_0.indexeddb.leveldb/CURRENT` | 16 | `sha256:0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443` |
+| `.local/browser-accounts/xhs-9653254890/Default/IndexedDB/https_creator.xiaohongshu.com_0.indexeddb.leveldb/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/IndexedDB/https_creator.xiaohongshu.com_0.indexeddb.leveldb/LOG` | 361 | `sha256:68c8432a530cbd03d2455f2bf8156105570a935e09817384b5d50f572fd79bcf` |
+| `.local/browser-accounts/xhs-9653254890/Default/IndexedDB/https_creator.xiaohongshu.com_0.indexeddb.leveldb/MANIFEST-000001` | 23 | `sha256:720a78803b84cbcc8eb204d5cf8ea6ee2f693be0ab2124ddf2b81455de02a3ed` |
+| `.local/browser-accounts/xhs-9653254890/Default/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/LOG` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/LOG.old` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Local Storage/leveldb/000003.log` | 38772 | `sha256:04a7c539ff89cd5fbfb638b4a4b902f9e3ca52c434f410199e0d30a4d0db2190` |
+| `.local/browser-accounts/xhs-9653254890/Default/Local Storage/leveldb/CURRENT` | 16 | `sha256:0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443` |
+| `.local/browser-accounts/xhs-9653254890/Default/Local Storage/leveldb/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Local Storage/leveldb/LOG` | 326 | `sha256:9947dc7579140d32424971111dc25f112e25ede963ce2ddd5f863e9bc2ff3629` |
+| `.local/browser-accounts/xhs-9653254890/Default/Local Storage/leveldb/LOG.old` | 326 | `sha256:a5b9a933945a7a31d8138ab3174d591295f6d6ed286fb979c916a5191fe01e86` |
+| `.local/browser-accounts/xhs-9653254890/Default/Local Storage/leveldb/MANIFEST-000001` | 41 | `sha256:f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4` |
+| `.local/browser-accounts/xhs-9653254890/Default/Login Data` | 40960 | `sha256:83b8decd484a2c31e781eda0367d8ec2311254227d8d37773df19ac458c6ed72` |
+| `.local/browser-accounts/xhs-9653254890/Default/Login Data For Account` | 40960 | `sha256:83b8decd484a2c31e781eda0367d8ec2311254227d8d37773df19ac458c6ed72` |
+| `.local/browser-accounts/xhs-9653254890/Default/Login Data For Account-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Login Data-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Network Action Predictor` | 53248 | `sha256:df704fd0710b1b97215cd5d5b89c87d429b9cfdeaac4080a553cc8199e8a2c75` |
+| `.local/browser-accounts/xhs-9653254890/Default/Network Action Predictor-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Network/Cookies` | 20480 | `sha256:cb4ba43ed17fdf0bcdb5187436b111a09731dda60184fc339cd4f2ffb2382477` |
+| `.local/browser-accounts/xhs-9653254890/Default/Network/Cookies-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Network/Device Bound Sessions` | 20480 | `sha256:943cd4adbef538c63d8202c83394d0b683a97c477ecf125fc16246f823d6c31b` |
+| `.local/browser-accounts/xhs-9653254890/Default/Network/Device Bound Sessions-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Network/Network Persistent State` | 4173 | `sha256:0f15230b7bc56f976b18ef68393d7f47a36e1c16f89931297dbe851e010b44ee` |
+| `.local/browser-accounts/xhs-9653254890/Default/Network/NetworkDataMigrated` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Network/Reporting and NEL` | 36864 | `sha256:919587599c961a865d7eff691e798d4341e7f1562d2fe5993d073ac3efab6c43` |
+| `.local/browser-accounts/xhs-9653254890/Default/Network/Reporting and NEL-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Network/SCT Auditing Pending Reports` | 2 | `sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945` |
+| `.local/browser-accounts/xhs-9653254890/Default/Network/TransportSecurity` | 355 | `sha256:9566f52e3fb8452f0febd657136949475bf5ce4ea6cdc10bc3798def9234e48c` |
+| `.local/browser-accounts/xhs-9653254890/Default/Network/Trust Tokens` | 36864 | `redacted:credential-name-marker; metadata-only` |
+| `.local/browser-accounts/xhs-9653254890/Default/Network/Trust Tokens-journal` | 0 | `redacted:credential-name-marker; metadata-only` |
+| `.local/browser-accounts/xhs-9653254890/Default/PersistentOriginTrials/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/PersistentOriginTrials/LOG` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/PersistentOriginTrials/LOG.old` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Preferences` | 8909 | `sha256:0641a152c5cf1ec67b3bd9aa073425dac25b4001a6e332c8126f305f4319b06e` |
+| `.local/browser-accounts/xhs-9653254890/Default/PreferredApps` | 33 | `sha256:42b55d126d1e640b1ed7a6bdcb9a46c81df461fa7e131f4f8c7108c2c61c14de` |
+| `.local/browser-accounts/xhs-9653254890/Default/README` | 204 | `sha256:1f96dd398d49cbcbe0b1dd95ab45afa071056e0ada49c1627c4368aae4f11af4` |
+| `.local/browser-accounts/xhs-9653254890/Default/Safe Browsing Network/NetworkDataMigrated` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Safe Browsing Network/Safe Browsing Cookies` | 20480 | `sha256:607f556df6c7d228e021043978a12ca7c753339d4a954951dcd9a24c16733ee7` |
+| `.local/browser-accounts/xhs-9653254890/Default/Safe Browsing Network/Safe Browsing Cookies-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Secure Preferences` | 9313 | `sha256:cbcde91c9418fbaf31459b8e31e1d054e058806fb67e0eaaf56376c6b6cf343d` |
+| `.local/browser-accounts/xhs-9653254890/Default/Segmentation Platform/SegmentInfoDB/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Segmentation Platform/SegmentInfoDB/LOG` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Segmentation Platform/SegmentInfoDB/LOG.old` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Segmentation Platform/SignalDB/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Segmentation Platform/SignalDB/LOG` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Segmentation Platform/SignalDB/LOG.old` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Segmentation Platform/SignalStorageConfigDB/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Segmentation Platform/SignalStorageConfigDB/LOG` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Segmentation Platform/SignalStorageConfigDB/LOG.old` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/ServerCertificate` | 20480 | `sha256:3f3c52eb59e5232a77d706b68b4b33b2a08cf4931f9204b422a7a4f4cc31b8d5` |
+| `.local/browser-accounts/xhs-9653254890/Default/ServerCertificate-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Service Worker/CacheStorage/29401d27862ede134911d8ea6e9950699034572c/002350e3-539c-4664-9187-4181da189f8b/index` | 24 | `sha256:fbcfe23a2ecb82b7100c50811691dde0a33aa3da8d176be9882a9db485dc0f2d` |
+| `.local/browser-accounts/xhs-9653254890/Default/Service Worker/CacheStorage/29401d27862ede134911d8ea6e9950699034572c/002350e3-539c-4664-9187-4181da189f8b/index-dir/the-real-index` | 48 | `sha256:0bcc5fb711230de99e26ad0278819eacdaee7f8b95ea7fd4616bedc2dfb95314` |
+| `.local/browser-accounts/xhs-9653254890/Default/Service Worker/CacheStorage/29401d27862ede134911d8ea6e9950699034572c/index.txt` | 279 | `sha256:a22cb947b7d80d5e2d4122e236e3edcf26a335b0ce2cbb08a38575b728bb2711` |
+| `.local/browser-accounts/xhs-9653254890/Default/Service Worker/Database/000003.log` | 1093 | `sha256:c3131eb6e7ba2bffee9ce0323be3d77eb31414590541cc7cc78925fd5db7df22` |
+| `.local/browser-accounts/xhs-9653254890/Default/Service Worker/Database/CURRENT` | 16 | `sha256:0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443` |
+| `.local/browser-accounts/xhs-9653254890/Default/Service Worker/Database/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Service Worker/Database/LOG` | 330 | `sha256:2f6631c39a45de9b8882e0dc3d568b98df116819f201e3a823add11ab590e22c` |
+| `.local/browser-accounts/xhs-9653254890/Default/Service Worker/Database/LOG.old` | 330 | `sha256:f82f9dd4ea98f6bf152ab0dd40e317c4f304346da32a6e0a710f18770dbb78ae` |
+| `.local/browser-accounts/xhs-9653254890/Default/Service Worker/Database/MANIFEST-000001` | 41 | `sha256:f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4` |
+| `.local/browser-accounts/xhs-9653254890/Default/Service Worker/ScriptCache/2cc80dabc69f58b6_0` | 31451 | `sha256:a1feb84a06e3c391baa90ab372a64222db06098108a31b392d34c63d80328baa` |
+| `.local/browser-accounts/xhs-9653254890/Default/Service Worker/ScriptCache/2cc80dabc69f58b6_1` | 75313 | `sha256:5a58df479fac6f5da2d90b53a0b590a69a343822d24177cd406008a528eeb812` |
+| `.local/browser-accounts/xhs-9653254890/Default/Service Worker/ScriptCache/index` | 24 | `sha256:fbcfe23a2ecb82b7100c50811691dde0a33aa3da8d176be9882a9db485dc0f2d` |
+| `.local/browser-accounts/xhs-9653254890/Default/Service Worker/ScriptCache/index-dir/the-real-index` | 72 | `sha256:b9dd8b5979002ab22d61fe2bbf78cf97a5e7ac83a734dce0018279615743aab3` |
+| `.local/browser-accounts/xhs-9653254890/Default/Session Storage/000003.log` | 817 | `sha256:7b82cf60c124422e01937a5ab5fa04179a76a8ab2269b6605ae282114a03a275` |
+| `.local/browser-accounts/xhs-9653254890/Default/Session Storage/CURRENT` | 16 | `sha256:0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443` |
+| `.local/browser-accounts/xhs-9653254890/Default/Session Storage/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Session Storage/LOG` | 314 | `sha256:5113cf96c8811809e1fdb90e15dba738acbbedeb0739e8003e86edab157e3498` |
+| `.local/browser-accounts/xhs-9653254890/Default/Session Storage/LOG.old` | 314 | `sha256:bf043280d3c56323414337d2256ef9f02745b3be163811df5cf9ba8962cef06b` |
+| `.local/browser-accounts/xhs-9653254890/Default/Session Storage/MANIFEST-000001` | 41 | `sha256:f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4` |
+| `.local/browser-accounts/xhs-9653254890/Default/Sessions/Session_13434480074840791` | 3813 | `sha256:0626dcaad3ed5feb80be8e913f01e15c1faf28b3825a36d8aeaf7f7d840c35ec` |
+| `.local/browser-accounts/xhs-9653254890/Default/Sessions/Session_13434480123022180` | 3957 | `sha256:8ab6268d62671674767e3aa18ee18b0b2a067698d761812b1118e272947ec668` |
+| `.local/browser-accounts/xhs-9653254890/Default/Sessions/Tabs_13434480075236303` | 8647 | `sha256:45df0d697adbfcb862d0ac974a9eb5292ace084e9bfc7a097a0711893a45970b` |
+| `.local/browser-accounts/xhs-9653254890/Default/Sessions/Tabs_13434480123575353` | 11499 | `sha256:49bffff92f849fdccb1ee592f71324ca412ef8ea9f7a1aa73ebbaac920716fca` |
+| `.local/browser-accounts/xhs-9653254890/Default/Shared Dictionary/cache/index` | 24 | `sha256:fbcfe23a2ecb82b7100c50811691dde0a33aa3da8d176be9882a9db485dc0f2d` |
+| `.local/browser-accounts/xhs-9653254890/Default/Shared Dictionary/cache/index-dir/the-real-index` | 48 | `sha256:8b520c3b5f25168317caef9f657bf2158b37b0f07e6faf0f53510ee738766d72` |
+| `.local/browser-accounts/xhs-9653254890/Default/Shared Dictionary/db` | 45056 | `sha256:b87da9786c3fb75b92ca41e78f7a8cacba24040a26ad85674782ad2cbf5ad814` |
+| `.local/browser-accounts/xhs-9653254890/Default/Shared Dictionary/db-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/SharedStorage` | 4096 | `sha256:f1c1d714b195aa1795c50ed2db1795613d868a07340cbf0b1a563384fdfebdcf` |
+| `.local/browser-accounts/xhs-9653254890/Default/Shortcuts` | 20480 | `sha256:ec8285b66f6c4b44812dee2024ef4a7827ee7e38ed0d62279fa530b2df269fbc` |
+| `.local/browser-accounts/xhs-9653254890/Default/Shortcuts-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Site Characteristics Database/000003.log` | 115 | `sha256:2cc52327d3b742d8e9b54e833915cecc1818b23575d18dc7c1cedf6dccfa09dc` |
+| `.local/browser-accounts/xhs-9653254890/Default/Site Characteristics Database/CURRENT` | 16 | `sha256:0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443` |
+| `.local/browser-accounts/xhs-9653254890/Default/Site Characteristics Database/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Site Characteristics Database/LOG` | 342 | `sha256:c4a9913d9a100edeaf8d7e7d7aec77ba01c336b6c37ce969f80d38111577b0b7` |
+| `.local/browser-accounts/xhs-9653254890/Default/Site Characteristics Database/LOG.old` | 342 | `sha256:ed23f6e08fd74f24635e8d7b76ac056710307591c5a0a74bc7b848e62436c607` |
+| `.local/browser-accounts/xhs-9653254890/Default/Site Characteristics Database/MANIFEST-000001` | 41 | `sha256:f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4` |
+| `.local/browser-accounts/xhs-9653254890/Default/Sync Data/LevelDB/000003.log` | 118 | `sha256:b201e50dd759e0c41786332abd0c141372955e9489cf632cc09100d1f46b3ac7` |
+| `.local/browser-accounts/xhs-9653254890/Default/Sync Data/LevelDB/CURRENT` | 16 | `sha256:0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443` |
+| `.local/browser-accounts/xhs-9653254890/Default/Sync Data/LevelDB/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Sync Data/LevelDB/LOG` | 318 | `sha256:154bb67163283de4b1ef032066f75213b8edc1b45519b8cb6592f54113d2ed9b` |
+| `.local/browser-accounts/xhs-9653254890/Default/Sync Data/LevelDB/LOG.old` | 315 | `sha256:56c5d7704df2af357dc31e5ac9e56860ffb626307321dea7f3f607ca67f5fb5c` |
+| `.local/browser-accounts/xhs-9653254890/Default/Sync Data/LevelDB/MANIFEST-000001` | 41 | `sha256:f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4` |
+| `.local/browser-accounts/xhs-9653254890/Default/Top Sites` | 20480 | `sha256:7ddddab95bbe407a175f5e3182d2b66d439c04c4df3b2abac30a1ce7468605af` |
+| `.local/browser-accounts/xhs-9653254890/Default/Top Sites-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/VideoDecodeStats/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/VideoDecodeStats/LOG` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/Web Data` | 157696 | `sha256:b7ab1734ddba338080c3bd10fd440eb85485f1a573091cd21a2f79e309429eea` |
+| `.local/browser-accounts/xhs-9653254890/Default/Web Data-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/WebStorage/QuotaManager` | 40960 | `sha256:80b4366ef75a3182badc10bdd7c25c0fd6e47aa4f2d3ffb396dab954bbf38179` |
+| `.local/browser-accounts/xhs-9653254890/Default/WebStorage/QuotaManager-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/chrome_cart_db/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/chrome_cart_db/LOG` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/chrome_cart_db/LOG.old` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/commerce_subscription_db/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/commerce_subscription_db/LOG` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/commerce_subscription_db/LOG.old` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/discount_infos_db/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/discount_infos_db/LOG` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/discount_infos_db/LOG.old` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/discounts_db/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/discounts_db/LOG` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/discounts_db/LOG.old` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/engine_allowlist.bf` | 360 | `sha256:a3e256ea46b3f7b98618803d3858a1c324c1a5cab4cfdcdf86e4f43865c90ef0` |
+| `.local/browser-accounts/xhs-9653254890/Default/heavy_ad_intervention_opt_out.db` | 16384 | `sha256:5a5f703468585e4cf747dc1baf0457a275d2dd31e84f2de9d18aab3e6d6bf568` |
+| `.local/browser-accounts/xhs-9653254890/Default/heavy_ad_intervention_opt_out.db-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/parcel_tracking_db/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/parcel_tracking_db/LOG` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/parcel_tracking_db/LOG.old` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/shared_proto_db/000003.log` | 20288 | `sha256:cb61d99268a331a8b6aac74dee525323412175f2e8bda94a3e7e252793cf0cd4` |
+| `.local/browser-accounts/xhs-9653254890/Default/shared_proto_db/CURRENT` | 16 | `sha256:0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443` |
+| `.local/browser-accounts/xhs-9653254890/Default/shared_proto_db/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/shared_proto_db/LOG` | 314 | `sha256:41d119c795dd9a7fbd9c088f1e07d092899d8143b5e221c6dfaf9230c92c4a75` |
+| `.local/browser-accounts/xhs-9653254890/Default/shared_proto_db/LOG.old` | 314 | `sha256:c9a9d9bbcac3c9eb3c75cd2d08c1729d7ce6292b4b356b0ee6929f8cd24dee07` |
+| `.local/browser-accounts/xhs-9653254890/Default/shared_proto_db/MANIFEST-000001` | 41 | `sha256:f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4` |
+| `.local/browser-accounts/xhs-9653254890/Default/shared_proto_db/metadata/000003.log` | 1040 | `sha256:714e563e5a1f313bd4977ded3bdbf5483f2b6f4527e66c51a021670477921496` |
+| `.local/browser-accounts/xhs-9653254890/Default/shared_proto_db/metadata/CURRENT` | 16 | `sha256:0f1bad70c7bd1e0a69562853ec529355462fcd0423263a3d39d6d0d70b780443` |
+| `.local/browser-accounts/xhs-9653254890/Default/shared_proto_db/metadata/LOCK` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/Default/shared_proto_db/metadata/LOG` | 332 | `sha256:72ab1686c581ad9c7a9316d170d6d71ebca5eba8761774e3e78126105a16bb10` |
+| `.local/browser-accounts/xhs-9653254890/Default/shared_proto_db/metadata/LOG.old` | 332 | `sha256:be6695557e3b70601293ff2e9619fbc85a0453332e5cccc2878db7aa535d8498` |
+| `.local/browser-accounts/xhs-9653254890/Default/shared_proto_db/metadata/MANIFEST-000001` | 41 | `sha256:f9d31b278e215eb0d0e9cd709edfa037e828f36214ab7906f612160fead4b2b4` |
+| `.local/browser-accounts/xhs-9653254890/Default/trusted_vault.pb` | 84 | `sha256:b87bf305aafae1f1ec7dd947176c9529b2a9cbd4a3bf296fce25fc009e725366` |
+| `.local/browser-accounts/xhs-9653254890/GPUPersistentCache/DawnGraphiteCache/C6YIJ5ZAKC6TXEMDAQ6UAWWQBARS2Q4L/cache.db` | 4096 | `sha256:f1c1d714b195aa1795c50ed2db1795613d868a07340cbf0b1a563384fdfebdcf` |
+| `.local/browser-accounts/xhs-9653254890/GPUPersistentCache/DawnGraphiteCache/C6YIJ5ZAKC6TXEMDAQ6UAWWQBARS2Q4L/cache.db-wal` | 12392 | `sha256:31e890e940bf102ce3d9399b9d1f6898da9c0d9c604229be4d6c9d8c0d77bfe2` |
+| `.local/browser-accounts/xhs-9653254890/GPUPersistentCache/DawnGraphiteCache/C6YIJ5ZAKC6TXEMDAQ6UAWWQBARS2Q4L/cache.journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/GrShaderCache/data_0` | 45056 | `sha256:7f7065cb9bbc807367f04de284336f41a9b03718770562268ac5db3a707b4997` |
+| `.local/browser-accounts/xhs-9653254890/GrShaderCache/data_1` | 270336 | `sha256:56b8011fd99520d06a6f2b6dd429b83568f212fa40f6145e6a73a29612ec6e42` |
+| `.local/browser-accounts/xhs-9653254890/GrShaderCache/data_2` | 8192 | `sha256:ec1702806f4cc7c42a82fc2b38e89835fde7c64bb32060e0823c9077ca92efb7` |
+| `.local/browser-accounts/xhs-9653254890/GrShaderCache/data_3` | 4202496 | `sha256:5aab7ce0c27d97110eee857c3b32c26ade48a9196939cc415d5f4d47981923cb` |
+| `.local/browser-accounts/xhs-9653254890/GrShaderCache/f_000001` | 19464 | `sha256:bcc90ede9ac1162a8a57c3509007606647217125b71eeece6262cfe8021fee8e` |
+| `.local/browser-accounts/xhs-9653254890/GrShaderCache/f_000002` | 16436 | `sha256:8479eb6ca33870ce0e76345fd27a88ebe37492e3460c0f6dde71fb7396e76de0` |
+| `.local/browser-accounts/xhs-9653254890/GrShaderCache/f_000003` | 16896 | `sha256:c39f905db87cb107093333dc777b0c884764adec81c0e2b67a3cc4e46bb25a1c` |
+| `.local/browser-accounts/xhs-9653254890/GrShaderCache/f_000004` | 21136 | `sha256:9ee56e9d7f8c22193649166569a0a875ee89976eee3082774c7c775cba43b335` |
+| `.local/browser-accounts/xhs-9653254890/GrShaderCache/f_000005` | 16572 | `sha256:80d5bf7be910dffb77946b0c6f9bed4ce33ae84d8eff79b0d032407952f47eeb` |
+| `.local/browser-accounts/xhs-9653254890/GrShaderCache/f_000006` | 18652 | `sha256:d19c20e81771fcb0a7691946817aa2d7dc5e0be41c72aff633bedd76799faaeb` |
+| `.local/browser-accounts/xhs-9653254890/GrShaderCache/f_000007` | 18188 | `sha256:aa84eea028f7869dc4a240e458443b59386f9324da8b2c81d92dd6a7fba252eb` |
+| `.local/browser-accounts/xhs-9653254890/GrShaderCache/f_000008` | 18972 | `sha256:325a39f1f0ff3051852ea124729bba57d02a8f7c1afb10cf019e4b7350152f47` |
+| `.local/browser-accounts/xhs-9653254890/GrShaderCache/f_000009` | 25364 | `sha256:d3b36f1f702cd25ae71717591d48fe33d036f1c14d62296193747e042038bad9` |
+| `.local/browser-accounts/xhs-9653254890/GrShaderCache/f_00000a` | 21056 | `sha256:d6c7f2483eddc2991e8c7a2ff5d3fc6042262640001dbde6d6a569340fae4e1c` |
+| `.local/browser-accounts/xhs-9653254890/GrShaderCache/f_00000b` | 21056 | `sha256:2fbb42a594e17f5d55eb7ec6c70f9603580105b34c0754efc8d0d1da4f5c873c` |
+| `.local/browser-accounts/xhs-9653254890/GrShaderCache/index` | 262512 | `sha256:84c78a82ae28bee308e34063908f79a774bcaf419abb7f1afd5cb3e7834e042a` |
+| `.local/browser-accounts/xhs-9653254890/Last Browser` | 154 | `sha256:aa792da4117c296d33376cc10bc0833497caebcf708655953f994e1f18b0515d` |
+| `.local/browser-accounts/xhs-9653254890/Last Version` | 13 | `sha256:86c4f518ac2a8ca11d673572f5217f4ccc47f1b77c23c05e5b852c2872b8a5cb` |
+| `.local/browser-accounts/xhs-9653254890/Local State` | 4331 | `sha256:eeae50824007cf77bf8b0c06d585e0b646070a61b1fb21fabf747ff0ac30c04d` |
+| `.local/browser-accounts/xhs-9653254890/ShaderCache/data_0` | 8192 | `sha256:d6a5fe39cd672781b256e0e3102f7022635f1d4bb7cfcc90a80fffe4d0f3877e` |
+| `.local/browser-accounts/xhs-9653254890/ShaderCache/data_1` | 270336 | `sha256:c5e8d08d038510f22c3d6c03dd965a71195ad73577cbacefe02419c296fd6651` |
+| `.local/browser-accounts/xhs-9653254890/ShaderCache/data_2` | 8192 | `sha256:ec1702806f4cc7c42a82fc2b38e89835fde7c64bb32060e0823c9077ca92efb7` |
+| `.local/browser-accounts/xhs-9653254890/ShaderCache/data_3` | 8192 | `sha256:e09f42c398d688dce168570291f1f92d079987deda3099a34adb9e8c0522b30c` |
+| `.local/browser-accounts/xhs-9653254890/ShaderCache/index` | 262512 | `sha256:5f76f154e805965968b1e03f60ef5ad562e01a8ab51aa67ca10f8f795eedd5a8` |
+| `.local/browser-accounts/xhs-9653254890/Variations` | 85 | `sha256:b26da4f8c7e283aa74386da0229d66af14a37986b8ca828e054fc932f68dd557` |
+| `.local/browser-accounts/xhs-9653254890/component_crx_cache/metadata.json` | 13 | `sha256:2771d13c637c267132afff9db67537bef95708534b79ae8d954254c4e64e4e0f` |
+| `.local/browser-accounts/xhs-9653254890/extensions_crx_cache/metadata.json` | 13 | `sha256:2771d13c637c267132afff9db67537bef95708534b79ae8d954254c4e64e4e0f` |
+| `.local/browser-accounts/xhs-9653254890/first_party_sets.db` | 49152 | `sha256:26f8fe3f8bcf53299122fe4d747ab8b2cb52ffec81606eb38d748afe2683980f` |
+| `.local/browser-accounts/xhs-9653254890/first_party_sets.db-journal` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
+| `.local/browser-accounts/xhs-9653254890/segmentation_platform/ukm_db` | 49152 | `sha256:78b251e48dea6b1fa3defffc3cec84ae750830e448596ff4ee46f3d23d606b27` |
+| `.local/browser-accounts/xhs-9653254890/session.json` | 179 | `sha256:8a6d238073da7de3e3144e89d6a5dda7c7741663d7b3fc395bc4f30c28b42d39` |
 | `AI跨境技术内容自动化工作流开发清单_LangGraph_V3.md` | 16550 | `sha256:69b0456e3ddb232b6a4ce4f33cf8505b791b390c9a9fbffc1a9516c632d0e59c` |
 | `AI跨境技术内容自动化工作流开发清单_审计与优化版.md` | 178643 | `sha256:779643afe11e18fc62beae09576f2df517675349a02b78129ec42aecfdf7ed87` |
 | `CODEOWNERS` | 514 | `sha256:152da1963e31d07517b9c4cafaa9b8b497111d7c9df309345a96f9c63e7c0052` |
@@ -762,12 +1155,13 @@ Formal runtime source was detected under apps/modules/services/src:
 | `adapters/manual/README.md` | 273 | `sha256:d59bef0fc5f4a9cc268df05437b9ce4ee8f4242ecca67fee326bb5e4e7b87195` |
 | `adapters/xiaohongshu/__init__.py` | 75 | `sha256:bf99d42faa7c125384db75b10d0f90c78a4f212c45b18eb9df7d94f0aee7f39c` |
 | `adapters/xiaohongshu/browser.py` | 3494 | `sha256:6a191fda087fdf6b55bd5c017909cd9582aeb67093d5dbf17375c2cdda2ff263` |
+| `adapters/xiaohongshu/session.py` | 1402 | `sha256:bae6960d6c0b126947bf770b7a414ca64d038ab2fd2d34a425e141a0d16d67a0` |
 | `alembic.ini` | 576 | `sha256:43cb71b556fae313d03aea59033aab50e46b03d00c5e6857bfd90a920b508247` |
 | `apps/__init__.py` | 62 | `sha256:1cdc47f24c4d8980cd92e816bb63a156ef30cad06aa12d1af84d407bb740c579` |
 | `apps/api/README.md` | 446 | `sha256:00ee4c3fb0d3bdf46ad5086e7ebd73e9b2da477d860283c09b90cbfb92c0ba51` |
 | `apps/api/__init__.py` | 32 | `sha256:28c766504a198d3c17832b792c4924608f4a4fda643c7c3a22f440390f761ba5` |
 | `apps/api/__main__.py` | 161 | `sha256:bae5b4c98263891c73bb5a0ac56635e07eab1321074660c1b1b94dcfffb55ffc` |
-| `apps/api/main.py` | 97538 | `sha256:d86351df9d4e187228d5238bd7b8c24fd1d08c9b8512abf394f129e6cf3e25b2` |
+| `apps/api/main.py` | 99903 | `sha256:8d0f0d67a61d5dd83fa20189d9ca7dac33c2a4a229d04376aacec8ae662a6462` |
 | `apps/knowledge-site/README.md` | 2283 | `sha256:4b2c9d85f876a568737f6a8348461f7ced28bf747c9797aec7aa30c44d8b6a60` |
 | `apps/knowledge-site/package.json` | 170 | `sha256:32d859006b73671808cad8fd910f1db1532d65e8b5a9fd6e1f13f07d0f960238` |
 | `apps/knowledge-site/pnpm-lock.yaml` | 114 | `sha256:17c814b167307942d3609c7b9d916ceddb85839573ab39baa114e30edb132a1a` |
@@ -788,7 +1182,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `apps/web-console/package.json` | 167 | `sha256:9b5d3d2153ac4164c691902f80b75a3911a4be54f82b3579b9f6f39e078f3066` |
 | `apps/web-console/pnpm-lock.yaml` | 114 | `sha256:17c814b167307942d3609c7b9d916ceddb85839573ab39baa114e30edb132a1a` |
 | `apps/web-console/scripts/build.mjs` | 851 | `sha256:eae2a2b621e5162dde56ffc02b716fc21c71146456cb69cf7bfdd23727030609` |
-| `apps/web-console/src/index.html` | 50338 | `sha256:e457ba176ccfbfd585ae27755334fb8e780715353bfd075310511848728f3f15` |
+| `apps/web-console/src/index.html` | 53035 | `sha256:ca36eb7247decc5505fc6152a80c8ab7697aa5a4d05de89d167b3021fbca62e1` |
 | `apps/worker/README.md` | 843 | `sha256:585eb3815e3271923e72d2c66325ce36be5af3c66135774cb734008315742021` |
 | `apps/worker/__init__.py` | 31 | `sha256:53da4abf7d557e2589aa76efd85c921469f44127a4035ec9f6c2f6361484ee76` |
 | `apps/worker/__main__.py` | 81 | `sha256:954eaddc192523ee47f44769ae571e58baf451c0e67d752edd3874b6393600d0` |
@@ -1204,7 +1598,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `docs/workflows/README.md` | 217 | `sha256:b5669edc2191f6b372a613724dfca501f25f27895f95dc03b8a9e1abdb520432` |
 | `docs/平台发布接口调研与小红书迁移方案.md` | 9782 | `sha256:8db75f0b90c032aad393d5e81dbbdbb1d7e9145571171c7c4b5bcd9719e62aed` |
 | `docs/真实账号自动化运营操作手册.md` | 11028 | `sha256:43a63706e741735c56f4f5c623f14ede0d5d5a8517ea4e71964ef37bcf4cb12f` |
-| `docs/网页管理后台测试说明.md` | 4480 | `sha256:abc6b167ab7a9b7bb717e5d5803c35097cb88291f282801d179fd022a8de0026` |
+| `docs/网页管理后台测试说明.md` | 5492 | `sha256:ef28353dd0599108cc3e1edae20cda13cd3473978b7adfac7aad2598e6231d48` |
 | `docs/项目开发进度汇报.html` | 22811 | `sha256:c72aa190ceb786c7bd0f77f05a028391c81defdf41006b303565964b4b3b36e2` |
 | `infra/__init__.py` | 47 | `sha256:8517a486e9a61a8d1e10284f75abe76808de8d787a0422021f07ba28d935cc82` |
 | `infra/compose/README.md` | 434 | `sha256:1e161168885e43eef8aa36e0db56f7c3efeb1017f724da61d6ff2dd4889f20e7` |
@@ -1388,7 +1782,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `modules/media/application/.gitkeep` | 1 | `sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b` |
 | `modules/media/domain/.gitkeep` | 1 | `sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b` |
 | `modules/media/infrastructure/.gitkeep` | 1 | `sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b` |
-| `modules/media/local_demo_generator.py` | 1953 | `sha256:c8f5ec39b0c8bcd8f27cd77bfb723c8a95cfb985840b049453bc4acf37d04227` |
+| `modules/media/local_demo_generator.py` | 3186 | `sha256:17eb781f36cdadd86208695aa4b7748d843e14b1b54b175b7dff70f78370c206` |
 | `modules/media/media_asset_lineage_service.py` | 24465 | `sha256:79a16fa7e2b28cc9b47282249b519b49d5ab2cd4ae3009497d8c11b79025b77d` |
 | `modules/media/media_content_qa_service.py` | 28524 | `sha256:3ddaa2a53acd45d66b44e91ada1ad78be7cf708875c3147e21be1ff3e4663840` |
 | `modules/media/media_qa_service.py` | 49251 | `sha256:3faece39e75e66b33f37061c4f1ecf00536e1034f45eb5fa5907e44c3e9245c3` |
@@ -2058,7 +2452,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `scripts/check_task_card_precision.py` | 1912 | `sha256:5b99576f9835a65c80c4a5d5a27c0548583de128187b40e0965597d107d8803b` |
 | `scripts/check_task_card_registry_refs.py` | 1484 | `sha256:a70eafc3d989942f0fa9e61a27e14d69b5252989f8c1608cd4b8fa6d17fb0c2d` |
 | `scripts/check_v3_completion_evidence.py` | 2360 | `sha256:2de829da51edbf44fa23689490a26e2b9e0a41823c64321b4f2ddf27cf47bfde` |
-| `scripts/generate-demo-content.py` | 622 | `sha256:cac454964730e5ea74579c7648cdb93218bde2bdd56af28c9b7fd3fadf0dd7b8` |
+| `scripts/generate-demo-content.py` | 714 | `sha256:3e5cfbb11a4974059f8ad226d664fb38f428132bdbd4d1152e2fcfb74f39421e` |
 | `scripts/generate_contract_manifest.py` | 3362 | `sha256:acbaf418c94899097ae599b1b8663924670b7065d44f7b6d1e3f5c6ff2d02875` |
 | `scripts/generate_event_compatibility_baseline.py` | 2492 | `sha256:bd02e5bbfa525130241ef76058143fa1c1af21070bab2aeeb1c08e79afb6ec0f` |
 | `scripts/generate_event_registry.py` | 7672 | `sha256:0d71e7126aba7c710adc2bec94812b6c2e232e1762b85b8155b8b61e7d65c499` |
@@ -2067,13 +2461,14 @@ Formal runtime source was detected under apps/modules/services/src:
 | `scripts/generate_state_registry.py` | 1959 | `sha256:853590fcb2159809a39bc09dd7ae3d8541ded167e8722f387292ed4e0d5b7b73` |
 | `scripts/generate_task_cards.py` | 3336 | `sha256:c1a41746312aba12ce1130d839dc02f406385a550a37cb9101873a3be770a3f9` |
 | `scripts/generate_task_registry.py` | 58473 | `sha256:ca307184e7be636e690103f7ea6702d761bded25009fbb0a21e7cb8b84321539` |
+| `scripts/prepare-xhs-draft.py` | 4053 | `sha256:a9515f003d2602153732c0d4b21f3d340236a30f3c7153e141347073a5faf9e4` |
 | `scripts/repo_inventory.py` | 18599 | `sha256:9f075bb427614a87a51bc6f98497d6392c07fd34055eb062fc86ad62b2c47eb6` |
 | `scripts/restart-web-console.ps1` | 579 | `sha256:3b7737c04b2b62199a5f23b2f3e7f111d8cd26fec75607e4600d1cd0f95319e3` |
 | `scripts/smoke_foundation.py` | 1554 | `sha256:d4943f9fc0c2899145f5ca99dfa31ef181ff4fcd9e72e17217376de0e5c67c46` |
 | `scripts/start-web-console.ps1` | 503 | `sha256:92aff9444fadfd270a3e152c8bd8a8a3d4d4cbdf6a68d2693f18ea4e610a0866` |
 | `scripts/start-workflow.ps1` | 733 | `sha256:b1a2ba5cdc41b95b43ac61f0cedac0796574f98a3906afe2a6e1707206d284ea` |
 | `scripts/start-xhs-login.ps1` | 167 | `sha256:0f418e9a703934fefad8ea2d83f623eb544f4e7db29ee5b0b64cc1a51fb67cc5` |
-| `scripts/start-xhs-login.py` | 1559 | `sha256:df23b58022ce2622a02fd2fd509cbb2fa08707ff16483926892ec1fd265a405a` |
+| `scripts/start-xhs-login.py` | 2385 | `sha256:cb89b1b7a27201cf137ad4f8827f7bdb827ac924e53f76a37a74e342bea99ed4` |
 | `tests/accessibility/README.md` | 243 | `sha256:67b53f18b556cac2dfb0a1f0aa5a2828967494b724bcb2401ad100cf74fdef8c` |
 | `tests/accessibility/test_site_004.py` | 3301 | `sha256:551f4759f6d8dbf1eb19413fdde54d08b3ae46882095c53e1cdc3069fe84098d` |
 | `tests/contract/test_analytics_001_contract.py` | 4987 | `sha256:c02b2c8a8b5bb96cdb2660843d421886d2f57dd366035dc6fc1db4eba479fade` |
@@ -2203,6 +2598,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `tests/integration/test_iam_core_001_api.py` | 1363 | `sha256:c3283404357af43840ae92229afb6be3dd697231ee7b906e9efe968077a8fc82` |
 | `tests/integration/test_knowledge_api.py` | 3904 | `sha256:de3313811517038a210eb93fae4e782fadd8878721d1ce6ebcea2c83873716b7` |
 | `tests/integration/test_knowledge_core_api.py` | 4321 | `sha256:a36ada0937a51554ff631ede84a41f52a677f1f8733a6ac0b5d455ecc1d4f699` |
+| `tests/integration/test_local_draft_api.py` | 906 | `sha256:a5e217f7b84ea675100033fd54d9bca918888ee60ebf81a821fb7d69c4cee52c` |
 | `tests/integration/test_local_recovery_drill.py` | 3886 | `sha256:1569e5e166abcc5256ad4484d42ac24440917313f19063679cbb108736110f61` |
 | `tests/integration/test_media_001.py` | 6752 | `sha256:29f7feaaa7ee8c0f1b036b1a8f81eaf80a7578658fb604c04c7a6abf8d51bf34` |
 | `tests/integration/test_media_001_migration.py` | 8617 | `sha256:17bab71f8fc760ec9c56c4bbaec08da605b86cce643525b879ae798c121b1033` |
