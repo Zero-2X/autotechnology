@@ -40,6 +40,7 @@ from modules.provenance import (
 )
 from modules.knowledge import KnowledgeCoreService, KnowledgeError, KnowledgeService
 from modules.canonical_content import CanonicalContentError, CanonicalContentService
+from adapters.xiaohongshu.session import read_session_status
 
 
 SERVICE_NAME = "api"
@@ -164,6 +165,14 @@ def create_app(
             content=metrics.prometheus_text(),
             media_type="text/plain; version=0.0.4",
         )
+
+    @app.get("/internal/xhs/accounts/{account_key}/session", tags=["internal"])
+    def xhs_session(account_key: str) -> dict[str, Any]:
+        """Return redacted local browser-session state; never returns cookies or tokens."""
+        try:
+            return success_response(read_session_status(account_key))
+        except (ValueError, OSError, json.JSONDecodeError) as exc:
+            raise HTTPException(status_code=400, detail={"code": "INVALID_XHS_ACCOUNT", "message": str(exc)}) from exc
 
     @app.post("/internal/outbox/dispatch", tags=["internal"], include_in_schema=False)
     def dispatch_outbox(

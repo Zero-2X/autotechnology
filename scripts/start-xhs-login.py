@@ -7,6 +7,7 @@ from pathlib import Path
 
 import playwright
 from playwright.async_api import async_playwright
+from adapters.xiaohongshu.session import write_session_status
 
 
 def _installed_chromium() -> str | None:
@@ -37,8 +38,8 @@ async def main(account_key: str) -> None:
         print('浏览器已打开。请由账号持有人完成登录、扫码或验证码；不要把验证码发给程序。')
         print('登录完成后返回此终端按 Enter，程序只保存该账号的浏览器会话目录。')
         await asyncio.to_thread(input)
-        print({'account_key': account_key, 'url': page.url, 'session_dir': str(state_dir),
-               'publish_performed': False})
+        payload = write_session_status(account_key, url=page.url)
+        print({**payload, 'session_dir': str(state_dir)})
         await context.close()
 
 
