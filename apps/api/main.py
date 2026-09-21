@@ -44,6 +44,7 @@ from modules.knowledge import KnowledgeCoreService, KnowledgeError, KnowledgeSer
 from modules.canonical_content import CanonicalContentError, CanonicalContentService
 from adapters.xiaohongshu.session import read_session_status
 from modules.media.local_demo_generator import generate_cover_svg, generate_demo_content
+from modules.support.local_reply_generator import generate_local_reply
 
 
 SERVICE_NAME = "api"
@@ -209,6 +210,22 @@ def create_app(
             "source": "local-template",
             "model_used": False,
         })
+
+    @app.post("/internal/support/replies:generate", tags=["internal"])
+    def generate_local_reply_draft(command: dict[str, Any] | None = None) -> dict[str, Any]:
+        payload = command or {}
+        message = str(payload.get("message", "")).strip()
+        if not message or len(message) > 2000:
+            raise HTTPException(status_code=400, detail={"code": "INVALID_SUPPORT_MESSAGE", "message": "message is required and must be <= 2000 characters"})
+        try:
+            result = generate_local_reply(
+                message,
+                intent=str(payload.get("intent", "question")),
+                risk=str(payload.get("risk", "low")),
+            )
+        except ValueError as exc:
+            raise HTTPException(status_code=400, detail={"code": "INVALID_SUPPORT_MESSAGE", "message": str(exc)}) from exc
+        return success_response(result)
 
     @app.post("/internal/outbox/dispatch", tags=["internal"], include_in_schema=False)
     def dispatch_outbox(

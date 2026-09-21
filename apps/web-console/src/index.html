@@ -90,6 +90,15 @@ setInterval(async()=>{try{const base=state.settings.apiBase.replace(/\/$/,'');co
       save();closeModal();renderAll();showView('content');toast('草稿、话题和封面已生成，等待审批');
     },true);
     const coverObserver=new MutationObserver(()=>{$$('#contentGrid .content-card').forEach(card=>{if(card.querySelector('[data-cover-preview]'))return;const heading=card.querySelector('h3');const record=state.contents.find(c=>c.title===heading?.textContent);if(record?.coverData){const image=document.createElement('img');image.src=record.coverData;image.alt='草稿封面预览';image.dataset.coverPreview='true';image.style.cssText='width:100%;height:150px;object-fit:cover;border-radius:14px;margin-bottom:12px';card.prepend(image)}})});coverObserver.observe($('#contentGrid'),{childList:true});
+    document.addEventListener('click',e=>{
+      if(e.target.id!=='draftReplyBtn')return;
+      e.preventDefault();e.stopImmediatePropagation();
+      const thread=state.inbox.find(x=>x.id===currentThread);
+      if(!thread)return toast('请先选择会话');
+      if(thread.risk==='high'){thread.status='escalated';save();renderInbox();return toast('高风险会话已转人工')}
+      thread.reply=thread.intent==='feedback'?'感谢你的建议，我们会把这条反馈加入后续内容和产品迭代记录。':'感谢你的提问。可以先从一个主题、一个账号和人工审核流程开始，再逐步扩大范围。';
+      save();renderInbox();toast('客服回复草稿已生成，尚未发送');
+    },true);
   </script>
 </body>
 </html>
