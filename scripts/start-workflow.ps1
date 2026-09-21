@@ -1,4 +1,4 @@
-param([int]$WebPort = 8765, [int]$ApiPort = 8000)
+param([int]$WebPort = 8766, [int]$ApiPort = 8000)
 $ErrorActionPreference = 'Stop'
 $root = Split-Path $PSScriptRoot -Parent
 $console = Join-Path $root 'apps\web-console'
