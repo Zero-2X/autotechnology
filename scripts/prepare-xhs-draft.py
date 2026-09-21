@@ -25,7 +25,7 @@ def _installed_chromium() -> str | None:
     return str(sorted(candidates, reverse=True)[0]) if candidates else None
 
 
-async def main(account_key: str) -> None:
+async def main(account_key: str, manual_editor: bool = False) -> None:
     root = Path(__file__).resolve().parents[1]
     profile = root / '.local' / 'browser-accounts' / account_key
     cover = root / '.tmp' / 'generated-content' / 'cover.png'
@@ -54,6 +54,9 @@ async def main(account_key: str) -> None:
             if await image_tab.count() == 1:
                 await image_tab.click()
         await page.wait_for_timeout(1500)
+        if manual_editor and await page.locator('input[type="file"]').count() != 1:
+            print('请在已打开的小红书窗口中手动进入“图文”编辑器，完成后回到此终端按 Enter。')
+            await asyncio.to_thread(input)
         try:
             result = await XiaohongshuDraftPreparer().prepare(page=page, note=note, bound_account_key=account_key)
         except BrowserPreparationError as exc:
@@ -72,4 +75,6 @@ async def main(account_key: str) -> None:
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--account-key', default='xhs-9653254890')
-    asyncio.run(main(parser.parse_args().account_key))
+    parser.add_argument('--manual-editor', action='store_true', help='允许运营人员先手动打开图文编辑器')
+    args = parser.parse_args()
+    asyncio.run(main(args.account_key, args.manual_editor))
