@@ -71,5 +71,24 @@
 document.addEventListener('click',e=>{if(e.target.closest('[data-account-action="connect"]')){setTimeout(()=>{const body=$("#modalBody");if(body&&!body.querySelector('[data-login-launch]')){const link=document.createElement('a');link.href='https://creator.xiaohongshu.com/';link.target='_blank';link.rel='noreferrer';link.dataset.loginLaunch='true';link.className='ghost-btn';link.textContent='打开小红书登录页（独立会话）';body.appendChild(link);const hint=document.createElement('p');hint.className='small-code';hint.textContent='登录由账号持有人完成；登录后请回到本地脚本确认，页面不会保存密码或验证码。';body.appendChild(hint)}},0)}});
 setInterval(async()=>{try{const base=state.settings.apiBase.replace(/\/$/,'');const r=await fetch(`${base}/internal/xhs/accounts/xhs-9653254890/session`);if(!r.ok)return;const payload=(await r.json()).data;if(payload.status==='connected'){const account=state.accounts.find(a=>a.id==='xhs-demo-01');if(account&&account.status!=='connected'){account.status='connected';account.health='登录会话已保存';save();if($('#view-accounts').classList.contains('active'))renderAccounts();toast('小红书登录会话已连接')}}}catch{}} ,3000);
   </script>
+  <script>
+    // Local fallback generation keeps the content workflow usable while the model provider is unavailable.
+    document.addEventListener('click',e=>{
+      if(e.target.id!=='confirmModal'||modalMode!=='content')return;
+      e.preventDefault();e.stopImmediatePropagation();
+      const topic=$('#modalContentTitle').value.trim();
+      if(!topic)return toast('请填写选题或内容要求');
+      const account=$('#modalContentAccount').value;
+      const pillar=$('#modalContentPillar').value.trim()||'AI 工程';
+      const clean=topic.replace(/\s+/g,' ');
+      const title=`${clean.slice(0,28)}：一份可执行的实践清单`;
+      const body=`给 AI 工程团队的一个小结：围绕“${clean}”，先把目标、素材、审核和发布回查拆开。\n\n建议先做单账号、小批量、人工确认；每次发布都保存内容版本、素材来源和平台回执。\n\n这样可以先验证内容质量，再逐步增加账号和自动化动作。`;
+      const hashtags=['#AI工程','#内容运营','#工作流'];
+      const coverSvg=`<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200"><rect width="900" height="1200" rx="48" fill="#f7efe3"/><circle cx="760" cy="150" r="130" fill="#f4b183" opacity=".8"/><rect x="70" y="72" width="160" height="44" rx="22" fill="#112033"/><text x="96" y="103" fill="white" font-size="22">运营中枢</text><text x="90" y="280" fill="#112033" font-size="56" font-weight="700">${esc(clean.slice(0,13))}</text><text x="90" y="372" fill="#112033" font-size="56" font-weight="700">${esc(clean.slice(13,26))}</text><text x="90" y="1030" fill="#536171" font-size="26">单账号试点 · 人工审核 · 可回查</text></svg>`;
+      const id=`CNT-${String(Date.now()).slice(-5)}`;
+      state.contents.unshift({id,title,pillar,account,status:'review',version:'v1',updated:'刚刚',body:`${body}\n\n${hashtags.join(' ')}`,hashtags,coverData:`data:image/svg+xml;charset=utf-8,${encodeURIComponent(coverSvg)}`,source:'local-template'});
+      save();closeModal();renderAll();showView('content');toast('草稿、话题和封面已生成，等待审批');
+    },true);
+  </script>
 </body>
 </html>

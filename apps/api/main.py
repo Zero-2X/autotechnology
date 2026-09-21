@@ -8,6 +8,7 @@ from __future__ import annotations
 from datetime import datetime, timezone
 import json
 import os
+from pathlib import Path
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -42,6 +43,7 @@ from modules.provenance import (
 from modules.knowledge import KnowledgeCoreService, KnowledgeError, KnowledgeService
 from modules.canonical_content import CanonicalContentError, CanonicalContentService
 from adapters.xiaohongshu.session import read_session_status
+from modules.media.local_demo_generator import generate_cover_svg, generate_demo_content
 
 
 SERVICE_NAME = "api"
@@ -183,6 +185,30 @@ def create_app(
             return success_response(read_session_status(account_key))
         except (ValueError, OSError, json.JSONDecodeError) as exc:
             raise HTTPException(status_code=400, detail={"code": "INVALID_XHS_ACCOUNT", "message": str(exc)}) from exc
+
+    @app.post("/internal/content/drafts:generate", tags=["internal"])
+    def generate_local_draft(command: dict[str, Any] | None = None) -> dict[str, Any]:
+        """Generate a deterministic draft and cover while an LLM provider is unavailable."""
+        payload = command or {}
+        topic = str(payload.get("topic", "")).strip()
+        audience = str(payload.get("audience", "AI 工程团队")).strip() or "AI 工程团队"
+        if not topic or len(topic) > 120:
+            raise HTTPException(status_code=400, detail={"code": "INVALID_DRAFT_TOPIC", "message": "topic is required and must be <= 120 characters"})
+        try:
+            content = generate_demo_content(topic, audience=audience)
+            cover_path = Path(".tmp") / "generated-content" / "api-cover.svg"
+            generate_cover_svg(content, cover_path)
+            cover_svg = cover_path.read_text(encoding="utf-8")
+        except (OSError, ValueError) as exc:
+            raise HTTPException(status_code=500, detail={"code": "LOCAL_DRAFT_GENERATION_FAILED", "message": str(exc)}) from exc
+        return success_response({
+            "title": content.title,
+            "body": content.body,
+            "hashtags": list(content.hashtags),
+            "cover_svg": cover_svg,
+            "source": "local-template",
+            "model_used": False,
+        })
 
     @app.post("/internal/outbox/dispatch", tags=["internal"], include_in_schema=False)
     def dispatch_outbox(
