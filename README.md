@@ -43,6 +43,14 @@ python scripts/check_openapi_contract.py
 python scripts/check_foundation_contracts.py
 ```
 
+## 本地运营后台
+
+```powershell
+.\scripts\start-workflow.ps1
+```
+
+默认打开 `http://127.0.0.1:8766/`，同时启动 API。内容工作室可以在模型服务不可用时生成本地标题、正文、话题标签和封面；客服收件箱可以生成低风险回复草稿，高风险消息自动转人工。小红书登录会话使用独立本机浏览器目录保存，发布准备脚本会停在最终发布按钮前。
+
 ## 任务流程
 
 一次只实现一个精确 TASK-ID。开始前读取任务卡、注册表、ADR、契约和当前清点；
