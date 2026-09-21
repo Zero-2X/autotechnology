@@ -53,7 +53,10 @@ async def main(account_key: str, manual_editor: bool = False) -> None:
             image_tab = page.get_by_text('图文', exact=True)
             if await image_tab.count() == 1:
                 await image_tab.click()
-        await page.wait_for_timeout(1500)
+        await asyncio.sleep(1.5)
+        if page.is_closed():
+            page = await context.new_page()
+            await page.goto('https://creator.xiaohongshu.com/publish/publish', wait_until='domcontentloaded')
         if manual_editor and await page.locator('input[type="file"]').count() != 1:
             print('请在已打开的小红书窗口中手动进入“图文”编辑器，完成后回到此终端按 Enter。')
             await asyncio.to_thread(input)
