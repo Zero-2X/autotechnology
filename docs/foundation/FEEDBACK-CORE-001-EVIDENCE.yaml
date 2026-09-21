@@ -1,0 +1,20 @@
+task_id: FEEDBACK-CORE-001
+status: done
+trace_id: 9b53e2f7-6a04-4d18-b245-feedback001
+actor: team/feedback
+registry_ref: docs/task-registry.yaml
+verification:
+  tests:
+    - py -3.12 -m pytest tests/unit/feedback -q
+  result: 3 passed
+  checks:
+    - py -3.12 scripts/check_task_card_precision.py --task FEEDBACK-CORE-001 --strict
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_migrations.py
+  observation_metric_discriminator: enforced
+  tenant_scoped_ids: enforced
+  scoring_version: schema-backed
+side_effects:
+  real_platform_data: false
+  real_credentials: false
+  external_publication: false

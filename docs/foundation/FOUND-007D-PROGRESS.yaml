@@ -1,0 +1,16 @@
+task_id: FOUND-007D
+status: done
+final_evidence: docs/foundation/FOUND-007D-EVIDENCE.yaml
+verified_increment:
+  targeted_command: python -m pytest tests/contract/test_found_007d_approval_schema.py tests/contract/test_found_007d_core_schemas.py tests/contract/test_found_007d_observation_binding.py -q
+  targeted_result: 51 passed
+  core_objects_registered: 49
+  previous_full_suite: 206 passed, 2 skipped before approval quorum constraints
+  skip_reason: pnpm unavailable for two static entry build tests
+remaining_in_overall_audit_not_in_007d:
+  - Re-audit prior completed foundation tasks, including reported compatibility checker gaps.
+  - Resolve database bootstrap and worker failure-composition findings before claiming those runtime capabilities.
+  - Only proceed to the next planned task after the current task acceptance and prior-work review.
+scope:
+  - All tests use synthetic fixtures; no model or real platform calls.
+  - Contract binding is not database authorization or storage implementation.

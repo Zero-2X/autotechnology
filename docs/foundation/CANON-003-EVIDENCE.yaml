@@ -1,0 +1,28 @@
+task_id: CANON-003
+status: done
+implementation:
+  module: modules/canonical_content/service.py
+  contracts:
+    - packages/contracts/jsonschema/canonical-content-version.schema.json
+  migration: packages/db/migrations/versions/20260918_canon_003.py
+  stored_snapshot_fields:
+    - topic_brief_status
+    - topic_brief_lock_hash
+    - input_snapshot_hash
+  behaviors:
+    - tenant_scoped_locked_or_approved_topic_brief_gate
+    - topic_brief_required_failure_before_write
+    - reproducible_brief_input_snapshot
+verification:
+  commands:
+    - py -3.12 -m pytest tests/unit/canonical_content tests/integration/test_canonical_content_api.py -q
+    - py -3.12 scripts/check_json_schemas.py
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 scripts/check_migrations.py --strict --json
+    - py -3.12 scripts/check_task_card_precision.py --task CANON-003 --strict
+  results:
+    targeted_tests: 6 passed
+    schema_errors: 0
+    architecture_errors: 0
+    migration_errors: 0
+    precision_gaps: 0

@@ -1,0 +1,62 @@
+task_id: GEO_CONTENT-003
+status: done
+trace_id: 55618e3a-a0dc-44ec-a001-000000000054
+actor: team/geo_content
+predecessors: [FOUND-009, PROD-002, GEO_CONTENT-002]
+external_dependencies: []
+artifacts:
+  implementation:
+    - modules/geo_content/__init__.py
+    - modules/geo_content/runs.py
+    - modules/geo_content/README.md
+  contracts:
+    - packages/contracts/jsonschema/geo-run.schema.json
+  migration:
+    - packages/db/migrations/versions/20260920_geo_content_003.py
+  tests:
+    - tests/unit/geo_content/test_geo_run_service.py
+    - tests/integration/test_geo_content_003.py
+    - tests/contract/test_geo_content_003_contract.py
+  task_spec:
+    - docs/tasks/GEO_CONTENT-003.md
+verification:
+  focused_command: python -m pytest tests/unit/geo_content/test_geo_run_service.py tests/integration/test_geo_content_003.py tests/contract/test_geo_content_003_contract.py -q
+  focused_result: 22 passed
+  module_regression_command: python -m pytest tests/unit/geo_content tests/integration/test_geo_content_001.py tests/integration/test_geo_content_002.py tests/integration/test_geo_content_003.py tests/contract/test_geo_content_002_contract.py tests/contract/test_geo_content_003_contract.py -q
+  module_regression_result: 66 passed
+  task_precision: scoped=1 precise=1 gaps=0
+  task_card_refs: checked=157 errors=0
+  schema_check: schema_errors=0
+  architecture_check: architecture_errors=0
+  migration_graph_check: revision_count=102; head=20260920_geo_content_003; errors=0
+  migration_upgrade_and_downgrade: passed
+  full_command: python -m pytest -q
+  full_result: 861 passed, 2 warnings
+  inventory_check: inventory valid
+  plan_consistency: validated=157; errors=0; planned warnings only
+  secrets_check: secret_findings=0
+  ci_configuration_check: ci_configuration_errors=0
+  lockfile_check: lockfile_errors=0
+  event_compatibility_check: events=167 baseline_events=162 errors=0 warnings=5
+  foundation_smoke: smoke_ok architecture api_liveness tenant_isolation
+  openapi_contract_check: paths=31 operations=32 exit=0
+  openapi_compatibility_check: operations=32 baseline_operations=32 errors=0 warnings=0
+behavior:
+  tenant_scoped_fixture_and_run_access: true
+  nested_answer_fixture_tenant_guard: true
+  active_fixture_hash_validation: true
+  deterministic_multi_sampling: true
+  result_hash_deduplication: true
+  deterministic_confidence_aggregation: true
+  parser_input_output_and_result_hash_binding: true
+  idempotent_replay_across_clock_actor_trace_and_keys: true
+  idempotent_replay_after_fixture_retirement: true
+  unknown_results_fail_closed_to_manual_review: true
+  fake_geo_data_quality_estimated_only: true
+  raw_answer_persistence: false
+  adapter_error_details_redacted: true
+  direct_sql_in_geo_content: false
+  real_network_calls: false
+rollback:
+  - Stop new FakeGeo run commands and export existing runs, observation hashes and audit rows to the controlled evidence archive before database downgrade.
+  - Downgrade to 20260919_geo_content_002; geo_runs and its indexes/triggers are removed from the database while fixtures and earlier GEO content facts remain intact; use the export for later review.

@@ -1,0 +1,28 @@
+task_id: ANALYTICS-001
+status: done
+verification:
+  focused_command: python -m pytest tests/unit/analytics/test_metric_definition_service.py tests/integration/test_analytics_001_migration.py tests/contract/test_analytics_001_contract.py -q
+  focused_result: 10 passed
+  compatibility_regression: 143 passed across Foundation metrics/events/core schemas, Feedback contracts, and ANALYTICS-001
+  service_behaviors: nine canonical event families, full analytics payload validation, platform-source account gate, tenant/global metric scopes, immutable version snapshots, draft/active/retired lifecycle, replacement-only retirement, idempotency and optimistic concurrency
+  migration_test: SQLite full-chain upgrade/downgrade, scoped version uniqueness, append-only guards and invalid state rejection
+  postgresql_sql_emission: upgrade/downgrade SQL and trigger/function removal order verified offline
+  schemas: schema_errors=0
+  architecture: architecture_errors=0
+  migration_graph: revisions=116; head=20260920_analytics_001; errors=0
+  events: 176 current; 162 baseline; errors=0; 14 expected new-event warnings
+  task_refs: checked=157; errors=0
+  precision: scoped=93; precise=93; gaps=0
+  secrets: secret_findings=0
+  plan_consistency: validated 157 registry tasks against 157 Markdown checkbox tasks
+  inventory: refreshed after closure documentation; repository check valid; FOUND-000 inventory tests 6 passed
+  full_regression: 1011 passed; the only failure was the expected stale repository inventory fingerprint
+  postgresql_runtime: not verified against a live PostgreSQL database
+verified_boundaries:
+  - Stage 8 real account work remains gated by EXT-ACCOUNT-001; account-free stage 9 tasks no longer inherit that dependency by phase number.
+  - Fake/manual canonical events pass without account evidence, while source=platform returns EXT_ACCOUNT_UNAVAILABLE unless evidence is supplied.
+  - MetricDefinition content and snapshot hashes remain unchanged across lifecycle transitions; retirement requires a later active version in the same scope and key.
+  - Generic event consumers retain the aggregate-only payload boundary; the analytics service enforces the complete observation projection before ingestion.
+limitations:
+  - This task defines and validates event/metric configuration; Observation persistence and aggregation begin in ANALYTICS-002 and ANALYTICS-003.
+  - PostgreSQL behavior is verified through offline SQL generation and rollback ordering; live PostgreSQL execution remains unverified.

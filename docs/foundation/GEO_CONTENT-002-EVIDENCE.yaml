@@ -1,0 +1,58 @@
+task_id: GEO_CONTENT-002
+status: done
+trace_id: 55618e3a-a0dc-44ec-a001-000000000053
+actor: team/geo_content
+predecessors: [PROD-002, SITE-002, GEO_CONTENT-001]
+external_dependencies: []
+artifacts:
+  implementation:
+    - modules/geo_content/__init__.py
+    - modules/geo_content/fixtures.py
+    - modules/geo_content/sampling.py
+    - modules/geo_content/README.md
+  contracts:
+    - packages/contracts/jsonschema/geo-query-fixture.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_geo_content_002.py
+  tests:
+    - tests/unit/geo_content/test_fixture_service.py
+    - tests/integration/test_geo_content_002.py
+    - tests/contract/test_geo_content_002_contract.py
+  task_spec:
+    - docs/tasks/GEO_CONTENT-002.md
+verification:
+  focused_command: python -m pytest tests/unit/geo_content tests/integration/test_geo_content_001.py tests/integration/test_geo_content_002.py tests/contract/test_geo_content_002_contract.py -q
+  focused_result: 44 passed before GEO_CONTENT-003 tests were added
+  task_precision: scoped=1 precise=1 gaps=0
+  task_card_refs: checked=157 errors=0
+  schema_check: schema_errors=0
+  architecture_check: architecture_errors=0
+  migration_graph_check: revision_count=101; head=20260919_geo_content_002; errors=0
+  migration_upgrade_and_downgrade: passed
+  full_command: python -m pytest -q
+  full_result: pending
+  inventory_check: pending
+  secrets_check: secret_findings=0
+  ci_configuration_check: ci_configuration_errors=0
+  lockfile_check: lockfile_errors=0
+  event_compatibility_check: events=167 baseline_events=162 errors=0 warnings=5
+  foundation_smoke: smoke_ok architecture api_liveness tenant_isolation
+  openapi_contract_check: paths=31 operations=32 exit=0
+  openapi_compatibility_check: operations=32 baseline_operations=32 errors=0 warnings=0
+behavior:
+  tenant_scoped_fixtures_and_sampling: true
+  fixture_idempotent_replay: true
+  fixture_hash_integrity_and_unique_payload: true
+  append_only_lifecycle_and_version_guards: true
+  retire_reason_required: true
+  predecessor_fail_closed: true
+  nested_predecessor_tenant_guard: true
+  offline_deterministic_sampling: true
+  sampling_adapter_output_binding: true
+  unknown_results_require_manual_review: true
+  explicit_unknown_correctness_sets_unknown_flag: true
+  direct_sql_in_geo_content: false
+  real_network_calls: false
+rollback:
+  - Stop new fixture creation, lifecycle transitions and sampling commands while retaining append-only versions, events and audit evidence.
+  - Downgrade to 20260919_geo_content_001; only geo_query_fixtures and its indexes/triggers are removed, leaving GEO_CONTENT-001 facts intact.

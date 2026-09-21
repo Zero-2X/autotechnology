@@ -1,0 +1,24 @@
+task_id: FOUND-011
+status: done
+trace_id: 73b91f42-39ee-48b5-8800-15ceea9e0011
+actor: team/foundation
+baseline_ref: docs/foundation/architecture-guard-v1.yaml
+verification:
+  tests:
+    - py -3.12 -m pytest tests/contract/test_found_011_architecture_guard.py -q
+  result: 4 passed
+  checks:
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 scripts/smoke_foundation.py
+    - py -3.12 scripts/check_task_card_precision.py --task FOUND-011 --strict
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_migrations.py
+  architecture: current modules and apps pass; negative fixtures reject lateral imports, forbidden infrastructure imports, and direct writes
+  tenant_isolation: same FakeStorage instance rejects cross-org read and delete, isolates list, preserves owner data
+  smoke: architecture, API liveness, and tenant isolation passed without network
+  migration: no-op revision; no persistent state created
+  static_limit: variable-built SQL and reflective imports require code review and later integration tests
+side_effects:
+  network_access: false
+  real_credentials: false
+  external_publication: false

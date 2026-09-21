@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/analytics-kpi-snapshot.schema.json",
+  "title": "AnalyticsKpiSnapshot",
+  "$defs": {
+    "rate": {
+      "type": "object",
+      "properties": {
+        "numerator": {"type": "integer", "minimum": 0},
+        "denominator": {"type": "integer", "minimum": 0},
+        "value": {
+          "anyOf": [
+            {"type": "number", "minimum": 0, "maximum": 1},
+            {"type": "null"}
+          ]
+        }
+      },
+      "required": ["numerator", "denominator", "value"],
+      "additionalProperties": false
+    },
+    "cost": {
+      "type": "object",
+      "properties": {
+        "total_cents": {"type": "number", "minimum": 0},
+        "sample_count": {"type": "integer", "minimum": 0},
+        "average_cents": {
+          "anyOf": [
+            {"type": "number", "minimum": 0},
+            {"type": "null"}
+          ]
+        }
+      },
+      "required": ["total_cents", "sample_count", "average_cents"],
+      "additionalProperties": false
+    },
+    "attribution": {
+      "type": "object",
+      "properties": {
+        "total": {"type": "integer", "minimum": 0},
+        "attributed": {"type": "integer", "minimum": 0},
+        "qualified": {"type": "integer", "minimum": 0},
+        "attribution_rate": {
+          "anyOf": [
+            {"type": "number", "minimum": 0, "maximum": 1},
+            {"type": "null"}
+          ]
+        },
+        "total_value_cents": {"type": "number", "minimum": 0},
+        "by_channel": {
+          "type": "object",
+          "propertyNames": {"pattern": "^[a-z][a-z0-9_.-]{0,63}$"},
+          "additionalProperties": {"type": "integer", "minimum": 0}
+        }
+      },
+      "required": ["total", "attributed", "qualified", "attribution_rate", "total_value_cents", "by_channel"],
+      "additionalProperties": false
+    }
+  },
+  "type": "object",
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "window_start": {"type": "string", "format": "date-time"},
+    "window_end": {"type": "string", "format": "date-time"},
+    "region": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+    "locale": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+    "source_scope": {"type": "string", "enum": ["account_free", "all_verified"]},
+    "input_observation_ids": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {"type": "string", "format": "uuid"}
+    },
+    "input_snapshot_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "publication_success_rate": {"$ref": "#/$defs/rate"},
+        "manual_intervention_rate": {"$ref": "#/$defs/rate"},
+        "rights_rejection_rate": {"$ref": "#/$defs/rate"},
+        "translation_pass_rate": {"$ref": "#/$defs/rate"},
+        "answer_error_rate": {"$ref": "#/$defs/rate"},
+        "cost": {"$ref": "#/$defs/cost"},
+        "lead_attribution": {"$ref": "#/$defs/attribution"}
+      },
+      "required": [
+        "publication_success_rate",
+        "manual_intervention_rate",
+        "rights_rejection_rate",
+        "translation_pass_rate",
+        "answer_error_rate",
+        "cost",
+        "lead_attribution"
+      ],
+      "additionalProperties": false
+    },
+    "status": {"type": "string", "enum": ["complete", "insufficient_data"]},
+    "quality_issues": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {"type": "string", "pattern": "^[A-Z][A-Z0-9_]{2,127}$"},
+          "metric": {"type": "string", "minLength": 1},
+          "count": {"type": "integer", "minimum": 0}
+        },
+        "required": ["code", "metric", "count"],
+        "additionalProperties": false
+      }
+    },
+    "rule_version": {"const": "analytics-003.v1"},
+    "snapshot_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "created_by": {"type": "string", "format": "uuid"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "required": [
+    "id",
+    "org_id",
+    "window_start",
+    "window_end",
+    "region",
+    "locale",
+    "source_scope",
+    "input_observation_ids",
+    "input_snapshot_hash",
+    "metrics",
+    "status",
+    "quality_issues",
+    "rule_version",
+    "snapshot_hash",
+    "created_by",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "ANALYTICS-003"
+}

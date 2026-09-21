@@ -1,0 +1,29 @@
+task_id: TOPIC-003
+status: done
+implementation:
+  module: modules/topic/opportunity.py
+  contracts:
+    - packages/contracts/jsonschema/topic-opportunity.schema.json
+    - packages/contracts/jsonschema/topic-score-snapshot.schema.json
+  migration: packages/db/migrations/versions/20260918_topic_003.py
+  behaviors:
+    - immutable_scoring_version_and_recomputable_snapshot
+    - seven_component_explainable_score
+    - per_signal_rights_and_deduction_reasons
+    - active_canonical_topic_uniqueness
+    - human_shortlist_with_expected_version
+    - expired_opportunity_blocks_brief
+    - tenant_scoped_sqlite_persistence
+verification:
+  commands:
+    - py -3.12 -m pytest tests/unit/topic/test_opportunity.py tests/integration/test_topic_opportunity.py -q --disable-warnings --maxfail=1
+    - py -3.12 scripts/check_json_schemas.py
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 scripts/check_migrations.py --strict --json
+    - py -3.12 scripts/check_task_card_precision.py --task TOPIC-003 --strict
+  results:
+    targeted_tests: 5
+    schema_errors: 0
+    architecture_errors: 0
+    migration_errors: 0
+    precision_gaps: 0

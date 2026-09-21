@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/runtime-entry.schema.json",
+  "title": "runtime entry baseline",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["baseline_key", "baseline_version", "status", "entries", "global_constraints"],
+  "properties": {
+    "baseline_key": { "const": "runtime-entrypoints" },
+    "baseline_version": { "type": "integer", "const": 1 },
+    "status": { "type": "string", "enum": ["active", "superseded"] },
+    "entries": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["entry_key", "kind", "path", "command", "owner", "mode", "health", "external_side_effects", "forbidden_dependencies"],
+        "properties": {
+          "entry_key": { "type": "string", "enum": ["api", "worker", "scheduler", "web-console", "knowledge-site"] },
+          "kind": { "type": "string", "enum": ["backend", "frontend"] },
+          "path": { "type": "string", "pattern": "^apps/" },
+          "command": { "type": "string", "minLength": 1 },
+          "owner": { "const": "team/foundation" },
+          "mode": { "type": "string", "enum": ["composition_root", "static_build"] },
+          "health": { "type": "string", "enum": ["liveness_and_dependency_readiness", "dry_run_once", "build_manifest"] },
+          "external_side_effects": { "type": "boolean", "const": false },
+          "forbidden_dependencies": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 }
+          }
+        }
+      }
+    },
+    "global_constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["business_logic_in_entries", "real_credentials", "real_platform_calls", "database_required_for_dry_run"],
+      "properties": {
+        "business_logic_in_entries": { "type": "boolean", "const": false },
+        "real_credentials": { "type": "boolean", "const": false },
+        "real_platform_calls": { "type": "boolean", "const": false },
+        "database_required_for_dry_run": { "type": "boolean", "const": false }
+      }
+    }
+  }
+}

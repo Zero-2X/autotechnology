@@ -1,0 +1,22 @@
+task_id: WORKFLOW-CORE-002
+status: done
+trace_id: 9b53e2f7-6a04-4d18-b245-workflow002
+actor: team/workflow
+registry_ref: docs/task-registry.yaml
+verification:
+  tests:
+    - py -3.12 -m pytest tests/unit/workflow tests/integration/test_workflow_core_002_api.py -q
+  result: 7 passed
+  checks:
+    - py -3.12 scripts/check_task_card_precision.py --task WORKFLOW-CORE-002 --strict
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_migrations.py
+  workflow_run_statuses: planned, running, paused, succeeded, failed, cancelled
+  workflow_step_statuses: queued, running, waiting, succeeded, failed, cancelled
+  human_task_expiry: expires task and pauses run without auto-skip
+  version_conflict: enforced on run and human-task commands
+  outbox: workflow and human-task state changes recorded
+side_effects:
+  real_scheduler: false
+  real_credentials: false
+  external_publication: false

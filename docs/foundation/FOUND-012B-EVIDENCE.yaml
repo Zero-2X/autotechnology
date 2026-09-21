@@ -1,0 +1,23 @@
+task_id: FOUND-012B
+status: done
+trace_id: 693f4453-fd63-4d95-9e87-012b20260918
+actor: team/foundation
+registry_ref: docs/task-registry.yaml
+baseline_ref: docs/foundation/supply-chain-baseline-v1.yaml
+verification:
+  tests:
+    - py -3.12 -m pytest tests/contract/test_found_012b_supply_chain.py -q
+  result: 2 passed
+  checks:
+    - py -3.12 scripts/check_supply_chain.py --generate --output-dir .ci-artifacts
+    - py -3.12 scripts/check_supply_chain.py --output-dir .ci-artifacts
+    - py -3.12 scripts/check_task_card_precision.py --task FOUND-012B --strict
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_migrations.py
+  sbom: CycloneDX 1.5 from locked dependencies
+  scan: fail-closed deterministic policy, no findings
+  attestation: SHA-256 digest verified
+  production_image: none; publication disabled until signed artifact exists
+side_effects:
+  real_credentials: false
+  external_publication: false

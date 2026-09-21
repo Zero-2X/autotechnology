@@ -1,0 +1,44 @@
+catalog_key: api-error-codes
+catalog_version: 1
+status: active
+codes:
+  INVALID_CORRELATION_CONTEXT: { http_status: 400, retryable: false, category: validation, owner: foundation }
+  REQUEST_VALIDATION_ERROR: { http_status: 422, retryable: false, category: validation, owner: foundation }
+  INTERNAL_ERROR: { http_status: 500, retryable: false, category: internal, owner: foundation }
+  WORKER_ONLY: { http_status: 403, retryable: false, category: authorization, owner: foundation }
+  OUTBOX_NOT_CONFIGURED: { http_status: 503, retryable: true, category: dependency, owner: foundation }
+  INVALID_DISPATCH_COMMAND: { http_status: 400, retryable: false, category: validation, owner: foundation }
+  INVALID_CLAIM_COMMAND: { http_status: 400, retryable: false, category: validation, owner: foundation }
+  TASK_CLAIM_NOT_CONFIGURED: { http_status: 503, retryable: true, category: dependency, owner: foundation }
+  TASK_FAILURE_NOT_CONFIGURED: { http_status: 503, retryable: true, category: dependency, owner: foundation }
+  INVALID_TASK_FAILURE: { http_status: 400, retryable: false, category: validation, owner: foundation }
+  JOB_NOT_FOUND: { http_status: 404, retryable: false, category: not_found, owner: foundation }
+  JOB_NOT_CLAIMABLE: { http_status: 409, retryable: true, category: state, owner: foundation }
+  LEASE_TOKEN_INVALID: { http_status: 400, retryable: false, category: authorization, owner: foundation }
+  JOB_VERSION_CONFLICT: { http_status: 409, retryable: true, category: concurrency, owner: foundation }
+  JOB_LEASE_EXPIRED: { http_status: 400, retryable: true, category: state, owner: foundation }
+  TENANT_SCOPE_VIOLATION: { http_status: 403, retryable: false, category: authorization, owner: foundation }
+  INVALID_RETRY_COMMAND: { http_status: 400, retryable: false, category: validation, owner: foundation }
+  RETRY_NOT_ALLOWED: { http_status: 409, retryable: false, category: state, owner: foundation }
+  MAX_ATTEMPTS_EXCEEDED: { http_status: 409, retryable: false, category: state, owner: foundation }
+  UNKNOWN_RESULT_REQUIRES_REVIEW: { http_status: 409, retryable: false, category: review, owner: foundation }
+  REQUEUE_NOT_ALLOWED: { http_status: 409, retryable: false, category: state, owner: foundation }
+  INVALID_REQUEUE_COMMAND: { http_status: 400, retryable: false, category: validation, owner: foundation }
+  TASK_REPLAY_NOT_CONFIGURED: { http_status: 503, retryable: true, category: dependency, owner: foundation }
+  INVALID_REPLAY_COMMAND: { http_status: 400, retryable: false, category: validation, owner: foundation }
+  REPLAY_SOURCE_NOT_FOUND: { http_status: 404, retryable: false, category: not_found, owner: foundation }
+  REPLAY_NOT_ALLOWED: { http_status: 409, retryable: false, category: state, owner: foundation }
+  REPLAY_SECRET_INPUT: { http_status: 400, retryable: false, category: security, owner: foundation }
+  REPLAY_VERSION_CONFLICT: { http_status: 409, retryable: true, category: concurrency, owner: foundation }
+  INVALID_EVENT_ENVELOPE: { http_status: 400, retryable: false, category: validation, owner: foundation }
+  OUTBOX_DUPLICATE: { http_status: 409, retryable: false, category: idempotency, owner: foundation }
+  OUTBOX_PUBLISH_RETRYABLE: { http_status: 503, retryable: true, category: dependency, owner: foundation }
+  OUTBOX_DEAD_LETTER: { http_status: 409, retryable: false, category: state, owner: foundation }
+  OUTBOX_PUBLISH_UNKNOWN: { http_status: 409, retryable: false, category: external_unknown, owner: foundation }
+  OUTBOX_LEASE_LOST: { http_status: 409, retryable: true, category: concurrency, owner: foundation }
+  IDEMPOTENCY_KEY_REUSED: { http_status: 409, retryable: false, category: idempotency, owner: foundation }
+  STORAGE_OBJECT_NOT_FOUND: { http_status: 404, retryable: false, category: not_found, owner: foundation }
+  STORAGE_TENANT_SCOPE_VIOLATION: { http_status: 403, retryable: false, category: authorization, owner: foundation }
+  STORAGE_CONFLICT: { http_status: 409, retryable: false, category: idempotency, owner: foundation }
+effective_at: '2026-09-16T00:00:00+08:00'
+locked_by: team/foundation

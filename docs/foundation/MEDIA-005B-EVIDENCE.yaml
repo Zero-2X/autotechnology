@@ -1,0 +1,25 @@
+task_id: MEDIA-005B
+status: done
+verification:
+  focused_command: python -m pytest tests/unit/media/test_media_content_qa_service.py tests/integration/test_media_005b_migration.py tests/contract/test_media_005b_contract.py tests/unit/qa -q
+  focused_result: 26 passed (combined MEDIA-005A/005B and existing QA suite)
+  service_behaviors: deterministic number/code/version token comparison, AI and advertising disclosure checks, RightsRecordVersion status/validity/region/locale/media/use checks, text extraction unknown review, tenant isolation, expected version and idempotent replay
+  migration_test: 1 passed; SQLite full-chain upgrade/downgrade and append-only content evidence guard
+  postgresql_sql_emission: 1 passed; upgrade/downgrade SQL and trigger/function removal order verified offline
+  schemas: schema_errors=0
+  architecture: architecture_errors=0
+  migration_graph: revisions=114; head=20260920_media_005b; errors=0
+  task_refs: checked=157; errors=0
+  precision: scoped=93; precise=93; gaps=0
+  secrets: secret_findings=0
+  plan_consistency: validated=157; errors=0
+  inventory: pending final inventory refresh
+  full_regression: pending final regression after documentation and registry refresh
+  postgresql_runtime: not verified against a live PostgreSQL database
+verified_boundaries:
+  - MediaContentRightsQAService consumes only tenant-scoped immutable projections and an offline TextExtractionPort/RightsPort.
+  - Number, code and version comparisons use stable token counters and never store raw media bytes or provider output.
+  - AI/advertising disclosure and material rights failures are deterministic; extraction/rights port uncertainty becomes needs_review.
+  - Content evaluation rows and QA reports are append-only, hash-addressed and tenant scoped.
+limitations:
+  - PostgreSQL behavior is verified through offline SQL generation and trigger removal ordering; live PostgreSQL execution remains unverified.

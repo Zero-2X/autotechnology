@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/policy-snapshot.schema.json",
+  "title": "PolicySnapshot",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "subject_type": {
+      "type": "string",
+      "enum": [
+        "variant",
+        "asset",
+        "target_version",
+        "publication_intent",
+        "account",
+        "region"
+      ]
+    },
+    "subject_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "subject_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "content_policy_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "region_policy_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "distribution_policy_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "account_policy_version": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "data_processing_policy_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_policy_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "policy_version_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
+    "precedence": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "input_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "rules_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "snapshot_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "supersedes_snapshot_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "evaluated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "effective_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "expires_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "review_due_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "expired",
+        "revoked"
+      ]
+    },
+    "created_by": {
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "subject_type",
+    "subject_id",
+    "subject_ref",
+    "content_policy_version",
+    "region_policy_version",
+    "distribution_policy_version",
+    "account_policy_version",
+    "data_processing_policy_version",
+    "model_policy_version",
+    "policy_version_refs",
+    "precedence",
+    "input_hash",
+    "rules_hash",
+    "snapshot_hash",
+    "supersedes_snapshot_id",
+    "evaluated_at",
+    "effective_at",
+    "expires_at",
+    "review_due_at",
+    "status",
+    "created_by"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue",
+  "oneOf": [
+    {
+      "title": "global policy",
+      "properties": {
+        "org_id": {
+          "type": "null"
+        },
+        "subject_id": {
+          "type": "null"
+        }
+      }
+    },
+    {
+      "title": "tenant policy",
+      "required": [
+        "org_id",
+        "subject_id"
+      ],
+      "properties": {
+        "org_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "subject_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    }
+  ]
+}

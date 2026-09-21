@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/policy-card.schema.json",
+  "title": "Versioned policy card",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "policy_key": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$"},
+    "policy_version": {"type": "integer", "minimum": 1},
+    "status": {"type": "string", "enum": ["active", "superseded"]},
+    "policy_domain": {"type": "string", "enum": ["content", "region", "distribution", "account", "data_processing", "model", "composite"]},
+    "display_name": {"type": "string", "minLength": 1},
+    "purpose": {"type": "string", "minLength": 1},
+    "owner_role": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+    "reviewer_roles": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}},
+    "evidence_refs": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "properties": {
+          "evidence_key": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+          "source_type": {"type": "string", "enum": ["document", "contract", "test", "decision"]},
+          "uri": {"type": "string", "minLength": 1},
+          "captured_at": {"type": "string", "format": "date-time"}
+        },
+        "required": ["evidence_key", "source_type", "uri", "captured_at"]
+      }
+    },
+    "rules": {
+      "type": "array", "minItems": 1,
+      "items": {
+        "type": "object", "additionalProperties": false,
+        "properties": {
+          "rule_id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+          "requirement": {"type": "string", "minLength": 1},
+          "on_unknown": {"type": "string", "enum": ["allow", "manual_review", "deny"]}
+        },
+        "required": ["rule_id", "requirement", "on_unknown"]
+      }
+    },
+    "allowed_release_levels": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "enum": ["architecture_mvp", "distribution_pilot", "scale"]}},
+    "synthetic_only": {"type": "boolean"},
+    "effective_at": {"type": "string", "format": "date-time"},
+    "review_due_at": {"type": "string", "format": "date-time"},
+    "locked_by": {"type": "string", "pattern": "^[a-z][a-z0-9_/.-]*$"}
+  },
+  "required": ["policy_key", "policy_version", "status", "policy_domain", "display_name", "purpose", "owner_role", "reviewer_roles", "evidence_refs", "rules", "allowed_release_levels", "synthetic_only", "effective_at", "review_due_at", "locked_by"],
+  "x-module": "governance",
+  "x-task-ids": ["GOV-005"]
+}

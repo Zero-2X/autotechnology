@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/analytics.schema.json",
+  "title": "analytics contract union",
+  "oneOf": [
+    {
+      "$ref": "./observation.schema.json"
+    },
+    {
+      "$ref": "./metric-definition.schema.json"
+    },
+    {
+      "$ref": "./analytics-event-catalog.schema.json"
+    },
+    {
+      "$ref": "./analytics-kpi-snapshot.schema.json"
+    }
+  ],
+  "x-module": "analytics"
+}

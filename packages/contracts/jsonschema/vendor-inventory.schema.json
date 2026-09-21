@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/vendor-inventory.schema.json",
+  "title": "GOV-010 external vendor inventory",
+  "type": "object", "additionalProperties": false,
+  "required": ["inventory_key", "inventory_version", "status", "as_of", "owner_role", "review_due_at", "real_processing_default", "required_before_real_use", "vendors", "unknown_or_missing_evidence_action", "change_rule"],
+  "properties": {
+    "inventory_key": {"const": "external-data-processors"},
+    "inventory_version": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["active", "superseded"]},
+    "as_of": {"type": "string", "format": "date-time"},
+    "owner_role": {"const": "data_protection_owner"},
+    "review_due_at": {"type": "string", "format": "date-time"},
+    "real_processing_default": {"const": "deny"},
+    "required_before_real_use": {"type": "array", "const": ["processing_regions", "retention_days", "contract_ref", "dpa_ref", "subprocessors_review_ref", "exit_plan_ref", "deletion_proof_ref", "owner_approval_ref"]},
+    "vendors": {"type": "array", "minItems": 4, "items": {"$ref": "#/$defs/vendor"}},
+    "unknown_or_missing_evidence_action": {"const": "no_go_and_manual_review"},
+    "change_rule": {"const": "new_inventory_version_and_data_protection_review"}
+  },
+  "$defs": {
+    "nullable_ref": {"type": ["string", "null"], "minLength": 1},
+    "vendor": {
+      "type": "object", "additionalProperties": false,
+      "required": ["vendor_id", "category", "selection_status", "processing_regions", "retention_days", "contract_ref", "dpa_ref", "subprocessors", "exit_plan_ref", "deletion_proof_ref", "owner_approval_ref"],
+      "properties": {
+        "vendor_id": {"type": "string", "pattern": "^[a-z][a-z0-9-]+$"},
+        "category": {"enum": ["model", "media", "storage", "data_processing"]},
+        "selection_status": {"enum": ["unselected", "under_review", "approved", "retired"]},
+        "processing_regions": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 2}},
+        "retention_days": {"type": ["integer", "null"], "minimum": 0},
+        "contract_ref": {"$ref": "#/$defs/nullable_ref"},
+        "dpa_ref": {"$ref": "#/$defs/nullable_ref"},
+        "subprocessors": {
+          "type": "object", "additionalProperties": false,
+          "required": ["status", "names", "review_ref"],
+          "properties": {
+            "status": {"enum": ["unknown", "none_attested", "listed"]},
+            "names": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+            "review_ref": {"$ref": "#/$defs/nullable_ref"}
+          }
+        },
+        "exit_plan_ref": {"$ref": "#/$defs/nullable_ref"},
+        "deletion_proof_ref": {"$ref": "#/$defs/nullable_ref"},
+        "owner_approval_ref": {"$ref": "#/$defs/nullable_ref"}
+      }
+    }
+  },
+  "x-module": "governance",
+  "x-task-ids": ["GOV-010"]
+}

@@ -1,0 +1,57 @@
+task_id: MEDIA-001
+status: done
+trace_id: 55618e3a-a0dc-44ec-a001-000000000058
+actor: team/media
+predecessors: [PROD-002, CANON-006]
+external_dependencies: []
+artifacts:
+  implementation:
+    - modules/media/__init__.py
+    - modules/media/script_service.py
+    - modules/media/README.md
+  contracts:
+    - packages/contracts/jsonschema/asset-version.schema.json
+    - packages/contracts/jsonschema/media-script.schema.json
+    - packages/contracts/jsonschema/media-script-version.schema.json
+  migration:
+    - packages/db/migrations/versions/20260920_media_001.py
+  tests:
+    - tests/unit/media/test_media_script_service.py
+    - tests/integration/test_media_001.py
+    - tests/integration/test_media_001_migration.py
+    - tests/contract/test_media_001_contract.py
+  task_spec:
+    - docs/tasks/MEDIA-001.md
+verification:
+  focused_command: python -m pytest tests/unit/media tests/integration/test_media_001.py tests/integration/test_media_001_migration.py tests/contract/test_media_001_contract.py -q
+  focused_result: 14 passed
+  migration_graph_check: revision_count=106; head=20260920_media_001; errors=0
+  migration_upgrade_and_downgrade: passed on disposable SQLite database
+  schema_check: schema_errors=0
+  architecture_check: architecture_errors=0
+  plan_consistency: validated=157; errors=0
+  task_card_refs: checked=157; errors=0
+  secrets_check: secret_findings=0
+  full_command: python -m pytest -q
+  full_result: 913 passed
+behavior:
+  exact_approved_variant_version_binding: true
+  verified_fresh_time_valid_claim_gate: true
+  deterministic_30_60_90_template_timelines: true
+  spoken_unit_budgets_75_150_225: true
+  hook_body_cta_and_claim_lineage: true
+  no_model_network_renderer_or_platform_calls: true
+  actor_trace_clock_excluded_from_snapshot_hash: true
+  stable_duration_specific_script_roots: true
+  idempotent_replay_and_payload_conflict: true
+  optimistic_expected_version_edit: true
+  immutable_human_edit_versions: true
+  timing_source_blocks_and_claim_refs_preserved: true
+  current_claim_revalidated_on_new_edit: true
+  tenant_scoped_reads_writes_and_composite_foreign_keys: true
+  append_only_version_claim_ref_and_command_projection: true
+  raw_provider_credentials_and_model_output_persisted: false
+rollback:
+  - Stop new script create/edit commands and export ScriptVersion, Claim refs, snapshot hashes and audit references.
+  - Downgrade to 20260920_site_004; only MEDIA-001 tables, indexes and guards are removed.
+  - VariantVersion, Claim, Canonical, Region and Site predecessor facts remain intact.

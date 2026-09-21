@@ -1,0 +1,44 @@
+task_id: AGENT-CORE-005C
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000043
+actor: team/agent
+predecessors: [AGENT-CORE-002, PROV-002, CANON-002, AGENT-CORE-005B]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/agent/rights_provenance.py
+    - modules/agent/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/agent-run.schema.json
+    - packages/contracts/jsonschema/rights-provenance-input.schema.json
+    - packages/contracts/jsonschema/rights-provenance-output.schema.json
+    - packages/contracts/jsonschema/rights-record-version.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_agent_core_005c.py
+  tests:
+    - tests/unit/agent/test_rights_provenance.py
+    - tests/integration/test_agent_core_005c_rights_provenance.py
+verification:
+  targeted_command: python -m pytest tests/unit/agent tests/integration --maxfail=1 -q
+  targeted_result: 137 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  agent_runner_and_hash_ledger_reused: true
+  tool_allowlist_empty: true
+  write_permissions_empty: true
+  immutable_rights_version_read_only: true
+  evidence_refs_bound_to_selected_version: true
+  permission_clues_match_controlled_excerpts: true
+  final_rights_decision_deferred: true
+  human_review_always_required: true
+  idempotent_model_invocation: true
+  rights_record_written: false
+  rights_status_mutated: false
+  authorization_decision_created: false
+  network_calls: false
+rollback:
+  - Disable the rights-provenance AgentDefinition while retaining AgentRun, ModelCall, extracted output, event and audit evidence.
+  - This revision creates no business table and no RightsRecordVersion or authorization decision requires reversal.

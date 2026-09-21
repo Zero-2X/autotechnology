@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/prompt-template.schema.json",
+  "title": "versioned prompt template",
+  "type": "object",
+  "properties": {
+    "key": {"type": "string", "minLength": 1, "maxLength": 128},
+    "version": {"type": "integer", "minimum": 1},
+    "template": {"type": "string", "minLength": 1, "maxLength": 32768},
+    "input_variables": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_]*$"}},
+    "status": {"enum": ["active", "retired"]}
+  },
+  "required": ["key", "version", "template", "input_variables", "status"],
+  "additionalProperties": false,
+  "x-module": "orchestration",
+  "x-task-ids": ["LC-PROMPT-001"]
+}

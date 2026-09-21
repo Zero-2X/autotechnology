@@ -1,0 +1,1728 @@
+schema_version: 1
+source_document: AI跨境技术内容自动化工作流开发清单_LangGraph_V3.md
+task_count: 38
+allowed_statuses:
+- planned
+- in_progress
+- blocked
+- done
+phase_names:
+  0: 架构冻结与迁移准备
+  1: LangGraph Runtime 与任务接入
+  2: Graph State 与契约
+  3: LangChain 组件层
+  4: 无账号内容纵向切片
+  5: 反馈、评测和可观测性
+  6: 真实账号与平台
+tasks:
+- id: GRAPH-GOV-001
+  phase: 0
+  phase_name: 架构冻结与迁移准备
+  group: GRAPH
+  module: orchestration
+  title: 冻结 LangGraph 边界并登记 ADR-001
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on: []
+  task_spec_ref: docs/tasks/GRAPH-GOV-001.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-GOV-001.implementation
+  - GRAPH-GOV-001.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-GOV-001 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_gov_001_acceptance
+  status: done
+- id: GRAPH-GOV-002
+  phase: 0
+  phase_name: 架构冻结与迁移准备
+  group: GRAPH
+  module: orchestration
+  title: 冻结 LangGraph/LangChain/Python 版本和升级窗口
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-GOV-001
+  task_spec_ref: docs/tasks/GRAPH-GOV-002.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-GOV-002.implementation
+  - GRAPH-GOV-002.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-GOV-002 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_gov_002_acceptance
+  status: done
+- id: GRAPH-GOV-003
+  phase: 0
+  phase_name: 架构冻结与迁移准备
+  group: GRAPH
+  module: orchestration
+  title: 定义 GraphRun、GraphAttempt、NodeExecution、HumanInterrupt 业务语义
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-GOV-001
+  task_spec_ref: docs/tasks/GRAPH-GOV-003.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-GOV-003.implementation
+  - GRAPH-GOV-003.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-GOV-003 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_gov_003_acceptance
+  status: done
+- id: GRAPH-GOV-004
+  phase: 0
+  phase_name: 架构冻结与迁移准备
+  group: GRAPH
+  module: orchestration
+  title: 定义 graph_key、workflow_version 和兼容策略
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-GOV-003
+  task_spec_ref: docs/tasks/GRAPH-GOV-004.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-GOV-004.implementation
+  - GRAPH-GOV-004.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-GOV-004 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_gov_004_acceptance
+  status: done
+- id: GRAPH-GOV-005
+  phase: 0
+  phase_name: 架构冻结与迁移准备
+  group: GRAPH
+  module: orchestration
+  title: 把 Node、State、Replay 门禁写入 Codex 执行协议
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-GOV-001
+  task_spec_ref: docs/tasks/GRAPH-GOV-005.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-GOV-005.implementation
+  - GRAPH-GOV-005.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-GOV-005 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_gov_005_acceptance
+  status: done
+- id: GRAPH-CORE-001
+  phase: 1
+  phase_name: LangGraph Runtime 与任务接入
+  group: GRAPH
+  module: orchestration
+  title: 建立 GraphRegistry 和 orchestration 包
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-GOV-002
+  task_spec_ref: docs/tasks/GRAPH-CORE-001.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-CORE-001.implementation
+  - GRAPH-CORE-001.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-CORE-001 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_core_001_acceptance
+  status: done
+- id: GRAPH-CORE-002
+  phase: 1
+  phase_name: LangGraph Runtime 与任务接入
+  group: GRAPH
+  module: orchestration
+  title: 实现 GraphRunner：输入校验、trace、租约、超时、结果引用
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-CORE-001
+  task_spec_ref: docs/tasks/GRAPH-CORE-002.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-CORE-002.implementation
+  - GRAPH-CORE-002.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-CORE-002 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_core_002_acceptance
+  status: done
+- id: GRAPH-CORE-003
+  phase: 1
+  phase_name: LangGraph Runtime 与任务接入
+  group: GRAPH
+  module: orchestration
+  title: 将 TaskJob 映射为 GraphRun 并保持现有状态机
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-CORE-002
+  task_spec_ref: docs/tasks/GRAPH-CORE-003.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-CORE-003.implementation
+  - GRAPH-CORE-003.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-CORE-003 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_core_003_acceptance
+  status: done
+- id: GRAPH-CORE-004
+  phase: 1
+  phase_name: LangGraph Runtime 与任务接入
+  group: GRAPH
+  module: orchestration
+  title: 实现可分类错误和重试策略
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-CORE-002
+  task_spec_ref: docs/tasks/GRAPH-CORE-004.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-CORE-004.implementation
+  - GRAPH-CORE-004.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-CORE-004 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_core_004_acceptance
+  status: done
+- id: GRAPH-CORE-005
+  phase: 1
+  phase_name: LangGraph Runtime 与任务接入
+  group: GRAPH
+  module: orchestration
+  title: 实现取消、暂停和 Kill Switch 检查
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-CORE-002
+  task_spec_ref: docs/tasks/GRAPH-CORE-005.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-CORE-005.implementation
+  - GRAPH-CORE-005.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-CORE-005 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_core_005_acceptance
+  status: done
+- id: GRAPH-CORE-006
+  phase: 1
+  phase_name: LangGraph Runtime 与任务接入
+  group: GRAPH
+  module: orchestration
+  title: 实现 Checkpointer Port 及 SQLite/PostgreSQL 实现
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-CORE-002
+  task_spec_ref: docs/tasks/GRAPH-CORE-006.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-CORE-006.implementation
+  - GRAPH-CORE-006.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-CORE-006 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_core_006_acceptance
+  status: done
+- id: GRAPH-STATE-001
+  phase: 2
+  phase_name: Graph State 与契约
+  group: GRAPH
+  module: orchestration
+  title: 建立 BaseGraphState 与 ContentGraphState Schema
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-GOV-003
+  task_spec_ref: docs/tasks/GRAPH-STATE-001.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-STATE-001.implementation
+  - GRAPH-STATE-001.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-STATE-001 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_state_001_acceptance
+  status: done
+- id: GRAPH-STATE-002
+  phase: 2
+  phase_name: Graph State 与契约
+  group: GRAPH
+  module: orchestration
+  title: 定义 ArtifactRef、EvidenceRef、PolicyRef、HumanInterruptRef
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-STATE-001
+  task_spec_ref: docs/tasks/GRAPH-STATE-002.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-STATE-002.implementation
+  - GRAPH-STATE-002.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-STATE-002 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_state_002_acceptance
+  status: done
+- id: GRAPH-STATE-003
+  phase: 2
+  phase_name: Graph State 与契约
+  group: GRAPH
+  module: orchestration
+  title: 定义并行分支 Reducer 和冲突策略
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-STATE-001
+  task_spec_ref: docs/tasks/GRAPH-STATE-003.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-STATE-003.implementation
+  - GRAPH-STATE-003.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-STATE-003 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_state_003_acceptance
+  status: done
+- id: GRAPH-STATE-004
+  phase: 2
+  phase_name: Graph State 与契约
+  group: GRAPH
+  module: orchestration
+  title: 定义 State 迁移和版本兼容策略
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-STATE-001
+  task_spec_ref: docs/tasks/GRAPH-STATE-004.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-STATE-004.implementation
+  - GRAPH-STATE-004.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-STATE-004 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_state_004_acceptance
+  status: done
+- id: GRAPH-STATE-005
+  phase: 2
+  phase_name: Graph State 与契约
+  group: GRAPH
+  module: orchestration
+  title: 增加 State 敏感字段和大小 lint
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-STATE-001
+  task_spec_ref: docs/tasks/GRAPH-STATE-005.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-STATE-005.implementation
+  - GRAPH-STATE-005.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-STATE-005 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_state_005_acceptance
+  status: done
+- id: LC-MODEL-001
+  phase: 3
+  phase_name: LangChain 组件层
+  group: LC
+  module: integrations/langchain
+  title: 实现 ModelPort 和 LangChain ChatModel Adapter
+  owner: team/llm
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-CORE-001
+  task_spec_ref: docs/tasks/LC-MODEL-001.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - LC-MODEL-001.implementation
+  - LC-MODEL-001.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 LC-MODEL-001 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: lc_model_001_acceptance
+  status: done
+- id: LC-MODEL-002
+  phase: 3
+  phase_name: LangChain 组件层
+  group: LC
+  module: integrations/langchain
+  title: 实现 FakeModel 和模型故障注入
+  owner: team/llm
+  priority: critical
+  tier: P0
+  depends_on:
+  - LC-MODEL-001
+  task_spec_ref: docs/tasks/LC-MODEL-002.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - LC-MODEL-002.implementation
+  - LC-MODEL-002.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 LC-MODEL-002 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: lc_model_002_acceptance
+  status: done
+- id: LC-PROMPT-001
+  phase: 3
+  phase_name: LangChain 组件层
+  group: LC
+  module: integrations/langchain
+  title: 实现版本化 Prompt 模板和变量校验
+  owner: team/llm
+  priority: critical
+  tier: P0
+  depends_on:
+  - LC-MODEL-001
+  task_spec_ref: docs/tasks/LC-PROMPT-001.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - LC-PROMPT-001.implementation
+  - LC-PROMPT-001.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 LC-PROMPT-001 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: lc_prompt_001_acceptance
+  status: done
+- id: LC-PARSER-001
+  phase: 3
+  phase_name: LangChain 组件层
+  group: LC
+  module: integrations/langchain
+  title: 实现结构化输出解析、校验和有限修复
+  owner: team/llm
+  priority: critical
+  tier: P0
+  depends_on:
+  - LC-MODEL-001
+  task_spec_ref: docs/tasks/LC-PARSER-001.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - LC-PARSER-001.implementation
+  - LC-PARSER-001.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 LC-PARSER-001 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: lc_parser_001_acceptance
+  status: done
+- id: LC-RETRIEVER-001
+  phase: 3
+  phase_name: LangChain 组件层
+  group: LC
+  module: integrations/langchain
+  title: 实现 Retriever Port、权限过滤和证据引用
+  owner: team/llm
+  priority: high
+  tier: P1
+  depends_on:
+  - LC-MODEL-001
+  task_spec_ref: docs/tasks/LC-RETRIEVER-001.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - LC-RETRIEVER-001.implementation
+  - LC-RETRIEVER-001.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 LC-RETRIEVER-001 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: lc_retriever_001_acceptance
+  status: done
+- id: LC-TOOL-001
+  phase: 3
+  phase_name: LangChain 组件层
+  group: LC
+  module: integrations/langchain
+  title: 实现 Tool 白名单、参数 Schema、超时和审计
+  owner: team/llm
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-CORE-002
+  task_spec_ref: docs/tasks/LC-TOOL-001.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - LC-TOOL-001.implementation
+  - LC-TOOL-001.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 LC-TOOL-001 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: lc_tool_001_acceptance
+  status: done
+- id: GRAPH-NODE-001
+  phase: 4
+  phase_name: 无账号内容纵向切片
+  group: GRAPH
+  module: orchestration
+  title: 实现 TopicSignal 到 TopicBrief 节点
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-STATE-001
+  - LC-MODEL-001
+  task_spec_ref: docs/tasks/GRAPH-NODE-001.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-NODE-001.implementation
+  - GRAPH-NODE-001.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-NODE-001 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_node_001_acceptance
+  status: done
+- id: GRAPH-NODE-002
+  phase: 4
+  phase_name: 无账号内容纵向切片
+  group: GRAPH
+  module: orchestration
+  title: 实现 Source/Rights/Knowledge/Canonical 节点
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-NODE-001
+  task_spec_ref: docs/tasks/GRAPH-NODE-002.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-NODE-002.implementation
+  - GRAPH-NODE-002.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-NODE-002 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_node_002_acceptance
+  status: done
+- id: GRAPH-NODE-003
+  phase: 4
+  phase_name: 无账号内容纵向切片
+  group: GRAPH
+  module: orchestration
+  title: 实现 Variant、QA、GEO_CONTENT、GEO_REGION 节点
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-NODE-002
+  task_spec_ref: docs/tasks/GRAPH-NODE-003.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-NODE-003.implementation
+  - GRAPH-NODE-003.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-NODE-003 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_node_003_acceptance
+  status: done
+- id: GRAPH-ROUTER-001
+  phase: 4
+  phase_name: 无账号内容纵向切片
+  group: GRAPH
+  module: orchestration
+  title: 实现通过、返工、人工、阻断纯函数路由
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-NODE-003
+  task_spec_ref: docs/tasks/GRAPH-ROUTER-001.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-ROUTER-001.implementation
+  - GRAPH-ROUTER-001.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-ROUTER-001 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_router_001_acceptance
+  status: done
+- id: GRAPH-HUMAN-001
+  phase: 4
+  phase_name: 无账号内容纵向切片
+  group: GRAPH
+  module: orchestration
+  title: 实现 Approval interrupt/resume 节点
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-ROUTER-001
+  - GRAPH-CORE-005
+  task_spec_ref: docs/tasks/GRAPH-HUMAN-001.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-HUMAN-001.implementation
+  - GRAPH-HUMAN-001.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-HUMAN-001 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_human_001_acceptance
+  status: done
+- id: GRAPH-NODE-004
+  phase: 4
+  phase_name: 无账号内容纵向切片
+  group: GRAPH
+  module: orchestration
+  title: 实现 Manual Export 和 FakeOfficialAdapter 节点
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-HUMAN-001
+  task_spec_ref: docs/tasks/GRAPH-NODE-004.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-NODE-004.implementation
+  - GRAPH-NODE-004.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-NODE-004 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_node_004_acceptance
+  status: done
+- id: GRAPH-REPLAY-001
+  phase: 4
+  phase_name: 无账号内容纵向切片
+  group: GRAPH
+  module: orchestration
+  title: 实现 Graph 重放、PublicationIntent 和 provider 幂等保护
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-NODE-004
+  task_spec_ref: docs/tasks/GRAPH-REPLAY-001.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-REPLAY-001.implementation
+  - GRAPH-REPLAY-001.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-REPLAY-001 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_replay_001_acceptance
+  status: done
+- id: GRAPH-OBS-001
+  phase: 5
+  phase_name: 反馈、评测和可观测性
+  group: GRAPH
+  module: orchestration
+  title: 统一 Graph/Node/Model/Outbox trace、metrics 和 cost
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-CORE-002
+  task_spec_ref: docs/tasks/GRAPH-OBS-001.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-OBS-001.implementation
+  - GRAPH-OBS-001.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-OBS-001 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_obs_001_acceptance
+  status: done
+- id: GRAPH-OBS-002
+  phase: 5
+  phase_name: 反馈、评测和可观测性
+  group: GRAPH
+  module: orchestration
+  title: 把 Graph 生命周期映射到 AuditLog
+  owner: team/orchestration
+  priority: critical
+  tier: P0
+  depends_on:
+  - GRAPH-OBS-001
+  task_spec_ref: docs/tasks/GRAPH-OBS-002.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-OBS-002.implementation
+  - GRAPH-OBS-002.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-OBS-002 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_obs_002_acceptance
+  status: done
+- id: GRAPH-EVAL-001
+  phase: 5
+  phase_name: 反馈、评测和可观测性
+  group: GRAPH
+  module: orchestration
+  title: 建立 Graph golden set、确定性回归和成本预算
+  owner: team/orchestration
+  priority: high
+  tier: P1
+  depends_on:
+  - LC-MODEL-002
+  task_spec_ref: docs/tasks/GRAPH-EVAL-001.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-EVAL-001.implementation
+  - GRAPH-EVAL-001.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-EVAL-001 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_eval_001_acceptance
+  status: done
+- id: GRAPH-EVAL-002
+  phase: 5
+  phase_name: 反馈、评测和可观测性
+  group: GRAPH
+  module: orchestration
+  title: 建立节点级和整图质量评测
+  owner: team/orchestration
+  priority: high
+  tier: P1
+  depends_on:
+  - GRAPH-EVAL-001
+  task_spec_ref: docs/tasks/GRAPH-EVAL-002.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-EVAL-002.implementation
+  - GRAPH-EVAL-002.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-EVAL-002 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_eval_002_acceptance
+  status: done
+- id: GRAPH-FEEDBACK-001
+  phase: 5
+  phase_name: 反馈、评测和可观测性
+  group: GRAPH
+  module: orchestration
+  title: 实现 Observation 到 Feedback Recommendation 图
+  owner: team/orchestration
+  priority: high
+  tier: P1
+  depends_on:
+  - GRAPH-OBS-002
+  task_spec_ref: docs/tasks/GRAPH-FEEDBACK-001.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-FEEDBACK-001.implementation
+  - GRAPH-FEEDBACK-001.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-FEEDBACK-001 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_feedback_001_acceptance
+  status: done
+- id: GRAPH-DIST-001
+  phase: 6
+  phase_name: 真实账号与平台
+  group: GRAPH
+  module: orchestration
+  title: 接入 AccountConnection/TargetVersion/PolicySnapshot 新版本链
+  owner: team/orchestration
+  priority: high
+  tier: M2
+  depends_on:
+  - GRAPH-REPLAY-001
+  task_spec_ref: docs/tasks/GRAPH-DIST-001.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-DIST-001.implementation
+  - GRAPH-DIST-001.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-DIST-001 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_dist_001_acceptance
+  status: blocked
+- id: GRAPH-DIST-002
+  phase: 6
+  phase_name: 真实账号与平台
+  group: GRAPH
+  module: orchestration
+  title: 实现 OAuth/Vault/Scope/租约检查
+  owner: team/orchestration
+  priority: high
+  tier: M2
+  depends_on:
+  - GRAPH-DIST-001
+  task_spec_ref: docs/tasks/GRAPH-DIST-002.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-DIST-002.implementation
+  - GRAPH-DIST-002.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-DIST-002 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_dist_002_acceptance
+  status: blocked
+- id: GRAPH-DIST-003
+  phase: 6
+  phase_name: 真实账号与平台
+  group: GRAPH
+  module: orchestration
+  title: 实现首个平台 draft_only 适配器
+  owner: team/orchestration
+  priority: high
+  tier: M2
+  depends_on:
+  - GRAPH-DIST-002
+  task_spec_ref: docs/tasks/GRAPH-DIST-003.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-DIST-003.implementation
+  - GRAPH-DIST-003.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-DIST-003 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_dist_003_acceptance
+  status: blocked
+- id: GRAPH-DIST-004
+  phase: 6
+  phase_name: 真实账号与平台
+  group: GRAPH
+  module: orchestration
+  title: 实现受控发布、unknown 核查和停发演练
+  owner: team/orchestration
+  priority: high
+  tier: M2
+  depends_on:
+  - GRAPH-DIST-003
+  task_spec_ref: docs/tasks/GRAPH-DIST-004.md
+  inputs:
+  - predecessor_artifacts
+  - tenant_context
+  - idempotency_key
+  outputs:
+  - GRAPH-DIST-004.implementation
+  - GRAPH-DIST-004.tests
+  - audit_evidence
+  acceptance:
+    given:
+    - 依赖任务已完成
+    - TenantContext、trace_id 和 Idempotency-Key 可用
+    when:
+    - 执行 GRAPH-DIST-004 的公开用例或 GraphRunner
+    then:
+    - 输出契约、实现和可复现测试结果
+    - 不突破 V2.4 的领域、Policy、Approval、Audit、Outbox 和账号后置边界
+  allowed_paths:
+  - orchestration
+  - integrations/langchain
+  - packages/contracts
+  - packages/observability
+  - tests
+  - docs/graphs
+  - docs/runbooks
+  forbidden_paths:
+  - secrets
+  - deploy/environments/prod/secrets
+  - '**/*.pem'
+  - '**/*token*.json'
+  test_command: python -m pytest tests --maxfail=1
+  gate: graph_dist_004_acceptance
+  status: blocked

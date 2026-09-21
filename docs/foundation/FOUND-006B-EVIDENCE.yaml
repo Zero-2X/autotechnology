@@ -1,0 +1,69 @@
+task_id: FOUND-006B
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000007
+actor: team/foundation
+predecessors: [GOV-006, FOUND-000, FOUND-005, FOUND-006A]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - infra/foundation/tracing.py
+    - infra/foundation/costs.py
+    - infra/foundation/observability.py
+    - infra/foundation/__init__.py
+    - apps/api/main.py
+  contracts:
+    - docs/foundation/tracing-cost-baseline-v1.yaml
+    - packages/contracts/jsonschema/tracing-cost-baseline.schema.json
+    - packages/contracts/jsonschema/cost-record.schema.json
+    - packages/contracts/jsonschema/correlation-context.schema.json
+    - packages/contracts/jsonschema/foundation.schema.json
+    - packages/contracts/openapi/openapi.yaml
+  migration:
+    - packages/db/migrations/versions/20260916_found_006b_tracing_cost.py
+  tests:
+    - tests/contract/test_found_006b_tracing_cost.py
+    - tests/integration/test_found_006b_tracing_cost_integration.py
+  manifests:
+    - docs/contracts/contract-manifest.yaml
+    - docs/contracts/migration-manifest.yaml
+    - docs/repo-inventory.md
+runtime_evidence:
+  tracing_sdk: opentelemetry_api_and_sdk_local_provider
+  propagation: W3C_traceparent_with_legacy_X-Trace-Id_compatibility
+  server_span: route_template_method_status_and_status_class_only
+  response_correlation: traceparent_X-Trace-Id_X-Span-Id
+  parent_child: valid_parent_trace_and_child_span_relationship
+  forbidden_span_data: query_headers_body_payload_prompt_token_secret_org_actor_blocked
+  cost_record: immutable_bounded_numeric_fields_and_allowlisted_strings
+  cost_idempotency: org_id_plus_idempotency_key_returns_same_fact
+  cost_conflict: reused_key_with_different_fact_rejected
+  sink_failure: best_effort_record_safely_does_not_break_business_path
+  exporter: in_memory_default_no_remote_export
+  persistence: none
+verification:
+  targeted_test_command: python -m pytest tests/contract/test_found_006b_tracing_cost.py tests/integration/test_found_006b_tracing_cost_integration.py -q
+  targeted_test_result: 17 passed
+  full_test_command: python -m pytest tests --maxfail=1 -q
+  full_test_result: 141 passed
+  migration_check_command: python scripts/check_migrations.py --strict --json
+  migration_check_result: revisions=8 heads=[20260916_found_006b] errors=[]
+  alembic_cycle: upgrade_head_then_downgrade_20260916_found_006a_then_upgrade_head_passed
+  task_precision_command: python scripts/check_task_card_precision.py --task FOUND-006B --strict
+  task_precision_result: scoped=1 precise=1 gaps=0
+  registry_refs_command: python scripts/check_task_card_registry_refs.py
+  registry_refs_result: checked=157 errors=0
+  plan_consistency_command: python scripts/check_plan_consistency.py --strict-contracts --strict-commands
+  plan_consistency_result: no errors; future planned migration warnings retained
+  openapi_check_command: python scripts/check_openapi_contract.py
+  openapi_check_result: paths=31 operations=31; future catalog-difference warnings only
+side_effects:
+  remote_otlp_export: false
+  real_credentials: false
+  real_model_provider: false
+  real_platform_api: false
+  database_write: false
+  prompt_or_payload_persistence: false
+rollback:
+  - Remove OpenTelemetry middleware and retain FOUND-006A metrics/correlation behavior.
+  - Run python -m alembic downgrade 20260916_found_006a; the FOUND-006B checkpoint is a no-op.
+  - Discard process-local spans and cost samples; no persisted fact requires deletion.

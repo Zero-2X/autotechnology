@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/render-retry.schema.json",
+  "title": "MediaRenderRetryDecision",
+  "type": "object",
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "uuid": {"type": "string", "format": "uuid"},
+    "timestamp": {"type": "string", "format": "date-time"},
+    "failure": {
+      "type": "object",
+      "properties": {
+        "id": {"$ref": "#/$defs/uuid"},
+        "org_id": {"$ref": "#/$defs/uuid"},
+        "job_id": {"$ref": "#/$defs/uuid"},
+        "attempt_count": {"type": "integer", "minimum": 1},
+        "error_class": {"type": "string", "enum": ["deterministic", "transient", "unknown"]},
+        "error_code": {"type": "string", "pattern": "^[A-Z0-9_]{1,128}$"},
+        "message_redacted": {"anyOf": [{"type": "string", "minLength": 1, "maxLength": 512}, {"type": "null"}]},
+        "retryable": {"type": "boolean"},
+        "trace_id": {"type": "string", "minLength": 1, "maxLength": 256},
+        "occurred_at": {"$ref": "#/$defs/timestamp"}
+      },
+      "required": ["id", "org_id", "job_id", "attempt_count", "error_class", "error_code", "message_redacted", "retryable", "trace_id", "occurred_at"],
+      "additionalProperties": false
+    },
+    "schedule": {
+      "type": "object",
+      "properties": {
+        "id": {"$ref": "#/$defs/uuid"},
+        "org_id": {"$ref": "#/$defs/uuid"},
+        "render_job_id": {"$ref": "#/$defs/uuid"},
+        "attempt_count": {"type": "integer", "minimum": 1},
+        "available_at": {"$ref": "#/$defs/timestamp"},
+        "status": {"type": "string", "enum": ["scheduled", "claimed", "completed", "cancelled"]},
+        "failure_id": {"$ref": "#/$defs/uuid"},
+        "delay_ms": {"type": "integer", "minimum": 0},
+        "created_at": {"$ref": "#/$defs/timestamp"}
+      },
+      "required": ["id", "org_id", "render_job_id", "attempt_count", "available_at", "status", "failure_id", "delay_ms", "created_at"],
+      "additionalProperties": false
+    },
+    "shot_target": {
+      "type": "object",
+      "properties": {
+        "org_id": {"$ref": "#/$defs/uuid"},
+        "render_job_id": {"$ref": "#/$defs/uuid"},
+        "stage": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{0,63}$"},
+        "shot_sequence": {"type": "integer", "minimum": 1},
+        "output_profile_key": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{0,63}$"},
+        "input_hash": {"$ref": "#/$defs/hash"},
+        "status": {"type": "string", "enum": ["requested", "confirmed", "conflict"]},
+        "artifact_id": {"anyOf": [{"$ref": "#/$defs/uuid"}, {"type": "null"}]},
+        "created_at": {"$ref": "#/$defs/timestamp"}
+      },
+      "required": ["org_id", "render_job_id", "stage", "shot_sequence", "output_profile_key", "input_hash", "status", "artifact_id", "created_at"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "operation": {"type": "string", "enum": ["record_failure", "retry", "rerender_shot", "dead_letter"]},
+    "status": {"type": "string", "enum": ["failed", "retry_scheduled", "running", "succeeded", "unknown", "dead_letter"]},
+    "code": {"anyOf": [{"type": "string", "pattern": "^[A-Z0-9_]{1,128}$"}, {"type": "null"}]},
+    "duplicate": {"type": "boolean"},
+    "render_job": {"$ref": "render-job.schema.json"},
+    "failure": {"$ref": "#/$defs/failure"},
+    "schedule": {"anyOf": [{"$ref": "#/$defs/schedule"}, {"type": "null"}]},
+    "shot_target": {"anyOf": [{"$ref": "#/$defs/shot_target"}, {"type": "null"}]},
+    "artifact": {"anyOf": [{"$ref": "render-job.schema.json#/$defs/artifact"}, {"type": "null"}]},
+    "human_task": {"anyOf": [{"type": "object"}, {"type": "null"}]},
+    "next_retry_at": {"anyOf": [{"$ref": "#/$defs/timestamp"}, {"type": "null"}]}
+  },
+  "required": ["operation", "status", "code", "duplicate", "render_job", "failure", "schedule", "shot_target", "artifact", "human_task", "next_retry_at"],
+  "additionalProperties": false,
+  "x-source": "MEDIA-004B",
+  "x-no-external-side-effect-replay": true
+}

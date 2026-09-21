@@ -1,0 +1,171 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/metric-definition.schema.json",
+  "title": "MetricDefinition",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version_no": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "metric_type": {
+      "type": "string",
+      "enum": [
+        "number",
+        "boolean",
+        "string",
+        "enum",
+        "json"
+      ]
+    },
+    "unit": {
+      "type": "string",
+      "minLength": 1
+    },
+    "formula": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "window": {
+      "type": "string",
+      "minLength": 1
+    },
+    "data_source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dedupe_rule": {
+      "type": "string",
+      "minLength": 1
+    },
+    "quality_rules": {
+      "type": "object",
+      "properties": {
+        "value_schema": {
+          "type": "object",
+          "minProperties": 1
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "owner_actor_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "retired"
+      ]
+    },
+    "effective_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "retired_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "snapshot_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "key",
+    "version_no",
+    "metric_type",
+    "unit",
+    "formula",
+    "dimensions",
+    "window",
+    "data_source",
+    "dedupe_rule",
+    "quality_rules",
+    "owner_actor_id",
+    "status",
+    "effective_at",
+    "retired_at",
+    "snapshot_hash"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "metric_type": {
+            "enum": [
+              "json",
+              "enum"
+            ]
+          }
+        },
+        "required": [
+          "metric_type"
+        ]
+      },
+      "then": {
+        "properties": {
+          "quality_rules": {
+            "required": [
+              "value_schema"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+task_id: FOUND-007B
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000009
+actor: team/foundation
+predecessors: [GOV-006, FOUND-000, FOUND-001, FOUND-004A, FOUND-007A]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - scripts/generate_event_compatibility_baseline.py
+    - scripts/check_event_compatibility.py
+  contracts:
+    - docs/foundation/event-envelope-baseline-v1.schema.json
+    - docs/contracts/event-registry.yaml
+    - docs/foundation/event-compatibility-baseline-v1.yaml
+    - packages/contracts/jsonschema/event-compatibility-baseline.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+    - packages/contracts/jsonschema/foundation.schema.json
+  migration:
+    - packages/db/migrations/versions/20260916_found_007b_events.py
+  tests:
+    - tests/contract/test_found_007b_envelope_regressions.py
+    - tests/contract/test_found_007b_events.py
+    - tests/integration/test_found_007b_events_integration.py
+  manifests:
+    - docs/contracts/contract-manifest.yaml
+    - docs/contracts/migration-manifest.yaml
+    - docs/repo-inventory.md
+runtime_evidence:
+  event_count: 162
+  registry_unique: true
+  schema_refs_resolve: envelope refs resolved offline in runtime validation tests; arbitrary recursive refs not fully checked by compatibility CLI
+  schema_draft: 2020-12
+  envelope_ref_required: true
+  event_type_const_and_version_const: true
+  payload_aggregate_fields_required: true
+  compatibility: removed_events_versions_required_fields_and_narrowed_constraints_rejected
+  additions: new_events_and_optional_fields_are_compatible_warnings
+  versioning: version changes are rejected; multi-version consumer selection not implemented
+  envelope_runtime: 162 current event schemas validate synthetic envelopes and reject invalid tenant UUIDs and payload version types
+  frozen_envelope: exact comparison with separately reviewed event-envelope-baseline-v1.schema.json
+  schema_validation: standard Draft 2020-12 meta-schema validation for event and envelope files
+  remaining: full JSON Schema inclusion, reference target changes, unsnapshotted root payload keywords and multi-version consumers remain outside the implemented check
+  side_effects: no_network_no_database_write_no_real_credentials_no_provider_calls
+verification:
+  audit_regression_command: python -m pytest tests/contract/test_found_007b_events.py tests/contract/test_found_007b_envelope_regressions.py tests/integration/test_found_007b_events_integration.py -q
+  audit_regression_result: 19 passed
+  targeted_test_command: python -m pytest tests/contract/test_found_007b_events.py tests/integration/test_found_007b_events_integration.py -q
+  targeted_test_result: 5 passed
+  compatibility_check_command: python scripts/check_event_compatibility.py --strict
+  compatibility_check_result: events=162 baseline_events=162 errors=0 warnings=0
+  full_test_command: python -m pytest tests --maxfail=1 -q
+  full_test_result: 153 passed
+  migration_check_command: python scripts/check_migrations.py --strict --json
+  migration_check_result: revision_count=10 heads=[20260916_found_007b] errors=[]
+  task_precision_command: python scripts/check_task_card_precision.py --task FOUND-007B --strict
+  task_precision_result: scoped=1 precise=1 gaps=0
+  registry_refs_command: python scripts/check_task_card_registry_refs.py
+  registry_refs_result: checked=157 errors=0
+  inventory_check_command: python scripts/repo_inventory.py --check
+  inventory_check_result: valid
+rollback:
+  - Remove the FOUND-007B compatibility checkpoint and retain existing event schemas and registry.
+  - Run python -m alembic downgrade 20260916_found_007a; this migration is a no-op checkpoint.
+continuation_2026_09_17:
+  task_id: FOUND-007B
+  scope: recursive property constraints and fixed registry ordering/dedupe keys
+  baseline_policy: historical event schemas and frozen baseline retained unchanged
+  targeted_command: python -m pytest tests/contract/test_found_007b_events.py tests/contract/test_found_007b_envelope_regressions.py tests/integration/test_found_007b_events_integration.py -q
+  targeted_result: 40 passed
+  compatibility_result: events=162 baseline_events=162 errors=0 warnings=0
+  initial_full_suite: 274 passed
+  final_full_suite: 295 passed in 25.09s
+  task_precision_result: scoped=1 precise=1 gaps=0
+  registry_refs_result: checked=157 errors=0
+  limitations: conservative review rejection for changed composition/ref keywords; no complete semantic inclusion or multi-version runtime claim
+  rollback: revert only this checker/test increment; no migration or database change
+continuation_versioned_consumers:
+  task_id: FOUND-007B
+  implementation: infra/foundation/event_validation.py
+  tests: tests/contract/test_found_007b_versioned_consumers.py
+  scope:
+    - Immutable per-event-type/version validators with copied offline dependency bundles
+    - All 162 current event schemas validated through the consumer registry
+    - Separate v1/v2 selection, recursive refs, nested IDs, unknown version rejection
+    - Missing offline refs rejected before use, including optional fields
+    - NaN/Infinity rejection and payload-free validation tracebacks
+    - Root payload and outer schema constraints cannot bypass compatibility checks
+    - v1 payload refs without a dependency snapshot require versioned review
+  verification:
+    targeted: 71 passed
+    full_gate: python scripts/check_foundation_contracts.py exited 0
+    full_suite: 326 passed in 32.83s
+    events: events=162 baseline_events=162 errors=0 warnings=0
+    schemas: schema_errors=0
+    migrations: revision_count=12 heads=[20260916_found_007d] errors=[]
+    registry: checked=157 errors=0
+  boundary: schema selection and validation implemented; business consumer dispatch and persisted dedupe belong to runtime tasks
+  compatibility_policy: conservative reviewed v1 profile, not a general JSON Schema inclusion theorem prover
+  rollback: revert this code and test increment; retain event schemas, frozen baselines and database facts

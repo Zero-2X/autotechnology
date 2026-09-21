@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/distribution_oauth.schema.json",
+  "title": "distribution_oauth contract union",
+  "oneOf": [
+    {
+      "$ref": "./authorization-evidence.schema.json"
+    },
+    {
+      "$ref": "./account-connection.schema.json"
+    }
+  ],
+  "x-module": "distribution_oauth"
+}

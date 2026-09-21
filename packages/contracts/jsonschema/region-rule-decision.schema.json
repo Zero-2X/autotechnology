@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/region-rule-decision.schema.json",
+  "title": "RegionRuleDecision",
+  "type": "object",
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "variant_id": {"anyOf": [{"type": "string", "format": "uuid"}, {"type": "null"}]},
+    "canonical_content_version_id": {"type": "string", "format": "uuid"},
+    "region_profile_version_id": {"type": "string", "format": "uuid"},
+    "locale": {"type": "string", "minLength": 1},
+    "market": {"type": "string", "minLength": 1},
+    "status": {"enum": ["eligible", "blocked", "review"]},
+    "checks": {"type": "array", "items": {
+      "type": "object",
+      "properties": {
+        "code": {"type": "string", "minLength": 1},
+        "status": {"enum": ["pass", "fail", "review"]},
+        "field": {"type": "string", "minLength": 1},
+        "message": {"type": "string", "minLength": 1},
+        "observed": {},
+        "expected": {}
+      },
+      "required": ["code", "status", "field", "message", "observed", "expected"],
+      "additionalProperties": false
+    }},
+    "required_disclosures": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "matched_restrictions": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "policy_snapshot_ref": {"type": ["string", "null"], "minLength": 1},
+    "decision_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "actor_id": {"type": "string", "format": "uuid"},
+    "trace_id": {"type": "string", "minLength": 1}
+  },
+  "required": ["id", "org_id", "variant_id", "canonical_content_version_id", "region_profile_version_id",
+    "locale", "market", "status", "checks", "required_disclosures", "matched_restrictions", "evaluated_at",
+    "policy_snapshot_ref", "decision_hash", "actor_id", "trace_id"],
+  "additionalProperties": false,
+  "x-source": "PROD-004 deterministic GEO_REGION preflight"
+}

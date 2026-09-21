@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/support-thread.schema.json",
+  "title": "support-thread",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "platform_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "external_thread_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "pending",
+        "resolved",
+        "escalated"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "intent": {"type": "string", "minLength": 1},
+    "risk_level": {"type": "string", "enum": ["low", "medium", "high"]},
+    "version": {"type": "integer", "minimum": 1},
+    "message_count": {"type": "integer", "minimum": 0},
+    "last_message_hash": {"type": ["string", "null"], "pattern": "^[A-Fa-f0-9]{64}$"},
+    "send_blocked": {"const": true},
+    "escalation_reason": {"type": ["string", "null"]}
+  },
+  "required": [
+    "id",
+    "org_id",
+    "platform_id",
+    "external_thread_id",
+    "status",
+    "created_at", "intent", "risk_level", "version", "message_count", "last_message_hash", "send_blocked", "escalation_reason"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

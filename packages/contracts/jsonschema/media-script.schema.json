@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/media-script.schema.json",
+  "title": "MediaScript",
+  "description": "Stable tenant-scoped script root for one VariantVersion and target duration.",
+  "type": "object",
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "variant_version_id": {"type": "string", "format": "uuid"},
+    "duration_seconds": {"type": "integer", "enum": [30, 60, 90]},
+    "current_version_id": {
+      "anyOf": [
+        {"type": "string", "format": "uuid"},
+        {"type": "null"}
+      ]
+    },
+    "status": {"type": "string", "enum": ["draft", "in_review", "approved", "withdrawn"]},
+    "created_by": {"type": "string", "format": "uuid"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"}
+  },
+  "required": [
+    "id", "org_id", "variant_version_id", "duration_seconds", "current_version_id",
+    "status", "created_by", "created_at", "updated_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "MEDIA-001"
+}

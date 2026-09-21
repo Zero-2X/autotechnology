@@ -1,0 +1,38 @@
+task_id: DIST-004
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000029
+actor: team/distribution
+predecessors: [FOUND-009, POLICY-001, DIST-002, DIST-003B]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/distribution/fake.py
+    - modules/distribution/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/publication-record.schema.json
+    - packages/contracts/jsonschema/delivery-attempt.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_dist_004.py
+  tests:
+    - tests/unit/distribution/test_fake.py
+verification:
+  targeted_command: python -m pytest tests/unit/distribution tests/contract/test_found_007d_core_schemas.py tests/contract/test_found_010_platform_contracts.py -q
+  targeted_result: 42 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  capability_draft_upload_schedule_publish_metrics_flow: true
+  delivery_attempt_and_publication_record_schema_validated: true
+  deterministic_fake_error_codes: true
+  expected_version_tenant_scope_and_idempotent_replay: true
+  no_network_or_real_credentials: true
+  business_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable FakeOfficialAdapter commands while retaining synthetic publication facts and audit events.
+  - This revision creates no business table; fake platform state uses a forward migration.

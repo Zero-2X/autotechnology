@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/knowledge-core-version.schema.json",
+  "title": "KnowledgeCoreVersion",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "knowledge_core_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "topic_brief_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "version_no": {
+      "type": "integer"
+    },
+    "entity_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
+    "claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
+    "evidence_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
+    "conflict_set_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
+    "freshness_checked_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "snapshot_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "content_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "verified",
+        "superseded",
+        "withdrawn",
+        "needs_review"
+      ]
+    },
+    "supersedes_version_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "created_by": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "knowledge_core_id",
+    "topic_brief_id",
+    "version_no",
+    "entity_ids",
+    "claim_ids",
+    "evidence_ids",
+    "conflict_set_ids",
+    "freshness_checked_at",
+    "snapshot_hash",
+    "content_hash",
+    "status",
+    "supersedes_version_id",
+    "created_by",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

@@ -1,0 +1,37 @@
+task_id: DIST-003A
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000027
+actor: team/distribution
+predecessors: [PROD-002, POLICY-001, DIST-001, DIST-002]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/distribution/manual.py
+    - modules/distribution/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/export-package.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_dist_003a.py
+  tests:
+    - tests/unit/distribution/test_manual.py
+verification:
+  targeted_command: python -m pytest tests/unit/distribution tests/contract/test_found_010_platform_contracts.py tests/contract/test_found_007d_core_schemas.py -q
+  targeted_result: 45 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  private_export_manifest_and_content_files: true
+  media_disclosure_checklist_and_evidence_assembly: true
+  public_media_url_blocked: true
+  deterministic_package_hash_and_idempotent_replay: true
+  tenant_scope_and_event_audit: true
+  business_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable ManualAdapter export commands while retaining immutable package metadata and audit records.
+  - This revision creates no business table; durable export artifacts use a forward migration.

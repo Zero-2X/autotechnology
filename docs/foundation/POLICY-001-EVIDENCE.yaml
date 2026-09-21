@@ -1,0 +1,38 @@
+task_id: POLICY-001
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000021
+actor: team/policy
+predecessors: [GOV-004, GOV-005, GEO_REGION-CORE-001, CANON-002, QA-001, QA-002, QA-003]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/policy/gate.py
+    - modules/policy/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/policy-snapshot.schema.json
+    - packages/contracts/jsonschema/policy-decision.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_policy_001.py
+  tests:
+    - tests/unit/policy/test_gate.py
+verification:
+  targeted_command: python -m pytest tests/unit/policy tests/contract/test_gov_004_risk_policy.py tests/contract/test_gov_005_policy_card.py tests/contract/test_found_004a_migrations.py -q
+  targeted_result: 20 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  tenant_and_subject_scoped_snapshot_validation: true
+  snapshot_effective_expiry_and_review_due_checks: true
+  risk_highest_level_aggregation: true
+  qa_rights_region_approval_release_account_data_model_gates: true
+  deny_precedes_manual_review_and_allow: true
+  deterministic_decision_hash_and_idempotent_replay: true
+  business_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Stop new Policy Gate evaluations while retaining generated PolicyDecision audit records.
+  - This revision creates no business table; durable decision persistence uses a forward migration.

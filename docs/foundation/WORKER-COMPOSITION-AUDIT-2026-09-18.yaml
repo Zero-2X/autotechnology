@@ -1,0 +1,38 @@
+scope: FOUND-004C/FOUND-004D runtime composition audit remediation
+status: closed_for_local_and_synthetic_runtime
+date: '2026-09-18'
+artifacts:
+  composition_entry: apps/worker/main.py
+  runtime: apps/worker/runtime.py
+  tests: tests/integration/test_foundation_worker_runtime.py
+behavior:
+  bounded_claim: batch_size, max_in_flight, and injected capacity are all enforced
+  lifecycle: claim -> start -> handler -> complete
+  heartbeat: cooperative checkpoint renews the active lease
+  failure_path: all handler failures use TaskFailureFacade
+  deterministic: failed without automatic retry
+  transient: retry_scheduled or dead_letter according to RetryPolicy
+  unknown: failed with one human review task
+  unexpected_exception: exception text is not persisted
+  timeout: unknown result because a side effect may already have occurred
+  shutdown: current task finishes; reserved unstarted leases become transient failures
+  outbox: optional tenant-scoped bounded dispatch after task processing
+  backpressure: zero capacity performs no claim
+  concurrency: one runtime executes synchronously; scale with multiple processes
+verification:
+  targeted_command: >-
+    python -m pytest tests/integration/test_foundation_worker_runtime.py
+    tests/contract/test_found_002_runtime_entries.py
+    tests/integration/test_foundation_failure_facade.py -q
+  targeted_result: 24 passed
+  full_gate: python scripts/check_foundation_contracts.py; 419 passed
+boundaries:
+  real_postgresql_concurrency: not verified; remains an external pre-production gate
+  real_credentials: false
+  network_calls: false
+  provider_calls: false
+  domain_handlers_registered_in_repository: false
+rollback:
+  - Stop creating new WorkerRuntime instances.
+  - Allow active leases to complete or expire; retain task and failure facts.
+  - Remove the composition runtime and its tests without changing accepted migrations.

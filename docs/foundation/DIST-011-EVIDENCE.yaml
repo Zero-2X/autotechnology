@@ -1,0 +1,44 @@
+task_id: DIST-011
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000040
+actor: team/distribution
+predecessors: [POLICY-001, DIST-010]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/distribution/ports.py
+    - modules/distribution/webhook.py
+    - modules/distribution/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/webhook-receipt.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+    - packages/contracts/events/webhook-processed.schema.json
+    - packages/contracts/events/webhook-deduplicated.schema.json
+    - packages/contracts/events/webhook-rejected.schema.json
+    - packages/contracts/events/webhook-dead_lettered.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_dist_011.py
+  tests:
+    - tests/unit/distribution/test_webhook.py
+    - tests/integration/test_dist_011_webhook_ingress.py
+verification:
+  targeted_command: python -m pytest tests/unit/distribution tests/integration --maxfail=1 -q
+  targeted_result: 158 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  fixture_hmac_signature_verification: true
+  event_envelope_schema_and_tenant_validation: true
+  external_event_deduplication: true
+  conflicting_payload_rejected: true
+  bounded_failures_enter_dead_letter: true
+  verified_manual_replay_only: true
+  duplicate_handler_invocation_blocked: true
+  private_payload_reference: true
+  real_credentials: false
+  real_platform_webhook: false
+  network_calls: false
+rollback:
+  - Disable the fixture ingress while retaining receipt, dedupe, rejection, dead-letter and audit facts.
+  - This revision creates no business table; the Alembic revision is reversible and fixture state is in memory only.

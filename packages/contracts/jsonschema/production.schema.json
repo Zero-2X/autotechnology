@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/production.schema.json",
+  "title": "production contract union",
+  "oneOf": [
+    {
+      "$ref": "./content-variant.schema.json"
+    },
+    {
+      "$ref": "./variant-version.schema.json"
+    }
+  ],
+  "x-module": "production"
+}

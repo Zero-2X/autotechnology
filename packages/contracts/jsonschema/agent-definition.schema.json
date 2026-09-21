@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/agent-definition.schema.json",
+  "title": "agent-definition",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "integer"
+    },
+    "input_schema_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "output_schema_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tool_allowlist": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "retired"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "key",
+    "version",
+    "input_schema_ref",
+    "output_schema_ref",
+    "tool_allowlist",
+    "status"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

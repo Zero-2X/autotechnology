@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/geo-query-fixture.schema.json",
+  "title": "GeoQueryFixture",
+  "description": "Immutable, tenant-scoped prompt/query fixture used by offline GEO compliance sampling.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "query": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "prompt": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "locale": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32
+    },
+    "region": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "expected_entities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "expected_claim_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "uniqueItems": true
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "created",
+        "active",
+        "retired"
+      ]
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "fixture_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "prompt_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "predecessor_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 256
+      },
+      "uniqueItems": true
+    },
+    "predecessor_hash": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "created_by": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_by": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "uuid"
+    },
+    "updated_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "trace_id": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "policy_snapshot_hash": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "query",
+    "prompt",
+    "locale",
+    "region",
+    "expected_entities",
+    "expected_claim_ids",
+    "status",
+    "version",
+    "fixture_hash",
+    "prompt_hash",
+    "predecessor_refs",
+    "predecessor_hash",
+    "created_by",
+    "created_at",
+    "updated_by",
+    "updated_at",
+    "trace_id",
+    "policy_snapshot_hash",
+    "metadata"
+  ],
+  "additionalProperties": false,
+  "x-source": "GEO_CONTENT-002",
+  "x-append-only": true
+}

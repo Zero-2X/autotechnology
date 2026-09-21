@@ -1,0 +1,22 @@
+schema_version: 1
+status: accepted
+python: '3.12'
+langgraph:
+  compatibility_line: 0.6.x
+  locked_version: 0.6.7
+  integration_mode: port_compatible
+  ci_runtime: dependency_free_fake
+langchain_core:
+  compatibility_line: 0.3.x
+  locked_version: 0.3.72
+  integration_mode: port_compatible
+lock_file: requirements-v3.lock
+provider_policy:
+  first_release_provider_count: 1
+  raw_provider_response_storage: false
+upgrade_window_days: 30
+rollback:
+  preserve_graph_state_schema: true
+  preserve_old_graph_versions_until_runs_terminal: true
+  require_contract_and_replay_tests: true
+x-task-ids: [GRAPH-GOV-002]

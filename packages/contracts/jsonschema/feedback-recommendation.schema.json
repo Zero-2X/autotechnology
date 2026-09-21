@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/feedback-recommendation.schema.json",
+  "title": "FeedbackRecommendation",
+  "type": "object",
+  "properties": {
+    "id": {"type": "string", "format": "uuid"}, "org_id": {"type": "string", "format": "uuid"},
+    "feedback_item_id": {"type": "string", "format": "uuid"},
+    "recommendation_type": {"type": "string", "enum": ["refresh", "reprioritize", "variant_strategy", "channel_strategy", "prompt_eval"]},
+    "target_type": {"type": "string", "enum": ["topic_opportunity", "refresh_queue", "variant", "channel", "prompt_eval"]},
+    "target_id": {"type": "string", "format": "uuid"}, "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "reasoning": {"type": "object", "additionalProperties": false, "properties": {"rule_version": {"type": "string"}, "evidence_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"}}, "required": ["rule_version", "evidence_hash"]},
+    "status": {"type": "string", "const": "proposed"}, "created_at": {"type": "string", "format": "date-time"}
+  },
+  "required": ["id", "org_id", "feedback_item_id", "recommendation_type", "target_type", "target_id", "confidence", "reasoning", "status", "created_at"],
+  "additionalProperties": false,
+  "x-source": "FEEDBACK-CORE-004"
+}

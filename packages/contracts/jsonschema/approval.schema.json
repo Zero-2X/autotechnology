@@ -1,0 +1,246 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/approval.schema.json",
+  "title": "Approval",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "aggregate_type": {
+      "type": "string",
+      "enum": [
+        "canonical",
+        "variant",
+        "asset",
+        "publication_intent",
+        "rights_version"
+      ]
+    },
+    "aggregate_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "aggregate_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "approval_type": {
+      "type": "string",
+      "enum": [
+        "content",
+        "asset",
+        "distribution",
+        "rights"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected",
+        "expired",
+        "revoked"
+      ]
+    },
+    "requested_by": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "reviewer_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "decision": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "approved",
+            "rejected",
+            "withdrawn"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "policy_snapshot_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
+    "input_snapshot_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "quorum_required": {
+      "type": "integer"
+    },
+    "quorum_reached": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "decision_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      },
+      "uniqueItems": true
+    },
+    "reason": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "expires_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "decided_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "aggregate_type",
+    "aggregate_id",
+    "aggregate_version",
+    "approval_type",
+    "status",
+    "requested_by",
+    "reviewer_id",
+    "decision",
+    "policy_snapshot_id",
+    "evidence_refs",
+    "input_snapshot_hash",
+    "quorum_required",
+    "quorum_reached",
+    "decision_ids",
+    "reason",
+    "expires_at",
+    "created_at",
+    "decided_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue",
+  "oneOf": [
+    {
+      "properties": {
+        "quorum_required": {
+          "const": 1
+        }
+      },
+      "if": {
+        "properties": {
+          "status": {
+            "const": "approved"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "quorum_reached": {
+            "minimum": 1
+          },
+          "decision_ids": {
+            "minItems": 1
+          },
+          "decision": {
+            "const": "approved"
+          },
+          "reviewer_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    {
+      "properties": {
+        "quorum_required": {
+          "const": 2
+        }
+      },
+      "if": {
+        "properties": {
+          "status": {
+            "const": "approved"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "quorum_reached": {
+            "minimum": 2
+          },
+          "decision_ids": {
+            "minItems": 2
+          },
+          "decision": {
+            "const": "approved"
+          },
+          "reviewer_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "decided_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  ]
+}

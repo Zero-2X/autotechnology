@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/content-variant.schema.json",
+  "title": "ContentVariant",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "canonical_content_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "locale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "market": {
+      "type": "string",
+      "minLength": 1
+    },
+    "audience": {
+      "type": "string",
+      "minLength": 1
+    },
+    "current_version_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "withdrawn",
+        "retired"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "canonical_content_id",
+    "locale",
+    "market",
+    "audience",
+    "current_version_id",
+    "status"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

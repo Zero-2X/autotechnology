@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/region-deletion-policy.schema.json",
+  "title": "RegionDeletionPolicy",
+  "description": "Deterministic deletion plan derived from an immutable region policy version; it contains no deletion side effect.",
+  "type": "object",
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "region_profile_version_id": {"type": "string", "format": "uuid"},
+    "subject_type": {"type": "string", "pattern": "^[A-Za-z][A-Za-z0-9_.:-]{0,127}$"},
+    "subject_id": {"type": "string", "format": "uuid"},
+    "data_residency": {"type": "string", "minLength": 1, "maxLength": 128},
+    "retention_days": {"type": "integer", "minimum": 0, "maximum": 36500},
+    "deletion_sla_hours": {"type": "integer", "minimum": 0, "maximum": 87600},
+    "anchor_at": {"type": "string", "format": "date-time"},
+    "retention_expires_at": {"type": "string", "format": "date-time"},
+    "due_at": {"type": "string", "format": "date-time"},
+    "legal_hold": {"type": "boolean"},
+    "status": {"type": "string", "enum": ["planned", "queued", "manual_review", "failed", "completed"]},
+    "deletion_action": {"type": "string", "enum": ["retain", "delete", "manual_review", "already_deleted"]},
+    "targets": {
+      "type": "array",
+      "prefixItems": [
+        {"const": "relational_db"}, {"const": "object_storage"}, {"const": "vector_index"},
+        {"const": "cache"}, {"const": "export_package"}
+      ],
+      "items": {"type": "string", "enum": ["relational_db", "object_storage", "vector_index", "cache", "export_package"]},
+      "minItems": 5, "maxItems": 5, "uniqueItems": true
+    },
+    "policy_snapshot_ref": {"type": ["string", "null"], "minLength": 1},
+    "input_snapshot_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "request_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "plan_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "request_id": {"type": ["string", "null"], "format": "uuid"},
+    "idempotency_key": {"type": "string", "minLength": 2, "maxLength": 200},
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "actor_id": {"type": "string", "format": "uuid"},
+    "trace_id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "required": [
+    "id", "org_id", "region_profile_version_id", "subject_type", "subject_id", "data_residency",
+    "retention_days", "deletion_sla_hours", "anchor_at", "retention_expires_at", "due_at", "legal_hold",
+    "status", "deletion_action", "targets", "policy_snapshot_ref", "input_snapshot_hash", "request_hash", "plan_hash",
+    "request_id", "idempotency_key", "evaluated_at", "actor_id", "trace_id"
+  ],
+  "additionalProperties": false,
+  "x-source": "GEO_REGION-002",
+  "x-append-only": true
+}

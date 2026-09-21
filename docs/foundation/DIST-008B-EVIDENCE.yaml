@@ -1,0 +1,39 @@
+task_id: DIST-008B
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000037
+actor: team/distribution
+predecessors: [FOUND-008, POLICY-001, POLICY-002, DIST-007, DIST-008A]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/distribution/killswitch.py
+    - modules/distribution/service.py
+    - modules/distribution/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/publication-intent.schema.json
+    - packages/contracts/jsonschema/kill-switch.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_dist_008b.py
+  tests:
+    - tests/unit/distribution/test_killswitch.py
+    - tests/unit/distribution/test_service.py
+verification:
+  targeted_command: python -m pytest tests/unit/distribution tests/integration --maxfail=1 -q
+  targeted_result: 149 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  four_delivery_modes_validate_against_target_version: true
+  global_platform_account_target_kill_switches: true
+  blocked_mode_has_no_delivery_attempt_side_effect: true
+  manual_export_safe_path_during_pause: true
+  tenant_scope_version_and_idempotency: true
+  kill_switch_contract_and_events: true
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable mode gate and Kill Switch commands while retaining Intent, delivery, package, record, event and audit facts.
+  - This revision creates no business table; gate projections use in-memory state and the Alembic revision is reversible.

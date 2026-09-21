@@ -1,0 +1,38 @@
+task_id: DIST-009
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000038
+actor: team/distribution
+predecessors: [CANON-006, PROD-002, QA-001, POLICY-001, APPROVAL-001, DIST-003A, DIST-007, DIST-008B]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/distribution/vertical.py
+    - modules/distribution/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/publication-intent.schema.json
+    - packages/contracts/jsonschema/export-package.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_dist_009.py
+  tests:
+    - tests/unit/distribution/test_vertical_slice.py
+verification:
+  targeted_command: python -m pytest tests/unit/distribution tests/integration --maxfail=1 -q
+  targeted_result: 151 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  canonical_variant_qa_approval_gates: true
+  account_free_manual_export_only: true
+  private_export_package: true
+  no_external_platform_side_effect: true
+  tenant_scope_and_idempotency: true
+  business_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable the vertical slice entry point while retaining existing predecessor and distribution facts.
+  - This revision creates no business table; the slice composes existing projections and the Alembic revision is reversible.

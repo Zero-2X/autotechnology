@@ -1,0 +1,189 @@
+policy_key: risk-classification
+policy_version: 1
+status: active
+scale:
+  order: [R0, R1, R2, R3, R4]
+  direction: increasing_severity
+  aggregation_rule: highest_triggered_level_wins
+  unknown_floor: R2
+  downgrade_rule: 风险降级必须创建新的版本化评估并引用原评估和证据；R3/R4 不得自动降级或自动恢复。
+dimensions:
+  - content
+  - factuality
+  - rights
+  - account
+  - privacy
+  - security
+  - region_compliance
+  - platform
+  - runtime
+cross_policy_refs:
+  release_levels: release-levels/v1
+  raci: raci-role-map/v1
+mandatory_rules:
+  - rule_id: highest_level_wins
+    applies_to: [all]
+    requirement: 同一对象命中多个条件时采用最高风险等级，低等级结果不得覆盖高等级结果。
+  - rule_id: unknown_requires_human_review
+    applies_to: [R2, R3, R4]
+    requirement: 无法确定的外部结果最低按 R2 处理，暂停相关副作用并创建人工核查；禁止自动重发。
+  - rule_id: immutable_downgrade_evidence
+    applies_to: [R2, R3, R4]
+    requirement: 降级必须创建新评估，保留原等级、证据、actor、trace_id 和审批记录。
+  - rule_id: severe_risk_no_auto_recovery
+    applies_to: [R3, R4]
+    requirement: R3/R4 不得自动降级、自动恢复或绕过 Kill Switch，恢复前必须重新检查最新 Policy、Rights、Region 和版本。
+  - rule_id: architecture_mvp_account_boundary
+    applies_to: [R4]
+    requirement: architecture_mvp 只允许 manual_export 和 simulation；读取、生成、保存真实凭证或调用真实平台 API 的请求必须阻断并至少按 R4 处理。
+levels:
+  - risk_level: R0
+    display_name: 低风险可逆编辑问题
+    meaning: 仅影响未批准草稿的格式、元数据或可逆编辑质量，不涉及权利、隐私、安全、合规或外部副作用。
+    triggers:
+      - trigger_id: reversible_draft_format_issue
+        dimension: content
+        condition: 未批准草稿存在格式、拼写、元数据或排版问题，修复可完全回滚且不会改变事实含义。
+    allowed_automation:
+      - 可在未批准草稿内执行确定性的格式化、拼写和元数据修复，并保留变更记录。
+    blocked_actions:
+      - 不得因 R0 问题创建真实发布动作、修改已批准版本或触发 Kill Switch。
+    human_escalation: none
+    minimum_approval_quorum: 1
+    response_sla_minutes: 1440
+    primary_role: content_editor
+    backup_roles: [qa_reviewer, topic_editor]
+    kill_switch_requirement: none
+    recovery_requirements:
+      - 重跑受影响的确定性检查并保留修复前后版本引用。
+    rollback_rule: 回退到修复前草稿版本；不得删除审计记录或影响已批准版本。
+  - risk_level: R1
+    display_name: 普通质量或可恢复内部故障
+    meaning: 影响内容质量或内部运行，但风险已知、范围有限、没有外部副作用，并可通过有上限的自动修复或重试恢复。
+    triggers:
+      - trigger_id: bounded_quality_issue
+        dimension: factuality
+        condition: 事实表述不够精确但不存在来源冲突，可通过已有证据进行一次有界修订。
+      - trigger_id: transient_internal_failure
+        dimension: runtime
+        condition: 内部依赖出现临时超时、限流或可恢复错误，尚未产生外部副作用。
+    allowed_automation:
+      - 可执行有上限的草稿修复，或按退避策略重试无外部副作用的内部步骤。
+    blocked_actions:
+      - 不得无限重试、绕过 QA/Policy，或把未验证修复直接标记为批准。
+    human_escalation: conditional
+    minimum_approval_quorum: 1
+    response_sla_minutes: 480
+    primary_role: qa_reviewer
+    backup_roles: [content_editor, on_call_engineer]
+    kill_switch_requirement: none
+    recovery_requirements:
+      - 达到重试上限或修复后仍失败时升级到 R2，并停止相关副作用。
+      - 恢复结果必须重新通过原失败检查。
+    rollback_rule: 停止自动修复或重试并回退到最近一次通过检查的内部版本。
+  - risk_level: R2
+    display_name: 需要人工核查的重大不确定性
+    meaning: 存在事实、权利、隐私、账号、平台结果或持续运行方面的不确定性，必须暂停相关副作用并由人工处理。
+    triggers:
+      - trigger_id: conflicting_evidence
+        dimension: factuality
+        condition: 两个或多个有效来源对关键事实给出冲突结论，无法自动确定真值。
+      - trigger_id: uncertain_rights
+        dimension: rights
+        condition: 来源许可、派生权利、地域或有效期不完整、不一致或无法确认。
+      - trigger_id: suspected_personal_data
+        dimension: privacy
+        condition: 内容或附件疑似包含个人数据、敏感个人信息或不可公开标识符。
+      - trigger_id: account_health_unknown
+        dimension: account
+        condition: 账号授权、Scope、健康或撤销状态无法确认；无账号阶段不得据此创建真实动作。
+      - trigger_id: unknown_external_result
+        dimension: platform
+        condition: 外部请求结果未知、超时后无法回查，或无法确认是否已创建外部对象。
+      - trigger_id: persistent_runtime_failure
+        dimension: runtime
+        condition: 核心任务、Outbox、Checkpoint、QA 或依赖在达到重试上限后仍持续失败。
+    allowed_automation:
+      - 只允许收集只读诊断、保全证据、创建 HumanTask 和通知负责人。
+    blocked_actions:
+      - 暂停受影响的发布、删除、覆盖、自动重试和其他不可逆副作用。
+      - unknown 外部结果不得自动重发。
+    human_escalation: required
+    minimum_approval_quorum: 1
+    response_sla_minutes: 120
+    primary_role: governance_owner
+    backup_roles: [on_call_engineer, rights_reviewer, data_protection_owner]
+    kill_switch_requirement: conditional_scoped
+    recovery_requirements:
+      - 人工核查事实、Rights、Privacy、账号或外部结果，并记录证据和决定。
+      - 恢复前重新读取最新 Policy、Rights、Region、版本和 Kill Switch。
+    rollback_rule: 保持副作用暂停，回退到最近一次已批准且证据完整的版本；未知外部结果先回查，不得重发。
+  - risk_level: R3
+    display_name: 高风险治理或安全违规
+    meaning: 已发现高风险内容、权利拒绝、区域合规冲突、Policy 绕过或恶意提示注入，需要双人审批和范围化 Kill Switch。
+    triggers:
+      - trigger_id: high_risk_content
+        dimension: content
+        condition: 内容涉及高风险建议、欺骗、歧视、违法引导或任务范围中禁止自动处理的敏感决定。
+      - trigger_id: denied_rights_distribution_request
+        dimension: rights
+        condition: 权利已拒绝、撤销或过期，但仍请求导出、分发或派生使用。
+      - trigger_id: regional_compliance_conflict
+        dimension: region_compliance
+        condition: 内容、数据处理或分发请求与目标区域适用规则或有效 Policy 明确冲突。
+      - trigger_id: malicious_prompt_injection
+        dimension: security
+        condition: 输入试图改变权限、读取敏感数据、绕过 Policy/Approval、调用未授权工具或产生平台副作用。
+      - trigger_id: policy_bypass_attempt
+        dimension: platform
+        condition: 请求试图绕过审批、Kill Switch、平台模式限制或 provider 幂等与回查规则。
+    allowed_automation:
+      - 只允许阻断请求、保全证据、创建事故记录并启用受影响范围的 Kill Switch。
+    blocked_actions:
+      - 禁止继续分发、自动降级、自动恢复或由单一审批人解除阻断。
+    human_escalation: required
+    minimum_approval_quorum: 2
+    response_sla_minutes: 30
+    primary_role: security_incident_lead
+    backup_roles: [governance_owner, policy_reviewer]
+    kill_switch_requirement: required_scoped
+    recovery_requirements:
+      - 两名不同审批人完成复核，并记录治理负责人确认和修复证据。
+      - 保持 Kill Switch，直到最新 Policy、Rights、Region、版本和安全检查全部通过。
+    rollback_rule: 保持范围化 Kill Switch，撤销未完成的内部意图并回退到最近的批准版本；不得删除违规和审批证据。
+  - risk_level: R4
+    display_name: 严重安全、隐私或未授权外部事件
+    meaning: 已确认凭证泄露、重大隐私泄露、生产安全失陷、未授权真实发布，或无账号阶段尝试真实平台副作用，必须立即隔离并响应事故。
+    triggers:
+      - trigger_id: credential_exposure
+        dimension: account
+        condition: 真实凭证、密钥、会话或授权材料已泄露、被写入不允许的位置或被未授权主体访问。
+      - trigger_id: confirmed_major_privacy_breach
+        dimension: privacy
+        condition: 已确认重大个人数据泄露、越权访问或违规跨境处理。
+      - trigger_id: production_security_compromise
+        dimension: security
+        condition: 已确认生产环境、供应链、运行身份或安全边界失陷。
+      - trigger_id: unauthorized_real_publication
+        dimension: platform
+        condition: 未经有效授权、审批或 Policy 即发生真实平台发布或其他不可逆外部动作。
+      - trigger_id: architecture_mvp_real_side_effect_attempt
+        dimension: account
+        condition: architecture_mvp 请求读取、生成或保存真实凭证，或尝试调用真实平台 API。
+    allowed_automation:
+      - 立即阻断请求、隔离受影响范围、启用范围化或全局 Kill Switch，并保全不可变证据。
+    blocked_actions:
+      - 禁止自动恢复、自动重发、继续使用受影响授权材料或删除事故证据。
+    human_escalation: incident_response
+    minimum_approval_quorum: 2
+    response_sla_minutes: 15
+    primary_role: security_incident_lead
+    backup_roles: [governance_owner, data_protection_owner, on_call_engineer]
+    kill_switch_requirement: immediate_scoped_or_global
+    recovery_requirements:
+      - 完成事故响应、影响评估、授权材料轮换或撤销、外部结果核查和审计复核。
+      - 两名不同审批人确认修复，治理负责人批准后方可分阶段恢复。
+      - 恢复前重新检查最新 Policy、Rights、Region、版本、账号授权和 Kill Switch。
+    rollback_rule: 保持隔离和 Kill Switch，停止所有新副作用；使用新版本修复，不覆盖或删除事故期间的事实与审计记录。
+effective_at: '2026-09-15T00:00:00+08:00'
+locked_by: team/governance

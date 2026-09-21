@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/canonical-content.schema.json",
+  "title": "CanonicalContent",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "topic_brief_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "stable_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "current_version_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "in_review",
+        "approved",
+        "archived"
+      ]
+    },
+    "created_by": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "topic_brief_id",
+    "stable_key",
+    "current_version_id",
+    "status",
+    "created_by",
+    "created_at",
+    "updated_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/task-queue-config.schema.json",
+  "title": "Task job polling configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "baseline_key",
+    "baseline_version",
+    "status",
+    "backend",
+    "configuration",
+    "polling",
+    "fixture"
+  ],
+  "properties": {
+    "baseline_key": { "const": "task-job-polling" },
+    "baseline_version": { "const": 1 },
+    "status": { "enum": ["active", "superseded"] },
+    "backend": { "const": "postgresql" },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "queue_name_env",
+        "poll_interval_env",
+        "batch_size_env",
+        "default_queue_name",
+        "default_poll_interval_seconds",
+        "default_batch_size",
+        "redis_required",
+        "credentials_in_repository"
+      ],
+      "properties": {
+        "queue_name_env": { "const": "TASK_QUEUE_NAME" },
+        "poll_interval_env": { "const": "TASK_QUEUE_POLL_INTERVAL_SECONDS" },
+        "batch_size_env": { "const": "TASK_QUEUE_POLL_BATCH_SIZE" },
+        "default_queue_name": { "const": "default" },
+        "default_poll_interval_seconds": { "type": "integer", "minimum": 1 },
+        "default_batch_size": { "type": "integer", "minimum": 1 },
+        "redis_required": { "const": false },
+        "credentials_in_repository": { "const": false }
+      }
+    },
+    "polling": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "eligible_status",
+        "ready_when",
+        "tenant_scope",
+        "ordering",
+        "mutates_job_state",
+        "claim_task"
+      ],
+      "properties": {
+        "eligible_status": { "const": "queued" },
+        "ready_when": { "const": "available_at_lte_now" },
+        "tenant_scope": { "const": "org_id" },
+        "ordering": {
+          "type": "array",
+          "prefixItems": [
+            { "const": "available_at" },
+            { "const": "created_at" },
+            { "const": "id" }
+          ],
+          "items": false,
+          "minItems": 3,
+          "maxItems": 3
+        },
+        "mutates_job_state": { "const": false },
+        "claim_task": { "const": "FOUND-004C" }
+      }
+    },
+    "fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "network_access", "represents_real_postgresql"],
+      "properties": {
+        "kind": { "const": "sqlite_dbapi" },
+        "network_access": { "const": false },
+        "represents_real_postgresql": { "const": false }
+      }
+    },
+    "effective_at": { "type": "string", "format": "date-time" },
+    "locked_by": { "type": "string", "minLength": 1 }
+  }
+}

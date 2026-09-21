@@ -1,0 +1,63 @@
+inventory_key: external-data-processors
+inventory_version: 1
+status: active
+as_of: '2026-09-18T00:00:00+08:00'
+owner_role: data_protection_owner
+review_due_at: '2026-10-18T00:00:00+08:00'
+real_processing_default: deny
+required_before_real_use:
+  - processing_regions
+  - retention_days
+  - contract_ref
+  - dpa_ref
+  - subprocessors_review_ref
+  - exit_plan_ref
+  - deletion_proof_ref
+  - owner_approval_ref
+vendors:
+  - vendor_id: pending-model
+    category: model
+    selection_status: unselected
+    processing_regions: []
+    retention_days: null
+    contract_ref: null
+    dpa_ref: null
+    subprocessors: {status: unknown, names: [], review_ref: null}
+    exit_plan_ref: null
+    deletion_proof_ref: null
+    owner_approval_ref: null
+  - vendor_id: pending-media
+    category: media
+    selection_status: unselected
+    processing_regions: []
+    retention_days: null
+    contract_ref: null
+    dpa_ref: null
+    subprocessors: {status: unknown, names: [], review_ref: null}
+    exit_plan_ref: null
+    deletion_proof_ref: null
+    owner_approval_ref: null
+  - vendor_id: pending-storage
+    category: storage
+    selection_status: unselected
+    processing_regions: []
+    retention_days: null
+    contract_ref: null
+    dpa_ref: null
+    subprocessors: {status: unknown, names: [], review_ref: null}
+    exit_plan_ref: null
+    deletion_proof_ref: null
+    owner_approval_ref: null
+  - vendor_id: pending-data-processing
+    category: data_processing
+    selection_status: unselected
+    processing_regions: []
+    retention_days: null
+    contract_ref: null
+    dpa_ref: null
+    subprocessors: {status: unknown, names: [], review_ref: null}
+    exit_plan_ref: null
+    deletion_proof_ref: null
+    owner_approval_ref: null
+unknown_or_missing_evidence_action: no_go_and_manual_review
+change_rule: new_inventory_version_and_data_protection_review

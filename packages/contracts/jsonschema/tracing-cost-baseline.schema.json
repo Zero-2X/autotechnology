@@ -1,0 +1,78 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/tracing-cost-baseline.schema.json",
+  "title": "Foundation tracing and cost baseline",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["baseline_key", "baseline_version", "status", "tracing", "costs", "security", "fixture", "effective_at", "locked_by"],
+  "properties": {
+    "baseline_key": { "const": "tracing-cost" },
+    "baseline_version": { "const": 1 },
+    "status": { "enum": ["active", "superseded"] },
+    "tracing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["api", "sdk", "propagation", "default_exporter", "global_provider_mutation", "remote_export", "response_headers", "span_attribute_policy"],
+      "properties": {
+        "api": { "const": "opentelemetry-api" },
+        "sdk": { "const": "opentelemetry-sdk" },
+        "propagation": { "const": "w3c-trace-context" },
+        "default_exporter": { "const": "in_memory" },
+        "global_provider_mutation": { "const": false },
+        "remote_export": { "const": false },
+        "response_headers": {
+          "type": "array",
+          "minItems": 3,
+          "uniqueItems": true,
+          "items": { "enum": ["traceparent", "X-Trace-Id", "X-Span-Id"] }
+        },
+        "span_attribute_policy": { "const": "allowlist" }
+      }
+    },
+    "costs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["record_schema", "default_sink", "persistence", "idempotency_scope", "units", "currency_unit"],
+      "properties": {
+        "record_schema": { "const": "packages/contracts/jsonschema/cost-record.schema.json" },
+        "default_sink": { "const": "in_memory" },
+        "persistence": { "const": false },
+        "idempotency_scope": {
+          "type": "array",
+          "prefixItems": [{ "const": "org_id" }, { "const": "idempotency_key" }],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "units": { "const": "integer" },
+        "currency_unit": { "const": "cents" }
+      }
+    },
+    "security": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["request_body_in_span", "response_body_in_span", "prompt_in_span", "query_in_span", "headers_in_span", "tenant_identity_in_span", "credentials_in_span"],
+      "properties": {
+        "request_body_in_span": { "const": false },
+        "response_body_in_span": { "const": false },
+        "prompt_in_span": { "const": false },
+        "query_in_span": { "const": false },
+        "headers_in_span": { "const": false },
+        "tenant_identity_in_span": { "const": false },
+        "credentials_in_span": { "const": false }
+      }
+    },
+    "fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["network_access", "database_write", "real_provider_call"],
+      "properties": {
+        "network_access": { "const": false },
+        "database_write": { "const": false },
+        "real_provider_call": { "const": false }
+      }
+    },
+    "effective_at": { "type": "string", "format": "date-time" },
+    "locked_by": { "type": "string", "minLength": 1 }
+  }
+}

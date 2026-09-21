@@ -1,0 +1,40 @@
+task_id: DIST-006C
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000034
+actor: team/distribution
+predecessors: [FOUND-004D, FOUND-004E, POLICY-001, DIST-006B]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/distribution/deadletter.py
+    - modules/distribution/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/publication-record.schema.json
+    - packages/contracts/jsonschema/human-task.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_dist_006c.py
+  tests:
+    - tests/unit/distribution/test_deadletter.py
+verification:
+  targeted_command: python -m pytest tests/unit/distribution tests/contract/test_found_007d_core_schemas.py -q
+  targeted_result: 53 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  unknown_creates_unique_human_task: true
+  unknown_blocks_automatic_side_effect_retry: true
+  retry_limit_enters_dead_letter: true
+  unknown_resolution_requires_evidence: true
+  single_task_replay_preserves_original_idempotency_key: true
+  replay_does_not_call_external_adapter: true
+  tenant_scope_expected_version_and_idempotency: true
+  business_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable unknown, dead-letter and replay command entry points while retaining delivery facts, HumanTasks, events and audit records.
+  - This revision creates no business table; projections use an in-memory service and the Alembic revision is reversible.

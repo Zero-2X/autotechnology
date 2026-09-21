@@ -1,0 +1,22 @@
+baseline_key: s3-compatible-storage
+baseline_version: 1
+status: active
+provider: s3-compatible
+configuration:
+  endpoint_env: STORAGE_ENDPOINT_URL
+  bucket_env: STORAGE_BUCKET
+  namespace_prefix_env: STORAGE_NAMESPACE_PREFIX
+  signed_url_ttl_env: STORAGE_SIGNED_URL_TTL_SECONDS
+  credentials_in_repository: false
+security:
+  default_access_policy: private
+  public_urls: false
+  tenant_namespace: true
+  content_hash: sha256
+  deletion_propagation: port_delete_then_metadata_delete
+fixture:
+  kind: fake_storage
+  network_access: false
+  credentials: false
+effective_at: '2026-09-16T00:00:00+08:00'
+locked_by: team/foundation

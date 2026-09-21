@@ -1,0 +1,39 @@
+task_id: POLICY-002
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000022
+actor: team/policy
+predecessors: [GOV-005, CANON-002, POLICY-001]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/policy/expiry.py
+    - modules/policy/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/policy-snapshot.schema.json
+    - packages/contracts/jsonschema/policy-decision.schema.json
+    - packages/contracts/jsonschema/human-task.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_policy_002.py
+  tests:
+    - tests/unit/policy/test_expiry.py
+verification:
+  targeted_command: python -m pytest tests/unit/policy tests/contract/test_gov_004_risk_policy.py tests/contract/test_gov_005_policy_card.py tests/contract/test_found_004a_migrations.py -q
+  targeted_result: 23 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  current_snapshot_allows_without_review_task: true
+  review_due_switches_to_manual: true
+  review_due_blocks_side_effects: true
+  idempotent_policy_review_human_task: true
+  expired_revoked_and_not_effective_denied: true
+  tenant_and_subject_scope_checks: true
+  business_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Stop new lifecycle checks while retaining generated HumanTask and decision audit records.
+  - This revision creates no business table; durable lifecycle decisions and HumanTask persistence use a forward migration.

@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/publication-record.schema.json",
+  "title": "PublicationRecord",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "publication_intent_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "delivery_attempt_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "provider_mode": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "fake",
+        "sandbox",
+        "authorized"
+      ]
+    },
+    "external_request_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "external_object_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "external_url": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "attempted",
+        "acknowledged",
+        "published",
+        "failed",
+        "unknown",
+        "removed"
+      ]
+    },
+    "result_snapshot": {
+      "type": "object",
+      "description": "Provider response projection. Provider adapters may add deterministic fields; raw secrets are forbidden by the adapter boundary.",
+      "additionalProperties": true
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "observation_source": {
+      "type": "string",
+      "enum": [
+        "adapter",
+        "webhook",
+        "poll",
+        "manual"
+      ]
+    },
+    "unknown_reason": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "resolution_reason": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "resolved_by": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "resolved_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "resolution_evidence_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "publication_intent_id",
+    "delivery_attempt_id",
+    "provider_mode",
+    "external_request_id",
+    "external_object_id",
+    "external_url",
+    "status",
+    "result_snapshot",
+    "observed_at",
+    "last_observed_at",
+    "observation_source",
+    "unknown_reason",
+    "resolution_reason",
+    "resolved_by",
+    "resolved_at",
+    "resolution_evidence_ref"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

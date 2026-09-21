@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/correlation-context.schema.json",
+  "title": "correlation-context",
+  "type": "object",
+  "properties": {
+    "trace_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "request_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "org_id": {
+      "anyOf": [
+        { "type": "string", "minLength": 1, "maxLength": 256 },
+        { "type": "null" }
+      ]
+    },
+    "actor_id": {
+      "anyOf": [
+        { "type": "string", "minLength": 1, "maxLength": 256 },
+        { "type": "null" }
+      ]
+    }
+  },
+  "required": ["trace_id", "request_id", "org_id", "actor_id"],
+  "additionalProperties": false,
+  "x-module": "foundation",
+  "x-source": "FOUND-005"
+}

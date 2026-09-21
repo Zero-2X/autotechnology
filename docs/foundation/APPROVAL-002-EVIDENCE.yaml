@@ -1,0 +1,38 @@
+task_id: APPROVAL-002
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000024
+actor: team/approval
+predecessors: [IAM-CORE-001, CANON-002, APPROVAL-001]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/approval/service.py
+    - modules/approval/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/approval.schema.json
+    - packages/contracts/jsonschema/approval-decision.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_approval_002.py
+  tests:
+    - tests/unit/approval/test_service.py
+verification:
+  targeted_command: python -m pytest tests/unit/approval tests/contract/test_found_007d_approval_schema.py tests/contract/test_found_004a_migrations.py -q
+  targeted_result: 27 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  immutable_reviewer_decision_projection: true
+  unique_reviewer_vote_per_approval: true
+  reviewer_authorization_port: true
+  requester_self_approval_blocked: true
+  r3_r4_two_reviewer_quorum: true
+  expected_version_and_idempotent_replay: true
+  business_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable new reviewer decision commands while retaining immutable decision records and audit events.
+  - This revision creates no business table; durable approval decisions use a forward migration.

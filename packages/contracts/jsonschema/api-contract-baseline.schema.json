@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/api-contract-baseline.schema.json",
+  "title": "OpenAPI compatibility baseline",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["baseline_key", "baseline_version", "openapi_version", "source", "operation_count", "operations", "compatibility", "effective_at", "locked_by"],
+  "properties": {
+    "baseline_key": { "const": "openapi-compatibility" },
+    "baseline_version": { "const": 1 },
+    "openapi_version": { "pattern": "^3\\.1\\." },
+    "source": { "const": "packages/contracts/openapi/openapi.yaml" },
+    "operation_count": { "type": "integer", "minimum": 1 },
+    "operations": { "type": "object", "minProperties": 1, "additionalProperties": { "type": "object" } },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allow_new_operations", "allow_new_optional_fields", "allow_new_response_codes", "reject_removed_operations", "reject_removed_responses", "reject_required_parameter_addition", "reject_constraint_narrowing"],
+      "properties": {
+        "allow_new_operations": { "const": true },
+        "allow_new_optional_fields": { "const": true },
+        "allow_new_response_codes": { "const": true },
+        "reject_removed_operations": { "const": true },
+        "reject_removed_responses": { "const": true },
+        "reject_required_parameter_addition": { "const": true },
+        "reject_constraint_narrowing": { "const": true }
+      }
+    },
+    "effective_at": { "type": "string", "format": "date-time" },
+    "locked_by": { "type": "string", "minLength": 1 }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/redis-config.schema.json",
+  "title": "FOUND-003C Redis capability baseline",
+  "type": "object", "additionalProperties": false,
+  "required": ["baseline_key", "baseline_version", "status", "provider", "required", "phase", "allowed_capabilities", "forbidden_capabilities", "queue_dependency", "network_probe_default", "configuration", "fallback", "tenant_key_rule", "effective_at", "locked_by"],
+  "properties": {
+    "baseline_key": {"const": "redis"},
+    "baseline_version": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["active", "superseded"]},
+    "provider": {"const": "redis"},
+    "required": {"const": false},
+    "phase": {"const": "P1"},
+    "allowed_capabilities": {"type": "array", "const": ["cache", "short_lock", "rate_limit"]},
+    "forbidden_capabilities": {"type": "array", "const": ["business_facts", "task_jobs", "outbox_events", "audit_log", "object_bodies"]},
+    "queue_dependency": {"const": false},
+    "network_probe_default": {"const": "no_network"},
+    "configuration": {
+      "type": "object", "additionalProperties": false,
+      "required": ["endpoint_env", "namespace_env", "endpoint_secret_policy", "snapshot_fields", "cache_ttl_seconds", "lock_ttl_seconds", "rate_limit_window_seconds", "rate_limit_capacity"],
+      "properties": {
+        "endpoint_env": {"const": "REDIS_URL"},
+        "namespace_env": {"const": "REDIS_NAMESPACE_PREFIX"},
+        "endpoint_secret_policy": {"const": "reject_url_userinfo_and_never_log_raw_url"},
+        "snapshot_fields": {"type": "array", "const": ["configured", "endpoint_scheme", "namespace_prefix", "cache_ttl_seconds", "lock_ttl_seconds", "rate_limit_window_seconds", "rate_limit_capacity"]},
+        "cache_ttl_seconds": {"type": "integer", "minimum": 1},
+        "lock_ttl_seconds": {"type": "integer", "minimum": 1},
+        "rate_limit_window_seconds": {"type": "integer", "minimum": 1},
+        "rate_limit_capacity": {"type": "integer", "minimum": 1}
+      }
+    },
+    "fallback": {"const": "local_fake_or_noop"},
+    "tenant_key_rule": {"const": "namespace_prefix/org_id/capability/key"},
+    "effective_at": {"type": "string", "format": "date-time"},
+    "locked_by": {"const": "team/foundation"}
+  },
+  "x-module": "foundation",
+  "x-task-ids": ["FOUND-003C"]
+}

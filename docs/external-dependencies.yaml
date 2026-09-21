@@ -1,0 +1,52 @@
+schema_version: 1
+owner: team/governance
+status_values: [planned, requested, ready, satisfied, blocked, missing, expired]
+dependencies:
+  - id: EXT-ACCOUNT-001
+    name: 真实平台主体与授权条件
+    owner: unassigned
+    required_by_phase: 8
+    blocking_tasks: [ACCOUNT-001A, OAUTH-001B, PLAT-001, PLAT-002, FEEDBACK-LIVE-001]
+    required_inputs:
+      - 法律主体或平台主体
+      - 授权联系人
+      - 官方 OAuth 应用或 Sandbox 条件
+      - 允许的 Scope 清单
+    substitute: Manual Export + FakeOfficialAdapter + synthetic fixtures
+    evidence:
+      - authorization_record
+      - scope_snapshot
+      - connection_health_check
+      - external_id_and_requery_result
+    status: missing
+  - id: EXT-MODEL-001
+    name: 模型供应商凭证与数据处理条款
+    owner: unassigned
+    required_by_phase: 4
+    blocking_tasks: [MODEL-001]
+    required_inputs:
+      - approved_provider
+      - data_processing_region
+      - retention_and_dpa
+    substitute: Fake Model + fixed golden fixtures
+    evidence:
+      - provider_terms
+      - DPA_or_equivalent
+      - test_call_audit
+    status: missing
+  - id: EXT-STORAGE-001
+    name: S3-compatible object storage
+    owner: unassigned
+    required_by_phase: 1
+    blocking_tasks: [FOUND-003B, DIST-003B, MEDIA-004A]
+    required_inputs:
+      - endpoint
+      - bucket_namespace
+      - private_access_policy
+      - retention_policy
+    substitute: Fake Storage in dev/test
+    evidence:
+      - private_read_write_test
+      - object_hash_check
+      - deletion_propagation_check
+    status: missing

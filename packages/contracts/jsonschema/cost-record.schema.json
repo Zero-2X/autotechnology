@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/cost-record.schema.json",
+  "title": "Append-only cost record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "org_id", "trace_id", "request_id", "service", "operation", "provider", "model", "input_units", "output_units", "cost_cents", "latency_ms", "status", "idempotency_key", "occurred_at"],
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "org_id": {
+      "anyOf": [
+        { "type": "string", "minLength": 1, "maxLength": 256 },
+        { "type": "null" }
+      ]
+    },
+    "trace_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "request_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "service": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "operation": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "provider": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "model": { "type": "string", "minLength": 1, "maxLength": 128 },
+    "input_units": { "type": "integer", "minimum": 0 },
+    "output_units": { "type": "integer", "minimum": 0 },
+    "cost_cents": { "type": "integer", "minimum": 0 },
+    "latency_ms": { "type": "integer", "minimum": 0 },
+    "status": { "enum": ["succeeded", "failed", "timed_out", "budget_exceeded"] },
+    "idempotency_key": { "type": "string", "minLength": 8, "maxLength": 200 },
+    "occurred_at": { "type": "string", "format": "date-time" }
+  },
+  "x-module": "foundation",
+  "x-source": "FOUND-006B"
+}

@@ -1,0 +1,37 @@
+task_id: DIST-002
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000026
+actor: team/distribution
+predecessors: [FOUND-010, POLICY-001, DIST-001]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/distribution/ports.py
+    - modules/distribution/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/publisher-capability.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_dist_002.py
+  tests:
+    - tests/unit/distribution/test_ports.py
+verification:
+  targeted_command: python -m pytest tests/unit/distribution tests/contract/test_found_010_platform_contracts.py tests/contract/test_found_007d_core_schemas.py -q
+  targeted_result: 42 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  four_independent_ports: true
+  mixed_responsibility_adapter_rejected: true
+  immutable_tenant_scoped_capability_versions: true
+  capability_event_envelope_and_audit: true
+  idempotent_replay: true
+  business_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable capability registration and port binding while retaining immutable capability facts and audit events.
+  - This revision creates no business table; durable capability projections use a forward migration.

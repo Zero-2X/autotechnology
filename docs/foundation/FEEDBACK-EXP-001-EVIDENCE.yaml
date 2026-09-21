@@ -1,0 +1,12 @@
+task_id: FEEDBACK-EXP-001
+status: done
+verification:
+  focused_command: python -m pytest tests/unit/feedback/test_experiment_service.py tests/integration/test_feedback_exp_001_migration.py tests/contract/test_feedback_exp_001_contract.py -q
+  focused_result: 4 passed
+  service_behaviors: hypothesis/group allocation validation, account-free sample capture, UTC windows, versioned planned/running/concluded/rolled_back state, conclusions, rollback reason, tenant isolation and idempotency
+  migration_test: reversible SQLite migration and offline PostgreSQL immutable SQL generation
+  schemas: feedback-experiment contract is closed and validated before persistence
+  secrets: samples store IDs and aggregate metrics only; no credentials or raw platform payloads
+  postgresql_runtime: not verified against a live PostgreSQL database
+limitations:
+  - Real platform attribution remains deferred to FEEDBACK-LIVE-001 and EXT-ACCOUNT-001.

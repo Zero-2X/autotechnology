@@ -1,0 +1,28 @@
+task_id: MEDIA-004B
+status: done
+verification:
+  focused_command: python -m pytest tests/unit/media/test_media_render_retry_service.py tests/integration/test_media_004b.py tests/integration/test_media_004b_migration.py tests/contract/test_media_004b_contract.py -q
+  service_behaviors: bounded exponential retry, deterministic/transient/unknown classification, idempotent failure facts and commands, due schedule claiming, dead letter, unknown manual review, single-shot rerender and stable private-object recovery
+  focused_result: 13 passed
+  migration_test: 1 passed; SQLite full-chain upgrade/downgrade, tenant composite references, retry field guards, append-only facts and schedule transitions
+  postgresql_sql_emission: 1 passed; upgrade/downgrade SQL and trigger/function removal order verified offline
+  migration_graph: revisions=112; head=20260920_media_004b; errors=0
+  schemas: schema_errors=0
+  architecture: architecture_errors=0
+  event_compatibility: events=167; baseline_events=162; errors=0; five pre-existing new-event warnings remain
+  task_refs: checked=157; errors=0
+  precision: scoped=93; precise=93; gaps=0
+  secrets: secret_findings=0
+  plan_consistency: validated=157; errors=0
+  inventory: pending final inventory refresh
+  full_regression: 979 passed; the sole failure was the expected stale FOUND-000 inventory fingerprint after repository edits, to be refreshed at the final documentation checkpoint
+  postgresql_runtime: not verified against a live PostgreSQL database
+verified_boundaries:
+  - Failure facts use the task-failure contract and never retain provider credentials or raw renderer output.
+  - Transient retries use a deterministic capped policy; deterministic failures do not schedule retries and unknown results require manual review.
+  - Retry schedules are tenant scoped and atomically claimable; replayed commands do not call Renderer again.
+  - Single-shot rerender uses a stable private object key and natural artifact key; same-hash confirmation is replayed and different-hash writes are rejected.
+  - A private object written before confirmation is recovered by head/get hash verification before any new renderer call.
+  - MEDIA-004B downgrade removes only its four tables and leaves MEDIA-004A facts and confirmed private objects intact.
+limitations:
+  - PostgreSQL behavior is verified through offline SQL generation and trigger removal ordering; live PostgreSQL execution remains unverified.

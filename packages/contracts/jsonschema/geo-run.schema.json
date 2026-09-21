@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/geo-run.schema.json",
+  "title": "GeoRun",
+  "description": "Immutable tenant-scoped result of deterministic multi-sample FakeGeo parsing and aggregation.",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "page_version_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "query_fixture_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "locale": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 32
+    },
+    "region": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "sample_count": {
+      "type": "integer",
+      "minimum": 2,
+      "maximum": 100
+    },
+    "parser_version": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64
+    },
+    "mention_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "citation_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "position_values": {
+      "type": "array",
+      "items": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "uniqueItems": true
+    },
+    "correctness_values": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "correct",
+          "incorrect",
+          "unknown"
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 3,
+      "uniqueItems": true
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "data_quality": {
+      "type": "string",
+      "enum": [
+        "estimated",
+        "validated"
+      ]
+    },
+    "fixture_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "running",
+        "succeeded",
+        "failed"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "page_version_id",
+    "query_fixture_id",
+    "locale",
+    "region",
+    "sample_count",
+    "parser_version",
+    "mention_count",
+    "citation_count",
+    "position_values",
+    "correctness_values",
+    "confidence",
+    "data_quality",
+    "fixture_hash",
+    "status",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "GEO_CONTENT-003",
+  "x-append-only": true
+}

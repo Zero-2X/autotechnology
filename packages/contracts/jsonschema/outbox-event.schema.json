@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/outbox-event.schema.json",
+  "title": "OutboxEvent",
+  "type": "object",
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "event_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "event_schema_version": {
+      "type": "integer"
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "trace_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "correlation_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "causation_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "aggregate_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "aggregate_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "aggregate_version": {
+      "type": "integer"
+    },
+    "actor_type": {
+      "type": "string",
+      "enum": [
+        "user",
+        "service",
+        "system",
+        "worker"
+      ]
+    },
+    "actor_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "payload": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": true
+    },
+    "payload_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "published_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "attempt_count": {
+      "type": "integer"
+    },
+    "last_error": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "publishing",
+        "published",
+        "failed",
+        "dead_letter"
+      ]
+    },
+    "available_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lease_until": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "locked_by": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "event_id",
+    "event_type",
+    "event_schema_version",
+    "occurred_at",
+    "org_id",
+    "trace_id",
+    "correlation_id",
+    "causation_id",
+    "aggregate_type",
+    "aggregate_id",
+    "aggregate_version",
+    "actor_type",
+    "actor_id",
+    "idempotency_key",
+    "payload",
+    "payload_hash",
+    "published_at",
+    "attempt_count",
+    "last_error",
+    "status",
+    "available_at",
+    "lease_until",
+    "locked_by"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

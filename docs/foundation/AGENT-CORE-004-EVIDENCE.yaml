@@ -1,0 +1,19 @@
+task_id: AGENT-CORE-004
+status: done
+trace_id: 8a42d1e6-5c90-4f27-b134-agentcore004
+actor: team/agent
+registry_ref: docs/task-registry.yaml
+verification:
+  tests:
+    - py -3.12 -m pytest tests/unit/agent -q
+  result: 9 passed
+  checks:
+    - py -3.12 scripts/check_task_card_precision.py --task AGENT-CORE-004 --strict
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_migrations.py
+  raw_prompt_storage: false
+  hashes: input and output
+  review_and_retry: recorded
+side_effects:
+  real_credentials: false
+  external_publication: false

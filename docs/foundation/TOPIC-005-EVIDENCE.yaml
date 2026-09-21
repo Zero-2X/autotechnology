@@ -1,0 +1,25 @@
+task_id: TOPIC-005
+status: done
+implementation:
+  module: modules/topic/calendar.py
+  contracts:
+    - packages/contracts/jsonschema/topic-opportunity.schema.json
+  migration: packages/db/migrations/versions/20260918_topic_005.py
+  behaviors:
+    - versioned_editorial_calendar_plan
+    - owner_priority_and_utc_due_at
+    - manual_override_reason_required
+    - opportunity_optimistic_version_update
+    - tenant_scoped_idempotency
+    - append_only_calendar_audit
+verification:
+  commands:
+    - py -3.12 -m pytest tests/unit/topic/test_calendar.py tests/integration/test_topic_calendar.py -q --disable-warnings --maxfail=1
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 scripts/check_migrations.py --strict --json
+    - py -3.12 scripts/check_task_card_precision.py --task TOPIC-005 --strict
+  results:
+    targeted_tests: 3
+    architecture_errors: 0
+    migration_errors: 0
+    precision_gaps: 0

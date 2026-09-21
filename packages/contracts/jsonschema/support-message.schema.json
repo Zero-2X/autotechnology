@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/support-message.schema.json",
+  "title": "SupportMessage",
+  "type": "object",
+  "properties": {
+    "id": {"type": "string", "format": "uuid"}, "org_id": {"type": "string", "format": "uuid"}, "thread_id": {"type": "string", "format": "uuid"},
+    "channel": {"type": "string", "enum": ["comment", "message"]}, "external_message_id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "message_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"}, "source": {"type": "string", "enum": ["fake", "manual"]},
+    "intent": {"type": "string", "enum": ["question", "feedback", "bug", "status", "refund", "contract", "medical", "legal", "financial", "kyc", "appeal", "copyright", "privacy", "security", "unknown"]},
+    "risk_level": {"type": "string", "enum": ["low", "medium", "high"]}, "received_at": {"type": "string", "format": "date-time"}
+  },
+  "required": ["id", "org_id", "thread_id", "channel", "external_message_id", "message_hash", "source", "intent", "risk_level", "received_at"],
+  "additionalProperties": false,
+  "x-source": "SUP-001/SUP-002"
+}

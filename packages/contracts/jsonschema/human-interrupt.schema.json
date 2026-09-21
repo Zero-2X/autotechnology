@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/human-interrupt.schema.json",
+  "title": "human interrupt reference",
+  "type": "object",
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "run_id": {"type": "string", "format": "uuid"},
+    "kind": {"type": "string", "minLength": 1, "maxLength": 64},
+    "status": {"enum": ["waiting", "claimed", "resolved", "expired", "cancelled"]},
+    "input_refs": {"type": "object", "additionalProperties": {"type": "string", "maxLength": 2048}},
+    "result_refs": {"type": ["object", "null"], "additionalProperties": {"type": "string", "maxLength": 2048}},
+    "expires_at": {"type": ["string", "null"], "format": "date-time"}
+  },
+  "required": ["id", "org_id", "run_id", "kind", "status", "input_refs", "result_refs", "expires_at"],
+  "additionalProperties": false,
+  "x-module": "orchestration",
+  "x-task-ids": ["GRAPH-HUMAN-001"]
+}

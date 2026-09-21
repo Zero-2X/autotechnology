@@ -1,0 +1,48 @@
+scope_key: ai-technology-engineering
+scope_version: 1
+status: locked
+vertical_name: AI 技术与应用工程
+vertical_definition: 面向开发者、技术负责人和技术决策者，围绕人工智能技术及其工程落地生产可验证、可追溯、可本地化的中英文技术内容。
+primary_topics:
+  - 大语言模型（LLM）
+  - 检索增强生成（RAG）
+  - Agent 工程
+  - LangChain 与 LangGraph
+  - Prompt、结构化输出与模型评测
+  - AI 应用架构、部署与可观测性
+  - AI 安全、隐私、版权与合规工程
+product_capabilities:
+  - 自动发现和筛选优质技术选题
+  - 自动采集和整理国内外技术资料并形成统一知识库
+  - 自动生成、整合、翻译和本地化技术内容
+  - 自动进行事实、版权、质量和合规检查
+  - 将文字内容扩展为图片、视频等多媒体内容
+  - 根据国家、语言和平台生成适配版本
+  - 后续接入平台账号进行发布、客服回复和数据监测
+  - 根据内容效果反馈并持续优化选题和生产流程
+languages:
+  - zh-CN
+  - en-US
+content_types:
+  - text
+knowledge_site: first_party
+distribution_modes:
+  - manual_export
+  - simulation
+account_strategy: deferred_to_M2
+initial_in_scope:
+  - TopicSignal、TopicOpportunity 和 TopicBrief
+  - 来源、证据、版权和 KnowledgeCore
+  - Canonical Content 及中英文 Variant
+  - 事实、代码、版权、质量、GEO_CONTENT 和 GEO_REGION 检查
+  - Policy Gate、人工审批和审计
+  - 手工导出包和 Fake Platform 模拟
+  - Observation、FeedbackItem 和刷新建议
+initial_out_of_scope:
+  - 真实平台账号、OAuth、Token 和平台 API 副作用
+  - 真实平台发布、平台审核、Webhook 和真实指标
+  - 自动客服发送和跨平台消息写入
+  - 图片/视频生产的生产级渲染基础设施
+  - 多模型供应商、多平台和规模化微服务
+locked_at: '2026-09-15T00:00:00+08:00'
+locked_by: team/governance

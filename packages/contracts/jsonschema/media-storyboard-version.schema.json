@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/media-storyboard-version.schema.json",
+  "title": "MediaStoryboardVersion",
+  "type": "object",
+  "$defs": {
+    "rights_snapshot": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "string", "format": "uuid"},
+        "snapshot_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"}
+      },
+      "required": ["id", "snapshot_hash"],
+      "additionalProperties": false
+    },
+    "asset_reference": {
+      "type": "object",
+      "properties": {
+        "role": {"type": "string", "enum": ["visual", "music", "font", "voiceover"]},
+        "asset_version_id": {"type": "string", "format": "uuid"},
+        "media_type": {"type": "string", "enum": ["image", "audio", "video", "subtitle", "document", "thumbnail"]},
+        "format": {"type": "string", "minLength": 1, "maxLength": 64},
+        "storage_object_ref": {
+          "anyOf": [
+            {"type": "string", "pattern": "^private://", "minLength": 1},
+            {"type": "null"}
+          ]
+        },
+        "asset_snapshot_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+        "rights_record_version_ids": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"type": "string", "format": "uuid"}
+        },
+        "rights_snapshots": {
+          "type": "array", "minItems": 1, "uniqueItems": true,
+          "items": {"$ref": "#/$defs/rights_snapshot"}
+        }
+      },
+      "required": [
+        "role", "asset_version_id", "media_type", "format", "storage_object_ref",
+        "asset_snapshot_hash", "rights_record_version_ids", "rights_snapshots"
+      ],
+      "additionalProperties": false
+    },
+    "shot": {
+      "type": "object",
+      "properties": {
+        "sequence": {"type": "integer", "minimum": 1},
+        "script_segment_sequence": {"type": "integer", "enum": [1, 2, 3]},
+        "start_ms": {"type": "integer", "minimum": 0},
+        "end_ms": {"type": "integer", "minimum": 500},
+        "purpose": {"type": "string", "minLength": 1, "maxLength": 512},
+        "asset_refs": {"type": "array", "items": {"$ref": "#/$defs/asset_reference"}},
+        "transition": {"type": "string", "enum": ["cut", "fade", "dissolve", "none"]}
+      },
+      "required": ["sequence", "script_segment_sequence", "start_ms", "end_ms", "purpose", "asset_refs", "transition"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "media_storyboard_id": {"type": "string", "format": "uuid"},
+    "media_script_version_id": {"type": "string", "format": "uuid"},
+    "version_no": {"type": "integer", "minimum": 1},
+    "duration_seconds": {"type": "integer", "enum": [30, 60, 90]},
+    "locale": {"type": "string", "minLength": 2, "maxLength": 64},
+    "market": {"type": "string", "minLength": 1, "maxLength": 64},
+    "region_profile_version_id": {"type": "string", "format": "uuid"},
+    "policy_snapshot_id": {"type": "string", "format": "uuid"},
+    "template_version": {"const": "media-storyboard-v1"},
+    "status": {"type": "string", "enum": ["draft", "edited", "in_review", "approved", "superseded", "withdrawn"]},
+    "shots": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/shot"}},
+    "asset_reference_count": {"type": "integer", "minimum": 0},
+    "rights_snapshot_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "format": "uuid"}},
+    "revision_reason": {
+      "anyOf": [{"type": "string", "minLength": 1, "maxLength": 1000}, {"type": "null"}]
+    },
+    "supersedes_version_id": {
+      "anyOf": [{"type": "string", "format": "uuid"}, {"type": "null"}]
+    },
+    "source_script_snapshot_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "snapshot_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "created_by": {"type": "string", "format": "uuid"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "required": [
+    "id", "org_id", "media_storyboard_id", "media_script_version_id", "version_no",
+    "duration_seconds", "locale", "market", "region_profile_version_id", "policy_snapshot_id",
+    "template_version", "status", "shots", "asset_reference_count", "rights_snapshot_ids",
+    "revision_reason", "supersedes_version_id", "source_script_snapshot_hash", "snapshot_hash",
+    "created_by", "created_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "MEDIA-002",
+  "x-append-only": true
+}

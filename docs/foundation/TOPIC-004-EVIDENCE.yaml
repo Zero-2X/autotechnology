@@ -1,0 +1,27 @@
+task_id: TOPIC-004
+status: done
+implementation:
+  module: modules/topic/brief.py
+  contracts:
+    - packages/contracts/jsonschema/topic-brief.schema.json
+  migration: packages/db/migrations/versions/20260918_topic_004.py
+  behaviors:
+    - audience_problem_claim_and_evidence_plan
+    - claim_to_evidence_plan_key_validation
+    - shortlisted_and_policy_gated_lock
+    - immutable_locked_brief_and_supersede_version
+    - tenant_scoped_idempotent_commands
+    - append_only_brief_events
+verification:
+  commands:
+    - py -3.12 -m pytest tests/unit/topic/test_brief.py tests/integration/test_topic_brief.py -q --disable-warnings --maxfail=1
+    - py -3.12 scripts/check_json_schemas.py
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 scripts/check_migrations.py --strict --json
+    - py -3.12 scripts/check_task_card_precision.py --task TOPIC-004 --strict
+  results:
+    targeted_tests: 4
+    schema_errors: 0
+    architecture_errors: 0
+    migration_errors: 0
+    precision_gaps: 0

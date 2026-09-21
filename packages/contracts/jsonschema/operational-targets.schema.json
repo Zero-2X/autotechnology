@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/operational-targets.schema.json",
+  "title": "GOV-008 operational targets",
+  "type": "object", "additionalProperties": false,
+  "required": ["policy_key", "policy_version", "status", "scope", "owner_role", "effective_at", "measurement", "success_metrics", "cost_budget", "slo", "recovery", "human_approval", "go_no_go"],
+  "properties": {
+    "policy_key": {"const": "operational-targets"},
+    "policy_version": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["active", "superseded"]},
+    "scope": {"const": "architecture_mvp"},
+    "owner_role": {"const": "governance_owner"},
+    "effective_at": {"type": "string", "format": "date-time"},
+    "measurement": {
+      "type": "object", "additionalProperties": false,
+      "required": ["window_days", "minimum_workflow_samples", "synthetic_results_are_not_production_slo_evidence"],
+      "properties": {
+        "window_days": {"type": "integer", "minimum": 1},
+        "minimum_workflow_samples": {"type": "integer", "minimum": 1},
+        "synthetic_results_are_not_production_slo_evidence": {"const": true}
+      }
+    },
+    "success_metrics": {
+      "type": "object", "additionalProperties": false,
+      "required": ["completed_workflow_ratio", "critical_policy_bypass_count", "unauthorized_external_action_count", "traceable_output_ratio"],
+      "properties": {
+        "completed_workflow_ratio": {"$ref": "#/$defs/ratio_metric"},
+        "critical_policy_bypass_count": {"$ref": "#/$defs/zero_count"},
+        "unauthorized_external_action_count": {"$ref": "#/$defs/zero_count"},
+        "traceable_output_ratio": {"$ref": "#/$defs/ratio_metric"}
+      }
+    },
+    "cost_budget": {
+      "type": "object", "additionalProperties": false,
+      "required": ["currency", "accounting_mode", "per_workflow_limit", "daily_limit", "monthly_limit", "warning_fraction", "unknown_cost_action", "exceed_action"],
+      "properties": {
+        "currency": {"const": "USD"},
+        "accounting_mode": {"const": "simulated_until_real_provider_approved"},
+        "per_workflow_limit": {"$ref": "#/$defs/money"},
+        "daily_limit": {"$ref": "#/$defs/money"},
+        "monthly_limit": {"$ref": "#/$defs/money"},
+        "warning_fraction": {"type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1},
+        "unknown_cost_action": {"const": "deny_and_review"},
+        "exceed_action": {"const": "stop_new_costly_work_and_escalate"}
+      }
+    },
+    "slo": {
+      "type": "object", "additionalProperties": false,
+      "required": ["availability_monthly_minimum", "workflow_completion_monthly_minimum", "audit_record_delivery_monthly_minimum", "queue_start_p95_seconds_maximum", "insufficient_samples_action"],
+      "properties": {
+        "availability_monthly_minimum": {"$ref": "#/$defs/ratio"},
+        "workflow_completion_monthly_minimum": {"$ref": "#/$defs/ratio"},
+        "audit_record_delivery_monthly_minimum": {"$ref": "#/$defs/ratio"},
+        "queue_start_p95_seconds_maximum": {"type": "integer", "minimum": 1},
+        "insufficient_samples_action": {"const": "inconclusive"}
+      }
+    },
+    "recovery": {
+      "type": "object", "additionalProperties": false,
+      "required": ["rpo_minutes_maximum", "rto_minutes_maximum", "measured_by", "evidence_required", "missing_evidence_action"],
+      "properties": {
+        "rpo_minutes_maximum": {"type": "integer", "minimum": 0},
+        "rto_minutes_maximum": {"type": "integer", "minimum": 1},
+        "measured_by": {"const": "disposable_restore_drill"},
+        "evidence_required": {"type": "array", "const": ["backup_snapshot_ref", "failure_started_at", "restored_at", "latest_recovered_event_at", "missing_event_count"]},
+        "missing_evidence_action": {"const": "no_go"}
+      }
+    },
+    "human_approval": {
+      "type": "object", "additionalProperties": false,
+      "required": ["clock_start", "clock_stop", "missed_deadline_action", "risk_levels"],
+      "properties": {
+        "clock_start": {"const": "human_task_created_at"},
+        "clock_stop": {"const": "first_human_response_at"},
+        "missed_deadline_action": {"const": "escalate_to_backup_and_keep_side_effect_blocked"},
+        "risk_levels": {
+          "type": "object", "additionalProperties": false,
+          "required": ["R0", "R1", "R2", "R3", "R4"],
+          "properties": {
+            "R0": {"$ref": "#/$defs/approval_level"}, "R1": {"$ref": "#/$defs/approval_level"},
+            "R2": {"$ref": "#/$defs/approval_level"}, "R3": {"$ref": "#/$defs/approval_level"},
+            "R4": {"$ref": "#/$defs/approval_level"}
+          }
+        }
+      }
+    },
+    "go_no_go": {
+      "type": "object", "additionalProperties": false,
+      "required": ["required_evidence", "missing_or_failed_metric_action", "owner_role"],
+      "properties": {
+        "required_evidence": {"type": "array", "minItems": 6, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "missing_or_failed_metric_action": {"const": "no_go"},
+        "owner_role": {"const": "governance_owner"}
+      }
+    }
+  },
+  "$defs": {
+    "ratio": {"type": "number", "minimum": 0, "maximum": 1},
+    "ratio_metric": {"type": "object", "additionalProperties": false, "required": ["numerator", "denominator", "minimum_ratio"], "properties": {"numerator": {"type": "string", "minLength": 1}, "denominator": {"type": "string", "minLength": 1}, "minimum_ratio": {"$ref": "#/$defs/ratio"}}},
+    "zero_count": {"type": "object", "additionalProperties": false, "required": ["maximum_count"], "properties": {"maximum_count": {"const": 0}}},
+    "money": {"type": "string", "pattern": "^(0|[1-9][0-9]*)\\.[0-9]{2}$"},
+    "approval_level": {"type": "object", "additionalProperties": false, "required": ["first_response_minutes", "minimum_quorum"], "properties": {"first_response_minutes": {"type": "integer", "minimum": 1}, "minimum_quorum": {"type": "integer", "minimum": 1}}}
+  },
+  "x-module": "governance",
+  "x-task-ids": ["GOV-008"]
+}

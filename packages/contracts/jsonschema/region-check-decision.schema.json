@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/region-check-decision.schema.json",
+  "title": "RegionCheckDecision",
+  "description": "Deterministic, tenant-scoped result of checking a page against an immutable region policy version.",
+  "type": "object",
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "region_profile_version_id": {"type": "string", "format": "uuid"},
+    "page_version_id": {"type": ["string", "null"], "format": "uuid"},
+    "page_key": {"type": "string", "minLength": 1, "maxLength": 512},
+    "locale": {"type": "string", "minLength": 2, "maxLength": 64},
+    "market": {"type": ["string", "null"], "minLength": 1, "maxLength": 64},
+    "region": {"type": ["string", "null"], "minLength": 1, "maxLength": 64},
+    "decision": {"type": "string", "enum": ["eligible", "deny", "manual_review"]},
+    "status": {"type": "string", "enum": ["eligible", "blocked", "review"]},
+    "input_snapshot_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {"type": "string", "pattern": "^[A-Z0-9_]+$"},
+          "status": {"type": "string", "enum": ["pass", "fail", "review"]},
+          "field": {"type": "string", "minLength": 1, "maxLength": 128},
+          "observed": {},
+          "expected": {},
+          "message": {"type": "string", "minLength": 1, "maxLength": 512}
+        },
+        "required": ["code", "status", "field", "observed", "expected", "message"],
+        "additionalProperties": false
+      }
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {"type": "string", "pattern": "^[A-Z0-9_]+$"},
+          "message": {"type": "string", "minLength": 1, "maxLength": 512}
+        },
+        "required": ["code", "message"],
+        "additionalProperties": false
+      },
+      "uniqueItems": true
+    },
+    "required_disclosures": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "matched_restrictions": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "hreflang": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "locale": {"type": "string", "minLength": 2},
+          "url": {"type": "string", "format": "uri", "pattern": "^https?://[^?#]+$"}
+        },
+        "required": ["locale", "url"],
+        "additionalProperties": false
+      },
+      "uniqueItems": true
+    },
+    "x_default_locale": {"type": ["string", "null"], "minLength": 2},
+    "policy_snapshot_ref": {"type": ["string", "null"], "minLength": 1},
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "decision_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "request_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "idempotency_key": {"type": "string", "minLength": 2, "maxLength": 200},
+    "actor_id": {"type": "string", "format": "uuid"},
+    "trace_id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "required": [
+    "id", "org_id", "region_profile_version_id", "page_version_id", "page_key", "locale", "market",
+    "decision", "status", "input_snapshot_hash", "checks", "reasons", "required_disclosures",
+    "matched_restrictions", "policy_snapshot_ref", "evaluated_at", "decision_hash", "request_hash",
+    "idempotency_key", "actor_id", "trace_id"
+  ],
+  "additionalProperties": false,
+  "x-source": "GEO_REGION-002",
+  "x-append-only": true
+}

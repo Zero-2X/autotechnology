@@ -1,0 +1,20 @@
+baseline_key: postgresql-foundation
+baseline_version: 1
+status: active
+engine: postgresql
+configuration:
+  url_env: DATABASE_URL
+  default_port: 5432
+  credentials_in_repository: false
+  connect_timeout_env: DATABASE_CONNECT_TIMEOUT_SECONDS
+  application_name_env: DATABASE_APPLICATION_NAME
+health_check:
+  path: /health/ready
+  probe_default: not_attempted
+  not_configured_status: not_configured
+fixture:
+  kind: synthetic
+  database_name: foundation_fixture
+  network_access: false
+effective_at: '2026-09-16T00:00:00+08:00'
+locked_by: team/foundation

@@ -1,0 +1,39 @@
+task_id: APPROVAL-001
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000023
+actor: team/approval
+predecessors: [IAM-CORE-001, WORKFLOW-CORE-002, CANON-002, POLICY-001]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/approval/service.py
+    - modules/approval/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/approval.schema.json
+    - packages/contracts/jsonschema/approval-decision.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_approval_001.py
+  tests:
+    - tests/unit/approval/test_service.py
+verification:
+  targeted_command: python -m pytest tests/unit/approval tests/contract/test_found_007d_approval_schema.py tests/contract/test_found_004a_migrations.py -q
+  targeted_result: 26 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  immutable_input_snapshot_hash_and_version_diff: true
+  evidence_risk_comment_assignment_view: true
+  expected_version_and_tenant_scope: true
+  one_or_two_reviewer_quorum: true
+  append_only_approval_decisions: true
+  approval_expiry_and_override_revocation: true
+  command_idempotent_replay: true
+  business_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Stop new Approval commands while retaining ApprovalDecision, comments, and audit records.
+  - This revision creates no business table; durable approval persistence uses a forward migration.

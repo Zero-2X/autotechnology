@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/topic-signal.schema.json",
+  "title": "TopicSignal",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "source_type": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "rss",
+        "api",
+        "import"
+      ]
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "captured_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "locale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "region": {
+      "type": "string",
+      "minLength": 1
+    },
+    "usage_rights_status": {
+      "type": "string",
+      "enum": [
+        "unknown",
+        "verified",
+        "restricted",
+        "rejected"
+      ]
+    },
+    "terms_snapshot_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "license_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "permitted_use": {
+      "type": "string",
+      "enum": [
+        "research",
+        "editorial",
+        "commercial",
+        "none"
+      ]
+    },
+    "confidence": {
+      "type": "number"
+    },
+    "normalized_question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "snapshot_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 8192
+    },
+    "dedupe_key": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "created_by": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "source_type",
+    "source_ref",
+    "captured_at",
+    "locale",
+    "region",
+    "usage_rights_status",
+    "terms_snapshot_ref",
+    "license_ref",
+    "permitted_use",
+    "confidence",
+    "normalized_question",
+    "snapshot_hash",
+    "title",
+    "summary",
+    "dedupe_key",
+    "created_by",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

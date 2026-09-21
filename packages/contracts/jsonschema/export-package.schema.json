@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/export-package.schema.json",
+  "title": "ExportPackage",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "publication_intent_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "storage_object_ref": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^private://"
+    },
+    "package_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "content_version_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
+    "approval_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "revoked_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "download_count": {
+      "type": "integer"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "expired",
+        "revoked"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "publication_intent_id",
+    "storage_object_ref",
+    "package_hash",
+    "content_version_refs",
+    "approval_refs",
+    "expires_at",
+    "revoked_at",
+    "download_count",
+    "status"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

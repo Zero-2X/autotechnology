@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/data-processing-policy.schema.json",
+  "title": "GOV-007 data processing policy",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["policy_key", "policy_version", "status", "scope", "owner_role", "effective_at", "classification", "retention", "deletion", "cross_border", "sources"],
+  "properties": {
+    "policy_key": {"const": "baseline-synthetic-data"},
+    "policy_version": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["active", "superseded"]},
+    "scope": {"const": "first_party_synthetic"},
+    "owner_role": {"const": "data_protection_owner"},
+    "effective_at": {"type": "string", "format": "date-time"},
+    "classification": {
+      "type": "object", "additionalProperties": false,
+      "required": ["public_content", "internal_working", "personal_data", "sensitive_personal_data", "credential_secret", "audit_evidence"],
+      "properties": {
+        "public_content": {"$ref": "#/$defs/class_rule"},
+        "internal_working": {"$ref": "#/$defs/class_rule"},
+        "personal_data": {"$ref": "#/$defs/class_rule"},
+        "sensitive_personal_data": {"$ref": "#/$defs/class_rule"},
+        "credential_secret": {"$ref": "#/$defs/class_rule"},
+        "audit_evidence": {"$ref": "#/$defs/class_rule"}
+      }
+    },
+    "retention": {
+      "type": "object", "additionalProperties": false,
+      "required": ["starts_at", "shorter_legal_or_contractual_limit_wins", "extension_requires", "legal_hold"],
+      "properties": {
+        "starts_at": {"const": "purpose_completed_at"},
+        "shorter_legal_or_contractual_limit_wins": {"const": true},
+        "extension_requires": {"type": "array", "const": ["lawful_basis", "owner_approval", "expiry_at", "evidence_ref"]},
+        "legal_hold": {"type": "string", "minLength": 1}
+      }
+    },
+    "deletion": {
+      "type": "object", "additionalProperties": false,
+      "required": ["sequence", "targets", "unavailable_target", "backup_rule", "completion_rule"],
+      "properties": {
+        "sequence": {"type": "array", "const": ["stop_processing", "tombstone", "discover_lineage", "delete_primary", "delete_derived", "notify_recipients", "verify", "record_evidence"]},
+        "targets": {"type": "array", "const": ["database", "object_storage", "cache", "search_index", "derived_artifact", "outbox_inbox", "backup", "external_recipient"]},
+        "unavailable_target": {"const": "pending_manual_review"},
+        "backup_rule": {"type": "string", "minLength": 1},
+        "completion_rule": {"const": "all_targets_verified_or_documented_legal_exception"}
+      }
+    },
+    "cross_border": {
+      "type": "object", "additionalProperties": false,
+      "required": ["default", "synthetic_public_only", "required_evidence", "personal_data_rule", "important_data_rule", "unknown_class_rule"],
+      "properties": {
+        "default": {"const": "deny"},
+        "synthetic_public_only": {"const": true},
+        "required_evidence": {"type": "array", "const": ["source_region", "destination_region", "recipient_id", "purpose", "data_class", "policy_snapshot", "transfer_review_ref", "rights_review_ref"]},
+        "personal_data_rule": {"const": "manual_legal_review_and_new_policy_required"},
+        "important_data_rule": {"const": "manual_legal_review_and_new_policy_required"},
+        "unknown_class_rule": {"const": "deny"}
+      }
+    },
+    "sources": {"type": "array", "minItems": 3, "items": {"type": "string", "format": "uri"}}
+  },
+  "$defs": {
+    "class_rule": {
+      "type": "object", "additionalProperties": false,
+      "required": ["rank", "default_retention_days", "allowed_regions"],
+      "properties": {
+        "rank": {"type": "integer", "minimum": 0, "maximum": 4},
+        "default_retention_days": {"type": "integer", "minimum": 1},
+        "allowed_regions": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["CN", "EU"]}}
+      }
+    }
+  },
+  "x-module": "governance",
+  "x-task-ids": ["GOV-007"]
+}

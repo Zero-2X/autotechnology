@@ -1,0 +1,53 @@
+task_id: SITE-002
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000050
+actor: team/knowledge_site
+predecessors: [PROD-002, SITE-001]
+external_dependencies: []
+artifacts:
+  implementation:
+    - apps/knowledge-site/scripts/site_render.py
+    - apps/knowledge-site/README.md
+  contracts:
+    - packages/contracts/jsonschema/site-page-version.schema.json
+    - packages/contracts/jsonschema/site-publication.schema.json
+    - packages/contracts/jsonschema/knowledge_site.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_site_002.py
+  tests:
+    - tests/unit/knowledge_site/test_site_render.py
+    - tests/integration/test_site_002.py
+  task_spec:
+    - docs/tasks/SITE-002.md
+verification:
+  focused_command: python -m pytest tests/unit/knowledge_site/test_site_render.py -q
+  focused_result: 5 passed
+  targeted_command: python -m pytest tests/unit/knowledge_site tests/integration/test_site_001.py tests/integration/test_site_002.py -q
+  targeted_result: 20 passed
+  task_precision: passed
+  task_card_refs: checked=157 errors=0
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed; revision_count=98; head=20260919_found_site_002
+  migration_upgrade_and_downgrade: passed
+  full_command: python -m pytest -q
+  full_result: 767 passed
+behavior:
+  tenant_scoped_rendering: true
+  canonical_origin_normalization: true
+  canonical_path_validation: true
+  html_text_escaping: true
+  published_and_ready_selection: true
+  historical_version_filtering: true
+  hreflang_and_x_default: true
+  deterministic_sitemap_rss_atom_robots: true
+  xml_escaping: true
+  idempotent_replay: true
+  publication_manifest_hashes: true
+  projection_identity_guard: true
+  direct_sql_in_site_app: false
+  real_network_calls: false
+  json_ld_emitted: false
+rollback:
+  - Stop new render commands and retain existing SitePageVersion facts; previously generated artifacts remain reproducible from their source snapshot.
+  - Downgrade to 20260919_found_site_001 only after no reader depends on site_publications; this removes only the SITE-002 projection table and indexes.

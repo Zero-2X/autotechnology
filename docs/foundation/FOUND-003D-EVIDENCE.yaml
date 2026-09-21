@@ -1,0 +1,50 @@
+task_id: FOUND-003D
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000005
+actor: team/foundation
+predecessors: [GOV-006, FOUND-000, FOUND-003A, FOUND-003B]
+external_dependencies: {}
+artifacts:
+  implementation: infra/foundation/task_queue.py
+  baseline: docs/foundation/task-job-polling-baseline-v1.yaml
+  task_schema: packages/contracts/jsonschema/task-job.schema.json
+  polling_schema: packages/contracts/jsonschema/task-queue-config.schema.json
+  foundation_union: packages/contracts/jsonschema/foundation.schema.json
+  migration: packages/db/migrations/versions/20260916_found_003d_task_jobs.sql
+  dev_template: deploy/environments/dev/task-queue.env.example
+  staging_template: deploy/environments/staging/task-queue.env.example
+runtime_evidence:
+  defaults: queue=default interval_seconds=5 batch_size=10
+  redis_independence: redis_required=false
+  enqueue: queued_task_and_private_payload_ref
+  idempotency: same_tenant_same_command_replayed_without_duplicate
+  conflict: same_tenant_same_key_different_command_rejected
+  tenant_scope: poll_ready_restricts_org_id
+  ordering: available_at_then_created_at_then_id
+  mutation_boundary: polling_is_read_only
+verification:
+  task_test_command: python -m pytest tests/contract/test_found_003d_task_jobs.py -q
+  task_test_result: 4 passed
+  integration_test_command: python -m pytest tests/integration/test_found_003d_polling_config.py -q
+  integration_test_result: 2 passed
+  combined_test_command: python -m pytest tests/contract/test_found_003d_task_jobs.py tests/integration/test_found_003d_polling_config.py -q
+  combined_test_result: 6 passed
+  full_test_command: python -m pytest tests --maxfail=1 -q
+  full_test_result: 60 passed
+  checks:
+    - python scripts/repo_inventory.py --check
+    - python scripts/check_task_card_precision.py --task FOUND-003D --strict
+    - python scripts/check_task_card_registry_refs.py
+    - python scripts/check_plan_consistency.py --strict-contracts
+    - python scripts/check_openapi_contract.py
+side_effects:
+  real_credentials: false
+  real_postgresql_connection: false
+  real_redis_connection: false
+  network_probe: false
+  real_platform_api: false
+  external_publication: false
+  domain_business_logic_added: false
+rollback:
+  - Keep the migration and evidence history; use a reviewed reverse change for new queue objects.
+  - Do not delete FOUND-003A/003B baselines or introduce Redis as a prerequisite.

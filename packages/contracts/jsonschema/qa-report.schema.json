@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/qa-report.schema.json",
+  "title": "qa-report",
+  "type": "object",
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "finding": {
+      "type": "object",
+      "properties": {
+        "code": {"type": "string", "pattern": "^[A-Z0-9_]{1,96}$"},
+        "severity": {"type": "string", "enum": ["error", "warning", "info"]},
+        "path": {"type": "string", "minLength": 1, "maxLength": 512},
+        "message": {"type": "string", "minLength": 1, "maxLength": 2000},
+        "observed": {},
+        "expected": {},
+        "check": {"type": "string", "enum": ["visual", "audio", "subtitle", "file_hash", "numbers", "code", "versions", "ai_label", "rights", "general"]},
+        "artifact_id": {"anyOf": [{"type": "string", "format": "uuid"}, {"type": "null"}]},
+        "object_id": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+        "claim_id": {"anyOf": [{"type": "string", "format": "uuid"}, {"type": "null"}]},
+        "evidence_id": {"anyOf": [{"type": "string", "format": "uuid"}, {"type": "null"}]}
+      },
+      "required": ["code", "severity", "path", "message"],
+      "additionalProperties": false
+    },
+    "check": {
+      "type": "object",
+      "properties": {
+        "status": {"type": "string", "enum": ["passed", "failed", "needs_review"]},
+        "finding_count": {"type": "integer", "minimum": 0}
+      },
+      "required": ["status", "finding_count"],
+      "additionalProperties": false
+    },
+    "artifact_fact": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "string", "format": "uuid"},
+        "sequence": {"type": "integer", "minimum": 1},
+        "stage": {"type": "string", "minLength": 1, "maxLength": 64},
+        "shot_sequence": {"anyOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]},
+        "output_profile_key": {"type": "string", "minLength": 1, "maxLength": 64},
+        "storage_object_ref": {"type": "string", "pattern": "^private://", "maxLength": 512},
+        "content_hash": {"$ref": "#/$defs/hash"},
+        "size_bytes": {"type": "integer", "minimum": 0},
+        "content_type": {"type": "string", "minLength": 1, "maxLength": 128},
+        "input_hash": {"$ref": "#/$defs/hash"}
+      },
+      "required": ["id", "sequence", "stage", "shot_sequence", "output_profile_key", "storage_object_ref", "content_hash", "size_bytes", "content_type", "input_hash"],
+      "additionalProperties": false
+    },
+    "media_input_snapshot": {
+      "type": "object",
+      "properties": {
+        "render_job_id": {"type": "string", "format": "uuid"},
+        "input_hash": {"$ref": "#/$defs/hash"},
+        "output_profile_key": {"type": "string", "minLength": 1, "maxLength": 64},
+        "output_profile": {"type": "object", "additionalProperties": true},
+        "subtitle_version_id": {"anyOf": [{"type": "string", "format": "uuid"}, {"type": "null"}]},
+        "subtitle_snapshot_hash": {"anyOf": [{"$ref": "#/$defs/hash"}, {"type": "null"}]}
+      },
+      "required": ["render_job_id", "input_hash", "output_profile_key", "output_profile", "subtitle_version_id", "subtitle_snapshot_hash"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "subject_type": {"type": "string", "minLength": 1},
+    "subject_id": {"type": "string", "format": "uuid"},
+    "rule_version": {"type": "string", "minLength": 1},
+    "status": {"type": "string", "enum": ["passed", "failed", "needs_review"]},
+    "findings": {"type": "array", "items": {"$ref": "#/$defs/finding"}},
+    "checks": {
+      "type": "object",
+      "properties": {
+        "visual": {"$ref": "#/$defs/check"},
+        "audio": {"$ref": "#/$defs/check"},
+        "subtitle": {"$ref": "#/$defs/check"},
+        "file_hash": {"$ref": "#/$defs/check"},
+        "numbers": {"$ref": "#/$defs/check"},
+        "code": {"$ref": "#/$defs/check"},
+        "versions": {"$ref": "#/$defs/check"},
+        "ai_label": {"$ref": "#/$defs/check"},
+        "rights": {"$ref": "#/$defs/check"}
+      },
+      "required": ["visual", "audio", "subtitle", "file_hash"],
+      "additionalProperties": false
+    },
+    "artifact_facts": {"type": "array", "items": {"$ref": "#/$defs/artifact_fact"}},
+    "input_snapshot": {"$ref": "#/$defs/media_input_snapshot"},
+    "actor_id": {"type": "string", "format": "uuid"},
+    "trace_id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "request_hash": {"$ref": "#/$defs/hash"},
+    "expected_version": {"type": "integer", "minimum": 1},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "required": ["id", "org_id", "subject_type", "subject_id", "rule_version", "status", "findings", "created_at"],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue",
+  "x-extended-by": "MEDIA-005A",
+  "x-extended-by-next": "MEDIA-005B",
+  "x-media-checks": ["visual", "audio", "subtitle", "file_hash", "numbers", "code", "versions", "ai_label", "rights"]
+}

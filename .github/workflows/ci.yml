@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  PYTHONDONTWRITEBYTECODE: "1"
+
+jobs:
+  python-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.lock
+      - name: Install locked runtime dependencies
+        run: python -m pip install --requirement requirements.lock
+      - name: Install locked V3 provider profile
+        run: python -m pip install --require-hashes --requirement requirements-v3.lock
+      - name: Install locked CI tools
+        run: python -m pip install --requirement ci/tooling.lock
+      - name: Validate lockfiles and CI policy
+        run: |
+          python scripts/check_lockfiles.py
+          python scripts/check_ci_configuration.py
+          python scripts/check_plan_consistency.py --strict-contracts
+      - name: Format and lint CI-owned Python
+        run: |
+          ruff format --check scripts/check_lockfiles.py scripts/check_secrets.py scripts/check_ci_configuration.py
+          ruff check scripts/check_lockfiles.py scripts/check_secrets.py scripts/check_ci_configuration.py
+      - name: Type check CI-owned Python
+        run: mypy scripts/check_lockfiles.py scripts/check_secrets.py scripts/check_ci_configuration.py
+      - name: Run SAST on CI-owned Python
+        run: bandit --quiet --recursive scripts/check_lockfiles.py scripts/check_secrets.py scripts/check_ci_configuration.py --severity-level medium --confidence-level medium
+      - name: Run local secret scan
+        run: python scripts/check_secrets.py
+      - name: Generate and verify SBOM, scan, and artifact attestation
+        run: |
+          python scripts/check_supply_chain.py --generate --output-dir .ci-artifacts
+          python scripts/check_supply_chain.py --output-dir .ci-artifacts
+      - name: Upload supply-chain evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: supply-chain-evidence
+          path: .ci-artifacts/
+      - name: Run repository secret scan
+        uses: gitleaks/gitleaks-action@v3
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - name: Run repository contract gate
+        run: python scripts/check_foundation_contracts.py
+      - name: Run tests
+        run: python -m pytest tests --maxfail=1 -q
+      - name: Audit locked dependencies
+        run: pip-audit --no-deps --requirement requirements.lock
+
+  frontend-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v6
+      - name: Set up Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+      - name: Enable pinned pnpm
+        run: |
+          corepack enable
+          corepack prepare pnpm@10.15.1 --activate
+      - name: Install and build web console
+        run: |
+          pnpm --dir apps/web-console install --frozen-lockfile
+          pnpm --dir apps/web-console build
+      - name: Install and build knowledge site
+        run: |
+          pnpm --dir apps/knowledge-site install --frozen-lockfile
+          pnpm --dir apps/knowledge-site build

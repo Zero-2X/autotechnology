@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/model-budget-decision.schema.json",
+  "title": "Model budget allow or deny decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "org_id", "policy_id", "task_id", "model", "decision", "reason", "scope", "period", "limit_cents", "used_cents", "requested_cents", "trace_id", "occurred_at"],
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "minLength": 1},
+    "policy_id": {"type": ["string", "null"], "format": "uuid"},
+    "task_id": {"type": "string", "minLength": 1},
+    "model": {"type": "string", "minLength": 1},
+    "decision": {"enum": ["allow", "deny"]},
+    "reason": {"type": "string", "minLength": 1},
+    "scope": {"type": ["string", "null"], "enum": ["org", "task", "model", null]},
+    "period": {"type": ["string", "null"], "enum": ["task", "day", "month", null]},
+    "limit_cents": {"type": ["integer", "null"], "minimum": 1},
+    "used_cents": {"type": "integer", "minimum": 0},
+    "requested_cents": {"type": "integer", "minimum": 0},
+    "trace_id": {"type": "string", "minLength": 1},
+    "occurred_at": {"type": "string", "format": "date-time"}
+  },
+  "x-module": "model_gateway",
+  "x-task-ids": ["MODEL-003"]
+}

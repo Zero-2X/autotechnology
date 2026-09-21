@@ -1,0 +1,38 @@
+task_id: DIST-006A
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000032
+actor: team/distribution
+predecessors: [FOUND-004B, POLICY-001, DIST-001, DIST-005B]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/distribution/idempotency.py
+    - modules/distribution/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/publication-intent.schema.json
+    - packages/contracts/jsonschema/delivery-attempt.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_dist_006a.py
+  tests:
+    - tests/unit/distribution/test_idempotency.py
+verification:
+  targeted_command: python -m pytest tests/unit/distribution tests/contract/test_found_007d_core_schemas.py -q
+  targeted_result: 45 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  intent_payload_hash_idempotency: true
+  delivery_attempt_number_duplicate_protection: true
+  event_id_and_idempotency_key_deduplication: true
+  duplicate_handler_invocation_blocked: true
+  tenant_scope_and_audit: true
+  business_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable intent and delivery event consumers while retaining accepted facts and audit records.
+  - This revision creates no business table; durable idempotency projections use a forward migration.

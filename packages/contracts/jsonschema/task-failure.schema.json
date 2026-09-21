@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/task-failure.schema.json",
+  "title": "task-failure",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "job_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "attempt_count": {
+      "type": "integer"
+    },
+    "error_class": {
+      "type": "string",
+      "enum": [
+        "deterministic",
+        "transient",
+        "unknown"
+      ]
+    },
+    "error_code": {
+      "type": "string",
+      "minLength": 1
+    },
+    "message_redacted": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "retryable": {
+      "type": "boolean"
+    },
+    "trace_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "job_id",
+    "attempt_count",
+    "error_class",
+    "error_code",
+    "message_redacted",
+    "retryable",
+    "trace_id",
+    "occurred_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

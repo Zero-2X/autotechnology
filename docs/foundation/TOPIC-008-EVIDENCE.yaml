@@ -1,0 +1,27 @@
+task_id: TOPIC-008
+status: done
+implementation:
+  module: modules/topic/brief.py
+  contracts:
+    - packages/contracts/jsonschema/topic-brief.schema.json
+  migration: packages/db/migrations/versions/20260918_topic_008.py
+  behaviors:
+    - atomic_approval_metadata_write
+    - canonical_lock_hash_recomputation
+    - optimistic_if_match_and_idempotency
+    - creator_approval_separation
+    - immutable_approved_versions_and_draft_revision
+verification:
+  commands:
+    - py -3.12 -m pytest tests/unit/topic/test_brief.py tests/integration/test_topic_brief.py tests/unit/topic/test_state_machine.py -q --disable-warnings --maxfail=1
+    - py -3.12 scripts/check_json_schemas.py
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 scripts/check_migrations.py --strict --json
+    - py -3.12 scripts/check_task_card_precision.py --task TOPIC-008 --strict
+    - py -3.12 -m pytest tests/contract/test_found_004a_migrations.py -q --disable-warnings --maxfail=1
+  results:
+    targeted_tests: 9
+    schema_errors: 0
+    architecture_errors: 0
+    migration_errors: 0
+    precision_gaps: 0

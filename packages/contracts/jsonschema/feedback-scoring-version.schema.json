@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/feedback-scoring-version.schema.json",
+  "title": "FeedbackScoringVersion",
+  "type": "object",
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "version": {"type": "integer", "minimum": 1},
+    "algorithm": {"type": "string", "minLength": 1},
+    "weights": {"type": "object", "additionalProperties": {"type": "number"}},
+    "active": {"type": "boolean"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "required": ["id", "org_id", "version", "algorithm", "weights", "active", "created_at"],
+  "additionalProperties": false,
+  "x-source": "FEEDBACK-CORE-001"
+}

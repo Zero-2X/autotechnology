@@ -1,0 +1,62 @@
+task_id: GEO_CONTENT-001
+status: done
+trace_id: 55618e3a-a0dc-44ec-a001-000000000052
+actor: team/geo_content
+predecessors: [CANON-006, PROD-002, SITE-001]
+external_dependencies: []
+artifacts:
+  implementation:
+    - modules/geo_content/__init__.py
+    - modules/geo_content/service.py
+    - modules/geo_content/README.md
+  contracts:
+    - packages/contracts/jsonschema/geo-content-assessment.schema.json
+    - packages/contracts/jsonschema/geo_content.schema.json
+    - packages/contracts/jsonschema/entity.schema.json
+    - packages/contracts/jsonschema/claim.schema.json
+    - packages/contracts/jsonschema/evidence.schema.json
+    - packages/contracts/jsonschema/source-snapshot.schema.json
+    - packages/contracts/jsonschema/rights-record-version.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_geo_content_001.py
+  tests:
+    - tests/unit/geo_content/test_service.py
+    - tests/unit/geo_content/test_rules_adversarial.py
+    - tests/integration/test_geo_content_001.py
+  task_spec:
+    - docs/tasks/GEO_CONTENT-001.md
+verification:
+  focused_command: python -m pytest tests/unit/geo_content tests/integration/test_geo_content_001.py -q
+  focused_result: 29 passed
+  task_precision: scoped=93 precise=93 gaps=0
+  task_card_refs: checked=157 errors=0
+  schema_check: schema_errors=0
+  architecture_check: architecture_errors=0
+  migration_graph_check: revision_count=100; head=20260919_geo_content_001; errors=0
+  migration_upgrade_and_downgrade: passed
+  full_command: python -m pytest -q
+  full_result: 804 passed
+  inventory_check: valid
+  secrets_check: secret_findings=0
+  ci_configuration_check: ci_configuration_errors=0
+  lockfile_check: lockfile_errors=0
+  event_compatibility_check: events=167 baseline_events=162 errors=0 warnings=5
+  foundation_smoke: smoke_ok
+  openapi_contract_check: paths=31 operations=32 exit=0
+  openapi_compatibility_check: operations=32 baseline_operations=32 errors=0
+behavior:
+  tenant_scoped_rules: true
+  entity_declaration_and_visible_text_consistency: true
+  bidirectional_claim_evidence_traceability: true
+  citation_source_and_rights_gates: true
+  freshness_expiry_and_review_rules: true
+  crawlability_canonical_and_robots_rules: true
+  missing_knowledge_not_citation_ready: true
+  deterministic_hashes: true
+  idempotent_replay: true
+  rejection_audit: true
+  direct_sql_in_geo_content: false
+  real_network_calls: false
+rollback:
+  - Stop new assessment commands and retain immutable predecessor facts and assessment evidence.
+  - Downgrade to 20260919_found_site_003; only geo_content_checks/geo_content_commands and their indexes/triggers are removed.

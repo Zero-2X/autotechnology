@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/operations.schema.json",
+  "title": "operations contract union",
+  "oneOf": [
+    {
+      "$ref": "./deletion-request.schema.json"
+    },
+    {
+      "$ref": "./kill-switch.schema.json"
+    }
+  ],
+  "x-module": "operations"
+}

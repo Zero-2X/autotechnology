@@ -1,0 +1,85 @@
+policy_key: release-levels
+policy_version: 1
+status: active
+levels:
+  - level_key: architecture_mvp
+    display_name: Account-free Architecture MVP
+    requires_real_account: false
+    allowed_distribution_modes:
+      - manual_export
+      - simulation
+    allowed_capabilities:
+      - 内容选题、资料采集、知识库和 Canonical Content
+      - zh-CN/en-US 文本 Variant、QA、Policy 和人工审批
+      - 第一方知识站、GEO_CONTENT、GEO_REGION 和离线评测
+      - 私有 ExportPackage 和 FakeOfficialAdapter 模拟
+      - synthetic/manual/fake Observation 与 Feedback Recommendation
+    forbidden_capabilities:
+      - 读取、保存或生成真实 Token、Cookie 或平台凭证
+      - 真实平台 OAuth、HTTP 发布、Webhook 和平台审核
+      - 自动客服发送和真实平台指标归因
+      - 未经人工审批的外部副作用
+    entry_gates:
+      - GOV-001 首期垂直范围已锁定
+      - V2.4 P0 契约、Policy、Rights、QA、Approval 和 Audit 基线存在
+      - 无账号模式只配置 manual_export/simulation
+    exit_gates:
+      - 完成 M1-Core 纵向切片并通过重放、幂等、跨租户和安全测试
+      - 业务事实、AuditLog 和 Outbox 事务证据完整
+      - 连续运行指标达到治理阈值并完成 Go/No-Go 评审
+    rollback_rule: 暂停 GraphRun 和队列，保留已批准版本与审计证据，回退到 manual_export；不得删除历史版本。
+  - level_key: distribution_pilot
+    display_name: Distribution Pilot
+    requires_real_account: true
+    allowed_distribution_modes:
+      - manual_export
+      - simulation
+      - draft_only
+    allowed_capabilities:
+      - 一个真实主体、一个授权账号和一个官方平台
+      - OAuth/Vault/Scope/Token lease 和账号健康检查
+      - 已批准内容的 draft_only 和低频受控发布
+      - provider 幂等、回查、unknown 人工核查和 Kill Switch
+      - 真实平台 Observation 与有限归因
+    forbidden_capabilities:
+      - 直接使用旧 synthetic Intent 进行真实发布
+      - 绕过 Policy、Approval、Rights 或 Kill Switch
+      - 未完成回查的自动重试和多平台并发发布
+      - 自动发送高风险客服回复
+    entry_gates:
+      - M1-Core Go/No-Go 通过
+      - 真实主体、授权联系人、Scope 和证据完整
+      - 平台 Sandbox/契约测试、回查和事故演练通过
+    exit_gates:
+      - 首个平台完成受控草稿或发布并能回查外部 ID/URL
+      - unknown、撤销、配额和停发演练通过
+      - 连续试点达到质量、成本、失败率和人工 SLA 阈值
+    rollback_rule: 立即触发 Kill Switch，停止新 DeliveryAttempt，保留外部结果和审计记录，未确认结果转人工核查。
+  - level_key: scale
+    display_name: Scale
+    requires_real_account: true
+    allowed_distribution_modes:
+      - manual_export
+      - simulation
+      - draft_only
+      - authorized_api
+    allowed_capabilities:
+      - 经过 Go/No-Go 的多平台、多账号和多市场分发
+      - 图片、视频、字幕、客服草稿和有限自动化
+      - 反馈实验、归因、预算和容量治理
+      - 只有达到拆分阈值后才引入独立服务、队列或 Kubernetes
+    forbidden_capabilities:
+      - 以账号数量作为唯一的架构拆分依据
+      - 无审计、无幂等、无回查的批量发布
+      - 通过自动化规避平台政策、验证码或账号风控
+      - 用 checkpoint 替代业务数据库和发布事实
+    entry_gates:
+      - Distribution Pilot 连续运行和事故演练通过
+      - 平台、账号、区域、成本、SLO、RPO/RTO 和人工负载指标达标
+      - 新增平台/服务均有独立契约、适配器和回滚方案
+    exit_gates:
+      - 每个平台和账号都有健康、配额、失败和停发观测
+      - 规模化变更通过架构评审和灰度验证
+    rollback_rule: 按平台和账号粒度 Kill Switch，冻结新发布，保留可回查的外部结果，按版本回退内容和适配器。
+effective_at: '2026-09-15T00:00:00+08:00'
+locked_by: team/governance

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/topic.schema.json",
+  "title": "topic contract union",
+  "oneOf": [
+    {
+      "$ref": "./topic-signal.schema.json"
+    },
+    {
+      "$ref": "./topic-opportunity.schema.json"
+    },
+    {
+      "$ref": "./topic-brief.schema.json"
+    },
+    {
+      "$ref": "./topic-score-snapshot.schema.json"
+    }
+  ],
+  "x-module": "topic"
+}

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/canonical_content.schema.json",
+  "title": "canonical_content contract union",
+  "oneOf": [
+    {
+      "$ref": "./canonical-content.schema.json"
+    },
+    {
+      "$ref": "./canonical-content-version.schema.json"
+    }
+  ],
+  "x-module": "canonical_content"
+}

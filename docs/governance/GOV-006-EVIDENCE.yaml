@@ -1,0 +1,24 @@
+task_id: GOV-006
+status: done
+trace_id: 9f6dcb4e-7d0f-4a83-aafc-7c6b0d520006
+actor: team/governance
+baseline_key: modular-monolith
+baseline_version: 1
+verification:
+  tests:
+    - python -m pytest tests/contract tests/integration --maxfail=1 -q
+  result: 17 passed
+  checks:
+    - python scripts/check_plan_consistency.py --strict-contracts
+    - python scripts/check_task_card_registry_refs.py
+    - python scripts/check_task_card_precision.py --task GOV-006 --strict
+    - python scripts/check_openapi_contract.py
+  result_summary: all checks passed; planned migration warnings for unrelated tasks are expected
+  migration_idempotency: verified with SQLite in-memory execution and duplicate baseline/version rejection
+  adr_compatibility: existing LangGraph/LangChain boundaries preserved and deployment baseline added
+  initial_exclusions: [LangGraph Server, Temporal, Kafka, Kubernetes, multiple model providers, multiple real platforms]
+side_effects:
+  real_platform_api: false
+  real_credentials: false
+  external_publication: false
+  infrastructure_provisioned: false

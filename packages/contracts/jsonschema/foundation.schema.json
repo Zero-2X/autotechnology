@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/foundation.schema.json",
+  "title": "foundation contract union",
+  "oneOf": [
+    {"$ref": "./task-job.schema.json"},
+    {"$ref": "./task-failure.schema.json"},
+    {"$ref": "./outbox-event.schema.json"},
+    {"$ref": "./platform.schema.json"},
+    {"$ref": "./kill-switch.schema.json"},
+    {"$ref": "./branch-protection.schema.json"},
+    {"$ref": "./runtime-entry.schema.json"},
+    {"$ref": "./database-config.schema.json"},
+    {"$ref": "./storage-config.schema.json"},
+    {"$ref": "./storage-object.schema.json"},
+    {"$ref": "./migration-baseline.schema.json"},
+    {"$ref": "./api-error.schema.json"},
+    {"$ref": "./correlation-context.schema.json"},
+    {"$ref": "./structured-log.schema.json"},
+    {"$ref": "./metrics-baseline.schema.json"},
+    {"$ref": "./tracing-cost-baseline.schema.json"},
+    {"$ref": "./cost-record.schema.json"},
+    {"$ref": "./api-contract-baseline.schema.json"},
+    {"$ref": "./event-compatibility-baseline.schema.json"},
+    {"$ref": "./synthetic-fixture.schema.json"},
+    {"$ref": "./architecture-guard.schema.json"},
+    {"$ref": "./redis-config.schema.json"},
+    {"$ref": "./supply-chain.schema.json"}
+  ],
+  "x-module": "foundation"
+}

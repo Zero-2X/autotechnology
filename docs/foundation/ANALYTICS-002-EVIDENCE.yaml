@@ -1,0 +1,28 @@
+task_id: ANALYTICS-002
+status: done
+verification:
+  focused_command: python -m pytest tests/unit/analytics/test_observation_service.py tests/integration/test_analytics_002_migration.py tests/contract/test_analytics_002_contract.py -q
+  focused_result: 9 passed
+  compatibility_regression: 88 passed across Analytics, Foundation Observation/events, Feedback contracts and fake publication feedback
+  service_behaviors: active metric binding, tenant/global definition scope, source/time/region/locale/version/data-quality normalization, typed value validation, source evidence, account-gated platform input, business dedupe, append-only revisions, safe dual events and tenant isolation
+  migration_test: SQLite full-chain upgrade/downgrade, active metric binding, dedupe/version guard, platform evidence guard and append-only mutation rejection
+  postgresql_sql_emission: upgrade/downgrade SQL and trigger/function removal order verified offline
+  schemas: schema_errors=0
+  architecture: architecture_errors=0
+  migration_graph: revisions=117; head=20260920_analytics_002; errors=0
+  events: 176 current; 162 baseline; errors=0; 14 expected new-event warnings
+  task_refs: checked=157; errors=0
+  precision: scoped=93; precise=93; gaps=0
+  secrets: secret_findings=0
+  plan_consistency: validated 157 registry tasks against 157 Markdown checkbox tasks
+  inventory: refreshed after closure documentation; repository check valid; FOUND-000 inventory tests 6 passed
+  full_regression: 1020 passed; the only failure was the expected stale repository inventory fingerprint
+  postgresql_runtime: not verified against a live PostgreSQL database
+verified_boundaries:
+  - M1 site, QA, GEO, manual and fake observations do not require EXT-ACCOUNT-001; platform observations require verified account evidence and a source snapshot reference.
+  - Metric values are validated against the pinned active MetricDefinition type and optional offline value schema.
+  - Revisions preserve source, subject and metric identity, require the next observation_version and never overwrite earlier values.
+  - Audit and outbox facts omit metric_value and retain only identifiers, classification, data quality and hashes.
+limitations:
+  - Observation aggregation and attribution are deferred to ANALYTICS-003.
+  - PostgreSQL behavior is verified through offline SQL generation and rollback ordering; live PostgreSQL execution remains unverified.

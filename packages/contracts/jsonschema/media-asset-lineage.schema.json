@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/media-asset-lineage.schema.json",
+  "title": "MediaAssetLineage",
+  "type": "object",
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "source": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "string", "format": "uuid"},
+        "version_no": {"anyOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]},
+        "snapshot_hash": {"$ref": "#/$defs/hash"}
+      },
+      "required": ["id", "version_no", "snapshot_hash"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "asset_version_id": {"type": "string", "format": "uuid"},
+    "variant_version": {"$ref": "#/$defs/source"},
+    "claims": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/source"}},
+    "rights_record_versions": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/source"}},
+    "status": {"type": "string", "enum": ["valid", "blocked", "withdrawn", "needs_review"]},
+    "reasons": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1, "maxLength": 256}},
+    "rule_version": {"const": "media-006/v1"},
+    "snapshot_hash": {"$ref": "#/$defs/hash"},
+    "checked_at": {"type": "string", "format": "date-time"},
+    "created_by": {"type": "string", "format": "uuid"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "required": [
+    "id", "org_id", "asset_version_id", "variant_version", "claims", "rights_record_versions",
+    "status", "reasons", "rule_version", "snapshot_hash", "checked_at", "created_by", "created_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "MEDIA-006",
+  "x-append-only": true
+}

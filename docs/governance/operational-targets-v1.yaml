@@ -1,0 +1,58 @@
+policy_key: operational-targets
+policy_version: 1
+status: active
+scope: architecture_mvp
+owner_role: governance_owner
+effective_at: '2026-09-18T00:00:00+08:00'
+measurement:
+  window_days: 30
+  minimum_workflow_samples: 100
+  synthetic_results_are_not_production_slo_evidence: true
+success_metrics:
+  completed_workflow_ratio:
+    numerator: completed_with_qa_policy_approval
+    denominator: eligible_started_workflows
+    minimum_ratio: 0.95
+  critical_policy_bypass_count:
+    maximum_count: 0
+  unauthorized_external_action_count:
+    maximum_count: 0
+  traceable_output_ratio:
+    numerator: outputs_with_source_policy_and_audit_refs
+    denominator: eligible_outputs
+    minimum_ratio: 1.0
+cost_budget:
+  currency: USD
+  accounting_mode: simulated_until_real_provider_approved
+  per_workflow_limit: '2.00'
+  daily_limit: '25.00'
+  monthly_limit: '300.00'
+  warning_fraction: 0.8
+  unknown_cost_action: deny_and_review
+  exceed_action: stop_new_costly_work_and_escalate
+slo:
+  availability_monthly_minimum: 0.99
+  workflow_completion_monthly_minimum: 0.95
+  audit_record_delivery_monthly_minimum: 0.999
+  queue_start_p95_seconds_maximum: 300
+  insufficient_samples_action: inconclusive
+recovery:
+  rpo_minutes_maximum: 60
+  rto_minutes_maximum: 240
+  measured_by: disposable_restore_drill
+  evidence_required: [backup_snapshot_ref, failure_started_at, restored_at, latest_recovered_event_at, missing_event_count]
+  missing_evidence_action: no_go
+human_approval:
+  clock_start: human_task_created_at
+  clock_stop: first_human_response_at
+  missed_deadline_action: escalate_to_backup_and_keep_side_effect_blocked
+  risk_levels:
+    R0: {first_response_minutes: 1440, minimum_quorum: 1}
+    R1: {first_response_minutes: 480, minimum_quorum: 1}
+    R2: {first_response_minutes: 120, minimum_quorum: 1}
+    R3: {first_response_minutes: 30, minimum_quorum: 2}
+    R4: {first_response_minutes: 15, minimum_quorum: 2}
+go_no_go:
+  required_evidence: [metric_window_and_sample_count, cost_ledger, slo_report, restore_drill, approval_sla_report, risk_review]
+  missing_or_failed_metric_action: no_go
+  owner_role: governance_owner

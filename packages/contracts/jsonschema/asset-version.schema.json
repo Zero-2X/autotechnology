@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/asset-version.schema.json",
+  "title": "AssetVersion",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "asset_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "variant_version_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "version_no": {
+      "type": "integer"
+    },
+    "media_type": {
+      "type": "string",
+      "enum": [
+        "image",
+        "audio",
+        "video",
+        "subtitle",
+        "document",
+        "thumbnail"
+      ]
+    },
+    "format": {
+      "type": "string",
+      "minLength": 1
+    },
+    "aspect_ratio": {
+      "anyOf": [
+        {
+          "type": "string",
+          "enum": [
+            "9:16",
+            "1:1",
+            "16:9",
+            "other"
+          ]
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "storage_object_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^private://"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "file_hash": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Fa-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "rights_snapshot_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
+    "region_profile_version_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "policy_snapshot_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "rendering",
+        "qa_pending",
+        "approved",
+        "withdrawn",
+        "blocked"
+      ]
+    },
+    "created_by": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "asset_id",
+    "variant_version_id",
+    "version_no",
+    "media_type",
+    "format",
+    "aspect_ratio",
+    "storage_object_ref",
+    "file_hash",
+    "rights_snapshot_ids",
+    "region_profile_version_id",
+    "policy_snapshot_id",
+    "status",
+    "created_by",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "approved"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "policy_snapshot_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,39 @@
+task_id: PROD-002
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000015
+actor: team/production
+predecessors: [GEO_REGION-CORE-001, CANON-002, PROD-001]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/production/variant_store.py
+    - modules/production/infrastructure/variant_schema.py
+  contracts:
+    - packages/contracts/jsonschema/content-variant.schema.json
+    - packages/contracts/jsonschema/variant-version.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_prod_002.py
+  tests:
+    - tests/integration/test_variant_store.py
+verification:
+  targeted_command: python -m pytest tests/contract/test_found_004a_migrations.py tests/unit/production tests/integration/test_variant_store.py -q
+  targeted_result: 17 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_upgrade_check: passed
+behavior:
+  stable_tenant_scoped_root: true
+  immutable_versions_and_source_mapping: true
+  optimistic_current_version_check: true
+  idempotent_command_and_audit_event: true
+  canonical_and_region_read_ports_checked: true
+  lineage_query_port_connected_in_integration_test: true
+  rule_copy_remains_draft: true
+  no_publication_side_effect: true
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Stop new Variant version creation while retaining existing roots, versions, commands, and events.
+  - Use forward-compatible migrations for later changes.

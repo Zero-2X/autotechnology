@@ -1,0 +1,21 @@
+task_id: MODEL-CORE-002
+status: done
+trace_id: 4c1d8a2e-7b55-4f03-9d21-modelcore002
+actor: team/model_gateway
+registry_ref: docs/task-registry.yaml
+verification:
+  tests:
+    - py -3.12 -m pytest tests/unit/model_gateway -q
+  result: 6 passed
+  checks:
+    - py -3.12 scripts/check_task_card_precision.py --task MODEL-CORE-002 --strict
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_migrations.py
+  provider_policy: fake only
+  idempotency: same key and payload replay same ModelCall
+  event_recording: started/succeeded/failed
+  retry_policy: timeout/provider unavailable only
+side_effects:
+  real_provider: false
+  real_credentials: false
+  external_publication: false

@@ -1,0 +1,52 @@
+task_id: MEDIA-003A
+status: done
+trace_id: 3b5e0d8a-1f9f-4f3a-8a0d-000000000003
+actor: team/media
+predecessors: [MEDIA-001, MEDIA-002, PROD-002]
+external_dependencies: []
+artifacts:
+  implementation:
+    - modules/media/__init__.py
+    - modules/media/subtitle_service.py
+    - modules/media/README.md
+  contracts:
+    - packages/contracts/jsonschema/media-subtitle.schema.json
+    - packages/contracts/jsonschema/media-subtitle-version.schema.json
+  migration:
+    - packages/db/migrations/versions/20260920_media_003a.py
+  tests:
+    - tests/unit/media/test_media_subtitle_service.py
+    - tests/integration/test_media_003a.py
+    - tests/integration/test_media_003a_migration.py
+    - tests/contract/test_media_003a_contract.py
+  task_spec:
+    - docs/tasks/MEDIA-003A.md
+verification:
+  focused_command: python -m pytest tests/unit/media/test_media_subtitle_service.py tests/integration/test_media_003a.py tests/integration/test_media_003a_migration.py tests/contract/test_media_003a_contract.py -q
+  focused_result: 10 passed
+  migration_graph_check: revision_count=108; head=20260920_media_003a; errors=0
+  migration_upgrade_and_downgrade: passed on disposable SQLite database
+  schema_check: schema_errors=0
+  architecture_check: architecture_errors=0
+  plan_consistency: validated=157; errors=0
+  task_card_refs: checked=157; errors=0
+  secrets_check: secret_findings=0
+  full_command: python -m pytest -q
+  full_result: 933 passed
+behavior:
+  exact_media_script_and_optional_storyboard_binding: true
+  single_and_multilingual_locale_tracks: true
+  deterministic_cue_timeline_and_source_segment_binding: true
+  non_overlapping_minimum_250ms_cues: true
+  text_version_and_snapshot_hash_lineage: true
+  captions_subtitles_direction_and_accessibility_profile: true
+  input_track_and_cue_reordering_is_hash_stable: true
+  idempotent_replay_and_payload_conflict: true
+  optimistic_expected_version_revision: true
+  immutable_subtitle_version_track_and_cue_projection: true
+  no_translation_model_render_network_or_platform_calls: true
+  bounded_failure_audit_without_credentials_or_binary_media: true
+rollback:
+  - Stop new subtitle create/revise commands and export subtitle versions, tracks, cues, snapshot hashes and audit references.
+  - Downgrade to 20260920_media_002; only MEDIA-003A tables, indexes and guards are removed.
+  - MEDIA-002 storyboard, MediaScript, Variant, Claim and Rights predecessor facts remain intact.

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/qa-agent-input.schema.json",
+  "title": "QAAgentInput",
+  "type": "object",
+  "properties": {
+    "qa_request_id": {"type": "string", "format": "uuid"},
+    "subject": {
+      "type": "object",
+      "properties": {
+        "variant_version_id": {"type": "string", "format": "uuid"},
+        "canonical_content_version_id": {"type": "string", "format": "uuid"},
+        "variant_snapshot_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+        "canonical_content_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"}
+      },
+      "required": ["variant_version_id", "canonical_content_version_id", "variant_snapshot_hash", "canonical_content_hash"],
+      "additionalProperties": false
+    },
+    "qa_report": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "string", "format": "uuid"},
+        "rule_version": {"type": "string", "minLength": 1, "maxLength": 256},
+        "status": {"type": "string", "enum": ["passed", "failed", "needs_review"]},
+        "findings": {"type": "array", "maxItems": 200}
+      },
+      "required": ["id", "rule_version", "status", "findings"],
+      "additionalProperties": false
+    },
+    "tool_calls": {"type": "array", "maxItems": 0}
+  },
+  "required": ["qa_request_id", "subject", "qa_report", "tool_calls"],
+  "additionalProperties": false,
+  "x-source": "AGENT-CORE-005E deterministic QA projection input"
+}

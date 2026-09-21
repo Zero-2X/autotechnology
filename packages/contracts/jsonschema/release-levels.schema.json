@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/release-levels.schema.json",
+  "title": "release level policy",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "policy_key": {"type": "string", "const": "release-levels"},
+    "policy_version": {"type": "integer", "minimum": 1},
+    "status": {"type": "string", "enum": ["active", "superseded"]},
+    "levels": {
+      "type": "array",
+      "minItems": 3,
+      "maxItems": 3,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "level_key": {"type": "string", "enum": ["architecture_mvp", "distribution_pilot", "scale"]},
+          "display_name": {"type": "string", "minLength": 1},
+          "requires_real_account": {"type": "boolean"},
+          "allowed_distribution_modes": {"type": "array", "items": {"type": "string", "enum": ["manual_export", "simulation", "draft_only", "authorized_api"]}},
+          "allowed_capabilities": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "forbidden_capabilities": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "entry_gates": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "exit_gates": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+          "rollback_rule": {"type": "string", "minLength": 1}
+        },
+        "required": ["level_key", "display_name", "requires_real_account", "allowed_distribution_modes", "allowed_capabilities", "forbidden_capabilities", "entry_gates", "exit_gates", "rollback_rule"]
+      }
+    },
+    "effective_at": {"type": "string", "format": "date-time"},
+    "locked_by": {"type": "string", "minLength": 1}
+  },
+  "required": ["policy_key", "policy_version", "status", "levels", "effective_at", "locked_by"],
+  "x-module": "governance",
+  "x-task-ids": ["GOV-002"]
+}

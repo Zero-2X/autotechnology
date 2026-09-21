@@ -1,0 +1,128 @@
+baseline_key: modular-monolith
+baseline_version: 1
+status: active
+components:
+  - component_key: python_runtime
+    category: runtime
+    technology: Python
+    version_policy: 3.12.x; exact patch is locked in the implementation lockfile.
+    environment: [dev, staging, prod]
+    required: true
+    phase: P0
+  - component_key: api
+    category: api
+    technology: FastAPI
+    version_policy: one approved minor line; exact version is locked in the implementation lockfile.
+    environment: [dev, staging, prod]
+    required: true
+    phase: P0
+  - component_key: worker
+    category: worker
+    technology: Python worker process with PostgreSQL task polling
+    version_policy: same repository and runtime line as API; no Redis dependency for the first vertical slice.
+    environment: [dev, staging, prod]
+    required: true
+    phase: P0
+  - component_key: scheduler
+    category: worker
+    technology: Python scheduler process
+    version_policy: creates or wakes TaskJob/GraphRun only; it does not own domain graph logic.
+    environment: [dev, staging, prod]
+    required: true
+    phase: P0
+  - component_key: graph_runtime
+    category: orchestration
+    technology: LangGraph
+    version_policy: fixed major line; exact compatibility window and lockfile are governed by GRAPH-GOV-002.
+    environment: [dev, staging, prod]
+    required: true
+    phase: P0
+  - component_key: langchain_components
+    category: model
+    technology: LangChain Core plus one provider integration
+    version_policy: one provider in the first release; exact versions and upgrade window are governed by GRAPH-GOV-002.
+    environment: [dev, staging, prod]
+    required: true
+    phase: P0
+  - component_key: database
+    category: database
+    technology: PostgreSQL
+    version_policy: one supported major line for business facts, immutable versions, AuditLog and Outbox.
+    environment: [dev, staging, prod]
+    required: true
+    phase: P0
+  - component_key: orm
+    category: database
+    technology: SQLAlchemy 2
+    version_policy: exact version locked with the application dependency lockfile; Domain modules do not import ORM types.
+    environment: [dev, staging, prod]
+    required: true
+    phase: P0
+  - component_key: migrations
+    category: migration
+    technology: Alembic
+    version_policy: expand/contract migrations; every task owns one migration path and rollback evidence.
+    environment: [dev, staging, prod]
+    required: true
+    phase: P0
+  - component_key: object_storage
+    category: object_storage
+    technology: S3-compatible private object storage
+    version_policy: private-by-default objects, content hash, tenant namespace and deletion propagation.
+    environment: [dev, staging, prod]
+    required: true
+    phase: P0
+  - component_key: tracing
+    category: observability
+    technology: OpenTelemetry
+    version_policy: trace_id/correlation fields span API, Worker, Scheduler, GraphRun, ModelCall, Outbox and AuditLog.
+    environment: [dev, staging, prod]
+    required: true
+    phase: P0
+  - component_key: metrics
+    category: observability
+    technology: Prometheus-compatible metrics
+    version_policy: expose latency, failure, retry, cost, queue and human-SLA metrics without sensitive payloads.
+    environment: [dev, staging, prod]
+    required: true
+    phase: P0
+  - component_key: tests
+    category: testing
+    technology: pytest with contract/integration/e2e/replay suites
+    version_policy: Fake providers and synthetic fixtures in CI; real credentials and real platforms excluded.
+    environment: [dev, staging, prod]
+    required: true
+    phase: P0
+  - component_key: redis
+    category: worker
+    technology: Redis
+    version_policy: optional P1 cache, short lock and rate-limit facility; never a business-fact store.
+    environment: [dev, staging, prod]
+    required: false
+    phase: P1
+excluded_initially:
+  - LangGraph Server
+  - Temporal
+  - Kafka
+  - Kubernetes
+  - multiple model providers
+  - multiple real platforms
+  - real platform credentials and tokens
+architecture_constraints:
+  - Domain modules must not import LangChain, LangGraph, FastAPI or ORM implementations.
+  - Node code may call only Application Use Cases or Ports; it may not write ORM/database records directly.
+  - External platform HTTP/SDK access is restricted to Distribution Adapters.
+  - PostgreSQL business facts, AuditLog and Outbox remain the source of truth; checkpoints only support recovery.
+  - M1 without accounts permits only manual_export and simulation; no real platform side effect is allowed.
+  - A new technology or provider requires an ADR, contract update, compatibility test and rollback evidence.
+upgrade_policy:
+  regular_window_days: 30
+  security_fix_window_days: 7
+  owner_role: governance_owner
+  required_evidence:
+    - compatibility test result
+    - dependency lockfile diff
+    - migration and rollback assessment
+    - cost and observability impact
+effective_at: '2026-09-16T00:00:00+08:00'
+locked_by: team/governance

@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/migration-baseline.schema.json",
+  "title": "Alembic migration framework baseline",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "baseline_key",
+    "baseline_version",
+    "status",
+    "tool",
+    "revision_naming",
+    "expand_contract_policy",
+    "legacy_sql_baseline",
+    "checks",
+    "fixture"
+  ],
+  "properties": {
+    "baseline_key": { "const": "migration-framework" },
+    "baseline_version": { "const": 1 },
+    "status": { "enum": ["active", "superseded"] },
+    "tool": { "const": "alembic" },
+    "revision_naming": { "const": "YYYYMMDD_<task-id>_<slug>.py" },
+    "expand_contract_policy": { "const": "expand_then_contract" },
+    "legacy_sql_baseline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "path", "rewrite_existing_revisions"],
+      "properties": {
+        "status": { "const": "preserved" },
+        "path": { "const": "packages/db/migrations/versions/*.sql" },
+        "rewrite_existing_revisions": { "const": false }
+      }
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "single_head",
+        "reversible_upgrade_downgrade",
+        "destructive_upgrade_sql",
+        "production_secrets",
+        "external_network_calls"
+      ],
+      "properties": {
+        "single_head": { "const": true },
+        "reversible_upgrade_downgrade": { "const": true },
+        "destructive_upgrade_sql": { "const": false },
+        "production_secrets": { "const": false },
+        "external_network_calls": { "const": false }
+      }
+    },
+    "fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default_url", "represents_real_postgresql"],
+      "properties": {
+        "default_url": { "const": "sqlite:///:memory:" },
+        "represents_real_postgresql": { "const": false }
+      }
+    },
+    "effective_at": { "type": "string", "format": "date-time" },
+    "locked_by": { "type": "string", "minLength": 1 }
+  }
+}

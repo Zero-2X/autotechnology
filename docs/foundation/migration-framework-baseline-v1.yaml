@@ -1,0 +1,21 @@
+baseline_key: migration-framework
+baseline_version: 1
+status: active
+tool: alembic
+revision_naming: YYYYMMDD_<task-id>_<slug>.py
+expand_contract_policy: expand_then_contract
+legacy_sql_baseline:
+  status: preserved
+  path: packages/db/migrations/versions/*.sql
+  rewrite_existing_revisions: false
+checks:
+  single_head: true
+  reversible_upgrade_downgrade: true
+  destructive_upgrade_sql: false
+  production_secrets: false
+  external_network_calls: false
+fixture:
+  default_url: 'sqlite:///:memory:'
+  represents_real_postgresql: false
+effective_at: '2026-09-16T00:00:00+08:00'
+locked_by: team/foundation

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/storage-object.schema.json",
+  "title": "Private storage object metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["org_id", "object_key", "storage_object_ref", "content_hash", "size_bytes", "content_type", "access_policy", "metadata"],
+  "properties": {
+    "org_id": { "type": "string", "minLength": 1, "maxLength": 128, "pattern": "^(?!\\.{1,2}$)[^/\\\\%?#\\s\\u0000-\\u001f\\u007f-\\u009f]+$", "description": "Single NFC namespace segment; runtime also enforces Unicode categories and 128 UTF-8 bytes." },
+    "object_key": { "type": "string", "minLength": 1, "maxLength": 1024, "pattern": "^(?!/)(?!.*(?:/$|//))(?!.*(?:^|/)\\.{1,2}(?:/|$))(?!.*(?:^|/)\\s)(?!.*\\s(?:/|$))[^\\\\%?#\\u0000-\\u001f\\u007f-\\u009f]+$", "description": "NFC relative path; runtime enforces Unicode categories and 1024 UTF-8 bytes including namespace/org prefix." },
+    "storage_object_ref": { "type": "string", "pattern": "^private://" },
+    "content_hash": { "type": "string", "pattern": "^[A-Fa-f0-9]{64}$" },
+    "size_bytes": { "type": "integer", "minimum": 0 },
+    "content_type": { "type": "string", "minLength": 1 },
+    "access_policy": { "const": "private" },
+    "metadata": { "type": "object", "additionalProperties": { "type": "string" } }
+  }
+}

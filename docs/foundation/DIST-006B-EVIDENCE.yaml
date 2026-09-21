@@ -1,0 +1,38 @@
+task_id: DIST-006B
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000033
+actor: team/distribution
+predecessors: [POLICY-001, DIST-004, DIST-006A]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/distribution/reconcile.py
+    - modules/distribution/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/publication-record.schema.json
+    - packages/contracts/jsonschema/delivery-attempt.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_dist_006b.py
+  tests:
+    - tests/unit/distribution/test_reconcile.py
+verification:
+  targeted_command: python -m pytest tests/unit/distribution tests/contract/test_found_007d_core_schemas.py -q
+  targeted_result: 48 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  upload_acknowledged_published_reconciliation: true
+  publication_record_and_attempt_schema_validation: true
+  unknown_result_requires_reason: true
+  successful_state_regression_blocked: true
+  idempotent_replay_tenant_scope_and_audit: true
+  business_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable reconciliation commands while retaining observed publication records and audit events.
+  - This revision creates no business table; reconciliation projections use a forward migration.

@@ -1,0 +1,35 @@
+dependency_key: first-official-platform-account
+dependency_version: 1
+status: unavailable
+as_of: '2026-09-18T00:00:00+08:00'
+owner:
+  responsible_role: platform_operator
+  accountable_role: governance_owner
+  consulted_roles: [product_owner, data_protection_owner, security_incident_lead]
+latest_evidence_due_at: '2026-12-31T17:00:00+08:00'
+review_cadence_days: 7
+escalation_days_before_due: 30
+required_evidence:
+  - legal_entity_and_authorized_contact
+  - platform_account_ownership
+  - official_platform_eligibility
+  - approved_scopes_and_purpose
+  - authorization_expiry_and_revocation_path
+  - privacy_and_region_review
+  - security_and_vault_readiness
+  - sandbox_and_reconciliation_test
+evidence_storage: references_only_no_credentials
+unavailable_fallback:
+  release_level: architecture_mvp
+  allowed_modes: [manual_export, simulation]
+  account_ref_status: [planned, synthetic]
+  prohibited_claims: [real_oauth, real_publication, real_platform_metrics]
+  blocked_modes: [draft_only, authorized_api]
+missed_deadline_action: escalate_and_keep_distribution_pilot_no_go
+transition:
+  require_all_evidence: true
+  require_go_no_go: true
+  new_immutable_target_version: true
+  new_publication_intent: true
+  old_synthetic_intent_reuse: false
+  external_result_reconciliation_required: true

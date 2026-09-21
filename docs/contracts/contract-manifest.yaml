@@ -1,0 +1,2472 @@
+schema_version: 1
+status: baseline
+source_documents:
+- AI跨境技术内容自动化工作流开发清单_审计与优化版.md
+- docs/task-registry.yaml
+machine_sources:
+  object_jsonschema_dir: packages/contracts/jsonschema
+  event_jsonschema_dir: packages/contracts/events
+  openapi: packages/contracts/openapi/openapi.yaml
+  event_index: docs/contracts/event-registry.yaml
+  state_index: docs/contracts/state-registry.yaml
+  migration_manifest: docs/contracts/migration-manifest.yaml
+object_schema_files:
+- packages/contracts/jsonschema/account-connection.schema.json
+- packages/contracts/jsonschema/account-profile.schema.json
+- packages/contracts/jsonschema/agent-definition.schema.json
+- packages/contracts/jsonschema/agent-output.schema.json
+- packages/contracts/jsonschema/agent-run.schema.json
+- packages/contracts/jsonschema/agent.schema.json
+- packages/contracts/jsonschema/analytics-event-catalog.schema.json
+- packages/contracts/jsonschema/analytics-geo-quality-snapshot.schema.json
+- packages/contracts/jsonschema/analytics-kpi-snapshot.schema.json
+- packages/contracts/jsonschema/analytics.schema.json
+- packages/contracts/jsonschema/api-contract-baseline.schema.json
+- packages/contracts/jsonschema/api-error.schema.json
+- packages/contracts/jsonschema/approval-decision.schema.json
+- packages/contracts/jsonschema/approval.schema.json
+- packages/contracts/jsonschema/approved-model-provider.schema.json
+- packages/contracts/jsonschema/architecture-guard.schema.json
+- packages/contracts/jsonschema/asset-version.schema.json
+- packages/contracts/jsonschema/asset.schema.json
+- packages/contracts/jsonschema/audit-log.schema.json
+- packages/contracts/jsonschema/audit.schema.json
+- packages/contracts/jsonschema/authorization-evidence.schema.json
+- packages/contracts/jsonschema/branch-protection.schema.json
+- packages/contracts/jsonschema/canonical-content-version.schema.json
+- packages/contracts/jsonschema/canonical-content.schema.json
+- packages/contracts/jsonschema/canonical_content.schema.json
+- packages/contracts/jsonschema/claim.schema.json
+- packages/contracts/jsonschema/content-variant.schema.json
+- packages/contracts/jsonschema/correlation-context.schema.json
+- packages/contracts/jsonschema/cost-record.schema.json
+- packages/contracts/jsonschema/data-processing-policy.schema.json
+- packages/contracts/jsonschema/database-config.schema.json
+- packages/contracts/jsonschema/deletion-request.schema.json
+- packages/contracts/jsonschema/delivery-attempt.schema.json
+- packages/contracts/jsonschema/delivery-mode.schema.json
+- packages/contracts/jsonschema/distribution-target-version.schema.json
+- packages/contracts/jsonschema/distribution-target.schema.json
+- packages/contracts/jsonschema/distribution.schema.json
+- packages/contracts/jsonschema/distribution_account.schema.json
+- packages/contracts/jsonschema/distribution_oauth.schema.json
+- packages/contracts/jsonschema/entity.schema.json
+- packages/contracts/jsonschema/eval-run.schema.json
+- packages/contracts/jsonschema/evaluation.schema.json
+- packages/contracts/jsonschema/event-compatibility-baseline.schema.json
+- packages/contracts/jsonschema/event-envelope.schema.json
+- packages/contracts/jsonschema/evidence.schema.json
+- packages/contracts/jsonschema/export-package.schema.json
+- packages/contracts/jsonschema/feature-flag.schema.json
+- packages/contracts/jsonschema/feedback-action.schema.json
+- packages/contracts/jsonschema/feedback-experiment.schema.json
+- packages/contracts/jsonschema/feedback-item.schema.json
+- packages/contracts/jsonschema/feedback-recommendation.schema.json
+- packages/contracts/jsonschema/feedback-scoring-version.schema.json
+- packages/contracts/jsonschema/feedback.schema.json
+- packages/contracts/jsonschema/foundation.schema.json
+- packages/contracts/jsonschema/geo-content-assessment.schema.json
+- packages/contracts/jsonschema/geo-query-fixture.schema.json
+- packages/contracts/jsonschema/geo-run.schema.json
+- packages/contracts/jsonschema/geo_content.schema.json
+- packages/contracts/jsonschema/geo_region.schema.json
+- packages/contracts/jsonschema/golden-set-version.schema.json
+- packages/contracts/jsonschema/governance.schema.json
+- packages/contracts/jsonschema/graph-attempt.schema.json
+- packages/contracts/jsonschema/graph-definition.schema.json
+- packages/contracts/jsonschema/graph-state.schema.json
+- packages/contracts/jsonschema/human-interrupt.schema.json
+- packages/contracts/jsonschema/human-task.schema.json
+- packages/contracts/jsonschema/iam.schema.json
+- packages/contracts/jsonschema/internal-iam.schema.json
+- packages/contracts/jsonschema/kill-switch.schema.json
+- packages/contracts/jsonschema/knowledge-core-version.schema.json
+- packages/contracts/jsonschema/knowledge-core.schema.json
+- packages/contracts/jsonschema/knowledge.schema.json
+- packages/contracts/jsonschema/knowledge_site.schema.json
+- packages/contracts/jsonschema/lineage-query.schema.json
+- packages/contracts/jsonschema/media-asset-lineage.schema.json
+- packages/contracts/jsonschema/media-output-spec-version.schema.json
+- packages/contracts/jsonschema/media-output-spec.schema.json
+- packages/contracts/jsonschema/media-script-version.schema.json
+- packages/contracts/jsonschema/media-script.schema.json
+- packages/contracts/jsonschema/media-storyboard-version.schema.json
+- packages/contracts/jsonschema/media-storyboard.schema.json
+- packages/contracts/jsonschema/media-subtitle-version.schema.json
+- packages/contracts/jsonschema/media-subtitle.schema.json
+- packages/contracts/jsonschema/media-visual-asset-set-version.schema.json
+- packages/contracts/jsonschema/media-visual-asset-set.schema.json
+- packages/contracts/jsonschema/media.schema.json
+- packages/contracts/jsonschema/metric-definition.schema.json
+- packages/contracts/jsonschema/metrics-baseline.schema.json
+- packages/contracts/jsonschema/migration-baseline.schema.json
+- packages/contracts/jsonschema/model-budget-decision.schema.json
+- packages/contracts/jsonschema/model-budget-policy.schema.json
+- packages/contracts/jsonschema/model-call.schema.json
+- packages/contracts/jsonschema/model-gateway.schema.json
+- packages/contracts/jsonschema/model_gateway.schema.json
+- packages/contracts/jsonschema/node-execution.schema.json
+- packages/contracts/jsonschema/oauth-authorization-session.schema.json
+- packages/contracts/jsonschema/observation.schema.json
+- packages/contracts/jsonschema/operational-targets.schema.json
+- packages/contracts/jsonschema/operations.schema.json
+- packages/contracts/jsonschema/outbox-event.schema.json
+- packages/contracts/jsonschema/pilot-run.schema.json
+- packages/contracts/jsonschema/planner-input.schema.json
+- packages/contracts/jsonschema/planner-output.schema.json
+- packages/contracts/jsonschema/platform.schema.json
+- packages/contracts/jsonschema/platform_adapter.schema.json
+- packages/contracts/jsonschema/policy-card.schema.json
+- packages/contracts/jsonschema/policy-decision.schema.json
+- packages/contracts/jsonschema/policy-snapshot.schema.json
+- packages/contracts/jsonschema/policy.schema.json
+- packages/contracts/jsonschema/production.schema.json
+- packages/contracts/jsonschema/prompt-template.schema.json
+- packages/contracts/jsonschema/prompt-version.schema.json
+- packages/contracts/jsonschema/provenance.schema.json
+- packages/contracts/jsonschema/publication-intent.schema.json
+- packages/contracts/jsonschema/publication-record.schema.json
+- packages/contracts/jsonschema/publisher-capability.schema.json
+- packages/contracts/jsonschema/qa-agent-input.schema.json
+- packages/contracts/jsonschema/qa-agent-output.schema.json
+- packages/contracts/jsonschema/qa-report.schema.json
+- packages/contracts/jsonschema/qa.schema.json
+- packages/contracts/jsonschema/raci-policy.schema.json
+- packages/contracts/jsonschema/real-account-dependency.schema.json
+- packages/contracts/jsonschema/redis-config.schema.json
+- packages/contracts/jsonschema/refresh-recommendation.schema.json
+- packages/contracts/jsonschema/region-check-decision.schema.json
+- packages/contracts/jsonschema/region-deletion-policy.schema.json
+- packages/contracts/jsonschema/region-profile-version.schema.json
+- packages/contracts/jsonschema/region-profile.schema.json
+- packages/contracts/jsonschema/region-rule-decision.schema.json
+- packages/contracts/jsonschema/regression-threshold-version.schema.json
+- packages/contracts/jsonschema/release-levels.schema.json
+- packages/contracts/jsonschema/render-job.schema.json
+- packages/contracts/jsonschema/render-retry.schema.json
+- packages/contracts/jsonschema/research-input.schema.json
+- packages/contracts/jsonschema/research-output.schema.json
+- packages/contracts/jsonschema/retrieval-result.schema.json
+- packages/contracts/jsonschema/rights-provenance-input.schema.json
+- packages/contracts/jsonschema/rights-provenance-output.schema.json
+- packages/contracts/jsonschema/rights-record-version.schema.json
+- packages/contracts/jsonschema/rights-record.schema.json
+- packages/contracts/jsonschema/risk-policy.schema.json
+- packages/contracts/jsonschema/runtime-entry.schema.json
+- packages/contracts/jsonschema/sandbox-run.schema.json
+- packages/contracts/jsonschema/scheduler-job.schema.json
+- packages/contracts/jsonschema/scheduler.schema.json
+- packages/contracts/jsonschema/site-page-version.schema.json
+- packages/contracts/jsonschema/site-publication.schema.json
+- packages/contracts/jsonschema/site-quality-report.schema.json
+- packages/contracts/jsonschema/site-structured-data.schema.json
+- packages/contracts/jsonschema/source-snapshot.schema.json
+- packages/contracts/jsonschema/source.schema.json
+- packages/contracts/jsonschema/storage-config.schema.json
+- packages/contracts/jsonschema/storage-object.schema.json
+- packages/contracts/jsonschema/structured-log.schema.json
+- packages/contracts/jsonschema/supply-chain.schema.json
+- packages/contracts/jsonschema/support-message.schema.json
+- packages/contracts/jsonschema/support-thread.schema.json
+- packages/contracts/jsonschema/support.schema.json
+- packages/contracts/jsonschema/synthetic-fixture.schema.json
+- packages/contracts/jsonschema/task-failure.schema.json
+- packages/contracts/jsonschema/task-job.schema.json
+- packages/contracts/jsonschema/task-queue-config.schema.json
+- packages/contracts/jsonschema/tech-stack-baseline.schema.json
+- packages/contracts/jsonschema/terminology-version.schema.json
+- packages/contracts/jsonschema/token-lease.schema.json
+- packages/contracts/jsonschema/tool-definition.schema.json
+- packages/contracts/jsonschema/topic-brief.schema.json
+- packages/contracts/jsonschema/topic-opportunity.schema.json
+- packages/contracts/jsonschema/topic-score-snapshot.schema.json
+- packages/contracts/jsonschema/topic-signal-import-row.schema.json
+- packages/contracts/jsonschema/topic-signal.schema.json
+- packages/contracts/jsonschema/topic-taxonomy.schema.json
+- packages/contracts/jsonschema/topic.schema.json
+- packages/contracts/jsonschema/tracing-cost-baseline.schema.json
+- packages/contracts/jsonschema/transform-input.schema.json
+- packages/contracts/jsonschema/transform-output.schema.json
+- packages/contracts/jsonschema/translation-memory-entry.schema.json
+- packages/contracts/jsonschema/variant-draft.schema.json
+- packages/contracts/jsonschema/variant-version.schema.json
+- packages/contracts/jsonschema/vendor-inventory.schema.json
+- packages/contracts/jsonschema/vertical-scope.schema.json
+- packages/contracts/jsonschema/webhook-receipt.schema.json
+- packages/contracts/jsonschema/workflow-run.schema.json
+- packages/contracts/jsonschema/workflow-step.schema.json
+- packages/contracts/jsonschema/workflow.schema.json
+event_schema_files:
+- packages/contracts/events/account-connection_changed.schema.json
+- packages/contracts/events/agent_run-completed.schema.json
+- packages/contracts/events/analytics-asset-observed.schema.json
+- packages/contracts/events/analytics-content-observed.schema.json
+- packages/contracts/events/analytics-cost-observed.schema.json
+- packages/contracts/events/analytics-geo-observed.schema.json
+- packages/contracts/events/analytics-interaction-observed.schema.json
+- packages/contracts/events/analytics-kpi_snapshot-created.schema.json
+- packages/contracts/events/analytics-publication-observed.schema.json
+- packages/contracts/events/analytics-qa-observed.schema.json
+- packages/contracts/events/analytics-risk-observed.schema.json
+- packages/contracts/events/analytics-support-observed.schema.json
+- packages/contracts/events/approval-approved.schema.json
+- packages/contracts/events/approval-decision_recorded.schema.json
+- packages/contracts/events/approval-expired.schema.json
+- packages/contracts/events/approval-recorded.schema.json
+- packages/contracts/events/approval-rejected.schema.json
+- packages/contracts/events/approval-requested.schema.json
+- packages/contracts/events/approval-revoked.schema.json
+- packages/contracts/events/asset-approved.schema.json
+- packages/contracts/events/asset-blocked.schema.json
+- packages/contracts/events/asset-created.schema.json
+- packages/contracts/events/asset-qa_requested.schema.json
+- packages/contracts/events/asset-render_dead_lettered.schema.json
+- packages/contracts/events/asset-render_failed.schema.json
+- packages/contracts/events/asset-render_retry_scheduled.schema.json
+- packages/contracts/events/asset-render_shot_rerendered.schema.json
+- packages/contracts/events/asset-render_started.schema.json
+- packages/contracts/events/asset-render_unknown.schema.json
+- packages/contracts/events/asset-root_changed.schema.json
+- packages/contracts/events/asset-withdrawn.schema.json
+- packages/contracts/events/canonical-evidence_requested.schema.json
+- packages/contracts/events/canonical-fact_checked.schema.json
+- packages/contracts/events/canonical-version-approved.schema.json
+- packages/contracts/events/canonical-version-created.schema.json
+- packages/contracts/events/canonical-version-superseded.schema.json
+- packages/contracts/events/canonical-version-withdrawn.schema.json
+- packages/contracts/events/claim-created.schema.json
+- packages/contracts/events/claim-freshness-changed.schema.json
+- packages/contracts/events/claim-verified.schema.json
+- packages/contracts/events/claim-withdrawn.schema.json
+- packages/contracts/events/deletion-completed.schema.json
+- packages/contracts/events/deletion-failed.schema.json
+- packages/contracts/events/deletion-partially_completed.schema.json
+- packages/contracts/events/deletion-queued.schema.json
+- packages/contracts/events/deletion-started.schema.json
+- packages/contracts/events/delivery-attempted.schema.json
+- packages/contracts/events/delivery-dead_lettered.schema.json
+- packages/contracts/events/delivery-failed.schema.json
+- packages/contracts/events/delivery-retry_scheduled.schema.json
+- packages/contracts/events/delivery-simulated.schema.json
+- packages/contracts/events/delivery-succeeded.schema.json
+- packages/contracts/events/delivery-unknown.schema.json
+- packages/contracts/events/delivery-unknown_resolved.schema.json
+- packages/contracts/events/distribution-target-created.schema.json
+- packages/contracts/events/distribution-target-retired.schema.json
+- packages/contracts/events/distribution-target_version-activated.schema.json
+- packages/contracts/events/distribution-target_version-created.schema.json
+- packages/contracts/events/distribution-target_version-retired.schema.json
+- packages/contracts/events/entity-activated.schema.json
+- packages/contracts/events/entity-created.schema.json
+- packages/contracts/events/entity-retired.schema.json
+- packages/contracts/events/event-envelope.schema.json
+- packages/contracts/events/evidence-captured.schema.json
+- packages/contracts/events/evidence-invalidated.schema.json
+- packages/contracts/events/evidence-validated.schema.json
+- packages/contracts/events/export_package-created.schema.json
+- packages/contracts/events/export_package-expired.schema.json
+- packages/contracts/events/export_package-revoked.schema.json
+- packages/contracts/events/feedback-action_approved.schema.json
+- packages/contracts/events/feedback-action_cancelled.schema.json
+- packages/contracts/events/feedback-action_executed.schema.json
+- packages/contracts/events/feedback-action_failed.schema.json
+- packages/contracts/events/feedback-action_started.schema.json
+- packages/contracts/events/feedback-approved.schema.json
+- packages/contracts/events/feedback-executed.schema.json
+- packages/contracts/events/feedback-expired.schema.json
+- packages/contracts/events/feedback-recommendation_created.schema.json
+- packages/contracts/events/feedback-rejected.schema.json
+- packages/contracts/events/geo-fixture-activated.schema.json
+- packages/contracts/events/geo-fixture-retired.schema.json
+- packages/contracts/events/human_task-assigned.schema.json
+- packages/contracts/events/human_task-cancelled.schema.json
+- packages/contracts/events/human_task-claimed.schema.json
+- packages/contracts/events/human_task-completed.schema.json
+- packages/contracts/events/human_task-created.schema.json
+- packages/contracts/events/human_task-escalated.schema.json
+- packages/contracts/events/human_task-expired.schema.json
+- packages/contracts/events/human_task-rejected.schema.json
+- packages/contracts/events/human_task-started.schema.json
+- packages/contracts/events/human_task-submitted.schema.json
+- packages/contracts/events/kill_switch-paused.schema.json
+- packages/contracts/events/kill_switch-resumed.schema.json
+- packages/contracts/events/knowledge-core-activated.schema.json
+- packages/contracts/events/knowledge-core-retired.schema.json
+- packages/contracts/events/knowledge-core_version-changed.schema.json
+- packages/contracts/events/knowledge-core_version-verified.schema.json
+- packages/contracts/events/metric-definition-activated.schema.json
+- packages/contracts/events/metric-definition-created.schema.json
+- packages/contracts/events/metric-definition-retired.schema.json
+- packages/contracts/events/model-call-failed.schema.json
+- packages/contracts/events/model-call-started.schema.json
+- packages/contracts/events/model-call-succeeded.schema.json
+- packages/contracts/events/observation-recorded.schema.json
+- packages/contracts/events/outbox-dead_lettered.schema.json
+- packages/contracts/events/outbox-failed.schema.json
+- packages/contracts/events/outbox-publish_started.schema.json
+- packages/contracts/events/outbox-published.schema.json
+- packages/contracts/events/outbox-retry_scheduled.schema.json
+- packages/contracts/events/policy-snapshot-created.schema.json
+- packages/contracts/events/policy-snapshot-expired.schema.json
+- packages/contracts/events/policy-snapshot-revoked.schema.json
+- packages/contracts/events/publication-acknowledged.schema.json
+- packages/contracts/events/publication-blocked.schema.json
+- packages/contracts/events/publication-cancelled.schema.json
+- packages/contracts/events/publication-dispatched.schema.json
+- packages/contracts/events/publication-failed.schema.json
+- packages/contracts/events/publication-published.schema.json
+- packages/contracts/events/publication-queued.schema.json
+- packages/contracts/events/publication-recorded.schema.json
+- packages/contracts/events/publication-removed.schema.json
+- packages/contracts/events/publication-unknown.schema.json
+- packages/contracts/events/publication-unknown_resolved.schema.json
+- packages/contracts/events/publication_intent-ready.schema.json
+- packages/contracts/events/refresh-requested.schema.json
+- packages/contracts/events/region-profile-created.schema.json
+- packages/contracts/events/region-profile_version-activated.schema.json
+- packages/contracts/events/region-profile_version-created.schema.json
+- packages/contracts/events/region-profile_version-retired.schema.json
+- packages/contracts/events/rights-version-complaint_hold.schema.json
+- packages/contracts/events/rights-version-created.schema.json
+- packages/contracts/events/rights-version-expired.schema.json
+- packages/contracts/events/rights-version-revoked.schema.json
+- packages/contracts/events/rights-version-verified.schema.json
+- packages/contracts/events/site-page_version-published.schema.json
+- packages/contracts/events/site-page_version-ready.schema.json
+- packages/contracts/events/site-page_version-rolled_back.schema.json
+- packages/contracts/events/site-page_version-superseded.schema.json
+- packages/contracts/events/source-blocked.schema.json
+- packages/contracts/events/source-expired.schema.json
+- packages/contracts/events/source-ingested.schema.json
+- packages/contracts/events/source-quarantined.schema.json
+- packages/contracts/events/source-revoked.schema.json
+- packages/contracts/events/source-snapshot-blocked.schema.json
+- packages/contracts/events/source-snapshot-expired.schema.json
+- packages/contracts/events/source-snapshot-quarantined.schema.json
+- packages/contracts/events/source-snapshot-revoked.schema.json
+- packages/contracts/events/source-snapshot-usable.schema.json
+- packages/contracts/events/source-usable.schema.json
+- packages/contracts/events/task_job-cancelled.schema.json
+- packages/contracts/events/task_job-dead_lettered.schema.json
+- packages/contracts/events/task_job-failed.schema.json
+- packages/contracts/events/task_job-leased.schema.json
+- packages/contracts/events/task_job-queued.schema.json
+- packages/contracts/events/task_job-retry_scheduled.schema.json
+- packages/contracts/events/task_job-started.schema.json
+- packages/contracts/events/task_job-succeeded.schema.json
+- packages/contracts/events/topic-brief-approved.schema.json
+- packages/contracts/events/topic-brief-created.schema.json
+- packages/contracts/events/topic-brief-deferred.schema.json
+- packages/contracts/events/topic-brief-rejected.schema.json
+- packages/contracts/events/topic-brief-superseded.schema.json
+- packages/contracts/events/topic-monitoring-started.schema.json
+- packages/contracts/events/topic-opportunity-approved.schema.json
+- packages/contracts/events/topic-opportunity-created.schema.json
+- packages/contracts/events/topic-opportunity-rejected.schema.json
+- packages/contracts/events/topic-opportunity-scored.schema.json
+- packages/contracts/events/topic-production-started.schema.json
+- packages/contracts/events/topic-refresh-started.schema.json
+- packages/contracts/events/topic-retired.schema.json
+- packages/contracts/events/topic-signal-created.schema.json
+- packages/contracts/events/topic-signal-rejected.schema.json
+- packages/contracts/events/topic_signal-rejected.schema.json
+- packages/contracts/events/variant-approved.schema.json
+- packages/contracts/events/variant-created.schema.json
+- packages/contracts/events/variant-draft_created.schema.json
+- packages/contracts/events/variant-localized.schema.json
+- packages/contracts/events/variant-qa_requested.schema.json
+- packages/contracts/events/variant-root_changed.schema.json
+- packages/contracts/events/variant-withdrawn.schema.json
+- packages/contracts/events/webhook-dead_lettered.schema.json
+- packages/contracts/events/webhook-deduplicated.schema.json
+- packages/contracts/events/webhook-processed.schema.json
+- packages/contracts/events/webhook-rejected.schema.json
+tasks:
+- task_id: GOV-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/governance.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/vertical-scope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260915_gov_001_governance_scope.sql
+    exists: true
+  openapi_task_link: null
+- task_id: GOV-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/governance.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/release-levels.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260915_gov_002_release_levels.sql
+    exists: true
+  openapi_task_link: null
+- task_id: GOV-003
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/governance.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/raci-policy.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260915_gov_003_raci_policy.sql
+    exists: true
+  openapi_task_link: null
+- task_id: GOV-004
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/governance.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/risk-policy.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260915_gov_004_risk_policy.sql
+    exists: true
+  openapi_task_link: null
+- task_id: GOV-005
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/governance.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/policy-card.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/policy-snapshot.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260915_gov_005_policy_card.sql
+    exists: true
+  openapi_task_link: null
+- task_id: GOV-006
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/governance.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/tech-stack-baseline.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260915_gov_006_tech_stack_baseline.sql
+    exists: true
+  openapi_task_link: null
+- task_id: GOV-007
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/governance.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/data-processing-policy.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_gov_007_data_processing_policy.py
+    exists: true
+  openapi_task_link: null
+- task_id: GOV-008
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/governance.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/operational-targets.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_gov_008_operational_targets.py
+    exists: true
+  openapi_task_link: null
+- task_id: GOV-009
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/governance.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/real-account-dependency.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_gov_009_account_dependency.py
+    exists: true
+  openapi_task_link: null
+- task_id: GOV-010
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/governance.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/vendor-inventory.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_gov_010_vendor_inventory.py
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-000
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_000_repository_inventory.sql
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/branch-protection.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_001_repository_baseline.sql
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/runtime-entry.schema.json
+    exists: true
+  - path: packages/contracts/openapi/openapi.yaml
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_002_runtime_entry_baseline.sql
+    exists: true
+  openapi_task_link: FOUND-002
+- task_id: FOUND-003A
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/database-config.schema.json
+    exists: true
+  - path: packages/contracts/openapi/openapi.yaml
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_003a_database_baseline.sql
+    exists: true
+  openapi_task_link: FOUND-003A
+- task_id: FOUND-003B
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/storage-config.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/storage-object.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_003b_storage_baseline.sql
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-003D
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/task-job.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/task-queue-config.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_003d_task_jobs.sql
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-004A
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/migration-baseline.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_004a_migration_baseline.py
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-004B
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/outbox-event.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_004b_outbox.py
+    exists: true
+  openapi_task_link: FOUND-004B
+- task_id: FOUND-004C
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/task-job.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_004c_task_leases.py
+    exists: true
+  openapi_task_link: FOUND-004C
+- task_id: FOUND-004D
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/task-job.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/task-failure.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/human-task.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_004d_failure_retry.py
+    exists: true
+  openapi_task_link: FOUND-004D
+- task_id: FOUND-004E
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/task-job.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_004e_replay.py
+    exists: true
+  openapi_task_link: FOUND-004E
+- task_id: FOUND-005
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/api-error.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/correlation-context.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/structured-log.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_004f_api_observability.py
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-006A
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/metrics-baseline.schema.json
+    exists: true
+  - path: packages/contracts/openapi/openapi.yaml
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_006a_health_metrics.py
+    exists: true
+  openapi_task_link: FOUND-006A
+- task_id: FOUND-006B
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/tracing-cost-baseline.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/cost-record.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/correlation-context.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_006b_tracing_cost.py
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-007A
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/api-contract-baseline.schema.json
+    exists: true
+  - path: packages/contracts/openapi/openapi.yaml
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_007a_openapi.py
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-007B
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/event-compatibility-baseline.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_007b_events.py
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-007C
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/agent-definition.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/agent-output.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_007c_agent_output.py
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-007D
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/topic-signal.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/topic-opportunity.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/topic-brief.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/topic-score-snapshot.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/canonical-content.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/canonical-content-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/variant-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/content-variant.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/asset.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/asset-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/publication-intent.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/delivery-attempt.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/export-package.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/publication-record.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/observation.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/feedback-item.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/source.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/source-snapshot.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/entity.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/claim.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/evidence.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/knowledge-core.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/knowledge-core-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/platform.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/rights-record.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/rights-record-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/distribution-target.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/distribution-target-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/account-profile.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/authorization-evidence.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/policy-decision.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/account-connection.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/region-profile.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/region-profile-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/policy-snapshot.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/metric-definition.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/approval.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/approval-decision.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/human-task.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/feedback-action.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/task-job.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/outbox-event.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/task-failure.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/site-page-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/geo-query-fixture.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/geo-run.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/webhook-receipt.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/deletion-request.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/kill-switch.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260916_found_007d_core_contracts.py
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-008
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/kill-switch.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/feature-flag.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/delivery-mode.schema.json
+    exists: true
+  - path: packages/contracts/events/kill_switch-paused.schema.json
+    exists: true
+  - path: packages/contracts/events/kill_switch-resumed.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_found_008_control_plane.py
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-009
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/synthetic-fixture.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/storage-object.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_found_009_testkit.py
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-010
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/platform.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/distribution-target.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/distribution-target-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/publication-intent.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/delivery-attempt.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_found_010_platform_contracts.py
+    exists: true
+  openapi_task_link: FOUND-010
+- task_id: FOUND-011
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/architecture-guard.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_found_011_architecture_guard.py
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-012A
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_found_012a_ci.py
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-013
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_found_013_registry.py
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-003C
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/redis-config.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_found_003c_redis.py
+    exists: true
+  openapi_task_link: null
+- task_id: FOUND-012B
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/foundation.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/supply-chain.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_found_012b_supply_chain.py
+    exists: true
+  openapi_task_link: null
+- task_id: IAM-CORE-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/internal-iam.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_iam_core_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: ACCOUNT-CORE-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/account-profile.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/distribution-target.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/distribution-target-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_account_core_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: GEO_REGION-CORE-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/region-profile.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/region-profile-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_geo_region_core_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: MODEL-CORE-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/model-gateway.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/model-call.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_model_core_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: MODEL-CORE-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/model-gateway.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/model-call.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_model_core_002.py
+    exists: true
+  openapi_task_link: null
+- task_id: AGENT-CORE-001
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/agent-definition.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_agent_core_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: AGENT-CORE-002
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/agent-run.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_agent_core_002.py
+    exists: true
+  openapi_task_link: null
+- task_id: AGENT-CORE-003
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/agent-run.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_agent_core_003.py
+    exists: true
+  openapi_task_link: null
+- task_id: AGENT-CORE-004
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/agent-run.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/model-call.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_agent_core_004.py
+    exists: true
+  openapi_task_link: null
+- task_id: WORKFLOW-CORE-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/workflow-run.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/human-task.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/task-job.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_workflow_core_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: WORKFLOW-CORE-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/workflow-run.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/workflow-step.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/human-task.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_workflow_core_002.py
+    exists: true
+  openapi_task_link: WORKFLOW-CORE-002
+- task_id: WORKFLOW-CORE-003
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/outbox-event.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/task-job.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_workflow_core_003.py
+    exists: true
+  openapi_task_link: null
+- task_id: FEEDBACK-CORE-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/observation.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/feedback-item.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/feedback-scoring-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_feedback_core_001.py
+    exists: true
+  openapi_task_link: FEEDBACK-CORE-001
+- task_id: SCHED-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/scheduler-job.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_sched_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: OBS-CORE-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/audit-log.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/outbox-event.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_obs_core_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: OBS-CORE-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/deletion-request.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_obs_core_002.py
+    exists: true
+  openapi_task_link: null
+- task_id: OBS-CORE-003
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/deletion-request.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_obs_core_003.py
+    exists: true
+  openapi_task_link: null
+- task_id: TOPIC-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/topic-taxonomy.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_topic_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: TOPIC-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/topic-signal.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_topic_002.py
+    exists: true
+  openapi_task_link: TOPIC-002
+- task_id: TOPIC-003
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/topic-opportunity.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/topic-score-snapshot.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_topic_003.py
+    exists: true
+  openapi_task_link: TOPIC-003
+- task_id: TOPIC-004
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/topic-brief.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_topic_004.py
+    exists: true
+  openapi_task_link: TOPIC-004
+- task_id: TOPIC-005
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/topic-opportunity.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_topic_005.py
+    exists: true
+  openapi_task_link: null
+- task_id: TOPIC-006
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/topic-opportunity.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_topic_006.py
+    exists: true
+  openapi_task_link: TOPIC-006
+- task_id: TOPIC-007
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/topic-score-snapshot.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_topic_007.py
+    exists: true
+  openapi_task_link: null
+- task_id: TOPIC-008
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/topic-brief.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_topic_008.py
+    exists: true
+  openapi_task_link: TOPIC-008
+- task_id: PROV-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/source.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/source-snapshot.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_prov_001.py
+    exists: true
+  openapi_task_link: PROV-001
+- task_id: PROV-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/rights-record.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/rights-record-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_prov_002.py
+    exists: true
+  openapi_task_link: PROV-002
+- task_id: PROV-003
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/rights-record.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/rights-record-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_prov_003.py
+    exists: true
+  openapi_task_link: null
+- task_id: KNOW-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/entity.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/claim.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/evidence.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_know_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: KNOW-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/knowledge-core.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/knowledge-core-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_know_002.py
+    exists: true
+  openapi_task_link: null
+- task_id: CANON-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/canonical-content.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/canonical-content-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_canon_001.py
+    exists: true
+  openapi_task_link: CANON-001
+- task_id: CANON-002
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/canonical-content-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_canon_002.py
+    exists: true
+  openapi_task_link: CANON-002
+- task_id: CANON-003
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/canonical-content-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_canon_003.py
+    exists: true
+  openapi_task_link: CANON-003
+- task_id: CANON-004
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/canonical-content-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/claim.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/evidence.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_canon_004.py
+    exists: true
+  openapi_task_link: null
+- task_id: CANON-005
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/canonical-content-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260918_canon_005.py
+    exists: true
+  openapi_task_link: null
+- task_id: CANON-006
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/lineage-query.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_canon_006.py
+    exists: true
+  openapi_task_link: null
+- task_id: AGENT-CORE-005A
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/agent-run.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/planner-input.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/planner-output.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_agent_core_005a.py
+    exists: true
+  openapi_task_link: null
+- task_id: AGENT-CORE-005B
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/agent-run.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/research-input.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/research-output.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/source-snapshot.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_agent_core_005b.py
+    exists: true
+  openapi_task_link: null
+- task_id: AGENT-CORE-005C
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/agent-run.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/rights-provenance-input.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/rights-provenance-output.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/rights-record-version.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_agent_core_005c.py
+    exists: true
+  openapi_task_link: null
+- task_id: AGENT-CORE-005D
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/agent-run.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/transform-input.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/transform-output.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/variant-draft.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/canonical-content-version.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_agent_core_005d.py
+    exists: true
+  openapi_task_link: null
+- task_id: AGENT-CORE-005E
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/agent-run.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/qa-agent-input.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/qa-agent-output.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/qa-report.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/human-task.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_agent_core_005e.py
+    exists: true
+  openapi_task_link: null
+- task_id: MODEL-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/model-gateway.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/model-call.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/approved-model-provider.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_model_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: PROD-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/variant-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/variant-draft.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_prod_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: PROD-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/content-variant.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/variant-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_prod_002.py
+    exists: true
+  openapi_task_link: PROD-002
+- task_id: PROD-003
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/variant-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/terminology-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/translation-memory-entry.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_prod_003.py
+    exists: true
+  openapi_task_link: null
+- task_id: PROD-004
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/variant-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/region-profile-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/region-rule-decision.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_prod_004.py
+    exists: true
+  openapi_task_link: null
+- task_id: QA-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/qa-report.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/claim.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/evidence.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_qa_001.py
+    exists: true
+  openapi_task_link: QA-001
+- task_id: QA-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/qa-report.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/variant-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_qa_002.py
+    exists: true
+  openapi_task_link: QA-002
+- task_id: QA-003
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/sandbox-run.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_qa_003.py
+    exists: true
+  openapi_task_link: null
+- task_id: POLICY-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/policy-snapshot.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/policy-decision.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_policy_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: POLICY-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/policy-snapshot.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/policy-decision.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_policy_002.py
+    exists: true
+  openapi_task_link: null
+- task_id: APPROVAL-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/approval.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_approval_001.py
+    exists: true
+  openapi_task_link: APPROVAL-001
+- task_id: APPROVAL-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/approval.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/approval-decision.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_approval_002.py
+    exists: true
+  openapi_task_link: APPROVAL-002
+- task_id: EVAL-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/prompt-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/golden-set-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/regression-threshold-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/eval-run.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_eval_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: MODEL-003
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/model-gateway.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/model-call.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/model-budget-policy.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/model-budget-decision.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_model_003.py
+    exists: true
+  openapi_task_link: null
+- task_id: SITE-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/site-page-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_site_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: SITE-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/site-page-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/site-publication.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_site_002.py
+    exists: true
+  openapi_task_link: null
+- task_id: SITE-003
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/site-page-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/site-structured-data.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_site_003.py
+    exists: true
+  openapi_task_link: null
+- task_id: GEO_CONTENT-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/geo-content-assessment.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/site-page-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/canonical-content-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/claim.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/evidence.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/source-snapshot.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/rights-record-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_geo_content_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: GEO_CONTENT-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/geo-query-fixture.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_geo_content_002.py
+    exists: true
+  openapi_task_link: null
+- task_id: GEO_CONTENT-003
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/geo-run.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260920_geo_content_003.py
+    exists: true
+  openapi_task_link: null
+- task_id: GEO_REGION-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/region-profile.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/region-profile-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/geo_region.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260920_geo_region_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: GEO_REGION-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/region-profile-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/region-check-decision.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/region-deletion-policy.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260920_geo_region_002.py
+    exists: true
+  openapi_task_link: null
+- task_id: SITE-004
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/site-page-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/site-quality-report.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260920_site_004.py
+    exists: true
+  openapi_task_link: null
+- task_id: MEDIA-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/asset-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/media-script.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/media-script-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260920_media_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: MEDIA-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/asset-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/rights-record-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/media-storyboard.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/media-storyboard-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260920_media_002.py
+    exists: true
+  openapi_task_link: null
+- task_id: MEDIA-003A
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/media-subtitle.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/media-subtitle-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260920_media_003a.py
+    exists: true
+  openapi_task_link: null
+- task_id: MEDIA-003B
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/asset-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/rights-record-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/media-visual-asset-set.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/media-visual-asset-set-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260920_media_003b.py
+    exists: true
+  openapi_task_link: null
+- task_id: MEDIA-003C
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/asset-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/media-visual-asset-set-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/media-output-spec.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/media-output-spec-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260920_media_003c.py
+    exists: true
+  openapi_task_link: null
+- task_id: MEDIA-004A
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/render-job.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/asset-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260920_media_004a.py
+    exists: true
+  openapi_task_link: null
+- task_id: MEDIA-004B
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/render-job.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/task-failure.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/render-retry.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260920_media_004b.py
+    exists: true
+  openapi_task_link: null
+- task_id: MEDIA-005A
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/qa-report.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/render-job.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/media-output-spec-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/media-subtitle-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260920_media_005a.py
+    exists: true
+  openapi_task_link: null
+- task_id: MEDIA-005B
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/qa-report.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/asset-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/render-job.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260920_media_005b.py
+    exists: true
+  openapi_task_link: null
+- task_id: MEDIA-006
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/asset-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/media-asset-lineage.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260920_media_006.py
+    exists: true
+  openapi_task_link: null
+- task_id: DIST-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/distribution-target.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/distribution-target-version.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/publication-intent.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/export-package.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/delivery-attempt.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/publication-record.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_dist_001.py
+    exists: true
+  openapi_task_link: DIST-001
+- task_id: DIST-002
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/publisher-capability.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_dist_002.py
+    exists: true
+  openapi_task_link: null
+- task_id: DIST-003A
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/export-package.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_dist_003a.py
+    exists: true
+  openapi_task_link: DIST-003A
+- task_id: DIST-003B
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/export-package.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_dist_003b.py
+    exists: true
+  openapi_task_link: null
+- task_id: DIST-004
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/publication-record.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/delivery-attempt.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_dist_004.py
+    exists: true
+  openapi_task_link: DIST-004
+- task_id: DIST-006A
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/publication-intent.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/delivery-attempt.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_dist_006a.py
+    exists: true
+  openapi_task_link: null
+- task_id: DIST-006B
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/publication-record.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/delivery-attempt.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_dist_006b.py
+    exists: true
+  openapi_task_link: null
+- task_id: DIST-006C
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/publication-record.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/human-task.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_dist_006c.py
+    exists: true
+  openapi_task_link: null
+- task_id: DIST-007
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/publication-intent.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/distribution-target-version.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_dist_007.py
+    exists: true
+  openapi_task_link: DIST-007
+- task_id: DIST-008A
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/distribution-target-version.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_dist_008a.py
+    exists: true
+  openapi_task_link: null
+- task_id: DIST-008B
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/publication-intent.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/kill-switch.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_dist_008b.py
+    exists: true
+  openapi_task_link: null
+- task_id: DIST-009
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/publication-intent.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/export-package.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_dist_009.py
+    exists: true
+  openapi_task_link: DIST-009
+- task_id: DIST-010
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/delivery-attempt.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/publication-record.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_dist_010.py
+    exists: true
+  openapi_task_link: DIST-010
+- task_id: DIST-011
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/webhook-receipt.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_dist_011.py
+    exists: true
+  openapi_task_link: null
+- task_id: DIST-005A
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/publisher-capability.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_dist_005a.py
+    exists: true
+  openapi_task_link: null
+- task_id: DIST-005B
+  readiness: contract_ready
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/delivery-attempt.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_dist_005b.py
+    exists: true
+  openapi_task_link: null
+- task_id: FEEDBACK-CORE-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/observation.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/feedback-item.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260919_feedback_core_002.py
+    exists: true
+  openapi_task_link: FEEDBACK-CORE-002
+- task_id: ACCOUNT-001A
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/account-profile.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/account-connection.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/account_001a.sql
+    exists: false
+  openapi_task_link: null
+- task_id: ACCOUNT-001B
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/authorization-evidence.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/account_001b.sql
+    exists: false
+  openapi_task_link: null
+- task_id: ACCOUNT-001C
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/distribution-target-version.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/account_001c.sql
+    exists: false
+  openapi_task_link: null
+- task_id: OAUTH-001A
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/oauth-authorization-session.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/oauth_001a.sql
+    exists: false
+  openapi_task_link: null
+- task_id: OAUTH-001B
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/oauth-authorization-session.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/oauth_001b.sql
+    exists: false
+  openapi_task_link: null
+- task_id: OAUTH-001C
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/authorization-evidence.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/oauth_001c.sql
+    exists: false
+  openapi_task_link: null
+- task_id: OAUTH-002A
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/token-lease.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/oauth_002a.sql
+    exists: false
+  openapi_task_link: null
+- task_id: OAUTH-002B
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/token-lease.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/oauth_002b.sql
+    exists: false
+  openapi_task_link: null
+- task_id: ACCOUNT-002
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/account-connection.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/account_002.sql
+    exists: false
+  openapi_task_link: null
+- task_id: IAM-CORE-002
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/internal-iam.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/iam_core_002.sql
+    exists: false
+  openapi_task_link: null
+- task_id: ACCOUNT-003
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/account-connection.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/kill-switch.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/account_003.sql
+    exists: false
+  openapi_task_link: null
+- task_id: PLAT-001
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/publisher-capability.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/plat_001.sql
+    exists: false
+  openapi_task_link: null
+- task_id: PLAT-002
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/publisher-capability.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/plat_002.sql
+    exists: false
+  openapi_task_link: null
+- task_id: PLAT-003
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/publisher-capability.schema.json
+    exists: true
+  - path: packages/contracts/events/event-envelope.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/plat_003.sql
+    exists: false
+  openapi_task_link: null
+- task_id: ANALYTICS-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/metric-definition.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/analytics-event-catalog.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260920_analytics_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: ANALYTICS-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/observation.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260920_analytics_002.py
+    exists: true
+  openapi_task_link: ANALYTICS-002
+- task_id: ANALYTICS-003
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/observation.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/analytics-kpi-snapshot.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260920_analytics_003.py
+    exists: true
+  openapi_task_link: null
+- task_id: ANALYTICS-004
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/observation.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/analytics-geo-quality-snapshot.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260921_analytics_004.py
+    exists: true
+  openapi_task_link: null
+- task_id: FEEDBACK-CORE-003
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/feedback-item.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260921_feedback_core_003.py
+    exists: true
+  openapi_task_link: null
+- task_id: FEEDBACK-CORE-004
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/feedback-item.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/feedback-recommendation.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260921_feedback_core_004.py
+    exists: true
+  openapi_task_link: null
+- task_id: FEEDBACK-CORE-005
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/feedback-action.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260921_feedback_core_005.py
+    exists: true
+  openapi_task_link: null
+- task_id: FEEDBACK-LIVE-001
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/observation.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/feedback_live_001.sql
+    exists: false
+  openapi_task_link: null
+- task_id: FEEDBACK-EXP-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/eval-run.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/feedback-experiment.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260921_feedback_exp_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: SUP-001
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/support-thread.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/support-message.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260921_sup_001.py
+    exists: true
+  openapi_task_link: null
+- task_id: SUP-002
+  readiness: ready_for_implementation
+  status: done
+  contract_refs:
+  - path: packages/contracts/jsonschema/support-thread.schema.json
+    exists: true
+  - path: packages/contracts/jsonschema/support-message.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/versions/20260921_sup_002.py
+    exists: true
+  openapi_task_link: null
+- task_id: PILOT-001
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/pilot-run.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/pilot_001.sql
+    exists: false
+  openapi_task_link: null
+- task_id: PILOT-002
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/pilot-run.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/pilot_002.sql
+    exists: false
+  openapi_task_link: null
+- task_id: PILOT-003
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/pilot-run.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/pilot_003.sql
+    exists: false
+  openapi_task_link: null
+- task_id: PILOT-004
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/pilot-run.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/pilot_004.sql
+    exists: false
+  openapi_task_link: null
+- task_id: PILOT-005
+  readiness: contract_ready
+  status: planned
+  contract_refs:
+  - path: packages/contracts/jsonschema/pilot-run.schema.json
+    exists: true
+  migration_refs:
+  - path: packages/db/migrations/planned/pilot_005.sql
+    exists: false
+  openapi_task_link: null

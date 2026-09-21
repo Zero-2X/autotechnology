@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/real-account-dependency.schema.json",
+  "title": "GOV-009 real account dependency",
+  "type": "object", "additionalProperties": false,
+  "required": ["dependency_key", "dependency_version", "status", "as_of", "owner", "latest_evidence_due_at", "review_cadence_days", "escalation_days_before_due", "required_evidence", "evidence_storage", "unavailable_fallback", "missed_deadline_action", "transition"],
+  "properties": {
+    "dependency_key": {"const": "first-official-platform-account"},
+    "dependency_version": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["unavailable", "evidence_pending", "verified"]},
+    "as_of": {"type": "string", "format": "date-time"},
+    "owner": {
+      "type": "object", "additionalProperties": false,
+      "required": ["responsible_role", "accountable_role", "consulted_roles"],
+      "properties": {
+        "responsible_role": {"const": "platform_operator"},
+        "accountable_role": {"const": "governance_owner"},
+        "consulted_roles": {"type": "array", "minItems": 3, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      }
+    },
+    "latest_evidence_due_at": {"type": "string", "format": "date-time"},
+    "review_cadence_days": {"type": "integer", "minimum": 1},
+    "escalation_days_before_due": {"type": "integer", "minimum": 1},
+    "required_evidence": {"type": "array", "minItems": 8, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "evidence_storage": {"const": "references_only_no_credentials"},
+    "unavailable_fallback": {
+      "type": "object", "additionalProperties": false,
+      "required": ["release_level", "allowed_modes", "account_ref_status", "prohibited_claims", "blocked_modes"],
+      "properties": {
+        "release_level": {"const": "architecture_mvp"},
+        "allowed_modes": {"type": "array", "const": ["manual_export", "simulation"]},
+        "account_ref_status": {"type": "array", "const": ["planned", "synthetic"]},
+        "prohibited_claims": {"type": "array", "const": ["real_oauth", "real_publication", "real_platform_metrics"]},
+        "blocked_modes": {"type": "array", "const": ["draft_only", "authorized_api"]}
+      }
+    },
+    "missed_deadline_action": {"const": "escalate_and_keep_distribution_pilot_no_go"},
+    "transition": {
+      "type": "object", "additionalProperties": false,
+      "required": ["require_all_evidence", "require_go_no_go", "new_immutable_target_version", "new_publication_intent", "old_synthetic_intent_reuse", "external_result_reconciliation_required"],
+      "properties": {
+        "require_all_evidence": {"const": true},
+        "require_go_no_go": {"const": true},
+        "new_immutable_target_version": {"const": true},
+        "new_publication_intent": {"const": true},
+        "old_synthetic_intent_reuse": {"const": false},
+        "external_result_reconciliation_required": {"const": true}
+      }
+    }
+  },
+  "x-module": "governance",
+  "x-task-ids": ["GOV-009"]
+}

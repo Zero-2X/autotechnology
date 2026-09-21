@@ -1,0 +1,22 @@
+task_id: MEDIA-003C
+status: done
+verification:
+  focused_command: python -m pytest tests/unit/media/test_media_output_spec_service.py tests/integration/test_media_003c.py tests/integration/test_media_003c_migration.py tests/contract/test_media_003c_contract.py -q
+  focused_result: 13 passed including PostgreSQL offline SQL emission test
+  latest_migration_test: 1 passed after source lineage and profile projection guard changes
+  pointer_guards: SQLite tests passed for initial dangling pointer, incomplete projections, clearing pointer and foreign version
+  postgresql_sql_emission: 1 passed; upgrade/downgrade SQL generated and guard removal order verified offline
+  migration_graph: revisions=110; head=20260920_media_003c; errors=0
+  schemas: schema_errors=0
+  architecture: architecture_errors=0
+  task_refs: checked=157; errors=0
+  precision: scoped=1; precise=1; gaps=0
+  secrets: secret_findings=0
+  plan_consistency: validated=157; errors=0
+  full_regression: 955 passed in 218.64s
+  postgresql_runtime: not verified against a live PostgreSQL database
+verified_boundaries:
+  - Missing fields, unknown fields, invalid dimensions/codecs/audio, duplicate ratios, invalid subtitle UUIDs and bitrate rejected in SQLite.
+  - Immutable snapshots, exact item projections, initial null pointer and complete next-version progression enforced.
+limitations:
+  - PostgreSQL SQL generation and trigger removal order verified offline; live PostgreSQL execution remains unverified.

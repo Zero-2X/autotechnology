@@ -1,0 +1,41 @@
+task_id: QA-001
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000018
+actor: team/qa
+predecessors: [KNOW-002, CANON-002, CANON-004, PROD-002]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/qa/service.py
+    - modules/qa/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/qa-report.schema.json
+    - packages/contracts/jsonschema/claim.schema.json
+    - packages/contracts/jsonschema/evidence.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_qa_001.py
+  tests:
+    - tests/unit/qa/test_service.py
+verification:
+  targeted_command: python -m pytest tests/unit/qa tests/unit/production tests/integration/test_variant_store.py tests/contract/test_found_004a_migrations.py -q
+  targeted_result: 31 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  tenant_scoped_projection_checks: true
+  claim_status_freshness_validity_and_review_checks: true
+  evidence_status_validity_quote_locator_and_snapshot_checks: true
+  claim_evidence_and_variant_source_map_link_checks: true
+  numbers_code_and_url_protection: true
+  replaceable_terminology_port: true
+  deterministic_findings_and_idempotent_replay: true
+  report_and_audit_hashes: true
+  business_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Stop new QA checks while retaining report audit records.
+  - This revision creates no business table; future durable QA report persistence uses a forward migration.

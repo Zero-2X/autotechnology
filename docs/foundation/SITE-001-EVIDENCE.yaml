@@ -1,0 +1,47 @@
+task_id: SITE-001
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000049
+actor: team/knowledge_site
+predecessors: [CANON-006, PROD-002]
+external_dependencies: []
+artifacts:
+  implementation:
+    - apps/knowledge-site/scripts/site_page.py
+    - apps/knowledge-site/README.md
+  contracts:
+    - packages/contracts/jsonschema/site-page-version.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_site_001.py
+  tests:
+    - tests/unit/knowledge_site/test_site_page.py
+    - tests/integration/test_site_001.py
+  task_spec:
+    - docs/tasks/SITE-001.md
+verification:
+  focused_command: python -m pytest tests/unit/knowledge_site -q
+  focused_result: 14 passed
+  targeted_command: python -m pytest tests/unit/knowledge_site tests/integration --maxfail=1 -q
+  targeted_result: 134 passed
+  task_precision: passed
+  task_card_refs: checked=157 errors=0
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed; revision_count=97; head=20260919_found_site_001
+  migration_upgrade_and_downgrade: passed
+  full_command: python -m pytest -q
+  full_result: 761 passed
+behavior:
+  tenant_scoped_page_root: true
+  immutable_version_sequence: true
+  canonical_path_normalization: true
+  locale_normalization: true
+  author_reviewer_methodology_evidence_limitations_faq: true
+  source_port_tenant_and_status_checks: true
+  idempotent_replay: true
+  deep_copy_reads: true
+  audit_excludes_page_body: true
+  direct_sql_in_site_app: false
+  real_network_calls: false
+rollback:
+  - Stop creating new SitePageVersion records and retain existing page facts and command summaries read-only.
+  - Downgrade to 20260919_found_model_003 only after exporting site page version and audit evidence.

@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/planner-output.schema.json",
+  "title": "PlannerOutput",
+  "type": "object",
+  "properties": {
+    "topic_plan": {
+      "type": "object",
+      "properties": {
+        "topic_brief_id": {"type": "string", "format": "uuid"},
+        "angle": {"type": "string", "minLength": 1, "maxLength": 2000},
+        "key_questions": {"type": "array", "minItems": 1, "maxItems": 10, "uniqueItems": true,
+          "items": {"type": "string", "minLength": 1, "maxLength": 500}}
+      },
+      "required": ["topic_brief_id", "angle", "key_questions"],
+      "additionalProperties": false
+    },
+    "workflow_plan": {
+      "type": "object",
+      "properties": {
+        "workflow_key": {"const": "canonical_content_draft"},
+        "steps": {"type": "array", "minItems": 1, "maxItems": 5, "items": {
+          "type": "object",
+          "properties": {
+            "step_key": {"enum": ["evidence_review", "outline", "canonical_draft", "fact_check", "human_review"]},
+            "purpose": {"type": "string", "minLength": 1, "maxLength": 500},
+            "depends_on": {"type": "array", "uniqueItems": true,
+              "items": {"enum": ["evidence_review", "outline", "canonical_draft", "fact_check", "human_review"]}}
+          },
+          "required": ["step_key", "purpose", "depends_on"],
+          "additionalProperties": false
+        }}
+      },
+      "required": ["workflow_key", "steps"],
+      "additionalProperties": false
+    },
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "needs_review": {"type": "boolean"}
+  },
+  "required": ["topic_plan", "workflow_plan", "confidence", "needs_review"],
+  "additionalProperties": false,
+  "x-source": "AGENT-CORE-005A plan only; no action or authorization fields"
+}

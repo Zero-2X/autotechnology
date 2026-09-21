@@ -1,0 +1,53 @@
+policy_key: baseline-synthetic-data
+policy_version: 1
+status: active
+scope: first_party_synthetic
+owner_role: data_protection_owner
+effective_at: '2026-09-18T00:00:00+08:00'
+classification:
+  public_content:
+    rank: 0
+    default_retention_days: 365
+    allowed_regions: [CN, EU]
+  internal_working:
+    rank: 1
+    default_retention_days: 90
+    allowed_regions: [CN]
+  personal_data:
+    rank: 2
+    default_retention_days: 30
+    allowed_regions: [CN]
+  sensitive_personal_data:
+    rank: 3
+    default_retention_days: 7
+    allowed_regions: [CN]
+  credential_secret:
+    rank: 4
+    default_retention_days: 1
+    allowed_regions: [CN]
+  audit_evidence:
+    rank: 2
+    default_retention_days: 730
+    allowed_regions: [CN]
+retention:
+  starts_at: purpose_completed_at
+  shorter_legal_or_contractual_limit_wins: true
+  extension_requires: [lawful_basis, owner_approval, expiry_at, evidence_ref]
+  legal_hold: restrict_use_and_record_reason; never report erasure complete while a held copy remains
+deletion:
+  sequence: [stop_processing, tombstone, discover_lineage, delete_primary, delete_derived, notify_recipients, verify, record_evidence]
+  targets: [database, object_storage, cache, search_index, derived_artifact, outbox_inbox, backup, external_recipient]
+  unavailable_target: pending_manual_review
+  backup_rule: exclude_from_restore_and_purge_at_rotation; verify before completion
+  completion_rule: all_targets_verified_or_documented_legal_exception
+cross_border:
+  default: deny
+  synthetic_public_only: true
+  required_evidence: [source_region, destination_region, recipient_id, purpose, data_class, policy_snapshot, transfer_review_ref, rights_review_ref]
+  personal_data_rule: manual_legal_review_and_new_policy_required
+  important_data_rule: manual_legal_review_and_new_policy_required
+  unknown_class_rule: deny
+sources:
+  - https://www.npc.gov.cn/npc/c2/c30834/202108/t20210820_313088.html
+  - https://www.cac.gov.cn/2024-03/22/c_1712776611775634.htm
+  - https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng/

@@ -1,0 +1,23 @@
+baseline_key: redis
+baseline_version: 1
+status: active
+provider: redis
+required: false
+phase: P1
+allowed_capabilities: [cache, short_lock, rate_limit]
+forbidden_capabilities: [business_facts, task_jobs, outbox_events, audit_log, object_bodies]
+queue_dependency: false
+network_probe_default: no_network
+configuration:
+  endpoint_env: REDIS_URL
+  namespace_env: REDIS_NAMESPACE_PREFIX
+  endpoint_secret_policy: reject_url_userinfo_and_never_log_raw_url
+  snapshot_fields: [configured, endpoint_scheme, namespace_prefix, cache_ttl_seconds, lock_ttl_seconds, rate_limit_window_seconds, rate_limit_capacity]
+  cache_ttl_seconds: 300
+  lock_ttl_seconds: 30
+  rate_limit_window_seconds: 60
+  rate_limit_capacity: 60
+fallback: local_fake_or_noop
+tenant_key_rule: namespace_prefix/org_id/capability/key
+effective_at: '2026-09-18T00:00:00+08:00'
+locked_by: team/foundation

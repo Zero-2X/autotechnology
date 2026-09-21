@@ -1,0 +1,23 @@
+task_id: FOUND-007C
+status: done
+artifacts:
+  implementation: infra/foundation/agent_output.py
+  schema: packages/contracts/jsonschema/agent-output.schema.json
+  tests: tests/contract/test_found_007c_agent_output.py
+  migration: packages/db/migrations/versions/20260916_found_007c_agent_output.py
+verification:
+  targeted: 16 passed
+  task_precision: scoped=1 precise=1 gaps=0
+  registry_refs: checked=157 errors=0
+  migration_graph: revision_count=11 heads=[20260916_found_007c] errors=[]
+  full_suite: 167 passed, 2 skipped
+  skip_reason: pnpm unavailable for two static entry build tests
+  plan_consistency: 157 tasks validated, future planned migrations remain warnings
+boundaries:
+  - Validation uses jsonschema 4.26.0 Draft 2020-12 without remote reference retrieval.
+  - Only v1 is released; v2 and migrations are synthetic test fixtures.
+  - Registry is process-local; no persistent AgentRun or real model integration.
+  - Schema rejects publication/approval statuses but does not implement authorization.
+  - AgentRunner integration and role-specific outputs remain AGENT-CORE tasks.
+  - Migration functions are trusted application code and must be pure; they are not sandboxed.
+  - No-op Alembic checkpoint changes no business tables.

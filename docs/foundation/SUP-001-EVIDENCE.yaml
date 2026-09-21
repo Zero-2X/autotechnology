@@ -1,0 +1,12 @@
+task_id: SUP-001
+status: done
+verification:
+  focused_command: python -m pytest tests/unit/support/test_inbox_service.py tests/integration/test_sup_001_migration.py tests/contract/test_support_contracts.py -q
+  focused_result: 6 passed
+  service_behaviors: Fake/manual comment and message ingestion, external message dedupe, intent/risk classification, low-risk draft generation, tenant/idempotency checks and permanently disabled send boundary
+  migration_test: reversible SQLite support thread/message migration and append-only protections
+  schemas: support-thread and support-message contracts are closed and validated
+  secrets: raw message body is not persisted in service facts, and send is disabled
+  postgresql_runtime: not verified against a live PostgreSQL database
+limitations:
+  - Real Inbox connectors are deferred until account/platform tasks are available.

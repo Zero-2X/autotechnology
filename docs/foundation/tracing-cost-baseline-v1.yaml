@@ -1,0 +1,33 @@
+baseline_key: tracing-cost
+baseline_version: 1
+status: active
+tracing:
+  api: opentelemetry-api
+  sdk: opentelemetry-sdk
+  propagation: w3c-trace-context
+  default_exporter: in_memory
+  global_provider_mutation: false
+  remote_export: false
+  response_headers: [traceparent, X-Trace-Id, X-Span-Id]
+  span_attribute_policy: allowlist
+costs:
+  record_schema: packages/contracts/jsonschema/cost-record.schema.json
+  default_sink: in_memory
+  persistence: false
+  idempotency_scope: [org_id, idempotency_key]
+  units: integer
+  currency_unit: cents
+security:
+  request_body_in_span: false
+  response_body_in_span: false
+  prompt_in_span: false
+  query_in_span: false
+  headers_in_span: false
+  tenant_identity_in_span: false
+  credentials_in_span: false
+fixture:
+  network_access: false
+  database_write: false
+  real_provider_call: false
+effective_at: '2026-09-16T00:00:00+08:00'
+locked_by: team/foundation

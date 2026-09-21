@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/feedback.schema.json",
+  "title": "feedback contract union",
+  "oneOf": [
+    {
+      "$ref": "./observation.schema.json"
+    },
+    {
+      "$ref": "./feedback-item.schema.json"
+    },
+    {
+      "$ref": "./feedback-action.schema.json"
+    }
+  ],
+  "x-module": "feedback"
+}

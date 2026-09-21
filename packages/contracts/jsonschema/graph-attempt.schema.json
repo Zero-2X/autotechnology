@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/graph-attempt.schema.json",
+  "title": "graph attempt",
+  "type": "object",
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "run_id": {"type": "string", "format": "uuid"},
+    "attempt_no": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["running", "waiting", "succeeded", "failed", "cancelled"]},
+    "started_at": {"type": "string", "format": "date-time"},
+    "finished_at": {"type": ["string", "null"], "format": "date-time"},
+    "error_code": {"type": ["string", "null"], "maxLength": 128}
+  },
+  "required": ["id", "run_id", "attempt_no", "status", "started_at", "finished_at", "error_code"],
+  "additionalProperties": false,
+  "x-module": "orchestration",
+  "x-task-ids": ["GRAPH-GOV-003", "GRAPH-CORE-004"]
+}

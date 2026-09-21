@@ -1,0 +1,30 @@
+task_id: GOV-008
+status: done
+trace_id: 91b85340-4c19-4e5b-8e12-e2f246fa8008
+actor: team/governance
+policy_snapshot: operational-targets/v1
+scope: architecture_mvp
+verification:
+  tests:
+    - py -3.12 -m pytest tests/contract/test_gov_008_operational_targets.py -q
+  result: 4 passed
+  checks:
+    - py -3.12 scripts/check_task_card_precision.py --task GOV-008 --strict
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_migrations.py
+  migration: SQLite disposable database upgraded to head, duplicate key/version rejected, GOV-008 downgraded
+  known_limit: synthetic measurements are not production SLO evidence; real PostgreSQL concurrency and restore drills remain pre-production work
+decisions:
+  minimum_workflow_samples: 100
+  measurement_window_days: 30
+  success_ratio_minimum: 0.95
+  cost_currency: USD
+  monthly_cost_limit: '300.00'
+  rpo_minutes_maximum: 60
+  rto_minutes_maximum: 240
+  approval_sla_matches_risk_policy: true
+side_effects:
+  real_platform_api: false
+  real_credentials: false
+  external_publication: false
+  infrastructure_provisioned: false

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/audit.schema.json",
+  "title": "audit contract union",
+  "oneOf": [
+    {
+      "$ref": "./outbox-event.schema.json"
+    },
+    {
+      "$ref": "./deletion-request.schema.json"
+    },
+    {
+      "$ref": "./kill-switch.schema.json"
+    }
+  ],
+  "x-module": "audit"
+}

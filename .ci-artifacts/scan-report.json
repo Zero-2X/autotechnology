@@ -1,0 +1,7 @@
+{
+  "findings": [],
+  "images": [],
+  "production_image": false,
+  "scanner": "deterministic-lockfile-policy",
+  "status": "pass"
+}

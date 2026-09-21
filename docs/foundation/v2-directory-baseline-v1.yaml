@@ -1,0 +1,73 @@
+baseline_key: v2-directory
+baseline_version: 1
+repository_classification: planning-and-contract-baseline
+runtime_entries:
+  - apps/api
+  - apps/worker
+  - apps/scheduler
+  - apps/web-console
+  - apps/knowledge-site
+logical_modules:
+  - governance
+  - iam
+  - topic
+  - provenance
+  - knowledge
+  - canonical_content
+  - production
+  - workflow
+  - model_gateway
+  - qa
+  - policy
+  - geo_content
+  - geo_region
+  - media
+  - distribution
+  - support
+  - analytics
+  - feedback
+  - audit
+adapter_boundaries:
+  - adapters/contract
+  - adapters/fake
+  - adapters/manual
+shared_packages:
+  - packages/observability
+  - packages/prompt_registry
+  - packages/testkit
+test_boundaries:
+  - tests/unit
+  - tests/integration
+  - tests/replay
+  - tests/security
+  - tests/accessibility
+  - tests/e2e
+infrastructure_boundaries:
+  - infra/foundation
+  - infra/compose
+  - infra/scripts
+  - infra/policies
+environment_templates:
+  - deploy/environments/dev
+  - deploy/environments/staging
+documentation_boundaries:
+  - docs/modules
+  - docs/runbooks
+  - docs/workflows
+module_readme_required_sections:
+  - 职责
+  - 固定布局
+  - 公开边界
+  - 表
+  - 公开接口
+  - 事件
+  - 权限
+  - 禁止事项
+runtime_boundary_rule: FOUND-001 creates boundaries only; runtime entry implementation is owned by FOUND-002 and later tasks.
+forbidden_paths:
+  - adapters/platforms
+  - deploy/environments/prod/secrets
+  - secrets
+  - '**/*.pem'
+  - '**/*secret*.json'
+  - '**/*token*.json'

@@ -1,0 +1,47 @@
+task_id: KNOW-001
+status: done
+implementation:
+  module: modules/knowledge/service.py
+  infrastructure: modules/knowledge/infrastructure/knowledge_schema.py
+  contracts:
+    - packages/contracts/jsonschema/entity.schema.json
+    - packages/contracts/jsonschema/claim.schema.json
+    - packages/contracts/jsonschema/evidence.schema.json
+  migration: packages/db/migrations/versions/20260918_know_001.py
+  tables:
+    - entities
+    - claims
+    - evidences
+    - entity_claims
+    - claim_evidences
+    - knowledge_commands
+    - knowledge_events
+  api_routes:
+    - /v1/entities
+    - /v1/claims
+    - /v1/evidences
+    - /internal/entities/{entity_id}:{action}
+    - /internal/claims/{claim_id}:{action}
+    - /internal/evidences/{evidence_id}:{action}
+  behaviors:
+    - tenant_scoped_entity_claim_evidence_facts
+    - idempotent_commands_and_payload_hashes
+    - immutable_fact_identity_and_append_only_relations
+    - version_region_locale_time_applicability
+    - evidence_source_snapshot_and_optional_rights_scope
+    - claim_verification_requires_valid_evidence
+    - expected_version_state_transitions
+verification:
+  commands:
+    - py -3.12 -m pytest tests/unit/knowledge/test_service.py tests/integration/test_knowledge_api.py -q --disable-warnings --maxfail=1
+    - py -3.12 scripts/check_json_schemas.py
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 scripts/check_migrations.py --strict --json
+    - py -3.12 scripts/check_task_card_precision.py --task KNOW-001 --strict
+    - py -3.12 -m pytest tests/contract/test_found_004a_migrations.py -q --disable-warnings --maxfail=1
+  results:
+    targeted_tests: 3 passed
+    schema_errors: 0
+    architecture_errors: 0
+    migration_errors: 0
+    precision_gaps: 0

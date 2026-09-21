@@ -1,0 +1,25 @@
+task_id: GOV-010
+status: done
+trace_id: 11545fd5-1dab-471b-8af1-99fa521d1010
+actor: team/governance
+inventory_snapshot: external-data-processors/v1
+real_vendor_status: none_selected
+verification:
+  tests:
+    - py -3.12 -m pytest tests/contract/test_gov_010_vendor_inventory.py -q
+  result: 3 passed
+  checks:
+    - py -3.12 scripts/check_task_card_precision.py --task GOV-010 --strict
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_migrations.py
+  migration: SQLite disposable database upgraded to head, duplicate key/version rejected, GOV-010 downgraded
+decision:
+  categories: [model, media, storage, data_processing]
+  unknown_evidence_action: no_go_and_manual_review
+  records_are_placeholders: true
+  vendor_names_or_contracts_invented: false
+  real_processing_approved: false
+side_effects:
+  real_vendor_api: false
+  real_credentials: false
+  real_data_processing: false

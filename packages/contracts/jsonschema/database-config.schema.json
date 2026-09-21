@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/database-config.schema.json",
+  "title": "PostgreSQL foundation configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "baseline_key",
+    "baseline_version",
+    "status",
+    "engine",
+    "configuration",
+    "health_check",
+    "fixture"
+  ],
+  "properties": {
+    "baseline_key": { "const": "postgresql-foundation" },
+    "baseline_version": { "const": 1 },
+    "status": { "enum": ["active", "superseded"] },
+    "engine": { "const": "postgresql" },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["url_env", "default_port", "credentials_in_repository"],
+      "properties": {
+        "url_env": { "const": "DATABASE_URL" },
+        "default_port": { "const": 5432 },
+        "credentials_in_repository": { "const": false },
+        "connect_timeout_env": { "const": "DATABASE_CONNECT_TIMEOUT_SECONDS" },
+        "application_name_env": { "const": "DATABASE_APPLICATION_NAME" }
+      }
+    },
+    "health_check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "probe_default", "not_configured_status"],
+      "properties": {
+        "path": { "const": "/health/ready" },
+        "probe_default": { "const": "not_attempted" },
+        "not_configured_status": { "const": "not_configured" }
+      }
+    },
+    "fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "database_name", "network_access"],
+      "properties": {
+        "kind": { "const": "synthetic" },
+        "database_name": { "const": "foundation_fixture" },
+        "network_access": { "const": false }
+      }
+    },
+    "effective_at": { "type": "string", "format": "date-time" },
+    "locked_by": { "type": "string", "minLength": 1 }
+  }
+}

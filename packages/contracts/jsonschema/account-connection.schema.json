@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/account-connection.schema.json",
+  "title": "AccountConnection",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "account_profile_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "platform_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "external_account_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "environment": {
+      "type": "string",
+      "enum": [
+        "sandbox",
+        "prod"
+      ]
+    },
+    "connection_status": {
+      "type": "string",
+      "enum": [
+        "unavailable",
+        "pending",
+        "connected",
+        "restricted",
+        "revoked"
+      ]
+    },
+    "authorization_status": {
+      "type": "string",
+      "enum": [
+        "unknown",
+        "authorized",
+        "expired",
+        "revoked"
+      ]
+    },
+    "health_status": {
+      "type": "string",
+      "enum": [
+        "unknown",
+        "healthy",
+        "degraded",
+        "restricted"
+      ]
+    },
+    "scope_snapshot": {
+      "type": "object",
+      "properties": {
+        "provider": {"type": "string", "minLength": 1},
+        "scopes": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        },
+        "scope_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"}
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "secret_reference": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "token_lease_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "token_version": {
+      "type": "integer"
+    },
+    "token_expires_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "last_health_check_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "last_refresh_error": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "revoked_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "revocation_reason": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "account_profile_id",
+    "platform_id",
+    "external_account_id",
+    "environment",
+    "connection_status",
+    "authorization_status",
+    "health_status",
+    "scope_snapshot",
+    "secret_reference",
+    "token_lease_id",
+    "token_version",
+    "token_expires_at",
+    "last_health_check_at",
+    "last_refresh_error",
+    "revoked_at",
+    "revocation_reason",
+    "created_at",
+    "updated_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "connection_status": {
+            "const": "connected"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "authorization_status": {
+            "const": "authorized"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "authorization_status": {
+            "enum": [
+              "expired",
+              "revoked"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "connection_status": {
+            "enum": [
+              "pending",
+              "restricted",
+              "revoked"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

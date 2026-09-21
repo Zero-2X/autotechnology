@@ -1,0 +1,21 @@
+task_id: AGENT-CORE-002
+status: done
+trace_id: 6e20b5c4-3f87-4d19-a021-agentcore002
+actor: team/agent
+registry_ref: docs/task-registry.yaml
+verification:
+  tests:
+    - py -3.12 -m pytest tests/unit/agent -q
+  result: 5 passed
+  checks:
+    - py -3.12 scripts/check_task_card_precision.py --task AGENT-CORE-002 --strict
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_migrations.py
+  model_port_only: true
+  tool_allowlist: enforced
+  output_schema: enforced
+  human_review: low confidence or explicit needs_review
+side_effects:
+  real_tools: false
+  real_credentials: false
+  external_publication: false

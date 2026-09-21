@@ -1,0 +1,42 @@
+task_id: DIST-010
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000039
+actor: team/distribution
+predecessors: [DIST-004, DIST-006C, DIST-009]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/distribution/fake_workflow.py
+    - modules/distribution/fake.py
+    - modules/distribution/retry.py
+    - modules/distribution/idempotency.py
+    - modules/distribution/deadletter.py
+    - modules/distribution/reconcile.py
+    - modules/distribution/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/delivery-attempt.schema.json
+    - packages/contracts/jsonschema/publication-record.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_dist_010.py
+  tests:
+    - tests/integration/test_dist_010_fake_workflow.py
+verification:
+  targeted_command: python -m pytest tests/unit/distribution tests/integration --maxfail=1 -q
+  targeted_result: 153 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  fake_publish_reconciles_simulated_record: true
+  transient_failure_classified_without_side_effect: true
+  retry_exhaustion_creates_dead_letter_and_human_task: true
+  manual_replay_preserves_provider_key_without_side_effect: true
+  duplicate_event_consumption_invokes_handler_once: true
+  tenant_scope_and_idempotency: true
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable the Fake workflow entry point while retaining existing fake projections, delivery records, human tasks and audit facts.
+  - This revision creates no business table; the Alembic revision is reversible and the workflow uses in-memory composition only.

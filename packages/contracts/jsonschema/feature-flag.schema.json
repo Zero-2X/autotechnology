@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/feature-flag.schema.json",
+  "title": "Tenant Feature Flag",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["org_id", "flag_key", "enabled", "version", "reason", "changed_by", "changed_at"],
+  "properties": {
+    "org_id": {"type": "string", "format": "uuid"},
+    "flag_key": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{0,127}$"},
+    "enabled": {"type": "boolean"},
+    "version": {"type": "integer", "minimum": 1},
+    "reason": {"type": "string", "minLength": 1, "maxLength": 512},
+    "changed_by": {"type": "string", "format": "uuid"},
+    "changed_at": {"type": "string", "format": "date-time"}
+  }
+}

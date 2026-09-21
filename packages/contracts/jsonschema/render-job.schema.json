@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/render-job.schema.json",
+  "title": "MediaRenderJob",
+  "type": "object",
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "profile": {
+      "type": "object",
+      "properties": {
+        "sequence": {"type": "integer", "minimum": 1},
+        "profile_key": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{0,63}$"},
+        "aspect_ratio": {"type": "string", "enum": ["9:16", "1:1", "16:9"]},
+        "width": {"type": "integer", "minimum": 2, "maximum": 7680},
+        "height": {"type": "integer", "minimum": 2, "maximum": 7680},
+        "frame_rate": {"type": "number", "exclusiveMinimum": 0, "maximum": 120},
+        "container_format": {"type": "string", "enum": ["mp4", "mov", "webm"]},
+        "video_codec": {"type": "string", "enum": ["h264", "hevc", "av1", "vp9"]},
+        "pixel_format": {"type": "string", "enum": ["yuv420p", "yuv422p", "yuv444p", "rgba"]},
+        "audio_codec": {"type": "string", "enum": ["aac", "opus", "pcm", "none"]},
+        "audio_sample_rate_hz": {"type": "integer", "enum": [0, 44100, 48000, 96000]},
+        "audio_channels": {"type": "integer", "minimum": 0, "maximum": 8},
+        "subtitle_track_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "format": "uuid"}},
+        "bitrate_kbps": {"type": "integer", "minimum": 1, "maximum": 1000000}
+      },
+      "required": [
+        "sequence", "profile_key", "aspect_ratio", "width", "height", "frame_rate",
+        "container_format", "video_codec", "pixel_format", "audio_codec", "audio_sample_rate_hz",
+        "audio_channels", "subtitle_track_ids"
+      ],
+      "additionalProperties": false
+    },
+    "artifact": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "string", "format": "uuid"},
+        "sequence": {"type": "integer", "minimum": 1},
+        "stage": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{0,63}$"},
+        "shot_sequence": {"anyOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]},
+        "output_profile_key": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{0,63}$"},
+        "storage_object_ref": {"type": "string", "pattern": "^private://"},
+        "content_hash": {"$ref": "#/$defs/hash"},
+        "size_bytes": {"type": "integer", "minimum": 0},
+        "content_type": {"type": "string", "minLength": 1, "maxLength": 128},
+        "input_hash": {"$ref": "#/$defs/hash"},
+        "created_at": {"type": "string", "format": "date-time"}
+      },
+      "required": ["id", "sequence", "stage", "shot_sequence", "output_profile_key", "storage_object_ref", "content_hash", "size_bytes", "content_type", "input_hash", "created_at"],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "asset_version_id": {"type": "string", "format": "uuid"},
+    "asset_version_no": {"anyOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]},
+    "media_script_version_id": {"type": "string", "format": "uuid"},
+    "media_storyboard_version_id": {"anyOf": [{"type": "string", "format": "uuid"}, {"type": "null"}]},
+    "media_subtitle_version_id": {"anyOf": [{"type": "string", "format": "uuid"}, {"type": "null"}]},
+    "media_visual_asset_set_version_id": {"type": "string", "format": "uuid"},
+    "media_output_spec_version_id": {"type": "string", "format": "uuid"},
+    "output_profile_key": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{0,63}$"},
+    "output_profile": {"$ref": "#/$defs/profile"},
+    "duration_seconds": {"type": "integer", "enum": [30, 60, 90]},
+    "region_profile_version_id": {"type": "string", "format": "uuid"},
+    "policy_snapshot_id": {"type": "string", "format": "uuid"},
+    "status": {"type": "string", "enum": ["planned", "running", "succeeded", "failed", "retry_scheduled", "unknown", "dead_letter"]},
+    "input_hash": {"$ref": "#/$defs/hash"},
+    "attempt_count": {"type": "integer", "minimum": 0},
+    "max_attempts": {"type": "integer", "minimum": 1},
+    "next_retry_at": {"anyOf": [{"type": "string", "format": "date-time"}, {"type": "null"}]},
+    "last_failure_id": {"anyOf": [{"type": "string", "format": "uuid"}, {"type": "null"}]},
+    "failure_count": {"type": "integer", "minimum": 0},
+    "dead_letter_reason": {"anyOf": [{"type": "string", "minLength": 1, "maxLength": 256}, {"type": "null"}]},
+    "pending_storage_object_ref": {"anyOf": [{"type": "string", "pattern": "^private://", "maxLength": 512}, {"type": "null"}]},
+    "pending_object_key": {"anyOf": [{"type": "string", "minLength": 1, "maxLength": 512}, {"type": "null"}]},
+    "pending_stage": {"anyOf": [{"type": "string", "pattern": "^[a-z][a-z0-9._-]{0,63}$"}, {"type": "null"}]},
+    "pending_shot_sequence": {"anyOf": [{"type": "integer", "minimum": 1}, {"type": "null"}]},
+    "pending_content_type": {"anyOf": [{"type": "string", "minLength": 1, "maxLength": 128}, {"type": "null"}]},
+    "input_snapshot_hashes": {
+      "type": "object",
+      "properties": {
+        "script": {"$ref": "#/$defs/hash"},
+        "storyboard": {"anyOf": [{"$ref": "#/$defs/hash"}, {"type": "null"}]},
+        "subtitle": {"anyOf": [{"$ref": "#/$defs/hash"}, {"type": "null"}]},
+        "visual_asset_set": {"$ref": "#/$defs/hash"},
+        "output_spec": {"$ref": "#/$defs/hash"},
+        "asset_version": {"anyOf": [{"$ref": "#/$defs/hash"}, {"type": "null"}]}
+      },
+      "required": ["script", "storyboard", "subtitle", "visual_asset_set", "output_spec", "asset_version"],
+      "additionalProperties": false
+    },
+    "artifacts": {"type": "array", "items": {"$ref": "#/$defs/artifact"}},
+    "artifact_count": {"type": "integer", "minimum": 0},
+    "trace_id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "failure_code": {"anyOf": [{"type": "string", "pattern": "^[A-Z0-9_]{1,80}$"}, {"type": "null"}]},
+    "created_by": {"type": "string", "format": "uuid"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "required": [
+    "id", "org_id", "asset_version_id", "asset_version_no", "status", "input_hash", "attempt_count",
+    "created_at", "media_script_version_id", "media_storyboard_version_id", "media_subtitle_version_id",
+    "media_visual_asset_set_version_id", "media_output_spec_version_id", "output_profile_key", "output_profile",
+    "duration_seconds", "region_profile_version_id", "policy_snapshot_id", "input_snapshot_hashes", "artifacts",
+    "artifact_count", "trace_id", "failure_code", "created_by", "updated_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "MEDIA-004A",
+  "x-append-only-inputs": true,
+  "x-extended-by": "MEDIA-004B",
+  "x-retry-state": "failure facts and schedules are append-only projections; confirmed private artifacts are immutable"
+}

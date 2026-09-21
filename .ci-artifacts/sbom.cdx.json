@@ -1,0 +1,117 @@
+{
+  "bomFormat": "CycloneDX",
+  "components": [
+    {
+      "bom-ref": "pkg:pypi/alembic@1.20.0",
+      "name": "alembic",
+      "purl": "pkg:pypi/alembic@1.20.0",
+      "scope": "required",
+      "type": "library",
+      "version": "1.20.0"
+    },
+    {
+      "bom-ref": "pkg:pypi/bandit@1.9.4",
+      "name": "bandit",
+      "purl": "pkg:pypi/bandit@1.9.4",
+      "scope": "required",
+      "type": "library",
+      "version": "1.9.4"
+    },
+    {
+      "bom-ref": "pkg:pypi/fastapi@0.136.3",
+      "name": "fastapi",
+      "purl": "pkg:pypi/fastapi@0.136.3",
+      "scope": "required",
+      "type": "library",
+      "version": "0.136.3"
+    },
+    {
+      "bom-ref": "pkg:pypi/httpx@0.28.1",
+      "name": "httpx",
+      "purl": "pkg:pypi/httpx@0.28.1",
+      "scope": "required",
+      "type": "library",
+      "version": "0.28.1"
+    },
+    {
+      "bom-ref": "pkg:pypi/jsonschema@4.26.0",
+      "name": "jsonschema",
+      "purl": "pkg:pypi/jsonschema@4.26.0",
+      "scope": "required",
+      "type": "library",
+      "version": "4.26.0"
+    },
+    {
+      "bom-ref": "pkg:pypi/mypy@2.0.0",
+      "name": "mypy",
+      "purl": "pkg:pypi/mypy@2.0.0",
+      "scope": "required",
+      "type": "library",
+      "version": "2.0.0"
+    },
+    {
+      "bom-ref": "pkg:pypi/opentelemetry-api@1.44.0",
+      "name": "opentelemetry-api",
+      "purl": "pkg:pypi/opentelemetry-api@1.44.0",
+      "scope": "required",
+      "type": "library",
+      "version": "1.44.0"
+    },
+    {
+      "bom-ref": "pkg:pypi/opentelemetry-sdk@1.44.0",
+      "name": "opentelemetry-sdk",
+      "purl": "pkg:pypi/opentelemetry-sdk@1.44.0",
+      "scope": "required",
+      "type": "library",
+      "version": "1.44.0"
+    },
+    {
+      "bom-ref": "pkg:pypi/pip-audit@2.10.1",
+      "name": "pip-audit",
+      "purl": "pkg:pypi/pip-audit@2.10.1",
+      "scope": "required",
+      "type": "library",
+      "version": "2.10.1"
+    },
+    {
+      "bom-ref": "pkg:pypi/pytest@9.0.3",
+      "name": "pytest",
+      "purl": "pkg:pypi/pytest@9.0.3",
+      "scope": "required",
+      "type": "library",
+      "version": "9.0.3"
+    },
+    {
+      "bom-ref": "pkg:pypi/pyyaml@6.0.3",
+      "name": "pyyaml",
+      "purl": "pkg:pypi/pyyaml@6.0.3",
+      "scope": "required",
+      "type": "library",
+      "version": "6.0.3"
+    },
+    {
+      "bom-ref": "pkg:pypi/ruff@0.15.17",
+      "name": "ruff",
+      "purl": "pkg:pypi/ruff@0.15.17",
+      "scope": "required",
+      "type": "library",
+      "version": "0.15.17"
+    },
+    {
+      "bom-ref": "pkg:pypi/sqlalchemy@2.0.54",
+      "name": "sqlalchemy",
+      "purl": "pkg:pypi/sqlalchemy@2.0.54",
+      "scope": "required",
+      "type": "library",
+      "version": "2.0.54"
+    }
+  ],
+  "metadata": {
+    "component": {
+      "name": "akagent-foundation",
+      "type": "application"
+    }
+  },
+  "specVersion": "1.5",
+  "version": 1
+}

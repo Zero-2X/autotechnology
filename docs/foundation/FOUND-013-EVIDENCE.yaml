@@ -1,0 +1,21 @@
+task_id: FOUND-013
+status: done
+trace_id: c52a6bea-a91d-4e08-9e41-6c0b8d013000
+actor: team/foundation
+registry_ref: docs/task-registry.yaml
+verification:
+  tests:
+    - py -3.12 -m pytest tests/contract/test_found_013_registry.py -q
+  result: 2 passed
+  checks:
+    - py -3.12 scripts/check_plan_consistency.py --strict-contracts
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_task_card_precision.py --task FOUND-013 --strict
+    - py -3.12 scripts/check_migrations.py
+  registry: 157 tasks, unique IDs, aligned source lines/titles/phases, dependency and path checks passed
+  negative_cases: cycle and overlapping path fixtures rejected
+  migration: no-op revision; no persistent state created
+side_effects:
+  production_secrets: false
+  real_credentials: false
+  external_publication: false

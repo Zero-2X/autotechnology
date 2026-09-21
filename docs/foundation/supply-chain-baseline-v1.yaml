@@ -1,0 +1,14 @@
+baseline_key: supply-chain
+baseline_version: 1
+status: active
+sbom_format: CycloneDX-1.5
+scan_policy: fail_closed_on_findings
+signature_policy: sha256_attestation_required
+production_publication: disabled_until_signed_artifact
+lockfiles:
+  - requirements.lock
+  - ci/tooling.lock
+network_probe_default: no_network
+real_credentials: forbidden
+effective_at: 2026-09-18T00:00:00+08:00
+locked_by: team/foundation

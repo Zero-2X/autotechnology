@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/transform-input.schema.json",
+  "title": "TransformInput",
+  "type": "object",
+  "properties": {
+    "transform_request_id": {"type": "string", "format": "uuid"},
+    "source_context": {
+      "type": "object",
+      "properties": {
+        "canonical_content_id": {"type": "string", "format": "uuid"},
+        "canonical_content_version_id": {"type": "string", "format": "uuid"},
+        "source_content_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+        "title": {"type": "string", "minLength": 1, "maxLength": 512},
+        "abstract": {"type": "string", "maxLength": 10000},
+        "sections": {
+          "type": "array", "minItems": 1, "maxItems": 200,
+          "items": {
+            "type": "object",
+            "properties": {
+              "source_key": {"type": "string", "minLength": 1, "maxLength": 256},
+              "block_id": {"type": "string", "minLength": 1, "maxLength": 256},
+              "position": {"type": "integer", "minimum": 1},
+              "source_text": {"type": "string", "minLength": 1, "maxLength": 50000},
+              "claim_id": {"type": ["string", "null"], "format": "uuid"}
+            },
+            "required": ["source_key", "block_id", "position", "source_text", "claim_id"],
+            "additionalProperties": false
+          }
+        },
+        "protected_tokens": {
+          "type": "array", "maxItems": 1000,
+          "items": {
+            "type": "object",
+            "properties": {
+              "mapping_key": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$"},
+              "source_key": {"type": "string", "minLength": 1, "maxLength": 256},
+              "kind": {"type": "string", "enum": ["term", "number", "code", "link"]},
+              "source_value": {"type": "string", "minLength": 1, "maxLength": 4000},
+              "target_value": {"type": "string", "minLength": 1, "maxLength": 4000},
+              "occurrence_count": {"type": "integer", "minimum": 1}
+            },
+            "required": ["mapping_key", "source_key", "kind", "source_value", "target_value", "occurrence_count"],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": ["canonical_content_id", "canonical_content_version_id", "source_content_hash", "title", "abstract", "sections", "protected_tokens"],
+      "additionalProperties": false
+    },
+    "target": {
+      "type": "object",
+      "properties": {
+        "locale": {"type": "string", "minLength": 1, "maxLength": 64},
+        "market": {"type": "string", "minLength": 1, "maxLength": 64},
+        "audience": {"type": "string", "minLength": 1, "maxLength": 256},
+        "tone": {"type": "string", "minLength": 1, "maxLength": 128}
+      },
+      "required": ["locale", "market", "audience", "tone"],
+      "additionalProperties": false
+    },
+    "tool_calls": {"type": "array", "maxItems": 0}
+  },
+  "required": ["transform_request_id", "source_context", "target", "tool_calls"],
+  "additionalProperties": false,
+  "x-source": "AGENT-CORE-005D controlled canonical transform input"
+}

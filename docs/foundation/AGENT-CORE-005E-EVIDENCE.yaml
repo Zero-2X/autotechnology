@@ -1,0 +1,45 @@
+task_id: AGENT-CORE-005E
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000045
+actor: team/agent
+predecessors: [AGENT-CORE-002, CANON-002, AGENT-CORE-005D]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/agent/qa.py
+    - modules/agent/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/agent-run.schema.json
+    - packages/contracts/jsonschema/qa-agent-input.schema.json
+    - packages/contracts/jsonschema/qa-agent-output.schema.json
+    - packages/contracts/jsonschema/qa-report.schema.json
+    - packages/contracts/jsonschema/human-task.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_agent_core_005e.py
+  tests:
+    - tests/unit/agent/test_qa.py
+    - tests/integration/test_agent_core_005e_qa.py
+verification:
+  targeted_command: python -m pytest tests/unit/agent tests/integration --maxfail=1 -q
+  targeted_result: 147 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  agent_runner_and_hash_ledger_reused: true
+  tool_allowlist_empty: true
+  write_permissions_empty: true
+  deterministic_qa_report_read_only: true
+  finding_explanations_cover_all_findings: true
+  human_tasks_reference_known_findings: true
+  review_only_decision: true
+  approved: false
+  published: false
+  approval_created: false
+  publication_side_effect: false
+  idempotent_model_invocation: true
+  network_calls: false
+rollback:
+  - Disable the QA AgentDefinition while retaining AgentRun, ModelCall, explanations, human-task proposals, event and audit evidence.
+  - This revision creates no business table and no approval or publication fact requires reversal.

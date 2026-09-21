@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/events/topic-signal-rejected.schema.json",
+  "allOf": [
+    {"$ref": "./event-envelope.schema.json"},
+    {
+      "type": "object",
+      "properties": {
+        "event_type": {"const": "topic_signal.rejected"},
+        "event_schema_version": {"const": 1},
+        "payload": {
+          "type": "object",
+          "required": ["aggregate_id", "aggregate_version", "line_number", "reason_code", "input_hash"],
+          "properties": {
+            "aggregate_id": {"type": "string", "format": "uuid"},
+            "aggregate_version": {"type": "integer", "const": 1},
+            "line_number": {"type": "integer", "minimum": 1},
+            "reason_code": {"type": "string", "minLength": 1},
+            "input_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+          },
+          "additionalProperties": false
+        }
+      }
+    }
+  ],
+  "x-event-kind": "append_only",
+  "x-replay-policy": "idempotent_projection_replay"
+}

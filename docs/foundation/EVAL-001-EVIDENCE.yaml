@@ -1,0 +1,45 @@
+task_id: EVAL-001
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000047
+actor: team/evaluation
+predecessors: [GOV-008, MODEL-CORE-002, AGENT-CORE-001, CANON-002]
+external_dependencies: []
+artifacts:
+  implementation:
+    - packages/prompt_registry/service.py
+    - packages/prompt_registry/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/prompt-version.schema.json
+    - packages/contracts/jsonschema/golden-set-version.schema.json
+    - packages/contracts/jsonschema/regression-threshold-version.schema.json
+    - packages/contracts/jsonschema/eval-run.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_eval_001.py
+  tests:
+    - tests/unit/evaluation/test_service.py
+    - tests/integration/test_eval_001_offline_gateway.py
+verification:
+  focused_command: python -m pytest tests/unit/evaluation tests/integration/test_eval_001_offline_gateway.py -q
+  focused_result: 7 passed
+  targeted_command: python -m pytest tests/unit/evaluation tests/integration --maxfail=1 -q
+  targeted_result: 126 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+  full_command: python -m pytest -q
+  full_result: 741 passed
+behavior:
+  immutable_prompt_versions: true
+  immutable_synthetic_golden_sets: true
+  immutable_regression_thresholds: true
+  tenant_scoped_reads_and_commands: true
+  idempotent_run_replay: true
+  fake_model_gateway_only_in_ci: true
+  model_call_evidence_recorded: true
+  quality_and_cost_baseline_regression: true
+  governance_workflow_cost_cap_cents: 200
+  raw_eval_content_in_run_or_audit: false
+  real_network_calls: false
+rollback:
+  - Stop new evaluation commands while keeping Prompt, dataset, threshold, ModelCall and EvalRun evidence read-only.
+  - Downgrade to 20260919_found_model_001 only after exporting any durable evaluation evidence.

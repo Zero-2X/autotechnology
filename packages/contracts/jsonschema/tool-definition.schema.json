@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/tool-definition.schema.json",
+  "title": "allowlisted tool definition",
+  "type": "object",
+  "properties": {
+    "name": {"type": "string", "minLength": 1, "maxLength": 128},
+    "version": {"type": "integer", "minimum": 1},
+    "input_schema": {"type": "object"},
+    "output_schema": {"type": "object"},
+    "timeout_seconds": {"type": "number", "exclusiveMinimum": 0, "maximum": 60},
+    "side_effect": {"type": "boolean"}
+  },
+  "required": ["name", "version", "input_schema", "output_schema", "timeout_seconds", "side_effect"],
+  "additionalProperties": false,
+  "x-module": "orchestration",
+  "x-task-ids": ["LC-TOOL-001"]
+}

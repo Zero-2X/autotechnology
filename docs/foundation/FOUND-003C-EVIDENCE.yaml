@@ -1,0 +1,23 @@
+task_id: FOUND-003C
+status: done
+trace_id: 7dca9b62-6c0d-4fb1-b3f6-003c20260918
+actor: team/foundation
+registry_ref: docs/task-registry.yaml
+baseline_ref: docs/foundation/redis-baseline-v1.yaml
+verification:
+  tests:
+    - py -3.12 -m pytest tests/contract/test_found_003c_redis.py -q
+  result: 5 passed
+  checks:
+    - py -3.12 scripts/check_task_card_precision.py --task FOUND-003C --strict
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_migrations.py
+  redis_client: false
+  network_probe: false
+  tenant_isolation: verified with FakeRedis
+  facts_storage: none
+  migration: no-op revision
+side_effects:
+  real_redis: false
+  real_credentials: false
+  external_publication: false

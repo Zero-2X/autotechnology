@@ -1,0 +1,209 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/observation.schema.json",
+  "title": "Observation",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "source": {
+      "type": "string",
+      "enum": [
+        "site",
+        "fake",
+        "manual",
+        "platform",
+        "geo",
+        "support",
+        "qa"
+      ]
+    },
+    "subject_type": {
+      "type": "string",
+      "enum": [
+        "publication",
+        "content",
+        "variant",
+        "asset",
+        "topic",
+        "page",
+        "geo_run"
+      ]
+    },
+    "subject_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "metric_definition_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "metric_definition_version_no": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "metric_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "metric_type": {
+      "type": "string",
+      "enum": [
+        "number",
+        "boolean",
+        "string",
+        "enum",
+        "json"
+      ]
+    },
+    "metric_value": {
+      "type": [
+        "object",
+        "array",
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ]
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "locale": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "region": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "data_quality": {
+      "type": "string",
+      "enum": [
+        "raw",
+        "validated",
+        "estimated"
+      ]
+    },
+    "dedupe_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_snapshot_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "observation_version": {
+      "type": "integer",
+      "minimum": 1
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "source",
+    "subject_type",
+    "subject_id",
+    "metric_definition_id",
+    "metric_definition_version_no",
+    "metric_name",
+    "metric_type",
+    "metric_value",
+    "observed_at",
+    "locale",
+    "region",
+    "data_quality",
+    "dedupe_key",
+    "source_snapshot_ref",
+    "observation_version"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue",
+  "oneOf": [
+    {
+      "properties": {
+        "metric_type": {
+          "const": "number"
+        },
+        "metric_value": {
+          "type": "number"
+        }
+      }
+    },
+    {
+      "properties": {
+        "metric_type": {
+          "const": "boolean"
+        },
+        "metric_value": {
+          "type": "boolean"
+        }
+      }
+    },
+    {
+      "properties": {
+        "metric_type": {
+          "const": "string"
+        },
+        "metric_value": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "properties": {
+        "metric_type": {
+          "const": "enum"
+        },
+        "metric_value": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "properties": {
+        "metric_type": {
+          "const": "json"
+        },
+        "metric_value": {
+          "type": [
+            "object",
+            "array",
+            "string",
+            "number",
+            "boolean",
+            "null"
+          ]
+        }
+      }
+    }
+  ]
+}

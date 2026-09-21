@@ -1,0 +1,25 @@
+task_id: MEDIA-006
+status: done
+verification:
+  focused_command: python -m pytest tests/unit/media/test_media_asset_lineage_service.py tests/integration/test_media_006_migration.py tests/contract/test_media_006_contract.py -q
+  focused_result: 7 passed
+  service_behaviors: immutable Variant/Claim/Rights snapshot capture, append-only lineage edges, deterministic dependency recheck, blocked/withdrawn propagation, explicit withdraw projection, tenant isolation, expected version and idempotent replay
+  migration_test: 1 passed; SQLite full-chain upgrade/downgrade, tenant source guard and append-only edge/check/command facts
+  postgresql_sql_emission: 1 passed; upgrade/downgrade SQL and trigger/function removal order verified offline
+  schemas: schema_errors=0
+  architecture: architecture_errors=0
+  migration_graph: revisions=115; head=20260920_media_006; errors=0
+  task_refs: checked=157; errors=0
+  precision: scoped=93; precise=93; gaps=0
+  secrets: secret_findings=0
+  plan_consistency: validated 157 registry tasks against 157 Markdown checkbox tasks
+  inventory: refreshed; repository check valid; tests/contract/test_found_000_inventory.py 6 passed
+  full_regression: 1001 passed; the only initial failure was the expected stale inventory fingerprint, corrected by the verified refresh above
+  postgresql_runtime: not verified against a live PostgreSQL database
+verified_boundaries:
+  - AssetVersion captures exact VariantVersion, Claim and RightsRecordVersion hashes without rewriting dependency history.
+  - Dependency rechecks return blocked for unusable Variant/Claim facts and withdrawn for unusable material rights.
+  - Explicit withdrawal advances a separate current status projection while preserving the immutable AssetVersion snapshot.
+  - Lineage edges, decisions and commands are append-only and enforce same-tenant source_org_id.
+limitations:
+  - PostgreSQL behavior is verified through offline SQL generation and trigger removal ordering; live PostgreSQL execution remains unverified.

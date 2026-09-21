@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/planner-input.schema.json",
+  "title": "PlannerInput",
+  "type": "object",
+  "properties": {
+    "topic_brief_id": {"type": "string", "format": "uuid"},
+    "brief_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "goal": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "audience": {"type": "string", "minLength": 1, "maxLength": 500},
+    "problem": {"type": "string", "minLength": 1, "maxLength": 2000},
+    "tool_calls": {"type": "array", "maxItems": 0}
+  },
+  "required": ["topic_brief_id", "brief_hash", "goal", "audience", "problem", "tool_calls"],
+  "additionalProperties": false,
+  "x-source": "AGENT-CORE-005A planner input"
+}

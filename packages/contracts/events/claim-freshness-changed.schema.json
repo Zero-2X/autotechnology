@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/events/claim-freshness-changed.schema.json",
+  "title": "claim.freshness.changed",
+  "allOf": [
+    {
+      "$ref": "./event-envelope.schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "event_type": {
+          "const": "claim.freshness.changed"
+        },
+        "event_schema_version": {
+          "const": 1
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "aggregate_id",
+            "aggregate_version"
+          ],
+          "properties": {
+            "aggregate_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "aggregate_version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "from_state": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "to_state": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "command": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "snapshot_hash": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[A-Fa-f0-9]{64}$"
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": true
+        }
+      }
+    }
+  ],
+  "x-event-kind": "append_only",
+  "x-replay-policy": "idempotent_projection_replay"
+}

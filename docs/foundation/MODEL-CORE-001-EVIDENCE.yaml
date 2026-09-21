@@ -1,0 +1,21 @@
+task_id: MODEL-CORE-001
+status: done
+trace_id: 31b8d8f1-1c44-4a15-9f2e-modelcore001
+actor: team/model_gateway
+registry_ref: docs/task-registry.yaml
+verification:
+  tests:
+    - py -3.12 -m pytest tests/unit/model_gateway -q
+  result: 4 passed
+  checks:
+    - py -3.12 scripts/check_task_card_precision.py --task MODEL-CORE-001 --strict
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_migrations.py
+  timeout: MODEL_TIMEOUT before provider call
+  budget: MODEL_BUDGET_EXCEEDED before provider call
+  schema: MODEL_OUTPUT_SCHEMA_INVALID without retry
+  prompt_logging: false
+side_effects:
+  real_provider: false
+  real_credentials: false
+  external_publication: false

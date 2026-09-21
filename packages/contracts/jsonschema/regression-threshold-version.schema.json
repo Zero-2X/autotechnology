@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/regression-threshold-version.schema.json",
+  "title": "Immutable evaluation regression threshold version",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "org_id", "threshold_key", "version_no", "min_exact_match_ratio", "max_error_ratio",
+    "max_total_cost_cents", "max_cost_per_case_cents", "max_quality_drop", "max_cost_increase_ratio",
+    "governance_workflow_cap_cents", "content_hash", "created_by", "created_at"
+  ],
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "threshold_key": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,127}$"},
+    "version_no": {"type": "integer", "minimum": 1},
+    "min_exact_match_ratio": {"type": "number", "minimum": 0, "maximum": 1},
+    "max_error_ratio": {"type": "number", "minimum": 0, "maximum": 1},
+    "max_total_cost_cents": {"type": "integer", "minimum": 1},
+    "max_cost_per_case_cents": {"type": "integer", "minimum": 1},
+    "max_quality_drop": {"type": "number", "minimum": 0, "maximum": 1},
+    "max_cost_increase_ratio": {"type": "number", "minimum": 0, "maximum": 1},
+    "governance_workflow_cap_cents": {"type": "integer", "minimum": 1},
+    "content_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "created_by": {"type": "string", "format": "uuid"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "x-module": "evaluation",
+  "x-task-ids": ["EVAL-001"]
+}

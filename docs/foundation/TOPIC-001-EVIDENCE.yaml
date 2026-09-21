@@ -1,0 +1,23 @@
+task_id: TOPIC-001
+status: done
+implementation:
+  module: modules/topic/service.py
+  contracts:
+    - packages/contracts/jsonschema/topic-taxonomy.schema.json
+  migration: packages/db/migrations/versions/20260918_topic_001.py
+  behaviors:
+    - taxonomy_and_tag_model
+    - technical_version_and_audience_model
+    - tenant_scoped_lifecycle
+    - idempotent_versioned_commands
+    - sqlite_taxonomy_persistence
+verification:
+  commands:
+    - py -3.12 -m pytest tests/unit/topic -q --disable-warnings --maxfail=1
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 scripts/check_json_schemas.py
+    - py -3.12 -m pytest tests/integration/test_topic_taxonomy_persistence.py -q
+  results:
+    targeted_tests: 3
+    architecture_errors: 0
+    schema_errors: 0

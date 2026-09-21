@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/site-page-version.schema.json",
+  "title": "SitePageVersion",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "site_page_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "version_no": {
+      "type": "integer"
+    },
+    "canonical_content_version_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "locale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "region_profile_version_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "url_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "render_mode": {
+      "type": "string",
+      "enum": [
+        "ssr",
+        "static"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "ready",
+        "published",
+        "superseded",
+        "rolled_back"
+      ]
+    },
+    "snapshot_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "published_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "page_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "variant_version_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "canonical_url": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string"
+    },
+    "author": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "reviewer": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": true
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "methodology": {
+      "anyOf": [
+        {
+          "type": "object",
+          "additionalProperties": true
+        },
+        {
+          "type": "array",
+          "items": {}
+        }
+      ]
+    },
+    "evidence": {
+      "type": "array",
+      "items": {}
+    },
+    "limitations": {
+      "type": "array",
+      "items": {}
+    },
+    "faq": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "visible_content": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "source_snapshot_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "created_by": {
+      "type": "string",
+      "format": "uuid"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "site_page_id",
+    "version_no",
+    "canonical_content_version_id",
+    "locale",
+    "region_profile_version_id",
+    "url_path",
+    "render_mode",
+    "status",
+    "snapshot_hash",
+    "published_at",
+    "created_at",
+    "page_key",
+    "variant_version_id",
+    "canonical_url",
+    "title",
+    "summary",
+    "author",
+    "reviewer",
+    "methodology",
+    "evidence",
+    "limitations",
+    "faq",
+    "visible_content",
+    "source_snapshot_refs",
+    "updated_at",
+    "created_by"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

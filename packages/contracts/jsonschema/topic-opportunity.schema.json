@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/topic-opportunity.schema.json",
+  "title": "TopicOpportunity",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "signal_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
+    "topic_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "score_snapshot_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "score_snapshot_hash": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Fa-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "owner_actor_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "normal",
+        "high",
+        "urgent"
+      ]
+    },
+    "due_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "editorial_plan_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "R0",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "proposed",
+        "shortlisted",
+        "briefed",
+        "captured",
+        "scored",
+        "approved",
+        "rejected",
+        "in_production",
+        "monitoring",
+        "refresh",
+        "retired",
+        "deferred",
+        "expired"
+      ]
+    },
+    "canonical_topic": {
+      "type": "string",
+      "minLength": 1
+    },
+    "score_total": {
+      "type": "number"
+    },
+    "score_breakdown": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "scoring_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decision_reason": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "shortlist_eligible": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "signal_ids",
+    "topic_key",
+    "title",
+    "question",
+    "score_snapshot_id",
+    "score_snapshot_hash",
+    "owner_actor_id",
+    "priority",
+    "due_at",
+    "editorial_plan_id",
+    "risk_level",
+    "status",
+    "canonical_topic",
+    "score_total",
+    "score_breakdown",
+    "scoring_version",
+    "decision_reason",
+    "expires_at",
+    "version",
+    "shortlist_eligible"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

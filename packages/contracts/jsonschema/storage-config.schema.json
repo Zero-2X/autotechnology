@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/storage-config.schema.json",
+  "title": "S3-compatible storage foundation configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["baseline_key", "baseline_version", "status", "provider", "configuration", "security", "fixture"],
+  "properties": {
+    "baseline_key": { "const": "s3-compatible-storage" },
+    "baseline_version": { "const": 1 },
+    "status": { "enum": ["active", "superseded"] },
+    "provider": { "const": "s3-compatible" },
+    "configuration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["endpoint_env", "bucket_env", "namespace_prefix_env", "credentials_in_repository"],
+      "properties": {
+        "endpoint_env": { "const": "STORAGE_ENDPOINT_URL" },
+        "bucket_env": { "const": "STORAGE_BUCKET" },
+        "namespace_prefix_env": { "const": "STORAGE_NAMESPACE_PREFIX" },
+        "signed_url_ttl_env": { "const": "STORAGE_SIGNED_URL_TTL_SECONDS" },
+        "credentials_in_repository": { "const": false }
+      }
+    },
+    "security": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["default_access_policy", "public_urls", "tenant_namespace", "content_hash"],
+      "properties": {
+        "default_access_policy": { "const": "private" },
+        "public_urls": { "const": false },
+        "tenant_namespace": { "const": true },
+        "content_hash": { "const": "sha256" },
+        "deletion_propagation": { "const": "port_delete_then_metadata_delete" }
+      }
+    },
+    "fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "network_access", "credentials"],
+      "properties": {
+        "kind": { "const": "fake_storage" },
+        "network_access": { "const": false },
+        "credentials": { "const": false }
+      }
+    },
+    "effective_at": { "type": "string", "format": "date-time" },
+    "locked_by": { "type": "string", "minLength": 1 }
+  }
+}

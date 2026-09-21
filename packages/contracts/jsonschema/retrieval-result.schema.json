@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/retrieval-result.schema.json",
+  "title": "tenant-scoped retrieval result",
+  "type": "object",
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "org_id": {"type": "string", "format": "uuid"},
+    "text_ref": {"type": "string", "pattern": "^private://"},
+    "score": {"type": "number", "minimum": 0, "maximum": 1},
+    "evidence_refs": {"type": "array", "items": {"type": "string"}},
+    "source_snapshot_ref": {"type": "string", "pattern": "^private://"}
+  },
+  "required": ["id", "org_id", "text_ref", "score", "evidence_refs", "source_snapshot_ref"],
+  "additionalProperties": false,
+  "x-module": "orchestration",
+  "x-task-ids": ["LC-RETRIEVER-001"]
+}

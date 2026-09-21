@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/events/analytics-kpi_snapshot-created.schema.json",
+  "title": "analytics.kpi_snapshot.created",
+  "allOf": [
+    {
+      "$ref": "./event-envelope.schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "event_type": {
+          "const": "analytics.kpi_snapshot.created"
+        },
+        "event_schema_version": {
+          "const": 1
+        },
+        "payload": {
+          "type": "object",
+          "required": [
+            "aggregate_id",
+            "aggregate_version"
+          ],
+          "properties": {
+            "aggregate_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "aggregate_version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "from_state": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "to_state": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "command": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "snapshot_hash": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[A-Fa-f0-9]{64}$"
+            },
+            "reason": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "window_start": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "window_end": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "input_snapshot_hash": {
+              "type": "string",
+              "pattern": "^[A-Fa-f0-9]{64}$"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "complete",
+                "insufficient_data"
+              ]
+            }
+          },
+          "additionalProperties": true
+        }
+      }
+    }
+  ],
+  "x-event-kind": "append_only",
+  "x-replay-policy": "idempotent_projection_replay"
+}

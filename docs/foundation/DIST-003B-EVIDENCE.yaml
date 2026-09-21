@@ -1,0 +1,37 @@
+task_id: DIST-003B
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000028
+actor: team/distribution
+predecessors: [FOUND-003B, POLICY-001, DIST-003A]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/distribution/package_storage.py
+    - modules/distribution/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/export-package.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_dist_003b.py
+  tests:
+    - tests/unit/distribution/test_package_storage.py
+verification:
+  targeted_command: python -m pytest tests/unit/distribution tests/contract/test_found_003b_key_policy.py tests/contract/test_found_003b_storage.py tests/contract/test_found_007d_core_schemas.py -q
+  targeted_result: 118 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  private_object_store_and_file_hashes: true
+  short_lived_hmac_private_download_url: true
+  package_expiry_and_if_match_revoke: true
+  download_audit_and_idempotent_count: true
+  tampered_url_and_tenant_scope_blocked: true
+  business_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable package download and lifecycle commands while retaining immutable package metadata and audit events.
+  - This revision creates no business table; durable package storage uses a forward migration.

@@ -1,0 +1,21 @@
+task_id: WORKFLOW-CORE-003
+status: done
+trace_id: 9b53e2f7-6a04-4d18-b245-workflow003
+actor: team/workflow
+registry_ref: docs/task-registry.yaml
+verification:
+  tests:
+    - py -3.12 -m pytest tests/unit/workflow tests/integration/test_workflow_core_002_api.py -q
+  result: 11 passed
+  checks:
+    - py -3.12 scripts/check_task_card_precision.py --task WORKFLOW-CORE-003 --strict
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_migrations.py
+  event_id_deduplication: enforced
+  command_idempotency: enforced
+  lease_recovery: expired leases can be reclaimed by another worker
+  replay: immutable source with a new queued job
+side_effects:
+  real_credentials: false
+  external_publication: false
+  network_provider: false

@@ -1,0 +1,2274 @@
+schema_version: 1
+status: baseline
+migration_tool: alembic_or_existing_repository_tool
+lifecycle:
+  planned: planned path may be absent and is documentation only
+  in_progress: real migration revision must exist and pass lint plus disposable database execution
+  done: real migration must be executed and verification evidence recorded
+  blocked: retain current reference and record dependency, owner, fallback and next review time
+execution_rule: planned paths are documentation; in_progress requires a real revision; done requires executed verification evidence
+migrations:
+- task_id: GOV-001
+  migration_ref: packages/db/migrations/versions/20260915_gov_001_governance_scope.sql
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/governance
+  tables_in_scope:
+  - governance_scopes
+  - organizations
+  - feature_flags
+  - kill_switches
+  - policy_versions
+  - policy_snapshots
+  - policy_decisions
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: GOV-002
+  migration_ref: packages/db/migrations/versions/20260915_gov_002_release_levels.sql
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/governance
+  tables_in_scope:
+  - release_level_policies
+  - organizations
+  - feature_flags
+  - kill_switches
+  - policy_versions
+  - policy_snapshots
+  - policy_decisions
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: GOV-003
+  migration_ref: packages/db/migrations/versions/20260915_gov_003_raci_policy.sql
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/governance
+  tables_in_scope:
+  - raci_policies
+  - organizations
+  - feature_flags
+  - kill_switches
+  - policy_versions
+  - policy_snapshots
+  - policy_decisions
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: GOV-004
+  migration_ref: packages/db/migrations/versions/20260915_gov_004_risk_policy.sql
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/governance
+  tables_in_scope:
+  - risk_policies
+  - organizations
+  - feature_flags
+  - kill_switches
+  - policy_versions
+  - policy_snapshots
+  - policy_decisions
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: GOV-005
+  migration_ref: packages/db/migrations/versions/20260915_gov_005_policy_card.sql
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/governance
+  tables_in_scope: &id001
+  - organizations
+  - feature_flags
+  - kill_switches
+  - policy_versions
+  - policy_snapshots
+  - policy_decisions
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: GOV-006
+  migration_ref: packages/db/migrations/versions/20260915_gov_006_tech_stack_baseline.sql
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/governance
+  tables_in_scope: *id001
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: GOV-007
+  migration_ref: packages/db/migrations/versions/20260918_gov_007_data_processing_policy.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/governance
+  tables_in_scope:
+  - data_processing_policy_versions
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: GOV-008
+  migration_ref: packages/db/migrations/versions/20260918_gov_008_operational_targets.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/governance
+  tables_in_scope:
+  - operational_target_versions
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: GOV-009
+  migration_ref: packages/db/migrations/versions/20260918_gov_009_account_dependency.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/governance
+  tables_in_scope:
+  - account_dependency_versions
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: GOV-010
+  migration_ref: packages/db/migrations/versions/20260918_gov_010_vendor_inventory.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/governance
+  tables_in_scope:
+  - vendor_inventory_versions
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-000
+  migration_ref: packages/db/migrations/versions/20260916_found_000_repository_inventory.sql
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope:
+  - repository_inventory_snapshots
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-001
+  migration_ref: packages/db/migrations/versions/20260916_found_001_repository_baseline.sql
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope:
+  - repository_branch_protection_baselines
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-002
+  migration_ref: packages/db/migrations/versions/20260916_found_002_runtime_entry_baseline.sql
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope:
+  - runtime_entry_baselines
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-003A
+  migration_ref: packages/db/migrations/versions/20260916_found_003a_database_baseline.sql
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope:
+  - database_connection_baselines
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-003B
+  migration_ref: packages/db/migrations/versions/20260916_found_003b_storage_baseline.sql
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope:
+  - storage_object_baselines
+  - storage_object_metadata
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-003D
+  migration_ref: packages/db/migrations/versions/20260916_found_003d_task_jobs.sql
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope:
+  - task_jobs
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-004A
+  migration_ref: packages/db/migrations/versions/20260916_found_004a_migration_baseline.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope:
+  - migration_framework_baselines
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-004B
+  migration_ref: packages/db/migrations/versions/20260916_found_004b_outbox.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope:
+  - business_states
+  - outbox_events
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-004C
+  migration_ref: packages/db/migrations/versions/20260916_found_004c_task_leases.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope:
+  - task_job_leases
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-004D
+  migration_ref: packages/db/migrations/versions/20260916_found_004d_failure_retry.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope:
+  - task_failures
+  - human_tasks
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-004E
+  migration_ref: packages/db/migrations/versions/20260916_found_004e_replay.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope:
+  - task_jobs
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-005
+  migration_ref: packages/db/migrations/versions/20260916_found_004f_api_observability.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-006A
+  migration_ref: packages/db/migrations/versions/20260916_found_006a_health_metrics.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope: &id002
+  - task_jobs
+  - task_failures
+  - outbox_events
+  - inbox_events
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-006B
+  migration_ref: packages/db/migrations/versions/20260916_found_006b_tracing_cost.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope: *id002
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-007A
+  migration_ref: packages/db/migrations/versions/20260916_found_007a_openapi.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope: *id002
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-007B
+  migration_ref: packages/db/migrations/versions/20260916_found_007b_events.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope: *id002
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-007C
+  migration_ref: packages/db/migrations/versions/20260916_found_007c_agent_output.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope: *id002
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-007D
+  migration_ref: packages/db/migrations/versions/20260916_found_007d_core_contracts.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope: *id002
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-008
+  migration_ref: packages/db/migrations/versions/20260918_found_008_control_plane.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope:
+  - foundation_feature_flags
+  - foundation_kill_switch
+  - foundation_control_commands
+  - foundation_control_audit
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-009
+  migration_ref: packages/db/migrations/versions/20260918_found_009_testkit.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-010
+  migration_ref: packages/db/migrations/versions/20260918_found_010_platform_contracts.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-011
+  migration_ref: packages/db/migrations/versions/20260918_found_011_architecture_guard.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-012A
+  migration_ref: packages/db/migrations/versions/20260918_found_012a_ci.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-013
+  migration_ref: packages/db/migrations/versions/20260918_found_013_registry.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-003C
+  migration_ref: packages/db/migrations/versions/20260918_found_003c_redis.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FOUND-012B
+  migration_ref: packages/db/migrations/versions/20260918_found_012b_supply_chain.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/foundation
+  tables_in_scope: *id002
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: IAM-CORE-001
+  migration_ref: packages/db/migrations/versions/20260918_iam_core_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/iam
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: ACCOUNT-CORE-001
+  migration_ref: packages/db/migrations/versions/20260918_account_core_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/distribution_account
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: GEO_REGION-CORE-001
+  migration_ref: packages/db/migrations/versions/20260918_geo_region_core_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/geo_region
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: MODEL-CORE-001
+  migration_ref: packages/db/migrations/versions/20260918_model_core_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/model_gateway
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: MODEL-CORE-002
+  migration_ref: packages/db/migrations/versions/20260918_model_core_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/model_gateway
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: AGENT-CORE-001
+  migration_ref: packages/db/migrations/versions/20260918_agent_core_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/agent
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: AGENT-CORE-002
+  migration_ref: packages/db/migrations/versions/20260918_agent_core_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/agent
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: AGENT-CORE-003
+  migration_ref: packages/db/migrations/versions/20260918_agent_core_003.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/agent
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: AGENT-CORE-004
+  migration_ref: packages/db/migrations/versions/20260918_agent_core_004.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/agent
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: WORKFLOW-CORE-001
+  migration_ref: packages/db/migrations/versions/20260918_workflow_core_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/workflow
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: WORKFLOW-CORE-002
+  migration_ref: packages/db/migrations/versions/20260918_workflow_core_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/workflow
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: WORKFLOW-CORE-003
+  migration_ref: packages/db/migrations/versions/20260918_workflow_core_003.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/workflow
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FEEDBACK-CORE-001
+  migration_ref: packages/db/migrations/versions/20260918_feedback_core_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/feedback
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: SCHED-001
+  migration_ref: packages/db/migrations/versions/20260918_sched_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/scheduler
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: OBS-CORE-001
+  migration_ref: packages/db/migrations/versions/20260918_obs_core_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/audit
+  tables_in_scope:
+  - audit_logs
+  - audit_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: OBS-CORE-002
+  migration_ref: packages/db/migrations/versions/20260918_obs_core_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/audit
+  tables_in_scope:
+  - audit_recovery_queue_pauses
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: OBS-CORE-003
+  migration_ref: packages/db/migrations/versions/20260918_obs_core_003.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/audit
+  tables_in_scope:
+  - audit_deletion_requests
+  - audit_deletion_stages
+  - audit_deletion_manual_tasks
+  - audit_deletion_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: TOPIC-001
+  migration_ref: packages/db/migrations/versions/20260918_topic_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/topic
+  tables_in_scope:
+  - topic_taxonomies
+  - topic_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: TOPIC-002
+  migration_ref: packages/db/migrations/versions/20260918_topic_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/topic
+  tables_in_scope:
+  - topic_signals
+  - topic_signal_imports
+  - topic_signal_events
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: TOPIC-003
+  migration_ref: packages/db/migrations/versions/20260918_topic_003.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/topic
+  tables_in_scope:
+  - topic_scoring_versions
+  - topic_opportunities
+  - topic_score_snapshots
+  - topic_opportunity_commands
+  - topic_opportunity_events
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: TOPIC-004
+  migration_ref: packages/db/migrations/versions/20260918_topic_004.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/topic
+  tables_in_scope:
+  - topic_briefs
+  - topic_brief_commands
+  - topic_brief_events
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: TOPIC-005
+  migration_ref: packages/db/migrations/versions/20260918_topic_005.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/topic
+  tables_in_scope:
+  - topic_editorial_plans
+  - topic_editorial_commands
+  - topic_editorial_audit
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: TOPIC-006
+  migration_ref: packages/db/migrations/versions/20260918_topic_006.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/topic
+  tables_in_scope:
+  - topic_opportunity_state_events
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: TOPIC-007
+  migration_ref: packages/db/migrations/versions/20260918_topic_007.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/topic
+  tables_in_scope:
+  - topic_score_snapshot_verifications
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: TOPIC-008
+  migration_ref: packages/db/migrations/versions/20260918_topic_008.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/topic
+  tables_in_scope:
+  - topic_briefs
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: PROV-001
+  migration_ref: packages/db/migrations/versions/20260918_prov_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/provenance
+  tables_in_scope:
+  - sources
+  - source_snapshots
+  - source_commands
+  - source_events
+  - source_snapshot_state_events
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: PROV-002
+  migration_ref: packages/db/migrations/versions/20260918_prov_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/provenance
+  tables_in_scope:
+  - rights_records
+  - rights_record_versions
+  - rights_commands
+  - rights_events
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: PROV-003
+  migration_ref: packages/db/migrations/versions/20260918_prov_003.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/provenance
+  tables_in_scope:
+  - rights_guard_commands
+  - rights_guard_decisions
+  - rights_expiry_reminders
+  - rights_lineage_edges
+  - rights_derivative_blocks
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: KNOW-001
+  migration_ref: packages/db/migrations/versions/20260918_know_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/knowledge
+  tables_in_scope:
+  - entities
+  - claims
+  - evidences
+  - entity_claims
+  - claim_evidences
+  - knowledge_commands
+  - knowledge_events
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: KNOW-002
+  migration_ref: packages/db/migrations/versions/20260918_know_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/knowledge
+  tables_in_scope:
+  - knowledge_cores
+  - knowledge_core_versions
+  - knowledge_conflict_sets
+  - knowledge_core_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: CANON-001
+  migration_ref: packages/db/migrations/versions/20260918_canon_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/canonical_content
+  tables_in_scope:
+  - canonical_contents
+  - canonical_content_versions
+  - canonical_claims
+  - canonical_commands
+  - canonical_events
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: CANON-002
+  migration_ref: packages/db/migrations/versions/20260918_canon_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/canonical_content
+  tables_in_scope:
+  - canonical_content_version_diffs
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: CANON-003
+  migration_ref: packages/db/migrations/versions/20260918_canon_003.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/canonical_content
+  tables_in_scope:
+  - canonical_content_versions
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: CANON-004
+  migration_ref: packages/db/migrations/versions/20260918_canon_004.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/canonical_content
+  tables_in_scope: &id003
+  - canonical_contents
+  - canonical_content_versions
+  - canonical_claims
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: CANON-005
+  migration_ref: packages/db/migrations/versions/20260918_canon_005.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/canonical_content
+  tables_in_scope: *id003
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: CANON-006
+  migration_ref: packages/db/migrations/versions/20260919_canon_006.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/canonical_content
+  tables_in_scope:
+  - canonical_lineage_queries
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: AGENT-CORE-005A
+  migration_ref: packages/db/migrations/versions/20260919_agent_core_005a.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/agent
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: AGENT-CORE-005B
+  migration_ref: packages/db/migrations/versions/20260919_agent_core_005b.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/agent
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: AGENT-CORE-005C
+  migration_ref: packages/db/migrations/versions/20260919_agent_core_005c.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/agent
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: AGENT-CORE-005D
+  migration_ref: packages/db/migrations/versions/20260919_agent_core_005d.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/agent
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: AGENT-CORE-005E
+  migration_ref: packages/db/migrations/versions/20260919_agent_core_005e.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/agent
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: MODEL-001
+  migration_ref: packages/db/migrations/versions/20260919_model_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/model_gateway
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: PROD-001
+  migration_ref: packages/db/migrations/versions/20260919_prod_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/production
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: PROD-002
+  migration_ref: packages/db/migrations/versions/20260919_prod_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/production
+  tables_in_scope:
+  - content_variants
+  - variant_versions
+  - variant_commands
+  - variant_events
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: PROD-003
+  migration_ref: packages/db/migrations/versions/20260919_prod_003.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/production
+  tables_in_scope:
+  - production_terminology_versions
+  - production_translation_memory
+  - production_terminology_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: PROD-004
+  migration_ref: packages/db/migrations/versions/20260919_prod_004.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/production
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: QA-001
+  migration_ref: packages/db/migrations/versions/20260919_qa_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/qa
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: QA-002
+  migration_ref: packages/db/migrations/versions/20260919_qa_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/qa
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: QA-003
+  migration_ref: packages/db/migrations/versions/20260919_qa_003.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/qa
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: POLICY-001
+  migration_ref: packages/db/migrations/versions/20260919_policy_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/policy
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: POLICY-002
+  migration_ref: packages/db/migrations/versions/20260919_policy_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/policy
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: APPROVAL-001
+  migration_ref: packages/db/migrations/versions/20260919_approval_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/approval
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: APPROVAL-002
+  migration_ref: packages/db/migrations/versions/20260919_approval_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/approval
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: EVAL-001
+  migration_ref: packages/db/migrations/versions/20260919_eval_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/evaluation
+  tables_in_scope:
+  - evaluation_prompt_versions
+  - evaluation_golden_set_versions
+  - evaluation_threshold_versions
+  - eval_runs
+  - evaluation_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: MODEL-003
+  migration_ref: packages/db/migrations/versions/20260919_model_003.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/model_gateway
+  tables_in_scope:
+  - model_budget_policies
+  - model_budget_usage
+  - model_budget_reservations
+  - model_budget_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: SITE-001
+  migration_ref: packages/db/migrations/versions/20260919_site_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/knowledge_site
+  tables_in_scope:
+  - site_pages
+  - site_page_versions
+  - site_page_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: SITE-002
+  migration_ref: packages/db/migrations/versions/20260919_site_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/knowledge_site
+  tables_in_scope:
+  - site_publications
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: SITE-003
+  migration_ref: packages/db/migrations/versions/20260919_site_003.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/knowledge_site
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: GEO_CONTENT-001
+  migration_ref: packages/db/migrations/versions/20260919_geo_content_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/geo_content
+  tables_in_scope:
+  - geo_content_checks
+  - geo_content_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: GEO_CONTENT-002
+  migration_ref: packages/db/migrations/versions/20260919_geo_content_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/geo_content
+  tables_in_scope:
+  - geo_query_fixtures
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: GEO_CONTENT-003
+  migration_ref: packages/db/migrations/versions/20260920_geo_content_003.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/geo_content
+  tables_in_scope:
+  - geo_runs
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: GEO_REGION-001
+  migration_ref: packages/db/migrations/versions/20260920_geo_region_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/geo_region
+  tables_in_scope:
+  - region_profiles
+  - region_profile_versions
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: GEO_REGION-002
+  migration_ref: packages/db/migrations/versions/20260920_geo_region_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/geo_region
+  tables_in_scope:
+  - region_policy_decisions
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: SITE-004
+  migration_ref: packages/db/migrations/versions/20260920_site_004.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/knowledge_site
+  tables_in_scope:
+  - site_quality_reports
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: MEDIA-001
+  migration_ref: packages/db/migrations/versions/20260920_media_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/media
+  tables_in_scope:
+  - media_scripts
+  - media_script_versions
+  - media_script_claim_refs
+  - media_script_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: MEDIA-002
+  migration_ref: packages/db/migrations/versions/20260920_media_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: required
+  owner: team/media
+  tables_in_scope:
+  - media_storyboards
+  - media_storyboard_versions
+  - media_storyboard_shots
+  - media_storyboard_asset_refs
+  - media_storyboard_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: MEDIA-003A
+  migration_ref: packages/db/migrations/versions/20260920_media_003a.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: required
+  owner: team/media
+  tables_in_scope:
+  - media_subtitles
+  - media_subtitle_versions
+  - media_subtitle_tracks
+  - media_subtitle_cues
+  - media_subtitle_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: MEDIA-003B
+  migration_ref: packages/db/migrations/versions/20260920_media_003b.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: required
+  owner: team/media
+  tables_in_scope:
+  - media_visual_asset_sets
+  - media_visual_asset_set_versions
+  - media_visual_asset_items
+  - media_visual_asset_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: MEDIA-003C
+  migration_ref: packages/db/migrations/versions/20260920_media_003c.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: required
+  owner: team/media
+  tables_in_scope:
+  - media_output_specs
+  - media_output_spec_versions
+  - media_output_spec_items
+  - media_output_spec_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: MEDIA-004A
+  migration_ref: packages/db/migrations/versions/20260920_media_004a.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: required
+  owner: team/media
+  tables_in_scope:
+  - media_render_jobs
+  - media_render_job_inputs
+  - media_render_artifacts
+  - media_render_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: MEDIA-004B
+  migration_ref: packages/db/migrations/versions/20260920_media_004b.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/media
+  tables_in_scope:
+  - media_render_failures
+  - media_render_retry_schedules
+  - media_render_retry_commands
+  - media_render_rerender_targets
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: MEDIA-005A
+  migration_ref: packages/db/migrations/versions/20260920_media_005a.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/media
+  tables_in_scope:
+  - media_qa_reports
+  - media_qa_findings
+  - media_qa_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: MEDIA-005B
+  migration_ref: packages/db/migrations/versions/20260920_media_005b.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/media
+  tables_in_scope:
+  - media_qa_content_evaluations
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: MEDIA-006
+  migration_ref: packages/db/migrations/versions/20260920_media_006.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/media
+  tables_in_scope:
+  - media_asset_lineage_edges
+  - media_asset_lineage_checks
+  - media_asset_lineage_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: DIST-001
+  migration_ref: packages/db/migrations/versions/20260919_dist_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/distribution
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: DIST-002
+  migration_ref: packages/db/migrations/versions/20260919_dist_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/distribution
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: DIST-003A
+  migration_ref: packages/db/migrations/versions/20260919_dist_003a.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/distribution
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: DIST-003B
+  migration_ref: packages/db/migrations/versions/20260919_dist_003b.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/distribution
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: DIST-004
+  migration_ref: packages/db/migrations/versions/20260919_dist_004.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/distribution
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: DIST-006A
+  migration_ref: packages/db/migrations/versions/20260919_dist_006a.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/distribution
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: DIST-006B
+  migration_ref: packages/db/migrations/versions/20260919_dist_006b.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/distribution
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: DIST-006C
+  migration_ref: packages/db/migrations/versions/20260919_dist_006c.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/distribution
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: DIST-007
+  migration_ref: packages/db/migrations/versions/20260919_dist_007.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/distribution
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: DIST-008A
+  migration_ref: packages/db/migrations/versions/20260919_dist_008a.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/distribution
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: DIST-008B
+  migration_ref: packages/db/migrations/versions/20260919_dist_008b.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/distribution
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: DIST-009
+  migration_ref: packages/db/migrations/versions/20260919_dist_009.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/distribution
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: DIST-010
+  migration_ref: packages/db/migrations/versions/20260919_dist_010.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/distribution
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: DIST-011
+  migration_ref: packages/db/migrations/versions/20260919_dist_011.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/distribution
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: DIST-005A
+  migration_ref: packages/db/migrations/versions/20260919_dist_005a.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/distribution
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: DIST-005B
+  migration_ref: packages/db/migrations/versions/20260919_dist_005b.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/distribution
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FEEDBACK-CORE-002
+  migration_ref: packages/db/migrations/versions/20260919_feedback_core_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/feedback
+  tables_in_scope: []
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: ACCOUNT-001A
+  migration_ref: packages/db/migrations/planned/account_001a.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/distribution_account
+  tables_in_scope: &id004
+  - account_profiles
+  - account_connections
+  - authorization_evidences
+  - distribution_targets
+  - distribution_target_versions
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: ACCOUNT-001B
+  migration_ref: packages/db/migrations/planned/account_001b.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/distribution_account
+  tables_in_scope: *id004
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: ACCOUNT-001C
+  migration_ref: packages/db/migrations/planned/account_001c.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/distribution_account
+  tables_in_scope: *id004
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: OAUTH-001A
+  migration_ref: packages/db/migrations/planned/oauth_001a.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/distribution_oauth
+  tables_in_scope: &id005
+  - oauth_authorization_sessions
+  - token_leases
+  - authorization_evidences
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: OAUTH-001B
+  migration_ref: packages/db/migrations/planned/oauth_001b.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/distribution_oauth
+  tables_in_scope: *id005
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: OAUTH-001C
+  migration_ref: packages/db/migrations/planned/oauth_001c.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/distribution_oauth
+  tables_in_scope: *id005
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: OAUTH-002A
+  migration_ref: packages/db/migrations/planned/oauth_002a.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/distribution_oauth
+  tables_in_scope: *id005
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: OAUTH-002B
+  migration_ref: packages/db/migrations/planned/oauth_002b.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/distribution_oauth
+  tables_in_scope: *id005
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: ACCOUNT-002
+  migration_ref: packages/db/migrations/planned/account_002.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/distribution_account
+  tables_in_scope: *id004
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: IAM-CORE-002
+  migration_ref: packages/db/migrations/planned/iam_core_002.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/iam
+  tables_in_scope:
+  - users
+  - organizations
+  - organization_memberships
+  - roles
+  - permissions
+  - role_bindings
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: ACCOUNT-003
+  migration_ref: packages/db/migrations/planned/account_003.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/distribution_account
+  tables_in_scope: *id004
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: PLAT-001
+  migration_ref: packages/db/migrations/planned/plat_001.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/platform_adapter
+  tables_in_scope: &id006
+  - platform_capability_versions
+  - webhook_receipts
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: PLAT-002
+  migration_ref: packages/db/migrations/planned/plat_002.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/platform_adapter
+  tables_in_scope: *id006
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: PLAT-003
+  migration_ref: packages/db/migrations/planned/plat_003.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/platform_adapter
+  tables_in_scope: *id006
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: ANALYTICS-001
+  migration_ref: packages/db/migrations/versions/20260920_analytics_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/analytics
+  tables_in_scope:
+  - metric_definitions
+  - metric_definition_state_events
+  - analytics_metric_definition_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: ANALYTICS-002
+  migration_ref: packages/db/migrations/versions/20260920_analytics_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: verified_by_contract_test
+  owner: team/analytics
+  tables_in_scope:
+  - observations
+  - analytics_observation_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: ANALYTICS-003
+  migration_ref: packages/db/migrations/versions/20260920_analytics_003.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: required
+  owner: team/analytics
+  tables_in_scope:
+  - analytics_kpi_snapshots
+  - analytics_kpi_snapshot_commands
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: ANALYTICS-004
+  migration_ref: packages/db/migrations/versions/20260921_analytics_004.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: required
+  owner: team/analytics
+  tables_in_scope:
+  - metric_definitions
+  - observations
+  - attribution_events
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FEEDBACK-CORE-003
+  migration_ref: packages/db/migrations/versions/20260921_feedback_core_003.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: required
+  owner: team/feedback
+  tables_in_scope: &id007
+  - feedback_items
+  - feedback_actions
+  - observations
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FEEDBACK-CORE-004
+  migration_ref: packages/db/migrations/versions/20260921_feedback_core_004.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: required
+  owner: team/feedback
+  tables_in_scope: *id007
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FEEDBACK-CORE-005
+  migration_ref: packages/db/migrations/versions/20260921_feedback_core_005.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: required
+  owner: team/feedback
+  tables_in_scope: *id007
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FEEDBACK-LIVE-001
+  migration_ref: packages/db/migrations/planned/feedback_live_001.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/feedback
+  tables_in_scope: *id007
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: FEEDBACK-EXP-001
+  migration_ref: packages/db/migrations/versions/20260921_feedback_exp_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: required
+  owner: team/feedback
+  tables_in_scope: *id007
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: SUP-001
+  migration_ref: packages/db/migrations/versions/20260921_sup_001.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: required
+  owner: team/support
+  tables_in_scope: &id008
+  - support_threads
+  - support_tickets
+  - support_drafts
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: SUP-002
+  migration_ref: packages/db/migrations/versions/20260921_sup_002.py
+  status: done
+  path_kind: real
+  exists: true
+  verification_status: required
+  owner: team/support
+  tables_in_scope: *id008
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: PILOT-001
+  migration_ref: packages/db/migrations/planned/pilot_001.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/operations
+  tables_in_scope: &id009
+  - pilot_runs
+  - risk_events
+  - budgets
+  - budget_usages
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: PILOT-002
+  migration_ref: packages/db/migrations/planned/pilot_002.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/operations
+  tables_in_scope: *id009
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: PILOT-003
+  migration_ref: packages/db/migrations/planned/pilot_003.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/operations
+  tables_in_scope: *id009
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: PILOT-004
+  migration_ref: packages/db/migrations/planned/pilot_004.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/operations
+  tables_in_scope: *id009
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step
+- task_id: PILOT-005
+  migration_ref: packages/db/migrations/planned/pilot_005.sql
+  status: planned
+  path_kind: planned
+  exists: false
+  verification_status: not_started
+  owner: team/operations
+  tables_in_scope: *id009
+  rules:
+  - one owner migration per task
+  - expand/contract for breaking changes
+  - org_id and tenant-scoped foreign keys for tenant-owned tables
+  - no destructive SQL in the expand step

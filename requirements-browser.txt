@@ -1,0 +1,2 @@
+# Optional browser runner; do not install the reference project's GUI stack.
+playwright==1.58.0

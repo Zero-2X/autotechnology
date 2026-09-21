@@ -1,0 +1,19 @@
+task_id: ACCOUNT-CORE-001
+status: done
+trace_id: 0fc3a1cf-0a0a-4f34-accountcore001
+actor: team/distribution_account
+registry_ref: docs/task-registry.yaml
+verification:
+  tests:
+    - py -3.12 -m pytest tests/unit/distribution_account -q
+  result: 3 passed
+  checks:
+    - py -3.12 scripts/check_task_card_precision.py --task ACCOUNT-CORE-001 --strict
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_migrations.py
+  credentials: none
+  account_connection_id: always null
+  delivery_modes: planned manual_export; synthetic manual_export or simulation
+side_effects:
+  real_credentials: false
+  external_publication: false

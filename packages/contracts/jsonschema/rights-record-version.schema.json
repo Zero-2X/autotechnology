@@ -1,0 +1,215 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/rights-record-version.schema.json",
+  "title": "RightsRecordVersion",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "rights_record_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "version_no": {
+      "type": "integer"
+    },
+    "source_snapshot_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
+    "license_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "contract_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "evidence_object_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "terms_snapshot_hash": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Fa-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "rights_holder": {
+      "type": "string",
+      "minLength": 1
+    },
+    "permitted_regions": {
+      "type": "array",
+      "items": {}
+    },
+    "permitted_locales": {
+      "type": "array",
+      "items": {}
+    },
+    "permitted_media": {
+      "type": "array",
+      "items": {}
+    },
+    "permitted_use": {
+      "type": "string",
+      "enum": [
+        "research",
+        "derivative",
+        "commercial"
+      ]
+    },
+    "valid_from": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "valid_to": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "verified",
+        "expired",
+        "revoked",
+        "complaint_hold"
+      ]
+    },
+    "policy_rule_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verified_by": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "verified_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "verification_reason": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "supersedes_version_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "snapshot_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "created_by": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "rights_record_id",
+    "version_no",
+    "source_snapshot_ids",
+    "license_ref",
+    "contract_ref",
+    "evidence_object_refs",
+    "terms_snapshot_hash",
+    "rights_holder",
+    "permitted_regions",
+    "permitted_locales",
+    "permitted_media",
+    "permitted_use",
+    "valid_from",
+    "valid_to",
+    "status",
+    "policy_rule_version",
+    "verified_by",
+    "verified_at",
+    "verification_reason",
+    "supersedes_version_id",
+    "snapshot_hash",
+    "created_by",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

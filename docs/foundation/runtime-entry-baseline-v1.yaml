@@ -1,0 +1,54 @@
+baseline_key: runtime-entrypoints
+baseline_version: 1
+status: active
+entries:
+  - entry_key: api
+    kind: backend
+    path: apps/api
+    command: python -m apps.api
+    owner: team/foundation
+    mode: composition_root
+    health: liveness_and_dependency_readiness
+    external_side_effects: false
+    forbidden_dependencies: [ORM access, domain rules, platform SDK]
+  - entry_key: worker
+    kind: backend
+    path: apps/worker
+    command: python -m apps.worker --once --dry-run
+    owner: team/foundation
+    mode: composition_root
+    health: dry_run_once
+    external_side_effects: false
+    forbidden_dependencies: [ORM access, domain rules, platform SDK]
+  - entry_key: scheduler
+    kind: backend
+    path: apps/scheduler
+    command: python -m apps.scheduler --once --dry-run
+    owner: team/foundation
+    mode: composition_root
+    health: dry_run_once
+    external_side_effects: false
+    forbidden_dependencies: [ORM access, domain rules, platform SDK]
+  - entry_key: web-console
+    kind: frontend
+    path: apps/web-console
+    command: pnpm --dir apps/web-console build -- --out-dir <output>
+    owner: team/foundation
+    mode: static_build
+    health: build_manifest
+    external_side_effects: false
+    forbidden_dependencies: [database connection, platform SDK, embedded credential]
+  - entry_key: knowledge-site
+    kind: frontend
+    path: apps/knowledge-site
+    command: pnpm --dir apps/knowledge-site build -- --out-dir <output>
+    owner: team/foundation
+    mode: static_build
+    health: build_manifest
+    external_side_effects: false
+    forbidden_dependencies: [database connection, platform SDK, embedded credential]
+global_constraints:
+  business_logic_in_entries: false
+  real_credentials: false
+  real_platform_calls: false
+  database_required_for_dry_run: false

@@ -1,0 +1,33 @@
+task_id: CANON-002
+status: done
+implementation:
+  module: modules/canonical_content/service.py
+  contracts:
+    - packages/contracts/jsonschema/canonical-content-version.schema.json
+    - packages/contracts/openapi/openapi.yaml
+  migration: packages/db/migrations/versions/20260918_canon_002.py
+  tables:
+    - canonical_content_version_diffs
+  api_routes:
+    - GET /internal/canonical-contents/{content_id}/versions
+    - GET /v1/canonical-contents/{id}/versions
+  behaviors:
+    - immutable_version_update_rejection
+    - stable_key_position_aware_version_diff
+    - tenant_scoped_version_history
+    - deterministic_append_only_diff_snapshot
+verification:
+  commands:
+    - py -3.12 -m pytest tests/unit/canonical_content tests/integration/test_canonical_content_api.py -q
+    - py -3.12 scripts/check_json_schemas.py
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 scripts/check_migrations.py --strict --json
+    - py -3.12 scripts/check_task_card_precision.py --task CANON-002 --strict
+    - py -3.12 scripts/check_openapi_compatibility.py --strict
+  results:
+    targeted_tests: 5 passed
+    schema_errors: 0
+    architecture_errors: 0
+    migration_errors: 0
+    precision_gaps: 0
+    openapi_errors: 0

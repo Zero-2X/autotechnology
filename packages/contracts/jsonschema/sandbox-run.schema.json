@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/sandbox-run.schema.json",
+  "title": "sandbox-run",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "input_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "workspace_ref": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^private://"
+    },
+    "image_digest": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "allowlisted_commands": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "network": {
+      "type": "string",
+      "minLength": 1
+    },
+    "secret_mounts": {
+      "type": "array",
+      "items": {}
+    },
+    "cpu_ms": {
+      "type": "integer"
+    },
+    "memory_mb": {
+      "type": "integer"
+    },
+    "timeout_ms": {
+      "type": "integer"
+    },
+    "reproducible": {
+      "type": "boolean"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "running",
+        "passed",
+        "failed",
+        "blocked",
+        "timed_out"
+      ]
+    },
+    "stdout_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^private://"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "stderr_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^private://"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "input_hash",
+    "workspace_ref",
+    "image_digest",
+    "allowlisted_commands",
+    "network",
+    "secret_mounts",
+    "cpu_ms",
+    "memory_mb",
+    "timeout_ms",
+    "reproducible",
+    "status",
+    "stdout_ref",
+    "stderr_ref",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

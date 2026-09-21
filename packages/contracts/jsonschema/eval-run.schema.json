@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/eval-run.schema.json",
+  "title": "EvalRun",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "prompt_version_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "prompt_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "prompt_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "model_config_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "configured_model": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_version": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "model_versions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "dataset_version_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "dataset_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "threshold_version_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "threshold_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "baseline_run_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "running",
+        "completed",
+        "failed"
+      ]
+    },
+    "gate_status": {
+      "type": "string",
+      "enum": [
+        "passed",
+        "failed"
+      ]
+    },
+    "case_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "passed_cases": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "failed_cases": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "error_cases": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "regression_reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "request_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "trace_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_by": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "prompt_version_id",
+    "prompt_version",
+    "prompt_hash",
+    "model_config_id",
+    "configured_model",
+    "model_versions",
+    "dataset_version_id",
+    "dataset_hash",
+    "threshold_version_id",
+    "threshold_hash",
+    "baseline_run_id",
+    "status",
+    "gate_status",
+    "case_count",
+    "passed_cases",
+    "failed_cases",
+    "error_cases",
+    "metrics",
+    "regression_reasons",
+    "results",
+    "request_hash",
+    "trace_id",
+    "created_by",
+    "created_at",
+    "completed_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "evaluation service offline run contract"
+}

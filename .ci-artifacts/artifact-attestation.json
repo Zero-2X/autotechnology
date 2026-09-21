@@ -1,0 +1,8 @@
+{
+  "artifact": "sbom.cdx.json",
+  "digest": "sha256:efd8dbb0be0a3b93a15918a28a4f201c2ef7eb1876f6b5e9b44cf7f6ef39ac5e",
+  "production_publication": false,
+  "signature_algorithm": "SHA-256",
+  "signature_type": "digest-attestation",
+  "signed": true
+}

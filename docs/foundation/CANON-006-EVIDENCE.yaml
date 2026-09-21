@@ -1,0 +1,41 @@
+task_id: CANON-006
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000012
+actor: team/canonical_content
+predecessors: [TOPIC-004, CANON-002, CANON-004, CANON-005]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/canonical_content/lineage.py
+    - modules/canonical_content/infrastructure/canonical_schema.py
+  contracts:
+    - packages/contracts/jsonschema/lineage-query.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_canon_006.py
+  tests:
+    - tests/unit/canonical_content/test_lineage.py
+verification:
+  targeted_command: python -m pytest tests/unit/canonical_content/test_lineage.py -q
+  targeted_result: 5 passed
+  migration_upgrade_command: python -m pytest tests/contract/test_found_004a_migrations.py -q
+  migration_upgrade_result: passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+  task_card_precision: passed
+behavior:
+  tenant_scoped_roots_and_downstream_ports: true
+  canonical_version_history_visible: true
+  variant_asset_publication_chain_tested_with_read_only_ports: true
+  text_publication_can_follow_variant: true
+  unavailable_stages_explicit: true
+  idempotent_query_snapshot_append_only: true
+  downstream_fact_services_connected: false
+side_effects:
+  canonical_or_downstream_business_fact_mutation: false
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable the lineage query entry while retaining prior audit snapshots.
+  - Use a forward-compatible migration if the query projection must change.

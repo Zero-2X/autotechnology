@@ -1,0 +1,64 @@
+task_id: FOUND-004E
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000010
+actor: team/foundation
+predecessors: [GOV-006, FOUND-000, FOUND-004D]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - infra/foundation/task_replay.py
+    - infra/foundation/task_queue.py
+    - infra/foundation/__init__.py
+    - apps/api/main.py
+    - packages/db/migrations/versions/20260916_found_004e_replay.py
+  contracts:
+    - packages/contracts/jsonschema/task-job.schema.json
+    - packages/contracts/openapi/openapi.yaml
+  tests:
+    - tests/contract/test_found_004e_replay.py
+    - tests/integration/test_found_004e_replay_integration.py
+  manifests:
+    - docs/contracts/contract-manifest.yaml
+    - docs/contracts/migration-manifest.yaml
+runtime_evidence:
+  replay_source: failed_or_dead_letter_task_only
+  unknown_review_gate: submitted_or_completed_human_task_required
+  source_immutability: source_task_and_failure_facts_are_never_updated
+  input_reuse: payload_ref_payload_hash_aggregate_version_reused
+  new_execution: fresh_task_job_id_status_queued_attempt_count_zero
+  provenance: replayed_from_job_id_and_attempt_count_recorded
+  idempotency: same_org_job_type_key_returns_same_replay_job
+  version_guard: source_attempt_count_mismatch_returns_REPLAY_VERSION_CONFLICT
+  secret_guard: secret_token_credential_oauth_and_external_refs_return_REPLAY_SECRET_INPUT
+  policy_guard: policy_and_kill_switch_hooks_must_allow_replay
+  tenant_scope: cross_org_source_returns_TENANT_SCOPE_VIOLATION
+  worker_command: POST_/internal/task-jobs/{id}:replay_requires_X-Worker-Id_and_Idempotency-Key
+  side_effect_boundary: no_provider_or_network_side_effects
+verification:
+  task_test_command: python -m pytest tests/contract/test_found_004e_replay.py tests/integration/test_found_004e_replay_integration.py -q
+  task_test_result: 6 passed
+  migration_check_command: python scripts/check_migrations.py --strict --json
+  migration_check_result: revisions=5 heads=[20260916_found_004e] errors=[]
+  targeted_checks:
+    - python scripts/check_task_card_precision.py --task FOUND-004E --strict
+    - python scripts/check_task_card_registry_refs.py
+    - python scripts/check_plan_consistency.py --strict-contracts --strict-commands
+    - python scripts/check_openapi_contract.py
+  full_test_command: python -m pytest tests --maxfail=1 -q
+  full_test_result: 96 passed, 8 warnings
+audit_revalidation:
+  date: '2026-09-16'
+  command: python -m pytest tests --maxfail=1 -q
+  result: 109 passed
+  reason: overall foundation architecture and implementation audit after replay idempotency-header correction
+side_effects:
+  real_credentials: false
+  real_postgresql_connection: false
+  real_redis_connection: false
+  network_probe: false
+  real_platform_api: false
+  external_publication: false
+  existing_sql_migrations_rewritten: false
+rollback:
+  - Cancel the newly created replay job; the source job and failure history remain unchanged.
+  - Run python -m alembic downgrade 20260916_found_004d against a disposable or reviewed target database; this no-op checkpoint removes no existing task_jobs objects.

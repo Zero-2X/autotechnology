@@ -1,0 +1,59 @@
+task_id: FOUND-004A
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000006
+actor: team/foundation
+predecessors: [GOV-006, FOUND-000, FOUND-003A, FOUND-003D]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - alembic.ini
+    - requirements.txt
+    - packages/db/migrations/env.py
+    - packages/db/migrations/script.py.mako
+    - packages/db/migrations/versions/20260916_found_004a_migration_baseline.py
+    - scripts/check_migrations.py
+  contract:
+    - docs/foundation/migration-framework-baseline-v1.yaml
+    - packages/contracts/jsonschema/migration-baseline.schema.json
+    - packages/contracts/jsonschema/foundation.schema.json
+  tests:
+    - tests/contract/test_found_004a_migrations.py
+  migration_manifest: docs/contracts/migration-manifest.yaml
+  contract_manifest: docs/contracts/contract-manifest.yaml
+runtime_evidence:
+  migration_revision: 20260916_found_004a
+  single_head: true
+  fixture: 'sqlite:///:memory:'
+  legacy_sql_baseline_preserved: true
+  upgrade_idempotent: true
+  downgrade_restores_fixture: true
+  destructive_upgrade_operations_blocked: true
+  external_network_imports_blocked: true
+verification:
+  task_test_command: python -m pytest tests/contract/test_found_004a_migrations.py -q
+  task_test_result: 9 passed
+  migration_check_command: python scripts/check_migrations.py --strict --json
+  migration_check_result: revisions=1 heads=[20260916_found_004a] errors=[]
+  targeted_checks:
+    - python scripts/check_task_card_precision.py --task FOUND-004A --strict
+    - python scripts/check_task_card_registry_refs.py
+    - python scripts/check_plan_consistency.py --strict-contracts --strict-commands
+    - python scripts/check_openapi_contract.py
+  full_test_command: python -m pytest tests --maxfail=1 -q
+  full_test_result: 69 passed, 3 warnings
+audit_revalidation:
+  date: '2026-09-16'
+  command: python -m pytest tests --maxfail=1 -q
+  result: 109 passed
+  reason: overall foundation architecture and implementation audit after migration tooling correction
+side_effects:
+  real_credentials: false
+  real_postgresql_connection: false
+  real_redis_connection: false
+  network_probe: false
+  real_platform_api: false
+  external_publication: false
+  existing_sql_migrations_rewritten: false
+rollback:
+  - Run python -m alembic downgrade base against the disposable or reviewed target database.
+  - Keep the accepted legacy SQL baseline and use a reviewed reverse revision for later schema changes.

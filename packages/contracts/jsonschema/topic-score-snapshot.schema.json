@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/topic-score-snapshot.schema.json",
+  "title": "TopicScoreSnapshot",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "opportunity_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "formula_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "signal_inputs": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "score_components": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "total_score": {
+      "type": "number"
+    },
+    "reasoning": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "scoring_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "weights": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "deductions": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "content_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "input_snapshot_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "opportunity_id",
+    "formula_version",
+    "signal_inputs",
+    "score_components",
+    "total_score",
+    "reasoning",
+    "created_at",
+    "scoring_version",
+    "weights",
+    "deductions",
+    "content_hash",
+    "input_snapshot_hash"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

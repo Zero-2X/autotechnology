@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/account-profile.schema.json",
+  "title": "AccountProfile",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "legal_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "brand_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "owner_actor_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "profile_kind": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "synthetic",
+        "real"
+      ]
+    },
+    "markets": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "active",
+        "restricted",
+        "retired"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "legal_name",
+    "brand_name",
+    "owner_actor_id",
+    "profile_kind",
+    "markets",
+    "status"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

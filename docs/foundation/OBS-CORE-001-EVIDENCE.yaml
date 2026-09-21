@@ -1,0 +1,28 @@
+task_id: OBS-CORE-001
+status: done
+implementation:
+  module: modules/audit/service.py
+  contracts:
+    - packages/contracts/jsonschema/audit-log.schema.json
+    - packages/contracts/jsonschema/outbox-event.schema.json
+  migration: packages/db/migrations/versions/20260918_obs_core_001.py
+  behaviors:
+    - append_only_audit_log
+    - trace_correlation
+    - tenant_scoped_queries
+    - query_and_export_audit_records
+    - evidence_package_references
+    - minimal_metrics
+    - sqlite_append_only_persistence
+    - restart_safe_idempotency
+verification:
+  commands:
+    - py -3.12 -m pytest tests/unit/audit tests/unit/workflow tests/unit/scheduler -q --disable-warnings --maxfail=1
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 scripts/check_json_schemas.py
+    - py -3.12 -m pytest tests/integration/test_audit_persistence.py -q
+  results:
+    targeted_tests: 16
+    architecture_errors: 0
+    schema_errors: 0
+    durable_fixture: true

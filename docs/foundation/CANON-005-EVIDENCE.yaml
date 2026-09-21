@@ -1,0 +1,43 @@
+task_id: CANON-005
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000011
+actor: team/canonical_content
+predecessors: [WORKFLOW-CORE-002, TOPIC-004, CANON-004]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/canonical_content/service.py
+    - modules/canonical_content/infrastructure/canonical_schema.py
+    - apps/api/main.py
+  contracts:
+    - packages/contracts/jsonschema/canonical-content-version.schema.json
+  migration:
+    - packages/db/migrations/versions/20260918_canon_005.py
+  tests:
+    - tests/unit/canonical_content/test_service.py
+    - tests/integration/test_canonical_content_api.py
+verification:
+  targeted_command: >-
+    python -m pytest tests/unit/canonical_content
+    tests/integration/test_canonical_content_api.py -q
+  targeted_result: 8 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_check: passed
+  task_card_registry_refs: passed
+behavior:
+  append_only_freshness_checks: true
+  freshness_states: [fresh, review_due, stale, expired, conflict, withdrawn]
+  conflict_sets_trigger_high_priority_refresh: true
+  refresh_queue_is_tenant_scoped_and_idempotent: true
+  refresh_queue_leases_can_be_reclaimed_after_expiry: true
+  historical_versions_are_not_mutated: true
+  api_routes_are_internal_and_account_free: true
+side_effects:
+  real_credentials: false
+  real_postgresql_connection: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Stop creating new freshness checks and refresh queue commands while retaining existing facts.
+  - Do not rewrite the accepted migration; use a forward-compatible migration for any correction.

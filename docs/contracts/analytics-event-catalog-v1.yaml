@@ -1,0 +1,93 @@
+schema_version: 1
+source_task: ANALYTICS-001
+categories:
+  - category: content
+    event_type: analytics.content.observed
+    event_schema_ref: packages/contracts/events/analytics-content-observed.schema.json
+    allowed_sources: [site, fake, manual, qa]
+    subject_types: [content, variant, topic, page]
+    account_gated_sources: []
+    synthetic_sources: [fake, manual]
+    data_classification: aggregate_only
+    dedupe_key: event_id
+    ordering_key: aggregate_id
+  - category: asset
+    event_type: analytics.asset.observed
+    event_schema_ref: packages/contracts/events/analytics-asset-observed.schema.json
+    allowed_sources: [fake, manual, qa]
+    subject_types: [asset]
+    account_gated_sources: []
+    synthetic_sources: [fake, manual]
+    data_classification: aggregate_only
+    dedupe_key: event_id
+    ordering_key: aggregate_id
+  - category: publication
+    event_type: analytics.publication.observed
+    event_schema_ref: packages/contracts/events/analytics-publication-observed.schema.json
+    allowed_sources: [fake, manual, platform]
+    subject_types: [publication]
+    account_gated_sources: [platform]
+    synthetic_sources: [fake, manual]
+    data_classification: aggregate_only
+    dedupe_key: event_id
+    ordering_key: aggregate_id
+  - category: interaction
+    event_type: analytics.interaction.observed
+    event_schema_ref: packages/contracts/events/analytics-interaction-observed.schema.json
+    allowed_sources: [fake, manual, platform, support]
+    subject_types: [publication, content, page]
+    account_gated_sources: [platform]
+    synthetic_sources: [fake, manual]
+    data_classification: aggregate_only
+    dedupe_key: event_id
+    ordering_key: aggregate_id
+  - category: geo
+    event_type: analytics.geo.observed
+    event_schema_ref: packages/contracts/events/analytics-geo-observed.schema.json
+    allowed_sources: [geo, fake, manual]
+    subject_types: [geo_run, content, page]
+    account_gated_sources: []
+    synthetic_sources: [fake, manual]
+    data_classification: aggregate_only
+    dedupe_key: event_id
+    ordering_key: aggregate_id
+  - category: support
+    event_type: analytics.support.observed
+    event_schema_ref: packages/contracts/events/analytics-support-observed.schema.json
+    allowed_sources: [support, fake, manual]
+    subject_types: [content, publication]
+    account_gated_sources: []
+    synthetic_sources: [fake, manual]
+    data_classification: aggregate_only
+    dedupe_key: event_id
+    ordering_key: aggregate_id
+  - category: qa
+    event_type: analytics.qa.observed
+    event_schema_ref: packages/contracts/events/analytics-qa-observed.schema.json
+    allowed_sources: [qa, fake, manual]
+    subject_types: [content, variant, asset, page, geo_run]
+    account_gated_sources: []
+    synthetic_sources: [fake, manual]
+    data_classification: aggregate_only
+    dedupe_key: event_id
+    ordering_key: aggregate_id
+  - category: cost
+    event_type: analytics.cost.observed
+    event_schema_ref: packages/contracts/events/analytics-cost-observed.schema.json
+    allowed_sources: [site, fake, manual, platform, geo, support, qa]
+    subject_types: [publication, content, variant, asset, topic, page, geo_run]
+    account_gated_sources: [platform]
+    synthetic_sources: [fake, manual]
+    data_classification: aggregate_only
+    dedupe_key: event_id
+    ordering_key: aggregate_id
+  - category: risk
+    event_type: analytics.risk.observed
+    event_schema_ref: packages/contracts/events/analytics-risk-observed.schema.json
+    allowed_sources: [site, fake, manual, platform, geo, support, qa]
+    subject_types: [publication, content, variant, asset, topic, page, geo_run]
+    account_gated_sources: [platform]
+    synthetic_sources: [fake, manual]
+    data_classification: aggregate_only
+    dedupe_key: event_id
+    ordering_key: aggregate_id

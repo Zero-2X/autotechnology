@@ -1,0 +1,12 @@
+task_id: SUP-002
+status: done
+verification:
+  focused_command: python -m pytest tests/unit/support/test_inbox_service.py tests/integration/test_sup_002_migration.py tests/contract/test_support_contracts.py -q
+  focused_result: 6 passed
+  service_behaviors: high-risk classification for refund, contract, medical, legal, financial, KYC, appeal, copyright, privacy and security intents; escalation and automatic-draft blocking
+  migration_test: reversible SQLite escalation migration and tenant binding guard
+  schemas: support-message and extended support-thread contracts validate risk/escalation fields
+  secrets: escalation facts store category and reason only, not message body or credentials
+  postgresql_runtime: not verified against a live PostgreSQL database
+limitations:
+  - Human handling UI and real inbox callbacks remain outside the account-free phase.

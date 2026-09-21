@@ -1,0 +1,18 @@
+task_id: GEO_REGION-CORE-001
+status: done
+trace_id: 2b3c4d5e-6f70-4a81-92b3-georegion001
+actor: team/geo_region
+registry_ref: docs/task-registry.yaml
+verification:
+  tests:
+    - py -3.12 -m pytest tests/unit/geo_region -q
+  result: 2 passed
+  checks:
+    - py -3.12 scripts/check_task_card_precision.py --task GEO_REGION-CORE-001 --strict
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_migrations.py
+  validation: timezone, locale, currency, validity and tenant scope enforced
+  current_pointer: optimistic version conflict enforced
+side_effects:
+  real_credentials: false
+  external_publication: false

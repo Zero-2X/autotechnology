@@ -1,0 +1,68 @@
+task_id: GEO_REGION-001
+status: done
+trace_id: 55618e3a-a0dc-44ec-a001-000000000055
+actor: team/geo_region
+predecessors: [GEO_REGION-CORE-001, PROD-002, PROD-003]
+external_dependencies: []
+artifacts:
+  implementation:
+    - modules/geo_region/__init__.py
+    - modules/geo_region/service.py
+    - modules/geo_region/README.md
+  contracts:
+    - packages/contracts/jsonschema/region-profile.schema.json
+    - packages/contracts/jsonschema/region-profile-version.schema.json
+    - packages/contracts/jsonschema/geo_region.schema.json
+    - packages/contracts/events/region-profile-created.schema.json
+    - packages/contracts/events/region-profile_version-created.schema.json
+    - packages/contracts/events/region-profile_version-activated.schema.json
+    - packages/contracts/events/region-profile_version-retired.schema.json
+  migration:
+    - packages/db/migrations/versions/20260920_geo_region_001.py
+  tests:
+    - tests/unit/geo_region/test_service.py
+    - tests/unit/geo_region/test_region_service.py
+    - tests/integration/test_geo_region_001.py
+    - tests/contract/test_geo_region_001_contract.py
+  task_spec:
+    - docs/tasks/GEO_REGION-001.md
+verification:
+  focused_command: python -m pytest tests/unit/geo_region tests/integration/test_geo_region_001.py tests/contract/test_geo_region_001_contract.py -q
+  focused_result: 24 passed
+  module_regression_command: python -m pytest tests/unit/geo_region tests/unit/production tests/integration/test_geo_region_001.py tests/integration/test_variant_store.py tests/contract/test_geo_region_001_contract.py -q
+  module_regression_result: 42 passed
+  task_precision: scoped=1 precise=1 gaps=0
+  task_card_refs: checked=157 errors=0
+  schema_check: schema_errors=0
+  architecture_check: architecture_errors=0
+  migration_graph_check: revision_count=103; head=20260920_geo_region_001; errors=0
+  migration_upgrade_and_downgrade: passed on disposable SQLite database
+  full_command: python -m pytest -q
+  full_result: 861 passed, 2 warnings
+  inventory_check: inventory valid
+  plan_consistency: validated=157; errors=0; planned warnings only
+  secrets_check: secret_findings=0
+  ci_configuration_check: ci_configuration_errors=0
+  lockfile_check: lockfile_errors=0
+  event_compatibility_check: events=167 baseline_events=162 errors=0 warnings=5
+  foundation_smoke: smoke_ok architecture api_liveness tenant_isolation
+  openapi_contract_check: paths=31 operations=32 exit=0
+  openapi_compatibility_check: operations=32 baseline_operations=32 errors=0 warnings=0
+behavior:
+  tenant_scoped_profiles_and_versions: true
+  deterministic_region_and_version_ids: true
+  bcp47_locale_and_iana_timezone_validation: true
+  currency_units_and_rule_validation: true
+  snapshot_hash_excludes_runtime_metadata: true
+  draft_active_retired_lifecycle: true
+  optimistic_pointer_and_if_match_guards: true
+  replacement_retires_previous_active_version: true
+  idempotent_replay_across_actor_trace_and_clock: true
+  nested_predecessor_and_policy_tenant_guards: true
+  compatibility_projection_for_prod_004: true
+  append_only_database_guards_and_tenant_foreign_keys: true
+  site_page_region_reference_guard: true
+  raw_secrets_or_network_calls: false
+rollback:
+  - Stop new region profile, draft, activation and retirement commands and export profiles, versions, events and audit rows before downgrade.
+  - Downgrade to 20260920_geo_content_003; remove the SitePageVersion region reference guard and region tables while retaining GEO_CONTENT facts.

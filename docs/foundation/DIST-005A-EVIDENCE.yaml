@@ -1,0 +1,36 @@
+task_id: DIST-005A
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000030
+actor: team/distribution
+predecessors: [POLICY-001, DIST-002, DIST-004]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/distribution/matrix.py
+    - modules/distribution/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/publisher-capability.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_dist_005a.py
+  tests:
+    - tests/unit/distribution/test_matrix.py
+verification:
+  targeted_command: python -m pytest tests/unit/distribution tests/contract/test_found_007d_core_schemas.py tests/contract/test_found_010_platform_contracts.py -q
+  targeted_result: 44 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  immutable_capability_matrix_versions: true
+  canonical_payload_boundary_and_adapter_mapping: true
+  unsupported_action_and_platform_field_leak_blocked: true
+  tenant_scope_idempotent_event_audit: true
+  business_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable capability matrix registration and mapping commands while retaining immutable snapshots and audit events.
+  - This revision creates no business table; durable matrix projections use a forward migration.

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/provenance.schema.json",
+  "title": "provenance contract union",
+  "oneOf": [
+    {
+      "$ref": "./source.schema.json"
+    },
+    {
+      "$ref": "./source-snapshot.schema.json"
+    },
+    {
+      "$ref": "./rights-record.schema.json"
+    },
+    {
+      "$ref": "./rights-record-version.schema.json"
+    }
+  ],
+  "x-module": "provenance"
+}

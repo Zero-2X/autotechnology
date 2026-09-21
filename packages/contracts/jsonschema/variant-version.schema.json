@@ -1,0 +1,202 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/variant-version.schema.json",
+  "title": "VariantVersion",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "content_variant_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "canonical_content_version_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "version_no": {
+      "type": "integer"
+    },
+    "locale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "market": {
+      "type": "string",
+      "minLength": 1
+    },
+    "audience": {
+      "type": "string",
+      "minLength": 1
+    },
+    "tone": {
+      "type": "string",
+      "minLength": 1
+    },
+    "region_profile_version_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "source_variant_version_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "body": {
+      "type": "object",
+      "properties": {
+        "blocks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "block_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "localized_text": {
+                "type": "string",
+                "minLength": 1
+              },
+              "term_refs": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "disclosure": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "block_id",
+              "localized_text",
+              "term_refs",
+              "disclosure"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "blocks"
+      ],
+      "additionalProperties": false
+    },
+    "term_memory_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "disclosure": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "policy_snapshot_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "draft",
+        "localized",
+        "qa_pending",
+        "approved",
+        "withdrawn"
+      ]
+    },
+    "snapshot_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "created_by": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "content_variant_id",
+    "canonical_content_version_id",
+    "version_no",
+    "locale",
+    "market",
+    "audience",
+    "tone",
+    "region_profile_version_id",
+    "source_variant_version_id",
+    "body",
+    "term_memory_version",
+    "disclosure",
+    "policy_snapshot_id",
+    "status",
+    "snapshot_hash",
+    "created_by",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "approved"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "policy_snapshot_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    }
+  ]
+}

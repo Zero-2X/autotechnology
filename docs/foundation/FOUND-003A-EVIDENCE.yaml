@@ -1,0 +1,48 @@
+task_id: FOUND-003A
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000003
+actor: team/foundation
+predecessors: [GOV-006, FOUND-000, FOUND-002]
+artifacts:
+  implementation: infra/foundation/database.py
+  baseline: docs/foundation/postgresql-foundation-baseline-v1.yaml
+  schema: packages/contracts/jsonschema/database-config.schema.json
+  foundation_union: packages/contracts/jsonschema/foundation.schema.json
+  openapi: packages/contracts/openapi/openapi.yaml
+  migration: packages/db/migrations/versions/20260916_found_003a_database_baseline.sql
+  dev_template: deploy/environments/dev/database.env.example
+  staging_template: deploy/environments/staging/database.env.example
+  compose_template: infra/compose/postgresql.dev.yaml
+  integration_fixture: tests/integration/conftest.py
+  integration_test: tests/integration/test_found_003a_connection_fixture.py
+runtime_evidence:
+  missing_database_url: status=not_configured, probe=skipped
+  configured_without_driver: status=configured, probe=not_attempted
+  invalid_configuration: deterministic rejection without password disclosure
+  synthetic_connection_fixture: in-memory SQLite DB-API SELECT 1 returns (1,), no network access
+  redaction: password omitted from health contract and config hash input
+verification:
+  task_test_command: python -m pytest tests/contract/test_found_003a_database.py -q
+  task_test_result: 7 passed
+  integration_test_command: python -m pytest tests/integration/test_found_003a_connection_fixture.py -q
+  integration_test_result: 1 passed
+  full_test_command: python -m pytest tests --maxfail=1 -q
+  full_test_result: 44 passed
+  checks:
+    - python scripts/repo_inventory.py --check
+    - python scripts/check_task_card_precision.py --task FOUND-003A --strict
+    - python scripts/check_plan_consistency.py --strict-contracts
+    - python scripts/check_task_card_registry_refs.py
+    - python scripts/check_openapi_contract.py
+side_effects:
+  real_credentials: false
+  database_connection: false
+  network_probe: false
+  queue_connection: false
+  real_platform_api: false
+  external_publication: false
+  domain_business_logic_added: false
+rollback:
+  - Keep the non-secret baseline and evidence for audit; use a reviewed reverse change for new files.
+  - Do not delete FOUND-002 entries or rewrite accepted migrations.
+  - Keep readiness configured/not_attempted until a later task owns a PostgreSQL driver and pool.

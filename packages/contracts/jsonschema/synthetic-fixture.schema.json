@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/synthetic-fixture.schema.json",
+  "title": "Deterministic account-free test fixture snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "fixture_id",
+    "fixture_version",
+    "seed_hash",
+    "context",
+    "idempotency_key",
+    "clock",
+    "storage_objects",
+    "audit_events",
+    "network_access",
+    "model_calls",
+    "platform_calls"
+  ],
+  "properties": {
+    "fixture_id": { "type": "string", "format": "uuid" },
+    "fixture_version": { "const": 1 },
+    "seed_hash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["trace_id", "request_id", "org_id", "actor_id"],
+      "properties": {
+        "trace_id": { "type": "string", "pattern": "^[a-f0-9]{32}$" },
+        "request_id": { "type": "string", "format": "uuid" },
+        "org_id": { "type": "string", "format": "uuid" },
+        "actor_id": { "type": "string", "format": "uuid" }
+      }
+    },
+    "idempotency_key": { "type": "string", "pattern": "^fixture-[a-f0-9]{64}$" },
+    "clock": { "type": "string", "format": "date-time" },
+    "storage_objects": {
+      "type": "array",
+      "items": { "$ref": "./storage-object.schema.json" }
+    },
+    "audit_events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "event_id",
+          "sequence",
+          "event_type",
+          "fixture_id",
+          "org_id",
+          "actor_id",
+          "trace_id",
+          "occurred_at",
+          "subject_ref",
+          "content_hash",
+          "metadata"
+        ],
+        "properties": {
+          "event_id": { "type": "string", "format": "uuid" },
+          "sequence": { "type": "integer", "minimum": 1 },
+          "event_type": { "enum": ["fixture.storage.put", "fixture.storage.deleted"] },
+          "fixture_id": { "type": "string", "format": "uuid" },
+          "org_id": { "type": "string", "format": "uuid" },
+          "actor_id": { "type": "string", "format": "uuid" },
+          "trace_id": { "type": "string", "pattern": "^[a-f0-9]{32}$" },
+          "occurred_at": { "type": "string", "format": "date-time" },
+          "subject_ref": { "type": "string", "pattern": "^private://" },
+          "content_hash": {
+            "oneOf": [
+              { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+              { "type": "null" }
+            ]
+          },
+          "metadata": { "type": "object", "additionalProperties": { "type": "string" } }
+        }
+      }
+    },
+    "network_access": { "const": false },
+    "model_calls": { "const": false },
+    "platform_calls": { "const": false }
+  },
+  "x-module": "foundation",
+  "x-task-id": "FOUND-009"
+}

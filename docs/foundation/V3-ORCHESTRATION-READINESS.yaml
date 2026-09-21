@@ -1,0 +1,52 @@
+scope: langgraph-v3-account-free-overlay
+status: account_free_complete
+source_registry: docs/task-registry-langgraph-v3.yaml
+implemented_task_groups:
+  governance: [GRAPH-GOV-001, GRAPH-GOV-002, GRAPH-GOV-003, GRAPH-GOV-004, GRAPH-GOV-005]
+  runtime: [GRAPH-CORE-001, GRAPH-CORE-002, GRAPH-CORE-004, GRAPH-CORE-005, GRAPH-CORE-006, GRAPH-OBS-001, GRAPH-OBS-002]
+  state: [GRAPH-STATE-001, GRAPH-STATE-002, GRAPH-STATE-003, GRAPH-STATE-004, GRAPH-STATE-005]
+  langchain_ports: [LC-MODEL-001, LC-MODEL-002, LC-PROMPT-001, LC-PARSER-001, LC-RETRIEVER-001, LC-TOOL-001]
+  content_graph: [GRAPH-NODE-001, GRAPH-NODE-002, GRAPH-NODE-003, GRAPH-NODE-004, GRAPH-ROUTER-001, GRAPH-HUMAN-001, GRAPH-REPLAY-001]
+  support: [GRAPH-EVAL-001, GRAPH-EVAL-002, GRAPH-FEEDBACK-001, GRAPH-CORE-003]
+artifacts:
+  runtime: orchestration/runtime.py
+  registry: orchestration/registry.py
+  state: orchestration/state.py
+  checkpointer: orchestration/checkpoint.py
+  content_graph: orchestration/content.py
+  task_bridge: orchestration/task_bridge.py
+  real_langgraph_adapter: orchestration/langgraph_adapter.py
+  feedback_graph: orchestration/feedback.py
+  replay_guard: orchestration/replay.py
+  model_ports: integrations/langchain/model.py
+  prompt_ports: integrations/langchain/prompt.py
+  parser: integrations/langchain/parser.py
+  retriever: integrations/langchain/retriever.py
+  tools: integrations/langchain/tool.py
+  contracts:
+    - packages/contracts/jsonschema/graph-state.schema.json
+    - packages/contracts/jsonschema/graph-definition.schema.json
+    - packages/contracts/jsonschema/graph-attempt.schema.json
+    - packages/contracts/jsonschema/node-execution.schema.json
+    - packages/contracts/jsonschema/human-interrupt.schema.json
+    - packages/contracts/jsonschema/model-call.schema.json
+    - packages/contracts/jsonschema/prompt-template.schema.json
+    - packages/contracts/jsonschema/retrieval-result.schema.json
+    - packages/contracts/jsonschema/tool-definition.schema.json
+tests:
+  command: python -m pytest tests/unit/orchestration tests/unit/langchain tests/contract/test_v3_task_precision.py tests/contract/test_v3_completion_evidence.py -q
+  result: 24 passed
+  full_regression: 1121 passed, 1 warning
+security_invariants:
+  graph_state_has_no_credentials_or_full_content: true
+  node_calls_only_injected_ports: true
+  checkpoint_is_not_business_fact: true
+  replay_does_not_repeat_provider_side_effect: true
+  fake_model_and_adapter_only_in_ci: true
+external_gate:
+  status: blocked_until_external_evidence
+  blocked_tasks: [GRAPH-DIST-001, GRAPH-DIST-002, GRAPH-DIST-003, GRAPH-DIST-004]
+  dependency: EXT-ACCOUNT-001
+  required_evidence: [authorization_record, scope_snapshot, connection_health_check, external_id_and_requery_result]
+remaining_account_free_work:
+  - run persistent PostgreSQL checkpointer against the deployment-managed service

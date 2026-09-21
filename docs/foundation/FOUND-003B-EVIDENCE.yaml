@@ -1,0 +1,70 @@
+task_id: FOUND-003B
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000004
+actor: team/foundation
+predecessors: [GOV-006, FOUND-000, FOUND-002, FOUND-003A]
+external_dependencies:
+  EXT-STORAGE-001:
+    status: missing
+    substitute: FakeStorage in dev/test
+artifacts:
+  implementation: infra/foundation/storage.py
+  baseline: docs/foundation/s3-storage-baseline-v1.yaml
+  schema: packages/contracts/jsonschema/storage-config.schema.json
+  object_schema: packages/contracts/jsonschema/storage-object.schema.json
+  foundation_union: packages/contracts/jsonschema/foundation.schema.json
+  migration: packages/db/migrations/versions/20260916_found_003b_storage_baseline.sql
+  dev_template: deploy/environments/dev/storage.env.example
+  staging_template: deploy/environments/staging/storage.env.example
+  compose_template: infra/compose/storage.dev.yaml
+runtime_evidence:
+  missing_storage_config: status=not_configured, probe=skipped
+  configured_without_sdk: status=configured, probe=not_attempted
+  fake_round_trip: private_ref_and_sha256_verified
+  tenant_isolation: cross_tenant_read_and_delete_rejected
+  idempotency: same_tenant_same_payload_replayed_without_duplicate
+  immutability: same_object_key_different_payload_rejected
+  deletion: object_unreadable_after_delete
+  metadata_contract: hash_size_content_type_and_private_policy_columns_verified
+  public_url: none_generated
+verification:
+  task_test_command: python -m pytest tests/contract/test_found_003b_storage.py -q
+  task_test_result: 9 passed
+  integration_test_command: python -m pytest tests/integration/test_found_003b_fake_storage.py -q
+  integration_test_result: 1 passed
+  combined_test_command: python -m pytest tests/contract/test_found_003a_database.py tests/contract/test_found_003b_storage.py tests/integration --maxfail=1 -q
+  combined_test_result: 18 passed
+  full_test_command: python -m pytest tests --maxfail=1 -q
+  full_test_result: 54 passed
+  checks:
+    - python scripts/repo_inventory.py --check
+    - python scripts/check_task_card_precision.py --task FOUND-003B --strict
+    - python scripts/check_plan_consistency.py --strict-contracts
+    - python scripts/check_task_card_registry_refs.py
+    - python scripts/check_openapi_contract.py
+audit_revalidation:
+  date: '2026-09-16'
+  command: python -m pytest tests --maxfail=1 -q
+  result: 109 passed
+  reason: overall foundation architecture and implementation audit after storage idempotency cleanup
+side_effects:
+  real_credentials: false
+  real_s3_connection: false
+  network_probe: false
+  public_object_url: false
+  real_platform_api: false
+  external_publication: false
+  domain_business_logic_added: false
+rollback:
+  - Keep the non-secret baseline and evidence for audit; use a reviewed reverse change for new files.
+  - Do not delete FOUND-003A entries or rewrite accepted migrations.
+  - Keep FakeStorage as the dev/test substitute until EXT-STORAGE-001 is satisfied.
+continuation_2026_09_18:
+  scope: storage key Unicode, control character, namespace and UTF-8 length policy
+  policy: docs/foundation/storage-key-policy-v1.md
+  contract: packages/contracts/jsonschema/storage-object.schema.json
+  tests: tests/contract/test_found_003b_key_policy.py
+  targeted_result: 84 passed
+  full_gate_result: 399 passed
+  compatibility: valid existing ASCII/synthetic references unchanged; invalid legacy keys require explicit migration mapping
+  side_effects: no network, provider SDK, real storage or object migration

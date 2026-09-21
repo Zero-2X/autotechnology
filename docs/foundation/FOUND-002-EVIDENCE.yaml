@@ -1,0 +1,43 @@
+task_id: FOUND-002
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000002
+actor: team/foundation
+predecessors: [GOV-006, FOUND-000, FOUND-001]
+artifacts:
+  api: apps/api/main.py
+  worker: apps/worker/main.py
+  scheduler: apps/scheduler/main.py
+  web_console: apps/web-console/package.json
+  knowledge_site: apps/knowledge-site/package.json
+  baseline: docs/foundation/runtime-entry-baseline-v1.yaml
+  schema: packages/contracts/jsonschema/runtime-entry.schema.json
+  migration: packages/db/migrations/versions/20260916_found_002_runtime_entry_baseline.sql
+runtime_evidence:
+  api_liveness: HTTP 200 with service=api and runtime=modular-monolith
+  api_readiness_without_database: status=not_configured and business_routes_registered=false
+  worker_dry_run: status=ok, leased_jobs=0, no_jobs
+  scheduler_dry_run: status=ok, created_jobs=0, no_due_jobs
+  non_dry_run: rejected until persistence tasks are implemented
+  frontend_builds: each emitted index.html and manifest.json to a pytest temporary directory
+verification:
+  task_test_command: python -m pytest tests/contract/test_found_002_runtime_entries.py -q
+  task_test_result: 8 passed
+  full_test_command: python -m pytest tests --maxfail=1 -q
+  full_test_result: 36 passed
+  checks:
+    - python scripts/repo_inventory.py --check
+    - python scripts/check_task_card_precision.py --task FOUND-002 --strict
+    - python scripts/check_plan_consistency.py --strict-contracts
+    - python scripts/check_task_card_registry_refs.py
+    - python scripts/check_openapi_contract.py
+side_effects:
+  real_credentials: false
+  database_connection: false
+  queue_connection: false
+  real_platform_api: false
+  external_publication: false
+  domain_business_logic_added: false
+rollback:
+  - Keep baseline and evidence for audit; use a reviewed reverse change for entry files.
+  - Do not delete FOUND-001 directories or rewrite accepted migrations and contracts.
+  - Keep readiness not_configured and dry-run enforcement until owning persistence tasks pass.

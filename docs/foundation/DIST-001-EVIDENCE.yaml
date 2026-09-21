@@ -1,0 +1,43 @@
+task_id: DIST-001
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000025
+actor: team/distribution
+predecessors: [FOUND-010, ACCOUNT-CORE-001, POLICY-001]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/distribution/service.py
+    - modules/distribution/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/distribution-target.schema.json
+    - packages/contracts/jsonschema/distribution-target-version.schema.json
+    - packages/contracts/jsonschema/publication-intent.schema.json
+    - packages/contracts/jsonschema/export-package.schema.json
+    - packages/contracts/jsonschema/delivery-attempt.schema.json
+    - packages/contracts/jsonschema/publication-record.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_dist_001.py
+  tests:
+    - tests/unit/distribution/test_service.py
+verification:
+  targeted_command: python -m pytest tests/unit/distribution tests/contract/test_found_010_platform_contracts.py tests/contract/test_found_007d_core_schemas.py -q
+  targeted_result: 39 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  immutable_target_version_and_snapshot_hash: true
+  manual_export_private_package: true
+  simulation_fake_publisher_and_event: true
+  policy_and_approval_block_before_side_effect: true
+  authorized_api_without_connection_blocked: true
+  idempotent_replay_and_tenant_scope: true
+  business_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable DIST-001 execution commands while retaining immutable projection and audit records.
+  - This revision creates no business table; durable distribution projections use a forward migration.

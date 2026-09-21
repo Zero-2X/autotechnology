@@ -1,0 +1,20 @@
+baseline_key: repository-branch-protection
+baseline_version: 1
+repository_state: not_a_git_worktree
+enforcement_status: documented_not_enforced
+provider: generic_git_host
+default_branch: main
+pull_request:
+  required_approvals: 1
+  require_code_owner_reviews: true
+  require_conversation_resolution: true
+  required_status_checks:
+    - repo-inventory
+    - task-registry-consistency
+    - contract-and-migration-checks
+    - tests
+branch_rules:
+  allow_force_pushes: false
+  allow_deletions: false
+  require_linear_history: false
+application_rule: Apply this baseline when a Git remote is provisioned; do not claim enforcement while the repository is not a Git worktree.

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/structured-log.schema.json",
+  "title": "structured-log",
+  "type": "object",
+  "properties": {
+    "event": { "type": "string", "minLength": 1 },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "level": { "type": "string", "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] },
+    "service": { "type": "string", "minLength": 1 },
+    "trace_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "request_id": { "type": "string", "minLength": 1, "maxLength": 256 },
+    "org_id": {
+      "anyOf": [
+        { "type": "string", "minLength": 1, "maxLength": 256 },
+        { "type": "null" }
+      ]
+    },
+    "actor_id": {
+      "anyOf": [
+        { "type": "string", "minLength": 1, "maxLength": 256 },
+        { "type": "null" }
+      ]
+    },
+    "method": { "type": ["string", "null"] },
+    "path": { "type": ["string", "null"] },
+    "status_code": { "type": ["integer", "null"], "minimum": 100, "maximum": 599 },
+    "duration_ms": { "type": ["integer", "null"], "minimum": 0 },
+    "error_type": { "type": ["string", "null"] }
+  },
+  "required": ["event", "timestamp", "level", "service", "trace_id", "request_id", "org_id", "actor_id"],
+  "additionalProperties": true,
+  "x-module": "foundation",
+  "x-allow-extra": true,
+  "x-source": "FOUND-005"
+}

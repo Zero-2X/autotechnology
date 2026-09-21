@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/task-job.schema.json",
+  "title": "TaskJob",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "job_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "queue_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "aggregate_type": {
+      "type": "string",
+      "minLength": 1
+    },
+    "aggregate_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "aggregate_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "payload_ref": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^private://"
+    },
+    "payload_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "leased",
+        "running",
+        "succeeded",
+        "failed",
+        "retry_scheduled",
+        "dead_letter",
+        "cancelled"
+      ]
+    },
+    "attempt_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "max_attempts": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "available_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "lease_until": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "locked_by": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "last_error": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "replayed_from_job_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "replayed_from_attempt_count": {
+      "anyOf": [
+        {
+          "type": "integer"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "replay_reason": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "trace_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "job_type",
+    "queue_name",
+    "aggregate_type",
+    "aggregate_id",
+    "aggregate_version",
+    "payload_ref",
+    "payload_hash",
+    "status",
+    "attempt_count",
+    "max_attempts",
+    "available_at",
+    "lease_until",
+    "locked_by",
+    "last_error",
+    "replayed_from_job_id",
+    "replayed_from_attempt_count",
+    "replay_reason",
+    "idempotency_key",
+    "trace_id",
+    "created_at",
+    "updated_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

@@ -1,0 +1,197 @@
+baseline_key: openapi-compatibility
+baseline_version: 1
+openapi_version: '3.1.0'
+source: packages/contracts/openapi/openapi.yaml
+operation_count: 32
+operations:
+  'POST /v1/topic-signals':
+    operation_id: importTopicSignals
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+    responses: ['202', '400', '403']
+  'POST /v1/topic-opportunities/{id}/score':
+    operation_id: scoreTopicOpportunity
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+      - {name: If-Match, in: header, required: true, constraints: {minLength: 1}}
+      - {name: id, in: path, required: true, constraints: {}}
+    responses: ['200', '409']
+  'POST /v1/topic-opportunities/{id}/approve':
+    operation_id: approveTopicOpportunity
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+      - {name: If-Match, in: header, required: true, constraints: {minLength: 1}}
+      - {name: id, in: path, required: true, constraints: {}}
+    responses: ['200', '409']
+  'POST /v1/topic-opportunities/{id}/brief':
+    operation_id: createTopicBrief
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+      - {name: id, in: path, required: true, constraints: {}}
+    responses: ['201', '409']
+  'POST /v1/topic-briefs/{id}/approve':
+    operation_id: approveAndLockTopicBrief
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+      - {name: If-Match, in: header, required: true, constraints: {minLength: 1}}
+      - {name: id, in: path, required: true, constraints: {}}
+    responses: ['200', '409']
+  'POST /v1/sources':
+    operation_id: ingestSource
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+    responses: ['201']
+  'POST /v1/rights-records/{record_id}/versions':
+    operation_id: createRightsRecordVersion
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+      - {name: If-Match, in: header, required: true, constraints: {minLength: 1}}
+      - {name: record_id, in: path, required: true, constraints: {}}
+    responses: ['201']
+  'POST /v1/rights-records/{record_id}/versions/{version_id}/verify':
+    operation_id: verifyRightsRecordVersion
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+      - {name: If-Match, in: header, required: true, constraints: {minLength: 1}}
+      - {name: record_id, in: path, required: true, constraints: {}}
+      - {name: version_id, in: path, required: true, constraints: {}}
+    responses: ['200', '409']
+  'POST /v1/canonical-contents':
+    operation_id: createCanonicalContent
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+    responses: ['201']
+  'POST /v1/canonical-contents/{id}/versions':
+    operation_id: createCanonicalContentVersion
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+      - {name: If-Match, in: header, required: true, constraints: {minLength: 1}}
+      - {name: id, in: path, required: true, constraints: {}}
+    responses: ['201', '409']
+  'GET /v1/canonical-contents/{id}/versions':
+    operation_id: listCanonicalContentVersions
+    parameters:
+      - {name: id, in: path, required: true, constraints: {}}
+    responses: ['200', '409']
+  'POST /v1/variants':
+    operation_id: createVariant
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+    responses: ['201']
+  'POST /v1/content-variants/{variant_id}/versions/{version_id}/qa':
+    operation_id: runVariantQa
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+      - {name: variant_id, in: path, required: true, constraints: {}}
+      - {name: version_id, in: path, required: true, constraints: {}}
+    responses: ['202']
+  'POST /v1/approvals':
+    operation_id: createApproval
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+    responses: ['201']
+  'POST /v1/approvals/{id}/decisions':
+    operation_id: recordApprovalDecision
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+      - {name: If-Match, in: header, required: true, constraints: {minLength: 1}}
+      - {name: id, in: path, required: true, constraints: {}}
+    responses: ['201', '409']
+  'POST /v1/distribution-targets':
+    operation_id: createDistributionTarget
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+    responses: ['201']
+  'POST /v1/publication-intents':
+    operation_id: createPublicationIntent
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+    responses: ['201']
+  'POST /v1/publication-intents/{id}/export':
+    operation_id: exportPublicationIntent
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+      - {name: id, in: path, required: true, constraints: {}}
+    responses: ['202', '409']
+  'POST /v1/publication-intents/{id}/simulate':
+    operation_id: simulatePublicationIntent
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+      - {name: id, in: path, required: true, constraints: {}}
+    responses: ['202', '409']
+  'POST /v1/observations':
+    operation_id: recordObservation
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+    responses: ['201']
+  'GET /v1/human-tasks':
+    operation_id: listHumanTasks
+    responses: ['200']
+  'GET /health/live':
+    operation_id: healthLive
+    responses: ['200']
+  'POST /internal/outbox/dispatch':
+    operation_id: dispatchOutbox
+    parameters:
+      - {name: X-Worker-Id, in: header, required: true, constraints: {minLength: 1}}
+    responses: ['200', '400', '403', '503']
+  'POST /internal/task-jobs:claim':
+    operation_id: claimTaskJob
+    parameters:
+      - {name: X-Worker-Id, in: header, required: true, constraints: {minLength: 1}}
+    responses: ['200', '403', '409', '503']
+  'POST /internal/task-jobs/{job_id}:heartbeat':
+    operation_id: heartbeatTaskJob
+    parameters:
+      - {name: X-Worker-Id, in: header, required: true, constraints: {minLength: 1}}
+      - {name: job_id, in: path, required: true, constraints: {}}
+    responses: ['200', '400', '403', '409', '503']
+  'POST /internal/task-jobs/{job_id}:complete':
+    operation_id: completeTaskJob
+    parameters:
+      - {name: X-Worker-Id, in: header, required: true, constraints: {minLength: 1}}
+      - {name: job_id, in: path, required: true, constraints: {}}
+    responses: ['200', '400', '403', '409', '503']
+  'POST /internal/task-jobs/{job_id}:fail':
+    operation_id: failTaskJob
+    parameters:
+      - {name: X-Worker-Id, in: header, required: true, constraints: {minLength: 1}}
+      - {name: job_id, in: path, required: true, constraints: {}}
+    responses: ['200', '400', '403', '409', '503']
+  'POST /internal/task-jobs/{job_id}:retry':
+    operation_id: retryTaskJob
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+      - {name: X-Worker-Id, in: header, required: true, constraints: {minLength: 1}}
+      - {name: job_id, in: path, required: true, constraints: {}}
+    responses: ['200', '400', '403', '409', '503']
+  'POST /internal/task-jobs/{job_id}:requeue-dead':
+    operation_id: requeueDeadTaskJob
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+      - {name: X-Worker-Id, in: header, required: true, constraints: {minLength: 1}}
+      - {name: job_id, in: path, required: true, constraints: {}}
+    responses: ['200', '400', '403', '409', '503']
+  'POST /internal/task-jobs/{job_id}:replay':
+    operation_id: replayTaskJob
+    parameters:
+      - {name: Idempotency-Key, in: header, required: true, constraints: {minLength: 8, maxLength: 200}}
+      - {name: X-Worker-Id, in: header, required: true, constraints: {minLength: 1}}
+      - {name: job_id, in: path, required: true, constraints: {}}
+    responses: ['200', '400', '403', '409', '503']
+  'GET /health/ready':
+    operation_id: healthReady
+    responses: ['200']
+  'GET /metrics':
+    operation_id: prometheusMetrics
+    responses: ['200']
+compatibility:
+  allow_new_operations: true
+  allow_new_optional_fields: true
+  allow_new_response_codes: true
+  reject_removed_operations: true
+  reject_removed_responses: true
+  reject_required_parameter_addition: true
+  reject_constraint_narrowing: true
+effective_at: '2026-09-16T00:00:00+08:00'
+locked_by: team/foundation

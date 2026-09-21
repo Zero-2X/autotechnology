@@ -1,0 +1,33 @@
+task_id: GOV-007
+status: done
+trace_id: 4ce70194-71d5-4cf0-9379-6ea472e41007
+actor: team/governance
+policy_snapshot: baseline-synthetic-data/v1
+scope: first_party_synthetic
+verification:
+  tests:
+    - py -3.12 -m pytest tests/contract/test_gov_007_data_processing.py tests/contract/test_found_004a_migrations.py -q
+  result: 14 passed
+  checks:
+    - py -3.12 scripts/check_task_card_precision.py --task GOV-007 --strict
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_plan_consistency.py --strict-contracts
+    - py -3.12 scripts/check_migrations.py
+  migration: SQLite disposable database upgraded to head, duplicate key/version rejected, GOV-007 downgraded
+  known_limit: PostgreSQL-specific concurrency remains an independent pre-production audit item
+decisions:
+  retention_days_are_project_defaults: true
+  shorter_applicable_limit_wins: true
+  deletion_requires_all_targets_verified_or_documented_exception: true
+  cross_border_default: deny
+  synthetic_public_reviewed_route_only: true
+  personal_or_important_data_transfer: new_policy_and_manual_legal_review_required
+sources:
+  - https://www.npc.gov.cn/npc/c2/c30834/202108/t20210820_313088.html
+  - https://www.cac.gov.cn/2024-03/22/c_1712776611775634.htm
+  - https://eur-lex.europa.eu/eli/reg/2016/679/oj/eng/
+side_effects:
+  real_platform_api: false
+  real_credentials: false
+  external_transfer: false
+  actual_data_deletion: false

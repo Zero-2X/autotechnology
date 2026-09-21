@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/events/asset-render_shot_rerendered.schema.json",
+  "title": "asset.render_shot_rerendered",
+  "allOf": [
+    {"$ref": "./event-envelope.schema.json"},
+    {"type": "object", "properties": {"event_type": {"const": "asset.render_shot_rerendered"}, "event_schema_version": {"const": 1}, "payload": {"type": "object", "required": ["aggregate_id", "aggregate_version", "stage", "shot_sequence", "artifact_id"], "properties": {"aggregate_id": {"type": "string", "format": "uuid"}, "aggregate_version": {"type": "integer", "minimum": 1}, "stage": {"type": "string", "minLength": 1}, "shot_sequence": {"type": "integer", "minimum": 1}, "artifact_id": {"type": "string", "format": "uuid"}}, "additionalProperties": true}}}
+  ],
+  "x-event-kind": "transition",
+  "x-replay-policy": "idempotent_projection_replay"
+}

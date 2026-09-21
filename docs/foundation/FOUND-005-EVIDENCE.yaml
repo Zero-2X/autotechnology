@@ -1,0 +1,70 @@
+task_id: FOUND-005
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000005
+actor: team/foundation
+predecessors: [GOV-006, FOUND-000, FOUND-001, FOUND-004E]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - infra/foundation/observability.py
+    - infra/foundation/__init__.py
+    - apps/api/main.py
+  contracts:
+    - packages/contracts/jsonschema/foundation.schema.json
+    - packages/contracts/jsonschema/api-error.schema.json
+    - packages/contracts/jsonschema/correlation-context.schema.json
+    - packages/contracts/jsonschema/structured-log.schema.json
+    - packages/contracts/openapi/openapi.yaml
+  migration:
+    - packages/db/migrations/versions/20260916_found_004f_api_observability.py
+  tests:
+    - tests/contract/test_found_005_observability.py
+    - tests/integration/test_found_005_observability_integration.py
+  manifests:
+    - docs/contracts/contract-manifest.yaml
+    - docs/contracts/migration-manifest.yaml
+    - docs/repo-inventory.md
+runtime_evidence:
+  generated_ids: missing_trace_or_request_headers_receive_uuid_values
+  explicit_ids: x_trace_x_request_x_org_x_actor_are_preserved
+  response_headers: correlation_headers_echo_context
+  response_body: json_responses_include_trace_request_org_actor_fields
+  tenant_context: request_scoped_contextvar_reset_in_finally
+  api_errors: http_validation_and_unknown_exceptions_use_stable_contract
+  unknown_error: INTERNAL_ERROR_without_raw_exception_text
+  structured_logging: utc_json_record_with_allowlisted_correlation_fields
+  secret_guard: authorization_token_password_secret_values_redacted
+  side_effect_boundary: no_database_cache_storage_or_provider_calls
+verification:
+  targeted_test_command: python -m pytest tests/contract/test_found_005_observability.py tests/integration/test_found_005_observability_integration.py -q
+  targeted_test_result: 6 passed
+  full_test_command: python -m pytest tests --maxfail=1 -q
+  full_test_result: 102 passed, 8 warnings
+  migration_check_command: python scripts/check_migrations.py --strict --json
+  migration_check_result: revisions=6 heads=[20260916_found_004f] errors=[]
+  inventory_check_command: python scripts/repo_inventory.py --check
+  inventory_check_result: valid
+  task_precision_command: python scripts/check_task_card_precision.py --task FOUND-005 --strict
+  task_precision_result: scoped=1 precise=1 gaps=0
+  registry_refs_command: python scripts/check_task_card_registry_refs.py
+  registry_refs_result: checked=157 errors=0
+  plan_consistency_command: python scripts/check_plan_consistency.py --strict-contracts --strict-commands
+  plan_consistency_result: no errors; planned migration warnings retained
+  openapi_check_command: python scripts/check_openapi_contract.py
+  openapi_check_result: paths=30 operations=30; existing catalog-difference warnings only
+audit_revalidation:
+  date: '2026-09-16'
+  command: python -m pytest tests --maxfail=1 -q
+  result: 109 passed
+  reason: overall foundation architecture and implementation audit after streaming-response and contract corrections
+side_effects:
+  real_credentials: false
+  real_postgresql_connection: false
+  real_redis_connection: false
+  network_probe: false
+  real_platform_api: false
+  external_publication: false
+  existing_business_tables_changed: false
+rollback:
+  - Remove middleware/handler installation to restore prior route behavior; no business facts are deleted.
+  - Run python -m alembic downgrade 20260916_found_004e against a disposable or reviewed target; the 004f checkpoint is a no-op.

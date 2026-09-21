@@ -1,0 +1,54 @@
+task_id: FOUND-009
+status: done
+date: '2026-09-18'
+trace_id: trace-found-009-acceptance
+actor: team/foundation
+predecessors: [GOV-006, FOUND-000, FOUND-003A, FOUND-003B, FOUND-005, FOUND-008]
+artifacts:
+  implementation:
+    - infra/foundation/testkit.py
+    - packages/testkit/__init__.py
+    - packages/testkit/README.md
+  contracts:
+    - packages/contracts/jsonschema/synthetic-fixture.schema.json
+    - packages/contracts/jsonschema/storage-object.schema.json
+    - packages/contracts/jsonschema/foundation.schema.json
+  migration: packages/db/migrations/versions/20260918_found_009_testkit.py
+  tests:
+    - tests/unit/test_found_009_testkit.py
+    - tests/integration/test_found_009_fixture_storage.py
+    - tests/contract/test_found_009_testkit_contract.py
+  manifests:
+    - docs/contracts/contract-manifest.yaml
+    - docs/contracts/migration-manifest.yaml
+behavior:
+  deterministic_identity: SHA-256 seed digest plus UUIDv5 derived IDs
+  raw_seed_persisted: false
+  fake_clock: UTC only; virtual advance/sleep; backward movement rejected
+  storage: isolated private FakeStorage per fixture
+  idempotency: same key and payload returns existing object; conflicting payload rejected
+  tenant_scope: cross-org object access rejected
+  audit: append-only references and hashes; payload bytes excluded
+  reproducibility: same seed, start time, and operations produce the same snapshot
+  external_side_effects: false
+verification:
+  targeted_command: >-
+    python -m pytest tests/unit/test_found_009_testkit.py
+    tests/integration/test_found_009_fixture_storage.py
+    tests/contract/test_found_009_testkit_contract.py -q
+  targeted_result: 18 passed
+  migration_regression: 27 passed
+  task_precision: scoped=1 precise=1 gaps=0
+  schema_gate: schema_errors=0
+  registry_refs: checked=157 errors=0
+  migration_graph: revision_count=14 heads=[20260918_found_009] errors=[]
+  full_gate: python scripts/check_foundation_contracts.py; 437 passed
+boundaries:
+  real_credentials: false
+  network_calls: false
+  model_calls: false
+  platform_calls: false
+  database_tables_added: false
+rollback:
+  - Stop imports from packages.testkit and remove the FOUND-009 code, schema, tests, and evidence.
+  - Downgrade to 20260918_found_008; the FOUND-009 revision is a reversible no-op.

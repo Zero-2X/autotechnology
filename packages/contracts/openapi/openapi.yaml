@@ -1,0 +1,808 @@
+openapi: 3.1.0
+info:
+  title: AI Cross-border Content Workflow API
+  version: 0.1.0
+  description: >-
+    Contract baseline for the account-free architecture MVP.  Endpoints create
+    domain commands; they do not expose database CRUD.  Real platform publish
+    endpoints are intentionally absent until the account pilot gate.
+servers:
+  - url: http://localhost:8000
+    description: local
+tags:
+  - name: topic
+  - name: provenance
+  - name: knowledge
+  - name: production
+  - name: qa
+  - name: approval
+  - name: distribution
+  - name: analytics
+  - name: workflow
+  - name: internal
+  - name: health
+  - name: metrics
+security:
+  - bearerAuth: []
+paths:
+  /v1/topic-signals:
+    post:
+      tags: [topic]
+      operationId: importTopicSignals
+      x-task-ids: [TOPIC-002]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              maxItems: 1000
+              items:
+                $ref: '../jsonschema/topic-signal-import-row.schema.json'
+          text/csv:
+            schema:
+              type: string
+              description: UTF-8 CSV with a header row; at most 1,000 data rows.
+      responses:
+        '202':
+          description: Batch accepted; each row has an individual result.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandAccepted'
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+  /v1/topic-opportunities/{id}/score:
+    post:
+      tags: [topic]
+      operationId: scoreTopicOpportunity
+      x-task-ids: [TOPIC-003]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      responses:
+        '200': { $ref: '#/components/responses/CommandResult' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /v1/topic-opportunities/{id}/approve:
+    post:
+      tags: [topic]
+      operationId: approveTopicOpportunity
+      x-task-ids: [TOPIC-006]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReasonBody'
+      responses:
+        '200': { $ref: '#/components/responses/CommandResult' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /v1/topic-opportunities/{id}/brief:
+    post:
+      tags: [topic]
+      operationId: createTopicBrief
+      x-task-ids: [TOPIC-004]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../jsonschema/topic-brief.schema.json'
+      responses:
+        '201': { $ref: '#/components/responses/CommandResult' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /v1/topic-briefs/{id}/approve:
+    post:
+      tags: [topic]
+      operationId: approveAndLockTopicBrief
+      x-task-ids: [TOPIC-008]
+      x-real-account-required: false
+      description: Approval and immutable lock happen in one transaction.
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      responses:
+        '200': { $ref: '#/components/responses/CommandResult' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /v1/sources:
+    post:
+      tags: [provenance]
+      operationId: ingestSource
+      x-task-ids: [PROV-001]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../jsonschema/source.schema.json'
+      responses:
+        '201': { $ref: '#/components/responses/CommandResult' }
+  /v1/rights-records/{record_id}/versions:
+    post:
+      tags: [provenance]
+      operationId: createRightsRecordVersion
+      x-task-ids: [PROV-002]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/RecordId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../jsonschema/rights-record-version.schema.json'
+      responses:
+        '201': { $ref: '#/components/responses/CommandResult' }
+  /v1/rights-records/{record_id}/versions/{version_id}/verify:
+    post:
+      tags: [provenance]
+      operationId: verifyRightsRecordVersion
+      x-task-ids: [PROV-002]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/RecordId'
+        - $ref: '#/components/parameters/VersionId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      responses:
+        '200': { $ref: '#/components/responses/CommandResult' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /v1/canonical-contents:
+    post:
+      tags: [knowledge]
+      operationId: createCanonicalContent
+      x-task-ids: [CANON-001]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../jsonschema/canonical-content.schema.json'
+      responses:
+        '201': { $ref: '#/components/responses/CommandResult' }
+  /v1/canonical-contents/{id}/versions:
+    get:
+      tags: [knowledge]
+      operationId: listCanonicalContentVersions
+      x-task-ids: [CANON-002]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200': { $ref: '#/components/responses/CommandResult' }
+        '409': { $ref: '#/components/responses/Conflict' }
+    post:
+      tags: [knowledge]
+      operationId: createCanonicalContentVersion
+      x-task-ids: [CANON-002, CANON-003]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../jsonschema/canonical-content-version.schema.json'
+      responses:
+        '201': { $ref: '#/components/responses/CommandResult' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /v1/variants:
+    post:
+      tags: [production]
+      operationId: createVariant
+      x-task-ids: [PROD-002]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../jsonschema/content-variant.schema.json'
+      responses:
+        '201': { $ref: '#/components/responses/CommandResult' }
+  /v1/content-variants/{variant_id}/versions/{version_id}/qa:
+    post:
+      tags: [qa]
+      operationId: runVariantQa
+      x-task-ids: [QA-001, QA-002]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/VariantId'
+        - $ref: '#/components/parameters/VersionId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '202': { $ref: '#/components/responses/CommandAccepted' }
+  /v1/approvals:
+    post:
+      tags: [approval]
+      operationId: createApproval
+      x-task-ids: [APPROVAL-001]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../jsonschema/approval.schema.json'
+      responses:
+        '201': { $ref: '#/components/responses/CommandResult' }
+  /v1/approvals/{id}/decisions:
+    post:
+      tags: [approval]
+      operationId: recordApprovalDecision
+      x-task-ids: [APPROVAL-002]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/IfMatch'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../jsonschema/approval-decision.schema.json'
+      responses:
+        '201': { $ref: '#/components/responses/CommandResult' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /v1/distribution-targets:
+    post:
+      tags: [distribution]
+      operationId: createDistributionTarget
+      x-task-ids: [FOUND-010, DIST-001]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../jsonschema/distribution-target.schema.json'
+      responses:
+        '201': { $ref: '#/components/responses/CommandResult' }
+  /v1/publication-intents:
+    post:
+      tags: [distribution]
+      operationId: createPublicationIntent
+      x-task-ids: [DIST-001, DIST-007]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../jsonschema/publication-intent.schema.json'
+      responses:
+        '201': { $ref: '#/components/responses/CommandResult' }
+  /v1/publication-intents/{id}/export:
+    post:
+      tags: [distribution]
+      operationId: exportPublicationIntent
+      x-task-ids: [DIST-003A, DIST-009]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '202': { $ref: '#/components/responses/CommandAccepted' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /v1/publication-intents/{id}/simulate:
+    post:
+      tags: [distribution]
+      operationId: simulatePublicationIntent
+      x-task-ids: [DIST-004, DIST-010]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/ResourceId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      responses:
+        '202': { $ref: '#/components/responses/CommandAccepted' }
+        '409': { $ref: '#/components/responses/Conflict' }
+  /v1/observations:
+    post:
+      tags: [analytics]
+      operationId: recordObservation
+      x-task-ids: [FEEDBACK-CORE-001, FEEDBACK-CORE-002, ANALYTICS-002]
+      x-real-account-required: false
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../jsonschema/observation.schema.json'
+      responses:
+        '201': { $ref: '#/components/responses/CommandResult' }
+  /v1/human-tasks:
+    get:
+      tags: [workflow]
+      operationId: listHumanTasks
+      x-task-ids: [WORKFLOW-CORE-002]
+      x-real-account-required: false
+      responses:
+        '200': { $ref: '#/components/responses/CommandResult' }
+  /health/live:
+    get:
+      tags: [health]
+      operationId: healthLive
+      x-task-ids: [FOUND-002, FOUND-006A]
+      x-real-account-required: false
+      security: []
+      responses:
+        '200':
+          description: Process is alive.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthLive'
+  /internal/outbox/dispatch:
+    post:
+      tags: [internal]
+      operationId: dispatchOutbox
+      x-task-ids: [FOUND-004B]
+      x-real-account-required: false
+      description: Worker-only command for one bounded Outbox dispatch batch.
+      parameters:
+        - name: X-Worker-Id
+          in: header
+          required: true
+          schema: { type: string, minLength: 1 }
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                org_id: { type: string, format: uuid }
+                limit: { type: integer, minimum: 1, maximum: 100 }
+      responses:
+        '200': { $ref: '#/components/responses/CommandResult' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '503': { $ref: '#/components/responses/Unavailable' }
+  /internal/task-jobs:claim:
+    post:
+      tags: [internal]
+      operationId: claimTaskJob
+      x-task-ids: [FOUND-004C]
+      x-real-account-required: false
+      parameters:
+        - name: X-Worker-Id
+          in: header
+          required: true
+          schema: { type: string, minLength: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [org_id]
+              additionalProperties: false
+              properties:
+                org_id: { type: string, format: uuid }
+                limit: { type: integer, minimum: 1, maximum: 100 }
+      responses:
+        '200': { $ref: '#/components/responses/CommandResult' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '503': { $ref: '#/components/responses/Unavailable' }
+  /internal/task-jobs/{job_id}:heartbeat:
+    post:
+      tags: [internal]
+      operationId: heartbeatTaskJob
+      x-task-ids: [FOUND-004C]
+      x-real-account-required: false
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: X-Worker-Id
+          in: header
+          required: true
+          schema: { type: string, minLength: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [lease_token]
+              additionalProperties: false
+              properties:
+                lease_token: { type: string, minLength: 1 }
+                org_id: { type: string, format: uuid }
+      responses:
+        '200': { $ref: '#/components/responses/CommandResult' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '503': { $ref: '#/components/responses/Unavailable' }
+  /internal/task-jobs/{job_id}:complete:
+    post:
+      tags: [internal]
+      operationId: completeTaskJob
+      x-task-ids: [FOUND-004C]
+      x-real-account-required: false
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: X-Worker-Id
+          in: header
+          required: true
+          schema: { type: string, minLength: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [lease_token]
+              additionalProperties: false
+              properties:
+                lease_token: { type: string, minLength: 1 }
+                expected_version: { type: integer, minimum: 1 }
+                org_id: { type: string, format: uuid }
+      responses:
+        '200': { $ref: '#/components/responses/CommandResult' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '503': { $ref: '#/components/responses/Unavailable' }
+  /internal/task-jobs/{job_id}:fail:
+    post:
+      tags: [internal]
+      operationId: failTaskJob
+      x-task-ids: [FOUND-004C]
+      x-real-account-required: false
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: X-Worker-Id
+          in: header
+          required: true
+          schema: { type: string, minLength: 1 }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [lease_token, error]
+              additionalProperties: false
+              properties:
+                lease_token: { type: string, minLength: 1 }
+                error: { type: string, minLength: 1 }
+                expected_version: { type: integer, minimum: 1 }
+                org_id: { type: string, format: uuid }
+      responses:
+        '200': { $ref: '#/components/responses/CommandResult' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '503': { $ref: '#/components/responses/Unavailable' }
+  /internal/task-jobs/{job_id}:retry:
+    post:
+      tags: [internal]
+      operationId: retryTaskJob
+      x-task-ids: [FOUND-004D]
+      x-real-account-required: false
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: X-Worker-Id
+          in: header
+          required: true
+          schema: { type: string, minLength: 1 }
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [org_id]
+              additionalProperties: false
+              properties:
+                org_id: { type: string, format: uuid }
+                trace_id: { type: string, minLength: 1 }
+                error_class: { type: string, enum: [deterministic, transient, unknown] }
+                error_code: { type: string, minLength: 1 }
+                message_redacted: { type: string, minLength: 1 }
+                attempt_count: { type: integer, minimum: 0 }
+                retryable: { type: boolean }
+                expected_version: { type: integer, minimum: 1 }
+                lease_token: { type: string, minLength: 1 }
+      responses:
+        '200': { $ref: '#/components/responses/CommandResult' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '503': { $ref: '#/components/responses/Unavailable' }
+  /internal/task-jobs/{job_id}:requeue-dead:
+    post:
+      tags: [internal]
+      operationId: requeueDeadTaskJob
+      x-task-ids: [FOUND-004D]
+      x-real-account-required: false
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: X-Worker-Id
+          in: header
+          required: true
+          schema: { type: string, minLength: 1 }
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [org_id, reason]
+              additionalProperties: false
+              properties:
+                org_id: { type: string, format: uuid }
+                reason: { type: string, minLength: 1 }
+                trace_id: { type: string, minLength: 1 }
+                failure_id: { type: string, format: uuid }
+      responses:
+        '200': { $ref: '#/components/responses/CommandResult' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '503': { $ref: '#/components/responses/Unavailable' }
+  /internal/task-jobs/{job_id}:replay:
+    post:
+      tags: [internal]
+      operationId: replayTaskJob
+      x-task-ids: [FOUND-004E]
+      x-real-account-required: false
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema: { type: string, format: uuid }
+        - name: X-Worker-Id
+          in: header
+          required: true
+          schema: { type: string, minLength: 1 }
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [source_job_id, source_attempt_count, reason, org_id]
+              additionalProperties: false
+              properties:
+                source_job_id: { type: string, format: uuid }
+                source_attempt_count: { type: integer, minimum: 0 }
+                reason: { type: string, minLength: 1 }
+                org_id: { type: string, format: uuid }
+                trace_id: { type: string, minLength: 1 }
+      responses:
+        '200': { $ref: '#/components/responses/CommandResult' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        '503': { $ref: '#/components/responses/Unavailable' }
+  /health/ready:
+    get:
+      tags: [health]
+      operationId: healthReady
+      x-task-ids: [FOUND-002, FOUND-003A, FOUND-006A]
+      x-real-account-required: false
+      security: []
+      responses:
+        '200':
+          description: Process is running; dependencies may be not_configured during bootstrap.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthReady'
+  /metrics:
+    get:
+      tags: [metrics]
+      operationId: prometheusMetrics
+      x-task-ids: [FOUND-006A]
+      x-real-account-required: false
+      security: []
+      responses:
+        '200':
+          description: Process-local, low-cardinality Prometheus text exposition.
+          content:
+            text/plain:
+              schema: { type: string }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  parameters:
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    VariantId:
+      name: variant_id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    RecordId:
+      name: record_id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    VersionId:
+      name: version_id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema: { type: string, minLength: 8, maxLength: 200 }
+    IfMatch:
+      name: If-Match
+      in: header
+      required: true
+      schema: { type: string, minLength: 1 }
+  schemas:
+    Error:
+      type: object
+      additionalProperties: false
+      required: [detail, trace_id, request_id, org_id, actor_id]
+      properties:
+        detail:
+          $ref: '#/components/schemas/ErrorDetail'
+        trace_id: { type: string }
+        request_id: { type: string }
+        org_id: { type: [string, 'null'] }
+        actor_id: { type: [string, 'null'] }
+    ErrorDetail:
+      type: object
+      additionalProperties: false
+      required: [code, message, details, trace_id, request_id, org_id, actor_id, retryable]
+      properties:
+        code: { type: string }
+        message: { type: string }
+        details: { type: object }
+        trace_id: { type: string }
+        request_id: { type: string }
+        org_id: { type: [string, 'null'] }
+        actor_id: { type: [string, 'null'] }
+        retryable: { type: boolean }
+    CommandResult:
+      type: object
+      additionalProperties: false
+      required: [data, trace_id, request_id, org_id, actor_id]
+      properties:
+        data: {}
+        trace_id: { type: string }
+        request_id: { type: string }
+        org_id: { type: [string, 'null'] }
+        actor_id: { type: [string, 'null'] }
+    CommandAccepted:
+      type: object
+      additionalProperties: false
+      required: [job_id, trace_id, request_id, org_id, actor_id]
+      properties:
+        job_id: { type: string, format: uuid }
+        trace_id: { type: string }
+        request_id: { type: string }
+        org_id: { type: [string, 'null'] }
+        actor_id: { type: [string, 'null'] }
+    ReasonBody:
+      type: object
+      additionalProperties: false
+      required: [reason]
+      properties:
+        reason: { type: string, minLength: 1 }
+    HealthLive:
+      type: object
+      additionalProperties: false
+      required: [status, service, runtime, trace_id, request_id, org_id, actor_id, checked_at]
+      properties:
+        status: { const: ok }
+        service: { const: api }
+        runtime: { const: modular-monolith }
+        trace_id: { type: string, minLength: 1, maxLength: 256 }
+        request_id: { type: string, minLength: 1, maxLength: 256 }
+        org_id: { type: [string, 'null'] }
+        actor_id: { type: [string, 'null'] }
+        checked_at: { type: string, format: date-time }
+    HealthReady:
+      type: object
+      additionalProperties: false
+      required: [status, service, runtime, dependencies, trace_id, request_id, org_id, actor_id, checked_at]
+      properties:
+        status: { type: string, enum: [ready, configured, degraded, unavailable, invalid_configuration, not_configured] }
+        service: { const: api }
+        runtime: { const: modular-monolith }
+        dependencies: { type: object, additionalProperties: true }
+        trace_id: { type: string, minLength: 1, maxLength: 256 }
+        request_id: { type: string, minLength: 1, maxLength: 256 }
+        org_id: { type: [string, 'null'] }
+        actor_id: { type: [string, 'null'] }
+        checked_at: { type: string, format: date-time }
+  responses:
+    CommandResult:
+      description: Synchronous command result.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/CommandResult' }
+    CommandAccepted:
+      description: Asynchronous command accepted for processing.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/CommandAccepted' }
+    BadRequest:
+      description: Deterministic validation failure.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Forbidden:
+      description: Permission or tenant-scope failure.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Conflict:
+      description: Optimistic lock, idempotency, or state conflict.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unavailable:
+      description: Internal dependency is not configured.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }

@@ -1,0 +1,19 @@
+task_id: ANALYTICS-003
+status: done
+verification:
+  focused_command: python -m pytest tests/unit/analytics/test_kpi_service.py tests/integration/test_analytics_003_migration.py tests/contract/test_analytics_003_contract.py -q
+  focused_result: 11 passed
+  service_behaviors: seven deterministic KPI aggregations, latest observation revision selection, half-open UTC windows, region/locale filters, account-free/platform account evidence gates, semantic validation, quality issue tracking, de-identified lead attribution, immutable snapshot hashes, audit and outbox facts, and idempotent replay
+  migration_test: SQLite append-only and tenant/input binding guards, full downgrade preservation of observations, and offline PostgreSQL trigger/function SQL emission with reversible cleanup order
+  schemas: analytics-kpi-snapshot schema validates as closed Draft 2020-12 contract; observation inputs are schema-validated
+  task_refs: ANALYTICS-003 registry and checklist synchronized; migration and contract manifests regenerated
+  secrets: no sensitive account or lead fields accepted or persisted
+  postgresql_runtime: not verified against a live PostgreSQL database
+verified_boundaries:
+  - M1 accepts Fake, manual, site, QA, GEO and other account-free observations; platform observations require verified account evidence.
+  - Aggregation uses the highest observation_version per dedupe_key before time and dimension filtering, preserving immutable input facts.
+  - Audit and outbox payloads contain only window, status, identifiers and hashes; metric values and lead source details are excluded.
+  - KPI snapshots are append-only and idempotent; new input revisions produce a new snapshot identity.
+limitations:
+  - Real platform metrics and lead quality remain deferred until EXT-ACCOUNT-001 and FEEDBACK-LIVE-001.
+  - PostgreSQL behavior is verified through offline SQL generation and rollback ordering; live PostgreSQL execution remains unverified.

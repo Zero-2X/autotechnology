@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/events/analytics-publication-observed.schema.json",
+  "title": "analytics.publication.observed",
+  "allOf": [
+    {
+      "$ref": "./event-envelope.schema.json"
+    },
+    {
+      "type": "object",
+      "properties": {
+        "event_type": {
+          "const": "analytics.publication.observed"
+        },
+        "event_schema_version": {
+          "const": 1
+        },
+        "payload": {
+          "type": "object",
+          "properties": {
+            "aggregate_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "aggregate_version": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "category": {
+              "const": "publication"
+            },
+            "observation_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "metric_definition_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "metric_definition_version_no": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "source": {
+              "type": "string",
+              "enum": [
+                "fake",
+                "manual",
+                "platform"
+              ]
+            },
+            "subject_type": {
+              "type": "string",
+              "enum": [
+                "publication"
+              ]
+            },
+            "subject_id": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "observed_at": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "data_quality": {
+              "type": "string",
+              "enum": [
+                "raw",
+                "validated",
+                "estimated"
+              ]
+            },
+            "snapshot_hash": {
+              "type": "string",
+              "pattern": "^[A-Fa-f0-9]{64}$"
+            }
+          },
+          "required": [
+            "aggregate_id",
+            "aggregate_version"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  ],
+  "x-event-kind": "append_only",
+  "x-replay-policy": "idempotent_projection_replay"
+}

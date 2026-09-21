@@ -1,0 +1,24 @@
+task_id: OBS-CORE-002
+status: done
+implementation:
+  module: modules/audit/recovery.py
+  contracts:
+    - packages/contracts/jsonschema/deletion-request.schema.json
+  migration: packages/db/migrations/versions/20260918_obs_core_002.py
+  behaviors:
+    - synthetic_database_and_object_backup
+    - tenant_scoped_restore
+    - queue_pause_after_restore
+    - rpo_rto_measurement
+    - recovery_target_release_gate
+    - verified_sqlite_and_private_object_restore
+    - worker_claim_and_outbox_pause
+verification:
+  commands:
+    - py -3.12 -m pytest tests/unit/audit -q --disable-warnings --maxfail=1
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 -m pytest tests/integration/test_local_recovery_drill.py -q
+  results:
+    targeted_tests: 7
+    architecture_errors: 0
+    synthetic_only: true

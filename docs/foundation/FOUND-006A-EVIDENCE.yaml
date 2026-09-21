@@ -1,0 +1,69 @@
+task_id: FOUND-006A
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000006
+actor: team/foundation
+predecessors: [GOV-006, FOUND-000, FOUND-005]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - infra/foundation/metrics.py
+    - infra/foundation/__init__.py
+    - apps/api/main.py
+  contracts:
+    - docs/foundation/metrics-health-baseline-v1.yaml
+    - packages/contracts/jsonschema/metrics-baseline.schema.json
+    - packages/contracts/jsonschema/foundation.schema.json
+    - packages/contracts/openapi/openapi.yaml
+  migration:
+    - packages/db/migrations/versions/20260916_found_006a_health_metrics.py
+  tests:
+    - tests/contract/test_found_006a_metrics.py
+    - tests/integration/test_found_006a_metrics_integration.py
+  manifests:
+    - docs/contracts/contract-manifest.yaml
+    - docs/contracts/migration-manifest.yaml
+    - docs/repo-inventory.md
+runtime_evidence:
+  liveness: process_only_and_no_dependency_check
+  readiness: named_health_checks_with_critical_status_aggregation
+  database_health: configuration_only_and_no_network_probe
+  health_failure: unavailable_with_generic_redacted_reason
+  metric_scopes: [technical, business]
+  metric_kinds: [counter, gauge, histogram]
+  prometheus_format: text/plain_version_0.0.4
+  http_labels: [method, route_template, status_class]
+  metrics_self_scrape: excluded
+  forbidden_labels: tenant_correlation_object_identity_and_sensitive_payload_labels
+  invalid_samples: negative_counter_nan_infinity_label_mismatch_and_conflicting_definition_rejected
+  concurrency: process_local_registry_updates_guarded_by_reentrant_lock
+  persistence: none
+verification:
+  targeted_test_command: python -m pytest tests/contract/test_found_006a_metrics.py tests/integration/test_found_006a_metrics_integration.py -q
+  targeted_test_result: 15 passed
+  full_test_command: python -m pytest tests --maxfail=1 -q
+  full_test_result: 124 passed
+  migration_check_command: python scripts/check_migrations.py --strict --json
+  migration_check_result: revisions=7 heads=[20260916_found_006a] errors=[]
+  alembic_cycle: upgrade_head_then_downgrade_20260916_found_004f_then_upgrade_head_passed
+  task_precision_command: python scripts/check_task_card_precision.py --task FOUND-006A --strict
+  task_precision_result: scoped=1 precise=1 gaps=0
+  registry_refs_command: python scripts/check_task_card_registry_refs.py
+  registry_refs_result: checked=157 errors=0
+  plan_consistency_command: python scripts/check_plan_consistency.py --strict-contracts --strict-commands
+  plan_consistency_result: no errors; future planned migration warnings retained
+  openapi_check_command: python scripts/check_openapi_contract.py
+  openapi_check_result: paths=31 operations=31; future catalog-difference warnings only
+side_effects:
+  real_credentials: false
+  real_postgresql_connection: false
+  database_write: false
+  network_probe: false
+  prometheus_remote_export: false
+  real_platform_api: false
+  external_publication: false
+  tenant_or_correlation_metric_labels: false
+  payload_or_secret_metric_labels: false
+rollback:
+  - Remove API metrics middleware and /metrics route; existing health and correlation routes remain available.
+  - Run python -m alembic downgrade 20260916_found_004f; the FOUND-006A checkpoint is a no-op.
+  - Process-local samples are ephemeral and require no data deletion or database rollback.

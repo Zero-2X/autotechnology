@@ -1,0 +1,60 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/refresh-recommendation.schema.json",
+  "title": "refresh-recommendation",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "feedback_item_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "recommendation_type": {
+      "type": "string",
+      "enum": [
+        "refresh",
+        "reprioritize",
+        "retire"
+      ]
+    },
+    "target_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "confidence": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "proposed",
+        "approved",
+        "rejected",
+        "executed"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "feedback_item_id",
+    "recommendation_type",
+    "target_id",
+    "confidence",
+    "status",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

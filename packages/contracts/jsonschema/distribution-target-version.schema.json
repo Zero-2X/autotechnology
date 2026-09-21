@@ -1,0 +1,333 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/distribution-target-version.schema.json",
+  "title": "DistributionTargetVersion",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "distribution_target_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "version_no": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "platform_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "market": {
+      "type": "string",
+      "minLength": 1
+    },
+    "locale": {
+      "type": "string",
+      "minLength": 1
+    },
+    "channel": {
+      "type": "string",
+      "enum": [
+        "article",
+        "short_post",
+        "video"
+      ]
+    },
+    "environment": {
+      "type": "string",
+      "enum": [
+        "dev",
+        "staging",
+        "prod"
+      ]
+    },
+    "region_profile_version_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "account_profile_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "account_profile_snapshot": {
+      "type": "object",
+      "properties": {
+        "id": {"type": "string", "format": "uuid"},
+        "profile_kind": {"type": "string", "enum": ["planned", "synthetic", "real"]},
+        "display_name": {"type": "string", "minLength": 1}
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "account_connection_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "account_connection_snapshot": {
+      "type": "object",
+      "properties": {
+        "connection_id": {"type": "string", "format": "uuid"},
+        "platform_id": {"type": "string", "format": "uuid"},
+        "external_account_id": {"type": "string", "minLength": 1},
+        "environment": {"type": "string", "enum": ["sandbox", "prod"]},
+        "authorization_status": {"type": "string", "enum": ["unknown", "authorized", "expired", "revoked"]},
+        "health_status": {"type": "string", "enum": ["unknown", "healthy", "degraded", "restricted"]},
+        "scope_snapshot": {
+          "type": "object",
+          "properties": {
+            "provider": {"type": "string", "minLength": 1},
+            "scopes": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+            "scope_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"}
+          },
+          "additionalProperties": false
+        },
+        "token_version": {"type": "integer", "minimum": 0}
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "synthetic_target_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "capability_snapshot": {
+      "type": "object",
+      "properties": {
+        "version": {"type": ["integer", "string"]},
+        "actions": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "limits": {"type": "object"},
+        "snapshot_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"}
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "policy_snapshot_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "eligible_delivery_modes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "./delivery-mode.schema.json"
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "active",
+        "retired"
+      ]
+    },
+    "snapshot_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "etag": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_by": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "retired_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "distribution_target_id",
+    "version_no",
+    "platform_id",
+    "market",
+    "locale",
+    "channel",
+    "environment",
+    "region_profile_version_id",
+    "account_profile_id",
+    "account_profile_snapshot",
+    "account_connection_id",
+    "account_connection_snapshot",
+    "synthetic_target_id",
+    "capability_snapshot",
+    "policy_snapshot_id",
+    "eligible_delivery_modes",
+    "status",
+    "snapshot_hash",
+    "etag",
+    "created_by",
+    "created_at",
+    "retired_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "active",
+              "ready",
+              "queued",
+              "exported",
+              "simulated",
+              "dispatched"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "policy_snapshot_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "policy_snapshot_id"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "synthetic_target_id": {"type": "string"}
+        },
+        "required": ["synthetic_target_id"]
+      },
+      "then": {
+        "properties": {
+          "policy_snapshot_id": {"type": "string", "format": "uuid"},
+          "account_connection_id": {"type": "null"}
+        },
+        "required": ["policy_snapshot_id"]
+      }
+    }
+  ],
+  "oneOf": [
+    {
+      "title": "account-free manual target",
+      "properties": {
+        "account_connection_id": {
+          "type": "null"
+        },
+        "eligible_delivery_modes": {
+          "items": {
+            "const": "manual_export"
+          }
+        }
+      }
+    },
+    {
+      "title": "synthetic simulation target",
+      "properties": {
+        "account_connection_id": {
+          "type": "null"
+        },
+        "synthetic_target_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "environment": {
+          "enum": [
+            "dev",
+            "staging"
+          ]
+        },
+        "eligible_delivery_modes": {
+          "items": {
+            "enum": [
+              "manual_export",
+              "simulation"
+            ]
+          },
+          "contains": {
+            "const": "simulation"
+          }
+        }
+      }
+    },
+    {
+      "title": "real or sandbox connection",
+      "required": [
+        "account_connection_id"
+      ],
+      "properties": {
+        "account_connection_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "account_profile_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "synthetic_target_id": {
+          "type": "null"
+        },
+        "eligible_delivery_modes": {
+          "items": {
+            "enum": [
+              "draft_only",
+              "authorized_api"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

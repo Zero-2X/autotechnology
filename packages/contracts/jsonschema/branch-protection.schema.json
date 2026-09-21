@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/branch-protection.schema.json",
+  "title": "repository branch protection baseline",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "baseline_key",
+    "baseline_version",
+    "repository_state",
+    "enforcement_status",
+    "provider",
+    "default_branch",
+    "pull_request",
+    "branch_rules",
+    "application_rule"
+  ],
+  "properties": {
+    "baseline_key": { "const": "repository-branch-protection" },
+    "baseline_version": { "type": "integer", "const": 1 },
+    "repository_state": { "type": "string", "enum": ["not_a_git_worktree", "git_worktree"] },
+    "enforcement_status": { "type": "string", "enum": ["documented_not_enforced", "enforced"] },
+    "provider": { "type": "string", "minLength": 1 },
+    "default_branch": { "type": "string", "minLength": 1 },
+    "pull_request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["required_approvals", "require_code_owner_reviews", "require_conversation_resolution", "required_status_checks"],
+      "properties": {
+        "required_approvals": { "type": "integer", "minimum": 1 },
+        "require_code_owner_reviews": { "type": "boolean", "const": true },
+        "require_conversation_resolution": { "type": "boolean", "const": true },
+        "required_status_checks": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "branch_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["allow_force_pushes", "allow_deletions", "require_linear_history"],
+      "properties": {
+        "allow_force_pushes": { "type": "boolean", "const": false },
+        "allow_deletions": { "type": "boolean", "const": false },
+        "require_linear_history": { "type": "boolean" }
+      }
+    },
+    "application_rule": { "type": "string", "minLength": 1 }
+  }
+}

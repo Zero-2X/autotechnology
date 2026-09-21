@@ -1,0 +1,12 @@
+task_id: FEEDBACK-CORE-005
+status: done
+verification:
+  focused_command: python -m pytest tests/unit/feedback/test_feedback_action.py tests/integration/test_feedback_core_005_migration.py tests/contract/test_feedback_core_005_contract.py -q
+  focused_result: 4 passed
+  service_behaviors: approval/start/complete/fail/cancel lifecycle, policy and approval gates, target version checks, optimistic locking, idempotent commands, bounded result snapshots, append-only audit/outbox facts and explicit side-effect blocking
+  migration_test: SQLite FeedbackItem binding and append-only guards plus offline PostgreSQL trigger/function cleanup ordering
+  schemas: feedback-action contract is closed and validates bounded result snapshots
+  secrets: token, secret, cookie, authorization and PII fields are rejected
+  postgresql_runtime: not verified against a live PostgreSQL database
+limitations:
+  - The service records internal action facts only; execution against a real platform remains outside the account-free phase.

@@ -1,0 +1,43 @@
+policy_key: baseline-synthetic
+policy_version: 1
+status: active
+policy_domain: composite
+display_name: M1 synthetic/dev baseline policy
+purpose: 为无账号的 Architecture MVP 提供可审计、可复核且不产生真实平台副作用的默认 Policy。
+owner_role: governance_owner
+reviewer_roles: [policy_reviewer, data_protection_owner]
+evidence_refs:
+  - evidence_key: release_levels
+    source_type: document
+    uri: docs/governance/release-levels-v1.yaml
+    captured_at: '2026-09-16T00:00:00+08:00'
+  - evidence_key: risk_classification
+    source_type: document
+    uri: docs/governance/risk-policy-v1.yaml
+    captured_at: '2026-09-16T00:00:00+08:00'
+  - evidence_key: vertical_scope
+    source_type: document
+    uri: docs/governance/vertical-scope.yaml
+    captured_at: '2026-09-16T00:00:00+08:00'
+  - evidence_key: contract_test
+    source_type: test
+    uri: tests/contract/test_gov_005_policy_card.py
+    captured_at: '2026-09-16T00:00:00+08:00'
+rules:
+  - rule_id: account_unknown
+    requirement: 账号缺失或授权状态未知时只能使用 manual_export 或 simulation，不得伪造 healthy 或 authorized_api。
+    on_unknown: manual_review
+  - rule_id: architecture_mvp_distribution
+    requirement: Architecture MVP 只允许 manual_export 和 simulation；两者均不得发起 HTTP 平台请求。
+    on_unknown: deny
+  - rule_id: unknown_external_result
+    requirement: 外部结果未知时暂停相关副作用并创建人工核查，禁止自动重发。
+    on_unknown: manual_review
+  - rule_id: policy_expiry
+    requirement: review_due_at 到期后切换到人工模式，阻止新的副作用任务并要求创建新 Policy 版本。
+    on_unknown: deny
+allowed_release_levels: [architecture_mvp]
+synthetic_only: true
+effective_at: '2026-09-16T00:00:00+08:00'
+review_due_at: '2026-10-16T00:00:00+08:00'
+locked_by: team/governance

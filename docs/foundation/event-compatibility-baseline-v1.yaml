@@ -1,0 +1,6816 @@
+baseline_key: event-compatibility
+baseline_version: 1
+registry: docs/contracts/event-registry.yaml
+event_count: 162
+events:
+- event_type: topic.opportunity.scored
+  schema_ref: packages/contracts/events/topic-opportunity-scored.schema.json
+  event_schema_version: 1
+  producer: topic
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: topic.signal.created
+  schema_ref: packages/contracts/events/topic-signal-created.schema.json
+  event_schema_version: 1
+  producer: topic
+  aggregate_type: Topic
+  event_kind: append_only
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: topic.opportunity.created
+  schema_ref: packages/contracts/events/topic-opportunity-created.schema.json
+  event_schema_version: 1
+  producer: topic
+  aggregate_type: Topic
+  event_kind: append_only
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: topic.opportunity.approved
+  schema_ref: packages/contracts/events/topic-opportunity-approved.schema.json
+  event_schema_version: 1
+  producer: topic
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: topic.opportunity.rejected
+  schema_ref: packages/contracts/events/topic-opportunity-rejected.schema.json
+  event_schema_version: 1
+  producer: topic
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: topic.brief.created
+  schema_ref: packages/contracts/events/topic-brief-created.schema.json
+  event_schema_version: 1
+  producer: topic
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: topic.brief.approved
+  schema_ref: packages/contracts/events/topic-brief-approved.schema.json
+  event_schema_version: 1
+  producer: topic
+  aggregate_type: TopicBrief
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: topic.brief.rejected
+  schema_ref: packages/contracts/events/topic-brief-rejected.schema.json
+  event_schema_version: 1
+  producer: topic
+  aggregate_type: TopicBrief
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: topic.brief.deferred
+  schema_ref: packages/contracts/events/topic-brief-deferred.schema.json
+  event_schema_version: 1
+  producer: topic
+  aggregate_type: TopicBrief
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: topic.brief.superseded
+  schema_ref: packages/contracts/events/topic-brief-superseded.schema.json
+  event_schema_version: 1
+  producer: topic
+  aggregate_type: TopicBrief
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: topic.production.started
+  schema_ref: packages/contracts/events/topic-production-started.schema.json
+  event_schema_version: 1
+  producer: topic
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: topic.monitoring.started
+  schema_ref: packages/contracts/events/topic-monitoring-started.schema.json
+  event_schema_version: 1
+  producer: topic
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: topic.refresh.started
+  schema_ref: packages/contracts/events/topic-refresh-started.schema.json
+  event_schema_version: 1
+  producer: topic
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: topic.retired
+  schema_ref: packages/contracts/events/topic-retired.schema.json
+  event_schema_version: 1
+  producer: topic
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: source.ingested
+  schema_ref: packages/contracts/events/source-ingested.schema.json
+  event_schema_version: 1
+  producer: source
+  aggregate_type: Source
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: source.quarantined
+  schema_ref: packages/contracts/events/source-quarantined.schema.json
+  event_schema_version: 1
+  producer: source
+  aggregate_type: Source
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: source.snapshot.quarantined
+  schema_ref: packages/contracts/events/source-snapshot-quarantined.schema.json
+  event_schema_version: 1
+  producer: source
+  aggregate_type: SourceSnapshot
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: source.snapshot.usable
+  schema_ref: packages/contracts/events/source-snapshot-usable.schema.json
+  event_schema_version: 1
+  producer: source
+  aggregate_type: SourceSnapshot
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: source.snapshot.expired
+  schema_ref: packages/contracts/events/source-snapshot-expired.schema.json
+  event_schema_version: 1
+  producer: source
+  aggregate_type: SourceSnapshot
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: source.snapshot.revoked
+  schema_ref: packages/contracts/events/source-snapshot-revoked.schema.json
+  event_schema_version: 1
+  producer: source
+  aggregate_type: SourceSnapshot
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: source.snapshot.blocked
+  schema_ref: packages/contracts/events/source-snapshot-blocked.schema.json
+  event_schema_version: 1
+  producer: source
+  aggregate_type: SourceSnapshot
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: source.usable
+  schema_ref: packages/contracts/events/source-usable.schema.json
+  event_schema_version: 1
+  producer: source
+  aggregate_type: Source
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: source.blocked
+  schema_ref: packages/contracts/events/source-blocked.schema.json
+  event_schema_version: 1
+  producer: source
+  aggregate_type: Source
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: source.expired
+  schema_ref: packages/contracts/events/source-expired.schema.json
+  event_schema_version: 1
+  producer: source
+  aggregate_type: Source
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: source.revoked
+  schema_ref: packages/contracts/events/source-revoked.schema.json
+  event_schema_version: 1
+  producer: source
+  aggregate_type: Source
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: rights.version.created
+  schema_ref: packages/contracts/events/rights-version-created.schema.json
+  event_schema_version: 1
+  producer: rights
+  aggregate_type: RightsRecordVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: rights.version.verified
+  schema_ref: packages/contracts/events/rights-version-verified.schema.json
+  event_schema_version: 1
+  producer: rights
+  aggregate_type: RightsRecordVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: rights.version.expired
+  schema_ref: packages/contracts/events/rights-version-expired.schema.json
+  event_schema_version: 1
+  producer: rights
+  aggregate_type: RightsRecordVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: rights.version.revoked
+  schema_ref: packages/contracts/events/rights-version-revoked.schema.json
+  event_schema_version: 1
+  producer: rights
+  aggregate_type: RightsRecordVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: rights.version.complaint_hold
+  schema_ref: packages/contracts/events/rights-version-complaint_hold.schema.json
+  event_schema_version: 1
+  producer: rights
+  aggregate_type: RightsRecordVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: entity.activated
+  schema_ref: packages/contracts/events/entity-activated.schema.json
+  event_schema_version: 1
+  producer: entity
+  aggregate_type: Entity
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: entity.retired
+  schema_ref: packages/contracts/events/entity-retired.schema.json
+  event_schema_version: 1
+  producer: entity
+  aggregate_type: Entity
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: claim.verified
+  schema_ref: packages/contracts/events/claim-verified.schema.json
+  event_schema_version: 1
+  producer: claim
+  aggregate_type: Claim
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: claim.withdrawn
+  schema_ref: packages/contracts/events/claim-withdrawn.schema.json
+  event_schema_version: 1
+  producer: claim
+  aggregate_type: Claim
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: evidence.validated
+  schema_ref: packages/contracts/events/evidence-validated.schema.json
+  event_schema_version: 1
+  producer: evidence
+  aggregate_type: Evidence
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: evidence.invalidated
+  schema_ref: packages/contracts/events/evidence-invalidated.schema.json
+  event_schema_version: 1
+  producer: evidence
+  aggregate_type: Evidence
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: knowledge.core.activated
+  schema_ref: packages/contracts/events/knowledge-core-activated.schema.json
+  event_schema_version: 1
+  producer: knowledge
+  aggregate_type: KnowledgeCore
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: knowledge.core.retired
+  schema_ref: packages/contracts/events/knowledge-core-retired.schema.json
+  event_schema_version: 1
+  producer: knowledge
+  aggregate_type: KnowledgeCore
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: knowledge.core_version.verified
+  schema_ref: packages/contracts/events/knowledge-core_version-verified.schema.json
+  event_schema_version: 1
+  producer: knowledge
+  aggregate_type: KnowledgeCoreVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: knowledge.core_version.changed
+  schema_ref: packages/contracts/events/knowledge-core_version-changed.schema.json
+  event_schema_version: 1
+  producer: knowledge
+  aggregate_type: KnowledgeCoreVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: policy.snapshot.created
+  schema_ref: packages/contracts/events/policy-snapshot-created.schema.json
+  event_schema_version: 1
+  producer: policy
+  aggregate_type: PolicySnapshot
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: policy.snapshot.expired
+  schema_ref: packages/contracts/events/policy-snapshot-expired.schema.json
+  event_schema_version: 1
+  producer: policy
+  aggregate_type: PolicySnapshot
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: policy.snapshot.revoked
+  schema_ref: packages/contracts/events/policy-snapshot-revoked.schema.json
+  event_schema_version: 1
+  producer: policy
+  aggregate_type: PolicySnapshot
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: distribution.target.created
+  schema_ref: packages/contracts/events/distribution-target-created.schema.json
+  event_schema_version: 1
+  producer: distribution
+  aggregate_type: DistributionTarget
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: distribution.target.retired
+  schema_ref: packages/contracts/events/distribution-target-retired.schema.json
+  event_schema_version: 1
+  producer: distribution
+  aggregate_type: DistributionTarget
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: distribution.target_version.created
+  schema_ref: packages/contracts/events/distribution-target_version-created.schema.json
+  event_schema_version: 1
+  producer: distribution
+  aggregate_type: DistributionTargetVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: distribution.target_version.activated
+  schema_ref: packages/contracts/events/distribution-target_version-activated.schema.json
+  event_schema_version: 1
+  producer: distribution
+  aggregate_type: DistributionTargetVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: distribution.target_version.retired
+  schema_ref: packages/contracts/events/distribution-target_version-retired.schema.json
+  event_schema_version: 1
+  producer: distribution
+  aggregate_type: DistributionTargetVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: region.profile.created
+  schema_ref: packages/contracts/events/region-profile-created.schema.json
+  event_schema_version: 1
+  producer: region
+  aggregate_type: RegionProfileVersion
+  event_kind: append_only
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: region.profile_version.created
+  schema_ref: packages/contracts/events/region-profile_version-created.schema.json
+  event_schema_version: 1
+  producer: region
+  aggregate_type: RegionProfileVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: region.profile_version.activated
+  schema_ref: packages/contracts/events/region-profile_version-activated.schema.json
+  event_schema_version: 1
+  producer: region
+  aggregate_type: RegionProfileVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: region.profile_version.retired
+  schema_ref: packages/contracts/events/region-profile_version-retired.schema.json
+  event_schema_version: 1
+  producer: region
+  aggregate_type: RegionProfileVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: canonical.version.created
+  schema_ref: packages/contracts/events/canonical-version-created.schema.json
+  event_schema_version: 1
+  producer: canonical
+  aggregate_type: CanonicalContentVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: canonical.evidence_requested
+  schema_ref: packages/contracts/events/canonical-evidence_requested.schema.json
+  event_schema_version: 1
+  producer: canonical
+  aggregate_type: CanonicalContentVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: canonical.fact_checked
+  schema_ref: packages/contracts/events/canonical-fact_checked.schema.json
+  event_schema_version: 1
+  producer: canonical
+  aggregate_type: CanonicalContentVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: canonical.version.approved
+  schema_ref: packages/contracts/events/canonical-version-approved.schema.json
+  event_schema_version: 1
+  producer: canonical
+  aggregate_type: CanonicalContentVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: canonical.version.superseded
+  schema_ref: packages/contracts/events/canonical-version-superseded.schema.json
+  event_schema_version: 1
+  producer: canonical
+  aggregate_type: CanonicalContentVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: canonical.version.withdrawn
+  schema_ref: packages/contracts/events/canonical-version-withdrawn.schema.json
+  event_schema_version: 1
+  producer: canonical
+  aggregate_type: CanonicalContentVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: variant.created
+  schema_ref: packages/contracts/events/variant-created.schema.json
+  event_schema_version: 1
+  producer: variant
+  aggregate_type: ContentVariant
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: variant.root_changed
+  schema_ref: packages/contracts/events/variant-root_changed.schema.json
+  event_schema_version: 1
+  producer: variant
+  aggregate_type: ContentVariant
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: variant.localized
+  schema_ref: packages/contracts/events/variant-localized.schema.json
+  event_schema_version: 1
+  producer: variant
+  aggregate_type: VariantVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: variant.draft_created
+  schema_ref: packages/contracts/events/variant-draft_created.schema.json
+  event_schema_version: 1
+  producer: variant
+  aggregate_type: VariantVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: variant.qa_requested
+  schema_ref: packages/contracts/events/variant-qa_requested.schema.json
+  event_schema_version: 1
+  producer: variant
+  aggregate_type: VariantVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: variant.approved
+  schema_ref: packages/contracts/events/variant-approved.schema.json
+  event_schema_version: 1
+  producer: variant
+  aggregate_type: VariantVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: variant.withdrawn
+  schema_ref: packages/contracts/events/variant-withdrawn.schema.json
+  event_schema_version: 1
+  producer: variant
+  aggregate_type: VariantVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: asset.created
+  schema_ref: packages/contracts/events/asset-created.schema.json
+  event_schema_version: 1
+  producer: asset
+  aggregate_type: Asset
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: asset.root_changed
+  schema_ref: packages/contracts/events/asset-root_changed.schema.json
+  event_schema_version: 1
+  producer: asset
+  aggregate_type: Asset
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: asset.render_started
+  schema_ref: packages/contracts/events/asset-render_started.schema.json
+  event_schema_version: 1
+  producer: asset
+  aggregate_type: AssetVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: asset.qa_requested
+  schema_ref: packages/contracts/events/asset-qa_requested.schema.json
+  event_schema_version: 1
+  producer: asset
+  aggregate_type: AssetVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: asset.approved
+  schema_ref: packages/contracts/events/asset-approved.schema.json
+  event_schema_version: 1
+  producer: asset
+  aggregate_type: AssetVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: asset.withdrawn
+  schema_ref: packages/contracts/events/asset-withdrawn.schema.json
+  event_schema_version: 1
+  producer: asset
+  aggregate_type: AssetVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: asset.blocked
+  schema_ref: packages/contracts/events/asset-blocked.schema.json
+  event_schema_version: 1
+  producer: asset
+  aggregate_type: AssetVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: publication_intent.ready
+  schema_ref: packages/contracts/events/publication_intent-ready.schema.json
+  event_schema_version: 1
+  producer: publication_intent
+  aggregate_type: PublicationIntent
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: export_package.created
+  schema_ref: packages/contracts/events/export_package-created.schema.json
+  event_schema_version: 1
+  producer: export_package
+  aggregate_type: PublicationIntent
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: delivery.simulated
+  schema_ref: packages/contracts/events/delivery-simulated.schema.json
+  event_schema_version: 1
+  producer: delivery
+  aggregate_type: PublicationIntent
+  event_kind: transition
+  side_effect_scope: fake
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: publication.queued
+  schema_ref: packages/contracts/events/publication-queued.schema.json
+  event_schema_version: 1
+  producer: publication
+  aggregate_type: PublicationIntent
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: publication.dispatched
+  schema_ref: packages/contracts/events/publication-dispatched.schema.json
+  event_schema_version: 1
+  producer: publication
+  aggregate_type: PublicationIntent
+  event_kind: transition
+  side_effect_scope: conditional
+  replay_policy: query_before_side_effect_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: publication.cancelled
+  schema_ref: packages/contracts/events/publication-cancelled.schema.json
+  event_schema_version: 1
+  producer: publication
+  aggregate_type: PublicationIntent
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: delivery.attempted
+  schema_ref: packages/contracts/events/delivery-attempted.schema.json
+  event_schema_version: 1
+  producer: delivery
+  aggregate_type: DeliveryAttempt
+  event_kind: transition
+  side_effect_scope: conditional
+  replay_policy: query_before_side_effect_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: delivery.succeeded
+  schema_ref: packages/contracts/events/delivery-succeeded.schema.json
+  event_schema_version: 1
+  producer: delivery
+  aggregate_type: DeliveryAttempt
+  event_kind: transition
+  side_effect_scope: conditional
+  replay_policy: query_before_side_effect_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: delivery.retry_scheduled
+  schema_ref: packages/contracts/events/delivery-retry_scheduled.schema.json
+  event_schema_version: 1
+  producer: delivery
+  aggregate_type: DeliveryAttempt
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: delivery.failed
+  schema_ref: packages/contracts/events/delivery-failed.schema.json
+  event_schema_version: 1
+  producer: delivery
+  aggregate_type: DeliveryAttempt
+  event_kind: transition
+  side_effect_scope: conditional
+  replay_policy: query_before_side_effect_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: delivery.unknown
+  schema_ref: packages/contracts/events/delivery-unknown.schema.json
+  event_schema_version: 1
+  producer: delivery
+  aggregate_type: DeliveryAttempt
+  event_kind: transition
+  side_effect_scope: conditional
+  replay_policy: manual_resolution
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: delivery.unknown_resolved
+  schema_ref: packages/contracts/events/delivery-unknown_resolved.schema.json
+  event_schema_version: 1
+  producer: delivery
+  aggregate_type: DeliveryAttempt
+  event_kind: transition
+  side_effect_scope: conditional
+  replay_policy: manual_resolution
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: delivery.dead_lettered
+  schema_ref: packages/contracts/events/delivery-dead_lettered.schema.json
+  event_schema_version: 1
+  producer: delivery
+  aggregate_type: DeliveryAttempt
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: publication.blocked
+  schema_ref: packages/contracts/events/publication-blocked.schema.json
+  event_schema_version: 1
+  producer: publication
+  aggregate_type: PublicationIntent
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: publication.recorded
+  schema_ref: packages/contracts/events/publication-recorded.schema.json
+  event_schema_version: 1
+  producer: publication
+  aggregate_type: PublicationRecord
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: publication.acknowledged
+  schema_ref: packages/contracts/events/publication-acknowledged.schema.json
+  event_schema_version: 1
+  producer: publication
+  aggregate_type: PublicationRecord
+  event_kind: transition
+  side_effect_scope: conditional
+  replay_policy: query_before_side_effect_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: publication.published
+  schema_ref: packages/contracts/events/publication-published.schema.json
+  event_schema_version: 1
+  producer: publication
+  aggregate_type: PublicationRecord
+  event_kind: transition
+  side_effect_scope: conditional
+  replay_policy: query_before_side_effect_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: publication.failed
+  schema_ref: packages/contracts/events/publication-failed.schema.json
+  event_schema_version: 1
+  producer: publication
+  aggregate_type: PublicationRecord
+  event_kind: transition
+  side_effect_scope: conditional
+  replay_policy: query_before_side_effect_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: publication.unknown
+  schema_ref: packages/contracts/events/publication-unknown.schema.json
+  event_schema_version: 1
+  producer: publication
+  aggregate_type: PublicationRecord
+  event_kind: transition
+  side_effect_scope: conditional
+  replay_policy: manual_resolution
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: publication.unknown_resolved
+  schema_ref: packages/contracts/events/publication-unknown_resolved.schema.json
+  event_schema_version: 1
+  producer: publication
+  aggregate_type: PublicationRecord
+  event_kind: transition
+  side_effect_scope: conditional
+  replay_policy: manual_resolution
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: publication.removed
+  schema_ref: packages/contracts/events/publication-removed.schema.json
+  event_schema_version: 1
+  producer: publication
+  aggregate_type: PublicationRecord
+  event_kind: transition
+  side_effect_scope: conditional
+  replay_policy: query_before_side_effect_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: export_package.expired
+  schema_ref: packages/contracts/events/export_package-expired.schema.json
+  event_schema_version: 1
+  producer: export_package
+  aggregate_type: ExportPackage
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: export_package.revoked
+  schema_ref: packages/contracts/events/export_package-revoked.schema.json
+  event_schema_version: 1
+  producer: export_package
+  aggregate_type: ExportPackage
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: metric.definition.created
+  schema_ref: packages/contracts/events/metric-definition-created.schema.json
+  event_schema_version: 1
+  producer: metric
+  aggregate_type: MetricDefinition
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: metric.definition.activated
+  schema_ref: packages/contracts/events/metric-definition-activated.schema.json
+  event_schema_version: 1
+  producer: metric
+  aggregate_type: MetricDefinition
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: metric.definition.retired
+  schema_ref: packages/contracts/events/metric-definition-retired.schema.json
+  event_schema_version: 1
+  producer: metric
+  aggregate_type: MetricDefinition
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: observation.recorded
+  schema_ref: packages/contracts/events/observation-recorded.schema.json
+  event_schema_version: 1
+  producer: observation
+  aggregate_type: Observation
+  event_kind: append_only
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: feedback.recommendation_created
+  schema_ref: packages/contracts/events/feedback-recommendation_created.schema.json
+  event_schema_version: 1
+  producer: feedback
+  aggregate_type: FeedbackItem
+  event_kind: append_only
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: refresh.requested
+  schema_ref: packages/contracts/events/refresh-requested.schema.json
+  event_schema_version: 1
+  producer: refresh
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: account.connection_changed
+  schema_ref: packages/contracts/events/account-connection_changed.schema.json
+  event_schema_version: 1
+  producer: account
+  aggregate_type: AccountConnection
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: approval.requested
+  schema_ref: packages/contracts/events/approval-requested.schema.json
+  event_schema_version: 1
+  producer: approval
+  aggregate_type: Approval
+  event_kind: append_only
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: approval.recorded
+  schema_ref: packages/contracts/events/approval-recorded.schema.json
+  event_schema_version: 1
+  producer: approval
+  aggregate_type: Approval
+  event_kind: append_only
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: approval.approved
+  schema_ref: packages/contracts/events/approval-approved.schema.json
+  event_schema_version: 1
+  producer: approval
+  aggregate_type: Approval
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: approval.rejected
+  schema_ref: packages/contracts/events/approval-rejected.schema.json
+  event_schema_version: 1
+  producer: approval
+  aggregate_type: Approval
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: approval.expired
+  schema_ref: packages/contracts/events/approval-expired.schema.json
+  event_schema_version: 1
+  producer: approval
+  aggregate_type: Approval
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: approval.revoked
+  schema_ref: packages/contracts/events/approval-revoked.schema.json
+  event_schema_version: 1
+  producer: approval
+  aggregate_type: Approval
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: human_task.created
+  schema_ref: packages/contracts/events/human_task-created.schema.json
+  event_schema_version: 1
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: human_task.assigned
+  schema_ref: packages/contracts/events/human_task-assigned.schema.json
+  event_schema_version: 1
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: human_task.claimed
+  schema_ref: packages/contracts/events/human_task-claimed.schema.json
+  event_schema_version: 1
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: human_task.started
+  schema_ref: packages/contracts/events/human_task-started.schema.json
+  event_schema_version: 1
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: human_task.submitted
+  schema_ref: packages/contracts/events/human_task-submitted.schema.json
+  event_schema_version: 1
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: human_task.completed
+  schema_ref: packages/contracts/events/human_task-completed.schema.json
+  event_schema_version: 1
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: human_task.rejected
+  schema_ref: packages/contracts/events/human_task-rejected.schema.json
+  event_schema_version: 1
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: human_task.expired
+  schema_ref: packages/contracts/events/human_task-expired.schema.json
+  event_schema_version: 1
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: human_task.escalated
+  schema_ref: packages/contracts/events/human_task-escalated.schema.json
+  event_schema_version: 1
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: human_task.cancelled
+  schema_ref: packages/contracts/events/human_task-cancelled.schema.json
+  event_schema_version: 1
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: task_job.leased
+  schema_ref: packages/contracts/events/task_job-leased.schema.json
+  event_schema_version: 1
+  producer: task_job
+  aggregate_type: TaskJob
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: task_job.started
+  schema_ref: packages/contracts/events/task_job-started.schema.json
+  event_schema_version: 1
+  producer: task_job
+  aggregate_type: TaskJob
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: task_job.succeeded
+  schema_ref: packages/contracts/events/task_job-succeeded.schema.json
+  event_schema_version: 1
+  producer: task_job
+  aggregate_type: TaskJob
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: task_job.failed
+  schema_ref: packages/contracts/events/task_job-failed.schema.json
+  event_schema_version: 1
+  producer: task_job
+  aggregate_type: TaskJob
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: task_job.retry_scheduled
+  schema_ref: packages/contracts/events/task_job-retry_scheduled.schema.json
+  event_schema_version: 1
+  producer: task_job
+  aggregate_type: TaskJob
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: task_job.queued
+  schema_ref: packages/contracts/events/task_job-queued.schema.json
+  event_schema_version: 1
+  producer: task_job
+  aggregate_type: TaskJob
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: task_job.dead_lettered
+  schema_ref: packages/contracts/events/task_job-dead_lettered.schema.json
+  event_schema_version: 1
+  producer: task_job
+  aggregate_type: TaskJob
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: task_job.cancelled
+  schema_ref: packages/contracts/events/task_job-cancelled.schema.json
+  event_schema_version: 1
+  producer: task_job
+  aggregate_type: TaskJob
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: outbox.publish_started
+  schema_ref: packages/contracts/events/outbox-publish_started.schema.json
+  event_schema_version: 1
+  producer: outbox
+  aggregate_type: OutboxEvent
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: outbox.published
+  schema_ref: packages/contracts/events/outbox-published.schema.json
+  event_schema_version: 1
+  producer: outbox
+  aggregate_type: OutboxEvent
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: outbox.failed
+  schema_ref: packages/contracts/events/outbox-failed.schema.json
+  event_schema_version: 1
+  producer: outbox
+  aggregate_type: OutboxEvent
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: outbox.retry_scheduled
+  schema_ref: packages/contracts/events/outbox-retry_scheduled.schema.json
+  event_schema_version: 1
+  producer: outbox
+  aggregate_type: OutboxEvent
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: outbox.dead_lettered
+  schema_ref: packages/contracts/events/outbox-dead_lettered.schema.json
+  event_schema_version: 1
+  producer: outbox
+  aggregate_type: OutboxEvent
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: approval.decision_recorded
+  schema_ref: packages/contracts/events/approval-decision_recorded.schema.json
+  event_schema_version: 1
+  producer: approval
+  aggregate_type: ApprovalDecision
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: feedback.approved
+  schema_ref: packages/contracts/events/feedback-approved.schema.json
+  event_schema_version: 1
+  producer: feedback
+  aggregate_type: FeedbackItem
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: feedback.rejected
+  schema_ref: packages/contracts/events/feedback-rejected.schema.json
+  event_schema_version: 1
+  producer: feedback
+  aggregate_type: FeedbackItem
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: feedback.expired
+  schema_ref: packages/contracts/events/feedback-expired.schema.json
+  event_schema_version: 1
+  producer: feedback
+  aggregate_type: FeedbackItem
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: feedback.executed
+  schema_ref: packages/contracts/events/feedback-executed.schema.json
+  event_schema_version: 1
+  producer: feedback
+  aggregate_type: FeedbackItem
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: feedback.action_approved
+  schema_ref: packages/contracts/events/feedback-action_approved.schema.json
+  event_schema_version: 1
+  producer: feedback
+  aggregate_type: FeedbackAction
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: feedback.action_cancelled
+  schema_ref: packages/contracts/events/feedback-action_cancelled.schema.json
+  event_schema_version: 1
+  producer: feedback
+  aggregate_type: FeedbackAction
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: feedback.action_started
+  schema_ref: packages/contracts/events/feedback-action_started.schema.json
+  event_schema_version: 1
+  producer: feedback
+  aggregate_type: FeedbackAction
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: feedback.action_executed
+  schema_ref: packages/contracts/events/feedback-action_executed.schema.json
+  event_schema_version: 1
+  producer: feedback
+  aggregate_type: FeedbackAction
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: feedback.action_failed
+  schema_ref: packages/contracts/events/feedback-action_failed.schema.json
+  event_schema_version: 1
+  producer: feedback
+  aggregate_type: FeedbackAction
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: site.page_version.ready
+  schema_ref: packages/contracts/events/site-page_version-ready.schema.json
+  event_schema_version: 1
+  producer: site
+  aggregate_type: SitePageVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: site.page_version.published
+  schema_ref: packages/contracts/events/site-page_version-published.schema.json
+  event_schema_version: 1
+  producer: site
+  aggregate_type: SitePageVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: site.page_version.superseded
+  schema_ref: packages/contracts/events/site-page_version-superseded.schema.json
+  event_schema_version: 1
+  producer: site
+  aggregate_type: SitePageVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: site.page_version.rolled_back
+  schema_ref: packages/contracts/events/site-page_version-rolled_back.schema.json
+  event_schema_version: 1
+  producer: site
+  aggregate_type: SitePageVersion
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: geo.fixture.activated
+  schema_ref: packages/contracts/events/geo-fixture-activated.schema.json
+  event_schema_version: 1
+  producer: geo
+  aggregate_type: GeoQueryFixture
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: geo.fixture.retired
+  schema_ref: packages/contracts/events/geo-fixture-retired.schema.json
+  event_schema_version: 1
+  producer: geo
+  aggregate_type: GeoQueryFixture
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: webhook.deduplicated
+  schema_ref: packages/contracts/events/webhook-deduplicated.schema.json
+  event_schema_version: 1
+  producer: webhook
+  aggregate_type: WebhookReceipt
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: webhook.processed
+  schema_ref: packages/contracts/events/webhook-processed.schema.json
+  event_schema_version: 1
+  producer: webhook
+  aggregate_type: WebhookReceipt
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: webhook.rejected
+  schema_ref: packages/contracts/events/webhook-rejected.schema.json
+  event_schema_version: 1
+  producer: webhook
+  aggregate_type: WebhookReceipt
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: webhook.dead_lettered
+  schema_ref: packages/contracts/events/webhook-dead_lettered.schema.json
+  event_schema_version: 1
+  producer: webhook
+  aggregate_type: WebhookReceipt
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: deletion.queued
+  schema_ref: packages/contracts/events/deletion-queued.schema.json
+  event_schema_version: 1
+  producer: deletion
+  aggregate_type: DeletionRequest
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: deletion.started
+  schema_ref: packages/contracts/events/deletion-started.schema.json
+  event_schema_version: 1
+  producer: deletion
+  aggregate_type: DeletionRequest
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: deletion.completed
+  schema_ref: packages/contracts/events/deletion-completed.schema.json
+  event_schema_version: 1
+  producer: deletion
+  aggregate_type: DeletionRequest
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: deletion.partially_completed
+  schema_ref: packages/contracts/events/deletion-partially_completed.schema.json
+  event_schema_version: 1
+  producer: deletion
+  aggregate_type: DeletionRequest
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: deletion.failed
+  schema_ref: packages/contracts/events/deletion-failed.schema.json
+  event_schema_version: 1
+  producer: deletion
+  aggregate_type: DeletionRequest
+  event_kind: control
+  side_effect_scope: none
+  replay_policy: idempotent_control_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: kill_switch.paused
+  schema_ref: packages/contracts/events/kill_switch-paused.schema.json
+  event_schema_version: 1
+  producer: kill_switch
+  aggregate_type: KillSwitch
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: kill_switch.resumed
+  schema_ref: packages/contracts/events/kill_switch-resumed.schema.json
+  event_schema_version: 1
+  producer: kill_switch
+  aggregate_type: KillSwitch
+  event_kind: transition
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: agent_run.completed
+  schema_ref: packages/contracts/events/agent_run-completed.schema.json
+  event_schema_version: 1
+  producer: agent_run
+  aggregate_type: AgentRun
+  event_kind: append_only
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: model.call.started
+  schema_ref: packages/contracts/events/model-call-started.schema.json
+  event_schema_version: 1
+  producer: model
+  aggregate_type: ModelCall
+  event_kind: append_only
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: model.call.succeeded
+  schema_ref: packages/contracts/events/model-call-succeeded.schema.json
+  event_schema_version: 1
+  producer: model
+  aggregate_type: ModelCall
+  event_kind: append_only
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+- event_type: model.call.failed
+  schema_ref: packages/contracts/events/model-call-failed.schema.json
+  event_schema_version: 1
+  producer: model
+  aggregate_type: ModelCall
+  event_kind: append_only
+  side_effect_scope: none
+  replay_policy: idempotent_projection_replay
+  payload:
+    required:
+    - aggregate_id
+    - aggregate_version
+    constraints:
+      additionalProperties: true
+    properties:
+      aggregate_id:
+        type: string
+        format: uuid
+      aggregate_version:
+        type: integer
+        minimum: 1
+      from_state:
+        type:
+        - string
+        - 'null'
+      to_state:
+        type:
+        - string
+        - 'null'
+      command:
+        type:
+        - string
+        - 'null'
+      snapshot_hash:
+        type:
+        - string
+        - 'null'
+        pattern: ^[A-Fa-f0-9]{64}$
+      reason:
+        type:
+        - string
+        - 'null'
+compatibility:
+  allow_new_events: true
+  allow_new_optional_fields: true
+  reject_removed_events: true
+  reject_version_change: true
+  reject_required_field_addition: true
+  reject_constraint_narrowing: true

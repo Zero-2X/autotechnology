@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/node-execution.schema.json",
+  "title": "graph node execution",
+  "type": "object",
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "run_id": {"type": "string", "format": "uuid"},
+    "node": {"type": "string", "minLength": 1, "maxLength": 128},
+    "sequence": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["running", "succeeded", "failed", "skipped"]},
+    "input_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "output_hash": {"type": ["string", "null"], "pattern": "^[A-Fa-f0-9]{64}$"},
+    "error_code": {"type": ["string", "null"], "maxLength": 128},
+    "started_at": {"type": "string", "format": "date-time"},
+    "finished_at": {"type": ["string", "null"], "format": "date-time"}
+  },
+  "required": ["id", "run_id", "node", "sequence", "status", "input_hash", "output_hash", "error_code", "started_at", "finished_at"],
+  "additionalProperties": false,
+  "x-module": "orchestration",
+  "x-task-ids": ["GRAPH-GOV-003", "GRAPH-OBS-001"]
+}

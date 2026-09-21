@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/translation-memory-entry.schema.json",
+  "title": "TranslationMemoryEntry",
+  "type": "object",
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "locale": {"type": "string", "minLength": 1},
+    "source_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "target_text": {"type": "string", "minLength": 1},
+    "status": {"const": "approved"},
+    "approved_by": {"type": "string", "format": "uuid"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "required": ["id", "org_id", "locale", "source_hash", "target_text", "status", "approved_by", "created_at"],
+  "additionalProperties": false,
+  "x-source": "PROD-003 approved memory; source text stored by hash only"
+}

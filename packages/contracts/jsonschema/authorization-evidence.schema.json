@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/authorization-evidence.schema.json",
+  "title": "AuthorizationEvidence",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "account_connection_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "evidence_type": {
+      "type": "string",
+      "enum": [
+        "oauth_consent",
+        "sandbox_membership",
+        "owner_confirmation",
+        "policy_acceptance"
+      ]
+    },
+    "external_reference": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "scope_snapshot": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scopes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "captured_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "valid_until": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "verified",
+        "expired",
+        "revoked"
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "account_connection_id",
+    "evidence_type",
+    "external_reference",
+    "scope_snapshot",
+    "captured_at",
+    "valid_until",
+    "status"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

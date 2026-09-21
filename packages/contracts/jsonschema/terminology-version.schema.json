@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/terminology-version.schema.json",
+  "title": "TerminologyVersion",
+  "type": "object",
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "locale": {"type": "string", "minLength": 1},
+    "version_no": {"type": "integer", "minimum": 1},
+    "entries": {"type": "array", "items": {
+      "type": "object", "properties": {
+        "source": {"type": "string", "minLength": 1},
+        "target": {"type": "string", "minLength": 1}
+      }, "required": ["source", "target"], "additionalProperties": false
+    }},
+    "locked_product_names": {"type": "array", "uniqueItems": true,
+      "items": {"type": "string", "minLength": 1}},
+    "content_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "created_by": {"type": "string", "format": "uuid"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "required": ["id", "org_id", "locale", "version_no", "entries", "locked_product_names", "content_hash", "created_by", "created_at"],
+  "additionalProperties": false,
+  "x-source": "PROD-003 tenant-scoped immutable glossary"
+}

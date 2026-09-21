@@ -1,0 +1,63 @@
+task_id: FOUND-007A
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000008
+actor: team/foundation
+predecessors: [GOV-006, FOUND-000, FOUND-001, FOUND-004A, FOUND-006B]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - scripts/check_openapi_compatibility.py
+    - packages/contracts/openapi/openapi.yaml
+  contracts:
+    - docs/foundation/openapi-compatibility-baseline-v1.yaml
+    - docs/foundation/error-code-catalog-v1.yaml
+    - packages/contracts/jsonschema/api-contract-baseline.schema.json
+    - packages/contracts/jsonschema/foundation.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260916_found_007a_openapi.py
+  tests:
+    - tests/contract/test_found_007a_openapi.py
+    - tests/integration/test_found_007a_openapi_integration.py
+  manifests:
+    - docs/contracts/contract-manifest.yaml
+    - docs/contracts/migration-manifest.yaml
+    - docs/repo-inventory.md
+runtime_evidence:
+  openapi_version: 3.1.0
+  operation_count: 31
+  operation_identity: method_and_path_key_with_stable_operation_id
+  task_mapping: every_operation_has_x_task_ids_and_x_real_account_required
+  local_refs: all_local_json_and_yaml_refs_resolve
+  worker_boundary: internal_operations_require_X_Worker_Id
+  idempotency_boundary: public_write_operations_keep_Idempotency_Key_8_to_200
+  compatibility_rules: removed_operations_responses_required_parameters_and_narrowed_constraints_rejected
+  planned_catalog_scope: future_operations_remain_warnings_only
+  error_catalog: stable_codes_include_http_status_retryable_category_and_owner
+  runtime_error_envelope: worker_only_and_not_configured_codes_match_catalog
+  health_metrics: health_and_metrics_routes_remain_outside_business_error_gate
+verification:
+  targeted_test_command: python -m pytest tests/contract/test_found_007a_openapi.py tests/integration/test_found_007a_openapi_integration.py -q
+  targeted_test_result: 7 passed
+  compatibility_check_command: python scripts/check_openapi_compatibility.py --strict
+  compatibility_check_result: operations=31 baseline_operations=31 errors=0 warnings=0
+  migration_check_command: python scripts/check_migrations.py --strict --json
+  migration_check_result: revision_count=9 heads=[20260916_found_007a] errors=[]
+  task_precision_command: python scripts/check_task_card_precision.py --task FOUND-007A --strict
+  task_precision_result: scoped=1 precise=1 gaps=0
+  registry_refs_command: python scripts/check_task_card_registry_refs.py
+  registry_refs_result: checked=157 errors=0
+  full_test_command: python -m pytest tests --maxfail=1 -q
+  full_test_result: 148 passed
+  openapi_contract_command: python scripts/check_openapi_contract.py
+  openapi_contract_result: paths=31 operations=31 linked_tasks=33 catalog_missing=38 warnings_only
+side_effects:
+  network_access: false
+  real_credentials: false
+  real_model_provider: false
+  real_platform_api: false
+  database_write: false
+  business_routes_added: false
+rollback:
+  - Remove the FOUND-007A compatibility checkpoint and checker while retaining the prior OpenAPI contract.
+  - Run python -m alembic downgrade 20260916_found_006b; this migration is a no-op checkpoint.

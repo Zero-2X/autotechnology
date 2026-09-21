@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/model_gateway.schema.json",
+  "title": "model_gateway contract envelope",
+  "type": "object",
+  "required": [
+    "contract_version",
+    "payload"
+  ],
+  "properties": {
+    "contract_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "x-module": "model_gateway"
+}

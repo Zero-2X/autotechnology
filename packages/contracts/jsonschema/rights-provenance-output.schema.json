@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/rights-provenance-output.schema.json",
+  "title": "RightsProvenanceOutput",
+  "type": "object",
+  "properties": {
+    "permission_clues": {
+      "type": "array", "maxItems": 50,
+      "items": {
+        "type": "object",
+        "properties": {
+          "clue_key": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$"},
+          "evidence_ref": {"type": "string", "minLength": 1, "maxLength": 2048},
+          "locator": {"type": "string", "minLength": 1, "maxLength": 1000},
+          "quote": {"type": "string", "minLength": 1, "maxLength": 4000},
+          "signal": {"type": "string", "enum": ["permit", "restrict", "condition", "expiry", "attribution", "ownership", "unknown"]},
+          "normalized_value": {"type": "string", "minLength": 1, "maxLength": 2000},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+        },
+        "required": ["clue_key", "evidence_ref", "locator", "quote", "signal", "normalized_value", "confidence"],
+        "additionalProperties": false
+      }
+    },
+    "scope_candidates": {
+      "type": "array", "maxItems": 50,
+      "items": {
+        "type": "object",
+        "properties": {
+          "scope_key": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$"},
+          "dimension": {"type": "string", "enum": ["rights_holder", "region", "locale", "media", "use", "valid_from", "valid_to"]},
+          "value": {"type": "string", "minLength": 1, "maxLength": 1000},
+          "evidence_clue_keys": {
+            "type": "array", "minItems": 1, "uniqueItems": true,
+            "items": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$"}
+          },
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+        },
+        "required": ["scope_key", "dimension", "value", "evidence_clue_keys", "confidence"],
+        "additionalProperties": false
+      }
+    },
+    "gaps": {
+      "type": "array", "maxItems": 50,
+      "items": {
+        "type": "object",
+        "properties": {
+          "gap_key": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$"},
+          "dimension": {"type": "string", "enum": ["rights_holder", "regions", "locales", "media", "use", "validity", "evidence", "license_or_contract", "policy"]},
+          "description": {"type": "string", "minLength": 1, "maxLength": 2000},
+          "severity": {"type": "string", "enum": ["low", "medium", "high", "blocking"]},
+          "related_clue_keys": {
+            "type": "array", "uniqueItems": true,
+            "items": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$"}
+          }
+        },
+        "required": ["gap_key", "dimension", "description", "severity", "related_clue_keys"],
+        "additionalProperties": false
+      }
+    },
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "needs_review": {"const": true},
+    "final_rights_decision": {"const": "deferred"}
+  },
+  "required": ["permission_clues", "scope_candidates", "gaps", "confidence", "needs_review", "final_rights_decision"],
+  "additionalProperties": false,
+  "x-source": "AGENT-CORE-005C extraction only; rule or human makes final rights decision"
+}

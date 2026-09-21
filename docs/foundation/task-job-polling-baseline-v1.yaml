@@ -1,0 +1,26 @@
+baseline_key: task-job-polling
+baseline_version: 1
+status: active
+backend: postgresql
+configuration:
+  queue_name_env: TASK_QUEUE_NAME
+  poll_interval_env: TASK_QUEUE_POLL_INTERVAL_SECONDS
+  batch_size_env: TASK_QUEUE_POLL_BATCH_SIZE
+  default_queue_name: default
+  default_poll_interval_seconds: 5
+  default_batch_size: 10
+  redis_required: false
+  credentials_in_repository: false
+polling:
+  eligible_status: queued
+  ready_when: available_at_lte_now
+  tenant_scope: org_id
+  ordering: [available_at, created_at, id]
+  mutates_job_state: false
+  claim_task: FOUND-004C
+fixture:
+  kind: sqlite_dbapi
+  network_access: false
+  represents_real_postgresql: false
+effective_at: '2026-09-16T00:00:00+08:00'
+locked_by: team/foundation

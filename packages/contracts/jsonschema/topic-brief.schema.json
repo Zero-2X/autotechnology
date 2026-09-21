@@ -1,0 +1,263 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/topic-brief.schema.json",
+  "title": "TopicBrief",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "opportunity_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "locked",
+        "approved",
+        "rejected",
+        "deferred",
+        "superseded"
+      ]
+    },
+    "version_no": {
+      "type": "integer"
+    },
+    "audience": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "problem": {
+      "type": "string",
+      "minLength": 1
+    },
+    "claim_specs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "claim_key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "low",
+              "normal",
+              "high"
+            ]
+          },
+          "evidence_plan_refs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "claim_key",
+          "statement",
+          "priority",
+          "evidence_plan_refs"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "claim_ids": {
+      "type": "array",
+      "items": {}
+    },
+    "evidence_plan": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "original_angle": {
+      "type": "string",
+      "minLength": 1
+    },
+    "locales": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "markets": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "expected_channels": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "approved_by": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "approved_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "locked_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "locked_by": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "lock_hash": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[A-Fa-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "input_snapshot_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "deferred_reason": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "problem_statement": {
+      "type": "string",
+      "minLength": 1
+    },
+    "core_claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "owner_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "created_by": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "supersedes_version_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "policy_snapshot_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "opportunity_id",
+    "status",
+    "version_no",
+    "audience",
+    "problem",
+    "claim_specs",
+    "claim_ids",
+    "evidence_plan",
+    "original_angle",
+    "locales",
+    "markets",
+    "expected_channels",
+    "approved_by",
+    "approved_at",
+    "locked_at",
+    "locked_by",
+    "lock_hash",
+    "input_snapshot_hash",
+    "deferred_reason",
+    "problem_statement",
+    "core_claims",
+    "owner_id",
+    "created_by",
+    "created_at",
+    "supersedes_version_id",
+    "policy_snapshot_ref"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

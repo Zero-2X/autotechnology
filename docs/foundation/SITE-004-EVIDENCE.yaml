@@ -1,0 +1,57 @@
+task_id: SITE-004
+status: done
+trace_id: 55618e3a-a0dc-44ec-a001-000000000057
+actor: team/knowledge_site
+predecessors: [PROD-002, SITE-002, SITE-003, GEO_REGION-002]
+external_dependencies: []
+artifacts:
+  implementation:
+    - apps/knowledge-site/scripts/site_quality.py
+    - apps/knowledge-site/README.md
+  contracts:
+    - packages/contracts/jsonschema/site-page-version.schema.json
+    - packages/contracts/jsonschema/site-quality-report.schema.json
+  migration:
+    - packages/db/migrations/versions/20260920_site_004.py
+  tests:
+    - tests/unit/knowledge_site/test_site_quality.py
+    - tests/accessibility/test_site_004.py
+    - tests/integration/test_site_004_quality.py
+    - tests/integration/test_site_004_migration.py
+    - tests/contract/test_site_004_contract.py
+  task_spec:
+    - docs/tasks/SITE-004.md
+verification:
+  focused_command: python -m pytest tests/unit/knowledge_site/test_site_quality.py tests/accessibility/test_site_004.py tests/integration/test_site_004_quality.py tests/integration/test_site_004_migration.py tests/contract/test_site_004_contract.py -q
+  focused_result: 14 passed
+  module_regression_command: python -m pytest tests/unit/knowledge_site tests/accessibility tests/integration/test_site_001.py tests/integration/test_site_002.py tests/integration/test_site_003.py tests/integration/test_site_004_quality.py tests/integration/test_site_004_migration.py tests/contract/test_site_004_contract.py -q
+  module_regression_result: 43 passed
+  task_precision: scoped=1 precise=1 gaps=0
+  task_card_refs: checked=157 errors=0
+  schema_check: schema_errors=0
+  architecture_check: architecture_errors=0
+  migration_graph_check: revision_count=105; head=20260920_site_004; errors=0
+  migration_upgrade_and_downgrade: passed on disposable SQLite database
+  plan_consistency: validated=157; errors=0
+  secrets_check: secret_findings=0
+  full_command: python -m pytest -q
+  full_result: 899 passed
+behavior:
+  no_default_network_or_browser_side_effects: true
+  tenant_and_nested_input_isolation: true
+  page_http_200_required: true
+  broken_link_and_fragment_detection: true
+  bounded_redirect_chain_and_loop_detection: true
+  versioned_performance_budgets: true
+  nondecorative_image_alt_required: true
+  per_media_caption_track_required: true
+  ssr_visible_content_required: true
+  optional_dynamic_dom_parity_check: true
+  unknown_probe_or_metric_requires_manual_review: true
+  deterministic_sorting_hashes_and_idempotent_replay: true
+  site_002_artifact_hash_binding: true
+  append_only_tenant_scoped_database_projection: true
+  raw_html_dom_response_or_credentials_persisted: false
+rollback:
+  - Stop new site quality audits and export report hashes, checks, metrics and audit references; raw HTML and DOM are not stored.
+  - Downgrade to 20260920_geo_region_002; only site_quality_reports, its indexes and guards are removed while page, publication and region facts remain.

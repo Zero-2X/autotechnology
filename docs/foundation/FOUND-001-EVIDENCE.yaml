@@ -1,0 +1,41 @@
+task_id: FOUND-001
+status: done
+trace_id: 4af1a8f4-7b3e-4d3b-a001-000000000001
+actor: team/foundation
+predecessors:
+  - GOV-006
+  - FOUND-000
+artifacts:
+  root_files:
+    - README.md
+    - CONTRIBUTING.md
+    - CODEOWNERS
+  directory_baseline: docs/foundation/v2-directory-baseline-v1.yaml
+  branch_protection_policy: docs/governance/branch-protection-baseline-v1.yaml
+  branch_protection_schema: packages/contracts/jsonschema/branch-protection.schema.json
+  migration: packages/db/migrations/versions/20260916_found_001_repository_baseline.sql
+verification:
+  task_test_command: python -m pytest tests/contract/test_found_001_repository_baseline.py -q
+  task_test_result: 6 passed
+  full_test_command: python -m pytest tests --maxfail=1 -q
+  full_test_result: 28 passed
+  checks:
+    - python scripts/repo_inventory.py --check
+    - python scripts/check_task_card_precision.py --task FOUND-001 --strict
+    - python scripts/check_plan_consistency.py --strict-contracts
+    - python scripts/check_task_card_registry_refs.py
+    - python scripts/check_openapi_contract.py
+repository_state:
+  git_worktree: false
+  branch_protection_enforcement: documented_not_enforced
+  remote_configuration_changed: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  external_publication: false
+  runtime_business_code_added: false
+  existing_runtime_or_user_files_overwritten: false
+rollback:
+  - Retain the baseline and evidence for audit.
+  - Revert only through a reviewed additive change; do not rewrite accepted FOUND-000 outputs, ADRs, contracts, or migrations.
+  - Apply the branch policy only after a Git remote exists and preserve provider-side audit records.

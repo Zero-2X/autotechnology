@@ -1,0 +1,23 @@
+id: 00000000-0000-0000-0000-000000000005
+org_id: null
+subject_type: variant
+subject_id: null
+subject_ref: synthetic:baseline-policy
+content_policy_version: baseline-synthetic-content/v1
+region_policy_version: baseline-synthetic-region/v1
+distribution_policy_version: baseline-synthetic-distribution/v1
+account_policy_version: null
+data_processing_policy_version: baseline-synthetic-data/v1
+model_policy_version: baseline-synthetic-model/v1
+policy_version_refs: []
+precedence: [content, region, data_processing, model, distribution, account]
+input_hash: 0000000000000000000000000000000000000000000000000000000000000005
+rules_hash: 0000000000000000000000000000000000000000000000000000000000000006
+snapshot_hash: 0000000000000000000000000000000000000000000000000000000000000007
+supersedes_snapshot_id: null
+evaluated_at: '2026-09-16T00:00:00+08:00'
+effective_at: '2026-09-16T00:00:00+08:00'
+expires_at: '2026-10-16T00:00:00+08:00'
+review_due_at: '2026-10-16T00:00:00+08:00'
+status: active
+created_by: 00000000-0000-0000-0000-000000000001

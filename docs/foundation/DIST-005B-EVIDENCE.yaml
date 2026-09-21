@@ -1,0 +1,37 @@
+task_id: DIST-005B
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000031
+actor: team/distribution
+predecessors: [FOUND-004D, POLICY-001, DIST-005A]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/distribution/retry.py
+    - modules/distribution/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/delivery-attempt.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_dist_005b.py
+  tests:
+    - tests/unit/distribution/test_retry.py
+verification:
+  targeted_command: python -m pytest tests/unit/distribution tests/contract/test_found_007d_core_schemas.py -q
+  targeted_result: 43 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  tenant_quota_and_retry_after: true
+  transient_exhausted_deterministic_unknown_classification: true
+  manual_escalation_event: true
+  idempotent_reservation_and_classification: true
+  no_implicit_retry_side_effect: true
+  business_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable quota reservation and retry classification commands while retaining audit decisions.
+  - This revision creates no business table; retry policy projections use a forward migration.

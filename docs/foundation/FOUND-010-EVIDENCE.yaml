@@ -1,0 +1,32 @@
+task_id: FOUND-010
+status: done
+date: '2026-09-18'
+actor: team/foundation
+artifacts:
+  implementation: infra/foundation/platform_contracts.py
+  contracts:
+    - packages/contracts/jsonschema/platform.schema.json
+    - packages/contracts/jsonschema/distribution-target.schema.json
+    - packages/contracts/jsonschema/distribution-target-version.schema.json
+    - packages/contracts/jsonschema/publication-intent.schema.json
+    - packages/contracts/jsonschema/delivery-attempt.schema.json
+  migration: packages/db/migrations/versions/20260918_found_010_platform_contracts.py
+  tests:
+    - tests/contract/test_found_010_platform_contracts.py
+    - tests/unit/test_found_010_platform_registry.py
+behavior:
+  registry: immutable unique id/key lookup with stable ordering
+  ports: protocol_only_no_adapter_implementation
+  synthetic_target: dev_or_staging_no_connection_policy_snapshot_required
+  delivery_mode: shared_contract
+  external_side_effects: false
+verification:
+  targeted_result: 43 passed including FOUND-007D regressions
+  schema_gate: schema_errors=0
+  migration_graph: revision_count=15 heads=[20260918_found_010] errors=[]
+  full_gate: python scripts/check_foundation_contracts.py; 448 passed
+boundaries:
+  real_accounts: false
+  network_calls: false
+  platform_behavior: false
+  database_tables_added: false

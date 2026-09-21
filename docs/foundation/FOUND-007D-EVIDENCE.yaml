@@ -1,0 +1,21 @@
+task_id: FOUND-007D
+status: done
+artifacts:
+  offline_schema_gate: scripts/check_json_schemas.py
+  local_ci_gate: scripts/check_foundation_contracts.py
+  binding: infra/foundation/observation_contract.py
+  migration: packages/db/migrations/versions/20260916_found_007d_core_contracts.py
+verification:
+  core_object_refs: 49
+  cross_field_increment: 10 passed
+  previous_full_suite: 220 passed after pnpm installation, before this increment
+  final_gate: python scripts/check_foundation_contracts.py exited 0
+  full_suite: 233 passed, 0 skipped
+  migration_graph: revision_count=12 heads=[20260916_found_007d] errors=[]
+  registry_refs: checked=157 errors=0
+  plan_consistency: errors=[], expected future planned-migration warnings
+boundaries:
+  - Local CI command is implemented; no hosted CI service was configured or claimed.
+  - No-op migration is a contract checkpoint, not database bootstrap or domain FKs.
+  - Schema cannot validate actual reviewer identity, foreign record existence or authorization.
+  - Old Foundation audit findings remain separate unresolved items before proceeding.

@@ -1,0 +1,72 @@
+task_id: FOUND-004C
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000008
+actor: team/foundation
+predecessors: [GOV-006, FOUND-000, FOUND-003D, FOUND-004B]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - infra/foundation/task_claim.py
+    - infra/foundation/__init__.py
+    - apps/api/main.py
+    - apps/worker/main.py
+    - apps/worker/runtime.py
+    - packages/db/migrations/versions/20260916_found_004c_task_leases.py
+  contracts:
+    - packages/contracts/jsonschema/task-job.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+    - packages/contracts/openapi/openapi.yaml
+  tests:
+    - tests/contract/test_found_004c_task_claim.py
+    - tests/integration/test_found_004c_task_claim_integration.py
+    - tests/integration/test_foundation_worker_runtime.py
+  manifests:
+    - docs/contracts/contract-manifest.yaml
+    - docs/contracts/migration-manifest.yaml
+runtime_evidence:
+  claim_atomicity: one_worker_claims_and_second_gets_JOB_NOT_CLAIMABLE
+  lease_token: unique_per_claim_and_worker_bound
+  heartbeat: extends_lease_until_with_token_and_worker_validation
+  lifecycle: leased_to_running_to_succeeded_or_failed
+  version_guard: JOB_VERSION_CONFLICT
+  expiry_recovery: expired_lease_reclaim_increments_attempt_count
+  old_token: cannot_overwrite_new_worker_state
+  tenant_scope: cross_org_id_rejected
+  worker_command: internal_task_job_commands_require_X-Worker-Id
+  postgres_strategy: FOR_UPDATE_SKIP_LOCKED_query_defined;sqlite_fixture_uses_BEGIN_IMMEDIATE
+  composed_worker: bounded_claim_start_handler_heartbeat_complete_failure_shutdown_and_outbox
+verification:
+  task_test_command: python -m pytest tests/contract/test_found_004c_task_claim.py tests/integration/test_found_004c_task_claim_integration.py -q
+  task_test_result: 5 passed
+  migration_check_command: python scripts/check_migrations.py --strict --json
+  migration_check_result: revisions=3 heads=[20260916_found_004c] errors=[]
+  alembic_upgrade_command: python -m alembic upgrade head
+  alembic_downgrade_command: python -m alembic downgrade 20260916_found_004b
+  targeted_checks:
+    - python scripts/check_task_card_precision.py --task FOUND-004C --strict
+    - python scripts/check_task_card_registry_refs.py
+    - python scripts/check_plan_consistency.py --strict-contracts --strict-commands
+    - python scripts/check_openapi_contract.py
+  full_test_command: python -m pytest tests --maxfail=1 -q
+  full_test_result: 85 passed, 8 warnings
+audit_revalidation:
+  date: '2026-09-16'
+  command: python -m pytest tests --maxfail=1 -q
+  result: 109 passed
+  reason: overall foundation architecture and implementation audit after claim race and max-attempt corrections
+worker_composition_revalidation:
+  date: '2026-09-18'
+  evidence: docs/foundation/WORKER-COMPOSITION-AUDIT-2026-09-18.yaml
+  targeted_result: 24 passed
+  real_postgresql_concurrency: false
+side_effects:
+  real_credentials: false
+  real_postgresql_connection: false
+  real_redis_connection: false
+  network_probe: false
+  real_platform_api: false
+  external_publication: false
+  existing_sql_migrations_rewritten: false
+rollback:
+  - Pause task claiming and retain leased/running jobs for recovery.
+  - Run python -m alembic downgrade 20260916_found_004b to remove task_job_leases only.

@@ -1,0 +1,45 @@
+task_id: MODEL-003
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000048
+actor: team/model_gateway
+predecessors: [GOV-008, MODEL-CORE-002, CANON-002, MODEL-001]
+external_dependencies: []
+artifacts:
+  implementation:
+    - modules/model_gateway/budget.py
+    - modules/model_gateway/service.py
+    - modules/model_gateway/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/model-gateway.schema.json
+    - packages/contracts/jsonschema/model-call.schema.json
+    - packages/contracts/jsonschema/model-budget-policy.schema.json
+    - packages/contracts/jsonschema/model-budget-decision.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_model_003.py
+  tests:
+    - tests/unit/model_gateway/test_budget.py
+verification:
+  focused_command: python -m pytest tests/unit/model_gateway -q
+  focused_result: 16 passed
+  targeted_command: python -m pytest tests/unit/model_gateway tests/integration --maxfail=1 -q
+  targeted_result: 136 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+  full_command: python -m pytest -q
+  full_result: 747 passed
+behavior:
+  versioned_budget_policy: true
+  org_task_model_dimensions: true
+  task_day_month_windows_utc: true
+  request_budget_reservation_before_provider: true
+  actual_cost_settlement: true
+  concurrent_idempotency: true
+  budget_exceeded_stops_provider_call: true
+  governance_caps_enforced_cents: {task: 200, day: 2500, month: 30000}
+  budget_events_exclude_request_body: true
+  real_network_calls: false
+rollback:
+  - Stop budget policy registration and retain existing ModelCall, usage, and deny evidence read-only.
+  - Downgrade to 20260919_found_eval_001 only after exporting budget audit and cost facts.

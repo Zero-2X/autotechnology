@@ -1,0 +1,35 @@
+task_id: PROV-001
+status: done
+implementation:
+  module: modules/provenance/source.py
+  contracts:
+    - packages/contracts/jsonschema/source.schema.json
+    - packages/contracts/jsonschema/source-snapshot.schema.json
+  migration: packages/db/migrations/versions/20260918_prov_001.py
+  tables:
+    - sources
+    - source_snapshots
+    - source_commands
+    - source_events
+    - source_snapshot_state_events
+  behaviors:
+    - tenant_scoped_source_and_snapshot_ingest
+    - private_storage_reference_and_sha256_content_hash
+    - fetch_method_and_confidence_validation
+    - idempotent_command_replay_without_generated_timestamp_drift
+    - optimistic_snapshot_state_machine_with_terminal_reasons
+    - append_only_audit_events_and_immutable_snapshot_identity
+verification:
+  commands:
+    - py -3.12 -m pytest tests/unit/provenance tests/integration/test_provenance.py -q --disable-warnings --maxfail=1
+    - py -3.12 scripts/check_json_schemas.py
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 scripts/check_migrations.py --strict --json
+    - py -3.12 scripts/check_task_card_precision.py --task PROV-001 --strict
+    - py -3.12 -m pytest tests/contract/test_found_004a_migrations.py -q --disable-warnings --maxfail=1
+  results:
+    targeted_tests: 6
+    schema_errors: 0
+    architecture_errors: 0
+    migration_errors: 0
+    precision_gaps: 0

@@ -1,0 +1,315 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/delivery-attempt.schema.json",
+  "title": "DeliveryAttempt",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "publication_intent_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "account_connection_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "adapter_ref": {
+      "type": "string",
+      "pattern": "^(manual:export|fake:official@[A-Za-z0-9._-]+|platform:[A-Za-z0-9_-]+@[A-Za-z0-9._-]+)$"
+    },
+    "provider_mode": {
+      "type": "string",
+      "enum": [
+        "manual",
+        "fake",
+        "sandbox",
+        "authorized"
+      ]
+    },
+    "environment": {
+      "type": "string",
+      "enum": [
+        "dev",
+        "staging",
+        "prod"
+      ]
+    },
+    "policy_snapshot_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "execution_policy_decision_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "adapter_version": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "capability_snapshot": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "idempotency_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "provider_idempotency_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attempt_no": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "parent_attempt_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "created",
+        "running",
+        "succeeded",
+        "failed",
+        "unknown",
+        "dead_letter"
+      ]
+    },
+    "retryable": {
+      "type": "boolean"
+    },
+    "next_attempt_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "max_attempts": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "started_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "completed_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "external_request_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "external_object_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "account_connection_snapshot": {
+      "type": "object",
+      "properties": {},
+      "required": [],
+      "additionalProperties": false
+    },
+    "error_class": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "last_error_code": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "last_error_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "resolution_reason": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "resolved_by": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "resolved_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "publication_intent_id",
+    "account_connection_id",
+    "adapter_ref",
+    "provider_mode",
+    "environment",
+    "policy_snapshot_id",
+    "execution_policy_decision_id",
+    "adapter_version",
+    "capability_snapshot",
+    "idempotency_key",
+    "provider_idempotency_key",
+    "attempt_no",
+    "parent_attempt_id",
+    "status",
+    "retryable",
+    "next_attempt_at",
+    "max_attempts",
+    "started_at",
+    "completed_at",
+    "external_request_id",
+    "external_object_id",
+    "account_connection_snapshot",
+    "error_class",
+    "last_error_code",
+    "last_error_at",
+    "resolution_reason",
+    "resolved_by",
+    "resolved_at",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue",
+  "oneOf": [
+    {
+      "title": "manual or fake",
+      "properties": {
+        "provider_mode": {
+          "enum": [
+            "manual",
+            "fake"
+          ]
+        },
+        "account_connection_id": {
+          "type": "null"
+        }
+      }
+    },
+    {
+      "title": "sandbox or authorized",
+      "properties": {
+        "provider_mode": {
+          "enum": [
+            "sandbox",
+            "authorized"
+          ]
+        },
+        "account_connection_id": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    }
+  ]
+}

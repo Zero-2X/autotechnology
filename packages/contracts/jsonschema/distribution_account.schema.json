@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/distribution_account.schema.json",
+  "title": "distribution_account contract union",
+  "oneOf": [
+    {
+      "$ref": "./account-profile.schema.json"
+    },
+    {
+      "$ref": "./account-connection.schema.json"
+    },
+    {
+      "$ref": "./authorization-evidence.schema.json"
+    }
+  ],
+  "x-module": "distribution_account"
+}

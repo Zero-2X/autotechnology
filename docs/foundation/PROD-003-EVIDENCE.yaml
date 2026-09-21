@@ -1,0 +1,37 @@
+task_id: PROD-003
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000016
+actor: team/production
+predecessors: [CANON-002, PROD-002]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/production/terminology.py
+  contracts:
+    - packages/contracts/jsonschema/terminology-version.schema.json
+    - packages/contracts/jsonschema/translation-memory-entry.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_prod_003.py
+  tests:
+    - tests/unit/production/test_terminology.py
+verification:
+  targeted_command: python -m pytest tests/unit/production tests/integration/test_variant_draft.py tests/integration/test_variant_store.py tests/contract/test_found_004a_migrations.py -q
+  targeted_result: 22 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  tenant_scoped_immutable_glossary_versions: true
+  translation_memory_stores_source_hash_only: true
+  idempotent_term_and_memory_commands: true
+  code_url_number_and_product_name_checks: true
+  preferred_term_check: true
+  draft_block_issues_and_memory_suggestions: true
+  automatic_approval_or_publication: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Stop new terminology and memory writes while retaining historical records.
+  - Disable checks without modifying saved Variant facts.

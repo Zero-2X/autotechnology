@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/research-output.schema.json",
+  "title": "ResearchOutput",
+  "type": "object",
+  "properties": {
+    "candidate_facts": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "properties": {
+          "candidate_key": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$"},
+          "statement": {"type": "string", "minLength": 1, "maxLength": 4000},
+          "fact_type": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{0,127}$"},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+          "citations": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "type": "object",
+              "properties": {
+                "source_snapshot_id": {"type": "string", "format": "uuid"},
+                "locator": {"type": "string", "minLength": 1, "maxLength": 1000},
+                "quote": {"type": "string", "minLength": 1, "maxLength": 4000}
+              },
+              "required": ["source_snapshot_id", "locator", "quote"],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": ["candidate_key", "statement", "fact_type", "confidence", "citations"],
+        "additionalProperties": false
+      }
+    },
+    "verification_items": {
+      "type": "array",
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "properties": {
+          "item_key": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$"},
+          "question": {"type": "string", "minLength": 1, "maxLength": 2000},
+          "reason": {"type": "string", "minLength": 1, "maxLength": 2000},
+          "priority": {"type": "string", "enum": ["low", "medium", "high", "urgent"]},
+          "related_candidate_keys": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {"type": "string", "pattern": "^[a-z][a-z0-9_-]{0,63}$"}
+          }
+        },
+        "required": ["item_key", "question", "reason", "priority", "related_candidate_keys"],
+        "additionalProperties": false
+      }
+    },
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "needs_review": {"const": true}
+  },
+  "required": ["candidate_facts", "verification_items", "confidence", "needs_review"],
+  "additionalProperties": false,
+  "x-source": "AGENT-CORE-005B candidates only; no Claim or KnowledgeCore mutation"
+}

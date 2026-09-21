@@ -1,0 +1,41 @@
+task_id: PROD-004
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000017
+actor: team/production
+predecessors: [GEO_REGION-CORE-001, CANON-002, PROD-002, PROD-003]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/production/region_rules.py
+    - modules/production/variant_store.py
+  contracts:
+    - packages/contracts/jsonschema/region-rule-decision.schema.json
+    - packages/contracts/jsonschema/region-profile-version.schema.json
+    - packages/contracts/jsonschema/variant-version.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_prod_004.py
+  tests:
+    - tests/unit/production/test_region_rules.py
+    - tests/integration/test_variant_store.py
+verification:
+  targeted_command: python -m pytest tests/unit/production tests/integration/test_variant_draft.py tests/integration/test_variant_store.py tests/contract/test_found_004a_migrations.py -q
+  targeted_result: 28 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  tenant_scoped_region_preflight: true
+  validity_locale_market_units_currency_timezone_checks: true
+  data_residency_and_platform_eligibility_checks: true
+  restricted_topic_blocking: true
+  required_disclosure_blocking: true
+  deterministic_decision_hash_and_idempotent_replay: true
+  variant_write_blocked_before_transaction: true
+  canonical_region_and_platform_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable RegionRuleService preflight while retaining decision audit records.
+  - This revision creates no business table; future decision persistence uses a forward migration.

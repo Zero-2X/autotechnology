@@ -1,0 +1,35 @@
+task_id: DIST-008A
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000036
+actor: team/distribution
+predecessors: [FOUND-004A, POLICY-001, DIST-001, DIST-007]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/distribution/service.py
+  contracts:
+    - packages/contracts/jsonschema/distribution-target-version.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_dist_008a.py
+  tests:
+    - tests/unit/distribution/test_target_immutability.py
+    - tests/unit/distribution/test_service.py
+verification:
+  targeted_command: python -m pytest tests/unit/distribution tests/integration --maxfail=1 -q
+  targeted_result: 145 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  target_fields_and_snapshots_immutable: true
+  target_version_etag_guards: true
+  target_version_activation_and_retirement: true
+  replacement_version_required_for_active_retirement: true
+  target_retirement_blocks_new_versions: true
+  tenant_scope_and_idempotency: true
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable Target lifecycle commands while retaining immutable Target/TargetVersion snapshots and audit events.
+  - This revision creates no business table; lifecycle projections use in-memory state and the Alembic revision is reversible.

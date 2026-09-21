@@ -1,0 +1,72 @@
+scope: stage-8-account-oauth-foundation
+status: external_gate_pending
+external_dependency: EXT-ACCOUNT-001
+reason: >-
+  The credential-free implementation and fake/sandbox contracts are ready, but
+  the checklist requires a registered legal/platform主体, authorized contact,
+  approved scopes and re-query evidence before a real AccountConnection or
+  platform capability can be accepted.
+tasks:
+  ACCOUNT-001A:
+    status: implementation_ready
+    behavior: redacted AccountConnection shell, tenant/platform/external-id uniqueness, no token input
+  ACCOUNT-001B:
+    status: implementation_ready
+    behavior: AuthorizationEvidence validation, evidence completeness and secret-free AccountPassport projection
+  ACCOUNT-001C:
+    status: implementation_ready
+    behavior: immutable connected TargetVersion with redacted account/capability snapshots and policy binding
+  ACCOUNT-002:
+    status: implementation_ready
+    behavior: health check, expiry/policy/owner restrictions and automatic restricted state
+  ACCOUNT-003:
+    status: implementation_ready
+    behavior: queue-claim, platform-call and reconcile Kill Switch checks
+  OAUTH-001A:
+    status: implementation_ready
+    behavior: OAuthProvider port, FakeOAuthProvider, hashed State and session lifecycle
+  OAUTH-001B:
+    status: implementation_ready
+    behavior: exact redirect URI, PKCE S256 and CSRF State validation; callback has no publication path
+  OAUTH-001C:
+    status: implementation_ready
+    behavior: scope allowlist, authorization evidence, revocation and invalidation event
+  OAUTH-002A:
+    status: implementation_ready
+    behavior: Secret Manager port stores raw values privately and exposes only secret references
+  OAUTH-002B:
+    status: implementation_ready
+    behavior: one active token lease, rotation, expiry, revocation and append-only audit/event facts
+artifacts:
+  account_service: modules/distribution/account/service.py
+  account_exports: modules/distribution/account/__init__.py
+  oauth_service: modules/distribution/oauth/service.py
+  oauth_exports: modules/distribution/oauth/__init__.py
+  account_contract: packages/contracts/jsonschema/account-connection.schema.json
+  evidence_contract: packages/contracts/jsonschema/authorization-evidence.schema.json
+  session_contract: packages/contracts/jsonschema/oauth-authorization-session.schema.json
+  lease_contract: packages/contracts/jsonschema/token-lease.schema.json
+  target_contract: packages/contracts/jsonschema/distribution-target-version.schema.json
+tests:
+  command: >-
+    python -m pytest tests/unit/distribution_oauth
+    tests/unit/distribution_account
+    tests/contract/test_oauth_contracts.py
+    tests/integration/test_account_connection_models.py -q
+  result: 16 passed
+security_invariants:
+  raw_token_in_contracts: false
+  raw_token_in_audit_or_events: false
+  callback_can_publish: false
+  cross_tenant_connection_access: rejected
+  duplicate_platform_external_account: rejected
+  real_platform_network_calls: false
+next_gate_inputs:
+  - legal_entity_and_authorized_contact
+  - platform_account_ownership
+  - official_platform_eligibility
+  - approved_scopes_and_purpose
+  - authorization_expiry_and_revocation_path
+  - privacy_and_region_review
+  - security_and_vault_readiness
+  - sandbox_and_reconciliation_test

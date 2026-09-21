@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/knowledge_site.schema.json",
+  "title": "knowledge_site contract union",
+  "oneOf": [
+    {
+      "$ref": "./site-page-version.schema.json"
+    }
+  ],
+  "x-module": "knowledge_site"
+}

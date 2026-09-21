@@ -1,0 +1,2253 @@
+schema_version: 1
+source_document: AI跨境技术内容自动化工作流开发清单_审计与优化版.md
+events:
+- event_type: topic.opportunity.scored
+  producer: topic
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/topic-opportunity-scored.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: captured
+    command: score
+    to_state: scored
+- event_type: topic.signal.created
+  producer: topic
+  aggregate_type: Topic
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/topic-signal-created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: topic_signal.rejected
+  producer: topic_signal
+  aggregate_type: topic_signal
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/topic_signal-rejected.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: topic.opportunity.created
+  producer: topic
+  aggregate_type: Topic
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/topic-opportunity-created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: topic.opportunity.approved
+  producer: topic
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/topic-opportunity-approved.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: scored
+    command: approve
+    to_state: approved
+- event_type: topic.opportunity.rejected
+  producer: topic
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/topic-opportunity-rejected.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: scored
+    command: reject
+    to_state: rejected
+- event_type: topic.brief.created
+  producer: topic
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/topic-brief-created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: approved
+    command: create_brief
+    to_state: briefed
+- event_type: topic.brief.approved
+  producer: topic
+  aggregate_type: TopicBrief
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/topic-brief-approved.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: draft
+    command: approve
+    to_state: approved
+- event_type: topic.brief.rejected
+  producer: topic
+  aggregate_type: TopicBrief
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/topic-brief-rejected.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: draft
+    command: reject
+    to_state: rejected
+- event_type: topic.brief.deferred
+  producer: topic
+  aggregate_type: TopicBrief
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/topic-brief-deferred.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: draft
+    command: defer
+    to_state: deferred
+- event_type: topic.brief.superseded
+  producer: topic
+  aggregate_type: TopicBrief
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/topic-brief-superseded.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: approved
+    command: supersede
+    to_state: superseded
+- event_type: topic.production.started
+  producer: topic
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/topic-production-started.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: briefed
+    command: start_production
+    to_state: in_production
+- event_type: topic.monitoring.started
+  producer: topic
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/topic-monitoring-started.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: in_production
+    command: start_monitoring
+    to_state: monitoring
+- event_type: topic.refresh.started
+  producer: topic
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/topic-refresh-started.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: refresh
+    command: start_refresh
+    to_state: in_production
+- event_type: topic.retired
+  producer: topic
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/topic-retired.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: monitoring
+    command: retire
+    to_state: retired
+- event_type: source.ingested
+  producer: source
+  aggregate_type: Source
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/source-ingested.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: none
+    command: ingest
+    to_state: ingested
+- event_type: source.quarantined
+  producer: source
+  aggregate_type: Source
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/source-quarantined.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: ingested
+    command: quarantine
+    to_state: quarantined
+- event_type: source.snapshot.quarantined
+  producer: source
+  aggregate_type: SourceSnapshot
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/source-snapshot-quarantined.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: captured
+    command: quarantine
+    to_state: quarantined
+- event_type: source.snapshot.usable
+  producer: source
+  aggregate_type: SourceSnapshot
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/source-snapshot-usable.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: quarantined
+    command: mark_usable
+    to_state: usable
+- event_type: source.snapshot.expired
+  producer: source
+  aggregate_type: SourceSnapshot
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/source-snapshot-expired.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: captured/quarantined/usable
+    command: expire
+    to_state: expired
+- event_type: source.snapshot.revoked
+  producer: source
+  aggregate_type: SourceSnapshot
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/source-snapshot-revoked.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: captured/quarantined/usable
+    command: revoke
+    to_state: revoked
+- event_type: source.snapshot.blocked
+  producer: source
+  aggregate_type: SourceSnapshot
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/source-snapshot-blocked.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: captured/quarantined/usable
+    command: block
+    to_state: blocked
+- event_type: source.usable
+  producer: source
+  aggregate_type: Source
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/source-usable.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: quarantined
+    command: mark_usable
+    to_state: usable
+- event_type: source.blocked
+  producer: source
+  aggregate_type: Source
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/source-blocked.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: ingested
+    command: block
+    to_state: blocked
+  - from_state: quarantined
+    command: block
+    to_state: blocked
+  - from_state: usable
+    command: block
+    to_state: blocked
+- event_type: source.expired
+  producer: source
+  aggregate_type: Source
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/source-expired.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: usable
+    command: expire
+    to_state: expired
+- event_type: source.revoked
+  producer: source
+  aggregate_type: Source
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/source-revoked.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: usable
+    command: revoke
+    to_state: revoked
+- event_type: rights.version.created
+  producer: rights
+  aggregate_type: RightsRecordVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/rights-version-created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: none
+    command: create
+    to_state: pending
+- event_type: rights.version.verified
+  producer: rights
+  aggregate_type: RightsRecordVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/rights-version-verified.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: pending
+    command: verify
+    to_state: verified
+- event_type: rights.version.expired
+  producer: rights
+  aggregate_type: RightsRecordVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/rights-version-expired.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: verified
+    command: expire
+    to_state: expired
+- event_type: rights.version.revoked
+  producer: rights
+  aggregate_type: RightsRecordVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/rights-version-revoked.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: verified
+    command: revoke
+    to_state: revoked
+- event_type: rights.version.complaint_hold
+  producer: rights
+  aggregate_type: RightsRecordVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/rights-version-complaint_hold.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: verified
+    command: hold_complaint
+    to_state: complaint_hold
+- event_type: entity.created
+  producer: entity
+  aggregate_type: Entity
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/entity-created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: entity.activated
+  producer: entity
+  aggregate_type: Entity
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/entity-activated.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: draft
+    command: activate
+    to_state: active
+- event_type: entity.retired
+  producer: entity
+  aggregate_type: Entity
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/entity-retired.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: active
+    command: retire
+    to_state: retired
+- event_type: claim.created
+  producer: claim
+  aggregate_type: Claim
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/claim-created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: claim.verified
+  producer: claim
+  aggregate_type: Claim
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/claim-verified.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: draft
+    command: verify
+    to_state: verified
+- event_type: claim.withdrawn
+  producer: claim
+  aggregate_type: Claim
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/claim-withdrawn.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: verified
+    command: withdraw
+    to_state: withdrawn
+- event_type: claim.freshness.changed
+  producer: claim
+  aggregate_type: Claim
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/claim-freshness-changed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: evidence.captured
+  producer: evidence
+  aggregate_type: Evidence
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/evidence-captured.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: evidence.validated
+  producer: evidence
+  aggregate_type: Evidence
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/evidence-validated.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: captured
+    command: validate
+    to_state: valid
+- event_type: evidence.invalidated
+  producer: evidence
+  aggregate_type: Evidence
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/evidence-invalidated.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: valid
+    command: expire/revoke
+    to_state: expired/revoked
+- event_type: knowledge.core.activated
+  producer: knowledge
+  aggregate_type: KnowledgeCore
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/knowledge-core-activated.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: draft
+    command: activate
+    to_state: active
+- event_type: knowledge.core.retired
+  producer: knowledge
+  aggregate_type: KnowledgeCore
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/knowledge-core-retired.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: active
+    command: retire
+    to_state: retired
+- event_type: knowledge.core_version.verified
+  producer: knowledge
+  aggregate_type: KnowledgeCoreVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/knowledge-core_version-verified.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: draft
+    command: verify
+    to_state: verified
+- event_type: knowledge.core_version.changed
+  producer: knowledge
+  aggregate_type: KnowledgeCoreVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/knowledge-core_version-changed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: verified
+    command: supersede/withdraw
+    to_state: superseded/withdrawn
+- event_type: policy.snapshot.created
+  producer: policy
+  aggregate_type: PolicySnapshot
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/policy-snapshot-created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: none
+    command: create
+    to_state: active
+- event_type: policy.snapshot.expired
+  producer: policy
+  aggregate_type: PolicySnapshot
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/policy-snapshot-expired.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: active
+    command: expire
+    to_state: expired
+- event_type: policy.snapshot.revoked
+  producer: policy
+  aggregate_type: PolicySnapshot
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/policy-snapshot-revoked.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: active
+    command: revoke
+    to_state: revoked
+- event_type: distribution.target.created
+  producer: distribution
+  aggregate_type: DistributionTarget
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/distribution-target-created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: none
+    command: create
+    to_state: active
+- event_type: distribution.target.retired
+  producer: distribution
+  aggregate_type: DistributionTarget
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/distribution-target-retired.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: active
+    command: retire
+    to_state: retired
+- event_type: distribution.target_version.created
+  producer: distribution
+  aggregate_type: DistributionTargetVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/distribution-target_version-created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: none
+    command: create_draft
+    to_state: draft
+- event_type: distribution.target_version.activated
+  producer: distribution
+  aggregate_type: DistributionTargetVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/distribution-target_version-activated.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: draft
+    command: activate
+    to_state: active
+- event_type: distribution.target_version.retired
+  producer: distribution
+  aggregate_type: DistributionTargetVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/distribution-target_version-retired.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: active
+    command: retire
+    to_state: retired
+- event_type: region.profile.created
+  producer: region
+  aggregate_type: RegionProfileVersion
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/region-profile-created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: region.profile_version.created
+  producer: region
+  aggregate_type: RegionProfileVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/region-profile_version-created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: none
+    command: create_draft
+    to_state: draft
+- event_type: region.profile_version.activated
+  producer: region
+  aggregate_type: RegionProfileVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/region-profile_version-activated.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: draft
+    command: activate
+    to_state: active
+- event_type: region.profile_version.retired
+  producer: region
+  aggregate_type: RegionProfileVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/region-profile_version-retired.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: active
+    command: retire
+    to_state: retired
+- event_type: canonical.version.created
+  producer: canonical
+  aggregate_type: CanonicalContentVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/canonical-version-created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: none
+    command: create
+    to_state: draft
+- event_type: canonical.evidence_requested
+  producer: canonical
+  aggregate_type: CanonicalContentVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/canonical-evidence_requested.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: draft
+    command: submit_evidence
+    to_state: evidence_pending
+- event_type: canonical.fact_checked
+  producer: canonical
+  aggregate_type: CanonicalContentVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/canonical-fact_checked.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: evidence_pending
+    command: fact_check
+    to_state: fact_checked
+- event_type: canonical.version.approved
+  producer: canonical
+  aggregate_type: CanonicalContentVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/canonical-version-approved.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: fact_checked
+    command: approve
+    to_state: approved
+- event_type: canonical.version.superseded
+  producer: canonical
+  aggregate_type: CanonicalContentVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/canonical-version-superseded.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: approved
+    command: supersede
+    to_state: superseded
+- event_type: canonical.version.withdrawn
+  producer: canonical
+  aggregate_type: CanonicalContentVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/canonical-version-withdrawn.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: approved
+    command: withdraw
+    to_state: withdrawn
+- event_type: variant.created
+  producer: variant
+  aggregate_type: ContentVariant
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/variant-created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: draft
+    command: activate
+    to_state: active
+- event_type: variant.root_changed
+  producer: variant
+  aggregate_type: ContentVariant
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/variant-root_changed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: active
+    command: withdraw/retire
+    to_state: withdrawn/retired
+- event_type: variant.localized
+  producer: variant
+  aggregate_type: VariantVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/variant-localized.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: draft
+    command: localize
+    to_state: localized
+- event_type: variant.draft_created
+  producer: variant
+  aggregate_type: VariantVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/variant-draft_created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: planned
+    command: create_draft
+    to_state: draft
+- event_type: variant.qa_requested
+  producer: variant
+  aggregate_type: VariantVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/variant-qa_requested.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: localized
+    command: request_qa
+    to_state: qa_pending
+- event_type: variant.approved
+  producer: variant
+  aggregate_type: VariantVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/variant-approved.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: qa_pending
+    command: approve
+    to_state: approved
+- event_type: variant.withdrawn
+  producer: variant
+  aggregate_type: VariantVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/variant-withdrawn.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: approved
+    command: withdraw
+    to_state: withdrawn
+- event_type: asset.created
+  producer: asset
+  aggregate_type: Asset
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/asset-created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: draft
+    command: activate
+    to_state: active
+- event_type: asset.root_changed
+  producer: asset
+  aggregate_type: Asset
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/asset-root_changed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: active
+    command: withdraw/retire
+    to_state: withdrawn/retired
+- event_type: asset.render_started
+  producer: asset
+  aggregate_type: AssetVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/asset-render_started.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: planned
+    command: render
+    to_state: rendering
+- event_type: asset.qa_requested
+  producer: asset
+  aggregate_type: AssetVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/asset-qa_requested.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: rendering
+    command: submit_qa
+    to_state: qa_pending
+- event_type: asset.approved
+  producer: asset
+  aggregate_type: AssetVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/asset-approved.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: qa_pending
+    command: approve
+    to_state: approved
+- event_type: asset.withdrawn
+  producer: asset
+  aggregate_type: AssetVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/asset-withdrawn.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: approved
+    command: withdraw
+    to_state: withdrawn
+- event_type: asset.blocked
+  producer: asset
+  aggregate_type: AssetVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/asset-blocked.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: planned/rendering/qa_pending
+    command: block
+    to_state: blocked
+- event_type: publication_intent.ready
+  producer: publication_intent
+  aggregate_type: PublicationIntent
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/publication_intent-ready.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: planned
+    command: prepare
+    to_state: ready
+- event_type: export_package.created
+  producer: export_package
+  aggregate_type: PublicationIntent
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/export_package-created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: ready
+    command: export
+    to_state: exported
+- event_type: delivery.simulated
+  producer: delivery
+  aggregate_type: PublicationIntent
+  event_kind: transition
+  side_effect_scope: fake
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/delivery-simulated.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: ready
+    command: simulate
+    to_state: simulated
+- event_type: publication.queued
+  producer: publication
+  aggregate_type: PublicationIntent
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/publication-queued.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: ready
+    command: queue
+    to_state: queued
+- event_type: publication.dispatched
+  producer: publication
+  aggregate_type: PublicationIntent
+  event_kind: transition
+  side_effect_scope: conditional
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/publication-dispatched.schema.json
+  replay_policy: query_before_side_effect_replay
+  state_transitions:
+  - from_state: queued
+    command: dispatch
+    to_state: dispatched
+- event_type: publication.cancelled
+  producer: publication
+  aggregate_type: PublicationIntent
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/publication-cancelled.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: ready/queued
+    command: cancel
+    to_state: cancelled
+- event_type: delivery.attempted
+  producer: delivery
+  aggregate_type: DeliveryAttempt
+  event_kind: transition
+  side_effect_scope: conditional
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/delivery-attempted.schema.json
+  replay_policy: query_before_side_effect_replay
+  state_transitions:
+  - from_state: created
+    command: start
+    to_state: running
+- event_type: delivery.succeeded
+  producer: delivery
+  aggregate_type: DeliveryAttempt
+  event_kind: transition
+  side_effect_scope: conditional
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/delivery-succeeded.schema.json
+  replay_policy: query_before_side_effect_replay
+  state_transitions:
+  - from_state: running
+    command: complete
+    to_state: succeeded
+- event_type: delivery.retry_scheduled
+  producer: delivery
+  aggregate_type: DeliveryAttempt
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/delivery-retry_scheduled.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: failed
+    command: retry
+    to_state: created`（新记录）
+- event_type: delivery.failed
+  producer: delivery
+  aggregate_type: DeliveryAttempt
+  event_kind: transition
+  side_effect_scope: conditional
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/delivery-failed.schema.json
+  replay_policy: query_before_side_effect_replay
+  state_transitions:
+  - from_state: running
+    command: fail
+    to_state: failed
+- event_type: delivery.unknown
+  producer: delivery
+  aggregate_type: DeliveryAttempt
+  event_kind: transition
+  side_effect_scope: conditional
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/delivery-unknown.schema.json
+  replay_policy: manual_resolution
+  state_transitions:
+  - from_state: running
+    command: unknown
+    to_state: unknown
+- event_type: delivery.unknown_resolved
+  producer: delivery
+  aggregate_type: DeliveryAttempt
+  event_kind: transition
+  side_effect_scope: conditional
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/delivery-unknown_resolved.schema.json
+  replay_policy: manual_resolution
+  state_transitions:
+  - from_state: unknown
+    command: resolve_unknown
+    to_state: succeeded` 或 `failed
+- event_type: delivery.dead_lettered
+  producer: delivery
+  aggregate_type: DeliveryAttempt
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/delivery-dead_lettered.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: failed
+    command: dead_letter
+    to_state: dead_letter
+- event_type: publication.blocked
+  producer: publication
+  aggregate_type: PublicationIntent
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/publication-blocked.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: planned
+    command: block
+    to_state: blocked
+  - from_state: ready
+    command: block
+    to_state: blocked
+  - from_state: queued
+    command: block
+    to_state: blocked
+- event_type: publication.recorded
+  producer: publication
+  aggregate_type: PublicationRecord
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/publication-recorded.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: none
+    command: record_attempt
+    to_state: attempted
+- event_type: publication.acknowledged
+  producer: publication
+  aggregate_type: PublicationRecord
+  event_kind: transition
+  side_effect_scope: conditional
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/publication-acknowledged.schema.json
+  replay_policy: query_before_side_effect_replay
+  state_transitions:
+  - from_state: attempted
+    command: acknowledge
+    to_state: acknowledged
+- event_type: publication.published
+  producer: publication
+  aggregate_type: PublicationRecord
+  event_kind: transition
+  side_effect_scope: conditional
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/publication-published.schema.json
+  replay_policy: query_before_side_effect_replay
+  state_transitions:
+  - from_state: acknowledged
+    command: confirm_published
+    to_state: published
+- event_type: publication.failed
+  producer: publication
+  aggregate_type: PublicationRecord
+  event_kind: transition
+  side_effect_scope: conditional
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/publication-failed.schema.json
+  replay_policy: query_before_side_effect_replay
+  state_transitions:
+  - from_state: acknowledged
+    command: confirm_failed
+    to_state: failed
+- event_type: publication.unknown
+  producer: publication
+  aggregate_type: PublicationRecord
+  event_kind: transition
+  side_effect_scope: conditional
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/publication-unknown.schema.json
+  replay_policy: manual_resolution
+  state_transitions:
+  - from_state: acknowledged
+    command: mark_unknown
+    to_state: unknown
+- event_type: publication.unknown_resolved
+  producer: publication
+  aggregate_type: PublicationRecord
+  event_kind: transition
+  side_effect_scope: conditional
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/publication-unknown_resolved.schema.json
+  replay_policy: manual_resolution
+  state_transitions:
+  - from_state: unknown
+    command: resolve_unknown
+    to_state: published` 或 `failed
+- event_type: publication.removed
+  producer: publication
+  aggregate_type: PublicationRecord
+  event_kind: transition
+  side_effect_scope: conditional
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/publication-removed.schema.json
+  replay_policy: query_before_side_effect_replay
+  state_transitions:
+  - from_state: published
+    command: remove
+    to_state: removed
+- event_type: export_package.expired
+  producer: export_package
+  aggregate_type: ExportPackage
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/export_package-expired.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: available
+    command: expire
+    to_state: expired
+- event_type: export_package.revoked
+  producer: export_package
+  aggregate_type: ExportPackage
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/export_package-revoked.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: available
+    command: revoke
+    to_state: revoked
+- event_type: metric.definition.created
+  producer: metric
+  aggregate_type: MetricDefinition
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/metric-definition-created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: none
+    command: create_draft
+    to_state: draft
+- event_type: metric.definition.activated
+  producer: metric
+  aggregate_type: MetricDefinition
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/metric-definition-activated.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: draft
+    command: activate
+    to_state: active
+- event_type: metric.definition.retired
+  producer: metric
+  aggregate_type: MetricDefinition
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/metric-definition-retired.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: active
+    command: retire
+    to_state: retired
+- event_type: observation.recorded
+  producer: observation
+  aggregate_type: Observation
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/observation-recorded.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: analytics.content.observed
+  producer: analytics
+  aggregate_type: Observation
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/analytics-content-observed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: analytics.asset.observed
+  producer: analytics
+  aggregate_type: Observation
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/analytics-asset-observed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: analytics.publication.observed
+  producer: analytics
+  aggregate_type: Observation
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/analytics-publication-observed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: analytics.interaction.observed
+  producer: analytics
+  aggregate_type: Observation
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/analytics-interaction-observed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: analytics.geo.observed
+  producer: analytics
+  aggregate_type: Observation
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/analytics-geo-observed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: analytics.support.observed
+  producer: analytics
+  aggregate_type: Observation
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/analytics-support-observed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: analytics.qa.observed
+  producer: analytics
+  aggregate_type: Observation
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/analytics-qa-observed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: analytics.cost.observed
+  producer: analytics
+  aggregate_type: Observation
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/analytics-cost-observed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: analytics.risk.observed
+  producer: analytics
+  aggregate_type: Observation
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/analytics-risk-observed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: analytics.kpi_snapshot.created
+  producer: analytics
+  aggregate_type: AnalyticsKpiSnapshot
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/analytics-kpi_snapshot-created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: feedback.recommendation_created
+  producer: feedback
+  aggregate_type: FeedbackItem
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/feedback-recommendation_created.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: refresh.requested
+  producer: refresh
+  aggregate_type: TopicOpportunity
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/refresh-requested.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: monitoring
+    command: request_refresh
+    to_state: refresh
+- event_type: account.connection_changed
+  producer: account
+  aggregate_type: AccountConnection
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/account-connection_changed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: unavailable
+    command: request
+    to_state: pending
+  - from_state: pending
+    command: connect
+    to_state: connected
+  - from_state: connected
+    command: revoke
+    to_state: revoked
+  - from_state: expired/revoked
+    command: reauthorize
+    to_state: authorized`（authorization_status）
+  - from_state: degraded/restricted
+    command: recover
+    to_state: healthy`（health_status）
+- event_type: approval.requested
+  producer: approval
+  aggregate_type: Approval
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/approval-requested.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: approval.recorded
+  producer: approval
+  aggregate_type: Approval
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/approval-recorded.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: approval.approved
+  producer: approval
+  aggregate_type: Approval
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/approval-approved.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: pending
+    command: approve
+    to_state: approved
+- event_type: approval.rejected
+  producer: approval
+  aggregate_type: Approval
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/approval-rejected.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: pending
+    command: reject
+    to_state: rejected
+- event_type: approval.expired
+  producer: approval
+  aggregate_type: Approval
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/approval-expired.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: pending
+    command: expire
+    to_state: expired
+- event_type: approval.revoked
+  producer: approval
+  aggregate_type: Approval
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/approval-revoked.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: approved
+    command: revoke
+    to_state: revoked
+- event_type: human_task.created
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/human_task-created.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions: []
+- event_type: human_task.assigned
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/human_task-assigned.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: queued
+    command: assign
+    to_state: assigned
+- event_type: human_task.claimed
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/human_task-claimed.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: queued
+    command: claim
+    to_state: claimed
+  - from_state: assigned
+    command: claim
+    to_state: claimed
+- event_type: human_task.started
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/human_task-started.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: claimed
+    command: start
+    to_state: in_progress
+- event_type: human_task.submitted
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/human_task-submitted.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: in_progress
+    command: submit
+    to_state: submitted
+- event_type: human_task.completed
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/human_task-completed.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: submitted
+    command: complete
+    to_state: completed
+  - from_state: claimed/in_progress
+    command: complete
+    to_state: completed
+- event_type: human_task.rejected
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/human_task-rejected.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: queued/assigned/claimed/in_progress
+    command: reject
+    to_state: rejected
+- event_type: human_task.expired
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/human_task-expired.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: queued/assigned/claimed/in_progress
+    command: expire
+    to_state: expired
+- event_type: human_task.escalated
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/human_task-escalated.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: queued/assigned/claimed/in_progress/submitted
+    command: escalate
+    to_state: escalated
+- event_type: human_task.cancelled
+  producer: human_task
+  aggregate_type: HumanTask
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/human_task-cancelled.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: queued/assigned/claimed/in_progress/submitted/escalated
+    command: cancel
+    to_state: cancelled
+- event_type: task_job.leased
+  producer: task_job
+  aggregate_type: TaskJob
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/task_job-leased.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: queued
+    command: lease
+    to_state: leased
+- event_type: task_job.started
+  producer: task_job
+  aggregate_type: TaskJob
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/task_job-started.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: leased
+    command: start
+    to_state: running
+- event_type: task_job.succeeded
+  producer: task_job
+  aggregate_type: TaskJob
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/task_job-succeeded.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: running
+    command: succeed
+    to_state: succeeded
+- event_type: task_job.failed
+  producer: task_job
+  aggregate_type: TaskJob
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/task_job-failed.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: running
+    command: fail
+    to_state: failed
+- event_type: task_job.retry_scheduled
+  producer: task_job
+  aggregate_type: TaskJob
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/task_job-retry_scheduled.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: failed
+    command: schedule_retry
+    to_state: retry_scheduled
+- event_type: task_job.queued
+  producer: task_job
+  aggregate_type: TaskJob
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/task_job-queued.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: retry_scheduled
+    command: enqueue
+    to_state: queued
+- event_type: task_job.dead_lettered
+  producer: task_job
+  aggregate_type: TaskJob
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/task_job-dead_lettered.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: failed
+    command: dead_letter
+    to_state: dead_letter
+- event_type: task_job.cancelled
+  producer: task_job
+  aggregate_type: TaskJob
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/task_job-cancelled.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: queued/leased/running
+    command: cancel
+    to_state: cancelled
+- event_type: outbox.publish_started
+  producer: outbox
+  aggregate_type: OutboxEvent
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/outbox-publish_started.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: pending
+    command: publish
+    to_state: publishing
+- event_type: outbox.published
+  producer: outbox
+  aggregate_type: OutboxEvent
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/outbox-published.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: publishing
+    command: ack
+    to_state: published
+- event_type: outbox.failed
+  producer: outbox
+  aggregate_type: OutboxEvent
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/outbox-failed.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: publishing
+    command: fail
+    to_state: failed
+- event_type: outbox.retry_scheduled
+  producer: outbox
+  aggregate_type: OutboxEvent
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/outbox-retry_scheduled.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: failed
+    command: retry
+    to_state: pending
+- event_type: outbox.dead_lettered
+  producer: outbox
+  aggregate_type: OutboxEvent
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/outbox-dead_lettered.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: failed
+    command: dead_letter
+    to_state: dead_letter
+- event_type: approval.decision_recorded
+  producer: approval
+  aggregate_type: ApprovalDecision
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/approval-decision_recorded.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: none
+    command: record
+    to_state: recorded`（不可变）
+- event_type: feedback.approved
+  producer: feedback
+  aggregate_type: FeedbackItem
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/feedback-approved.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: proposed
+    command: approve
+    to_state: approved
+- event_type: feedback.rejected
+  producer: feedback
+  aggregate_type: FeedbackItem
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/feedback-rejected.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: proposed
+    command: reject
+    to_state: rejected
+- event_type: feedback.expired
+  producer: feedback
+  aggregate_type: FeedbackItem
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/feedback-expired.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: proposed
+    command: expire
+    to_state: expired
+- event_type: feedback.executed
+  producer: feedback
+  aggregate_type: FeedbackItem
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/feedback-executed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: approved
+    command: mark_executed
+    to_state: executed
+- event_type: feedback.action_approved
+  producer: feedback
+  aggregate_type: FeedbackAction
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/feedback-action_approved.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: proposed
+    command: approve
+    to_state: approved
+- event_type: feedback.action_cancelled
+  producer: feedback
+  aggregate_type: FeedbackAction
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/feedback-action_cancelled.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: proposed/approved
+    command: cancel
+    to_state: cancelled
+- event_type: feedback.action_started
+  producer: feedback
+  aggregate_type: FeedbackAction
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/feedback-action_started.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: approved
+    command: start
+    to_state: executing
+- event_type: feedback.action_executed
+  producer: feedback
+  aggregate_type: FeedbackAction
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/feedback-action_executed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: executing
+    command: complete
+    to_state: executed
+- event_type: feedback.action_failed
+  producer: feedback
+  aggregate_type: FeedbackAction
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/feedback-action_failed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: executing
+    command: fail
+    to_state: failed
+- event_type: site.page_version.ready
+  producer: site
+  aggregate_type: SitePageVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/site-page_version-ready.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: draft
+    command: ready
+    to_state: ready
+- event_type: site.page_version.published
+  producer: site
+  aggregate_type: SitePageVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/site-page_version-published.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: ready
+    command: publish
+    to_state: published
+- event_type: site.page_version.superseded
+  producer: site
+  aggregate_type: SitePageVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/site-page_version-superseded.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: published
+    command: supersede
+    to_state: superseded
+- event_type: site.page_version.rolled_back
+  producer: site
+  aggregate_type: SitePageVersion
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/site-page_version-rolled_back.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: published
+    command: rollback
+    to_state: rolled_back
+- event_type: geo.fixture.activated
+  producer: geo
+  aggregate_type: GeoQueryFixture
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/geo-fixture-activated.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: created
+    command: activate
+    to_state: active
+- event_type: geo.fixture.retired
+  producer: geo
+  aggregate_type: GeoQueryFixture
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/geo-fixture-retired.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: active
+    command: retire
+    to_state: retired
+- event_type: webhook.deduplicated
+  producer: webhook
+  aggregate_type: WebhookReceipt
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/webhook-deduplicated.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: received
+    command: dedupe
+    to_state: deduplicated
+- event_type: webhook.processed
+  producer: webhook
+  aggregate_type: WebhookReceipt
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/webhook-processed.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: deduplicated
+    command: process
+    to_state: processed
+- event_type: webhook.rejected
+  producer: webhook
+  aggregate_type: WebhookReceipt
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/webhook-rejected.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: received/deduplicated
+    command: reject
+    to_state: rejected
+- event_type: webhook.dead_lettered
+  producer: webhook
+  aggregate_type: WebhookReceipt
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/webhook-dead_lettered.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: deduplicated
+    command: dead_letter
+    to_state: dead_letter
+- event_type: deletion.queued
+  producer: deletion
+  aggregate_type: DeletionRequest
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/deletion-queued.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: requested
+    command: queue
+    to_state: queued
+- event_type: deletion.started
+  producer: deletion
+  aggregate_type: DeletionRequest
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/deletion-started.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: queued
+    command: start
+    to_state: running
+- event_type: deletion.completed
+  producer: deletion
+  aggregate_type: DeletionRequest
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/deletion-completed.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: running
+    command: complete
+    to_state: completed
+- event_type: deletion.partially_completed
+  producer: deletion
+  aggregate_type: DeletionRequest
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/deletion-partially_completed.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: running
+    command: partial
+    to_state: partially_completed
+- event_type: deletion.failed
+  producer: deletion
+  aggregate_type: DeletionRequest
+  event_kind: control
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/deletion-failed.schema.json
+  replay_policy: idempotent_control_replay
+  state_transitions:
+  - from_state: running
+    command: fail
+    to_state: failed
+- event_type: kill_switch.paused
+  producer: kill_switch
+  aggregate_type: KillSwitch
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/kill_switch-paused.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: active
+    command: pause
+    to_state: paused
+- event_type: kill_switch.resumed
+  producer: kill_switch
+  aggregate_type: KillSwitch
+  event_kind: transition
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/kill_switch-resumed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions:
+  - from_state: paused
+    command: resume
+    to_state: active
+- event_type: agent_run.completed
+  producer: agent_run
+  aggregate_type: AgentRun
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/agent_run-completed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: model.call.started
+  producer: model
+  aggregate_type: ModelCall
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/model-call-started.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: model.call.succeeded
+  producer: model
+  aggregate_type: ModelCall
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/model-call-succeeded.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []
+- event_type: model.call.failed
+  producer: model
+  aggregate_type: ModelCall
+  event_kind: append_only
+  side_effect_scope: none
+  ordering_key: aggregate_id
+  consumer_dedupe_key: event_id
+  schema_ref: packages/contracts/events/model-call-failed.schema.json
+  replay_policy: idempotent_projection_replay
+  state_transitions: []

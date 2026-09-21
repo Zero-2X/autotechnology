@@ -1,0 +1,7 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/delivery-mode.schema.json",
+  "title": "DeliveryMode",
+  "type": "string",
+  "enum": ["manual_export", "simulation", "draft_only", "authorized_api"]
+}

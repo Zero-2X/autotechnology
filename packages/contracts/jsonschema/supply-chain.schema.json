@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/supply-chain.schema.json",
+  "title": "FOUND-012B supply-chain attestation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["baseline_key", "baseline_version", "status", "sbom_format", "scan_policy", "signature_policy", "production_publication"],
+  "properties": {
+    "baseline_key": {"const": "supply-chain"},
+    "baseline_version": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["active", "superseded"]},
+    "sbom_format": {"const": "CycloneDX-1.5"},
+    "scan_policy": {"const": "fail_closed_on_findings"},
+    "signature_policy": {"const": "sha256_attestation_required"},
+    "production_publication": {"const": "disabled_until_signed_artifact"}
+  },
+  "x-module": "foundation",
+  "x-task-ids": ["FOUND-012B"]
+}

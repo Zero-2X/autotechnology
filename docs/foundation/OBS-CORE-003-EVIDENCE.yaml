@@ -1,0 +1,25 @@
+task_id: OBS-CORE-003
+status: done
+implementation:
+  module: modules/audit/deletion.py
+  contracts:
+    - packages/contracts/jsonschema/deletion-request.schema.json
+  migration: packages/db/migrations/versions/20260918_obs_core_003.py
+  behaviors:
+    - tenant_scoped_deletion_request
+    - five_stage_propagation
+    - manual_review_on_failure
+    - redacted_failure_reason
+    - idempotent_stage_confirmation
+    - independent_target_absence_check
+    - durable_manual_review_queue
+verification:
+  commands:
+    - py -3.12 -m pytest tests/unit/audit -q --disable-warnings --maxfail=1
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 scripts/check_json_schemas.py
+    - py -3.12 -m pytest tests/integration/test_deletion_persistence.py -q
+  results:
+    targeted_tests: 10
+    architecture_errors: 0
+    schema_errors: 0

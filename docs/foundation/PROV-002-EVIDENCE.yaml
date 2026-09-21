@@ -1,0 +1,34 @@
+task_id: PROV-002
+status: done
+implementation:
+  module: modules/provenance/rights.py
+  contracts:
+    - packages/contracts/jsonschema/rights-record.schema.json
+    - packages/contracts/jsonschema/rights-record-version.schema.json
+  migration: packages/db/migrations/versions/20260918_prov_002.py
+  tables:
+    - rights_records
+    - rights_record_versions
+    - rights_commands
+    - rights_events
+  behaviors:
+    - tenant_scoped_rights_identity_and_versioning
+    - source_snapshot_scope_and_usable_guard
+    - immutable_authorization_scope_and_snapshot_hash
+    - human_verified_transition_with_policy_and_evidence_requirements
+    - reasoned_expire_revoke_and_complaint_hold_transitions
+    - append_only_rights_audit_events_and_idempotent_replay
+verification:
+  commands:
+    - py -3.12 -m pytest tests/unit/provenance/test_rights.py tests/integration/test_rights_api.py -q --disable-warnings --maxfail=1
+    - py -3.12 scripts/check_json_schemas.py
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 scripts/check_migrations.py --strict --json
+    - py -3.12 scripts/check_task_card_precision.py --task PROV-002 --strict
+    - py -3.12 -m pytest tests/contract/test_found_004a_migrations.py -q --disable-warnings --maxfail=1
+  results:
+    targeted_tests: 6
+    schema_errors: 0
+    architecture_errors: 0
+    migration_errors: 0
+    precision_gaps: 0

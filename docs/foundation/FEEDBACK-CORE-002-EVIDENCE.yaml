@@ -1,0 +1,44 @@
+task_id: FEEDBACK-CORE-002
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000041
+actor: team/feedback
+predecessors: [FEEDBACK-CORE-001, CANON-005, POLICY-001, DIST-010]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/feedback/core/contracts.py
+    - modules/feedback/core/service.py
+    - modules/feedback/core/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/observation.schema.json
+    - packages/contracts/jsonschema/feedback-item.schema.json
+    - packages/contracts/jsonschema/refresh-recommendation.schema.json
+    - packages/contracts/jsonschema/feedback-scoring-version.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_feedback_core_002.py
+  tests:
+    - tests/unit/feedback/test_contracts.py
+    - tests/unit/feedback/test_recommendation_service.py
+    - tests/integration/test_feedback_core_002_recommendation.py
+verification:
+  targeted_command: python -m pytest tests/unit/feedback tests/integration --maxfail=1 -q
+  targeted_result: 121 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  fake_and_manual_observations_only: true
+  refresh_and_reprioritize_rules_are_versioned: true
+  reasoning_snapshot_contains_threshold_and_evidence: true
+  raw_and_nontriggering_observations_do_not_recommend: true
+  recommendations_remain_proposed: true
+  observation_dedupe_and_command_idempotency: true
+  tenant_scope_enforced: true
+  production_rules_mutated: false
+  feedback_action_created: false
+  real_platform_data: false
+  network_calls: false
+rollback:
+  - Disable the recommendation entry point while retaining observation, feedback, recommendation, event and audit facts.
+  - This revision creates no business table; the Alembic revision is reversible and no production action is executed.

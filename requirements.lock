@@ -1,0 +1,11 @@
+# Direct project and test dependencies. Keep this file exact-pinned; update it only with
+# a reviewed compatibility, security, and rollback record.
+alembic==1.20.0
+fastapi==0.136.3
+httpx==0.28.1
+jsonschema==4.26.0
+opentelemetry-api==1.44.0
+opentelemetry-sdk==1.44.0
+pytest==9.0.3
+PyYAML==6.0.3
+SQLAlchemy==2.0.54

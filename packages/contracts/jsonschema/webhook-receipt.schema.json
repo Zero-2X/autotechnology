@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/webhook-receipt.schema.json",
+  "title": "WebhookReceipt",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "platform_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "external_event_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "signature_valid": {
+      "type": "boolean"
+    },
+    "payload_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "raw_payload_ref": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^private://"
+    },
+    "dedupe_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "received",
+        "deduplicated",
+        "processed",
+        "rejected",
+        "dead_letter"
+      ]
+    },
+    "processing_attempts": {
+      "type": "integer"
+    },
+    "last_error": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "replay_count": {
+      "type": "integer"
+    },
+    "received_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "processed_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "rejected_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "platform_id",
+    "external_event_id",
+    "signature_valid",
+    "payload_hash",
+    "raw_payload_ref",
+    "dedupe_key",
+    "status",
+    "processing_attempts",
+    "last_error",
+    "replay_count",
+    "received_at",
+    "processed_at",
+    "rejected_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

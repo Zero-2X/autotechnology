@@ -1,0 +1,16 @@
+# Logical owners used by the repository baseline. Remote enforcement is documented separately.
+* @team/foundation
+/README.md @team/foundation
+/CONTRIBUTING.md @team/foundation
+/CODEOWNERS @team/foundation
+/docs/adr/ @team/governance
+/docs/governance/ @team/governance
+/docs/task-registry.yaml @team/foundation
+/docs/tasks/ @team/foundation
+/packages/contracts/ @team/foundation
+/packages/db/ @team/foundation
+/apps/ @team/foundation
+/modules/ @team/foundation
+/adapters/ @team/foundation
+/tests/ @team/foundation
+

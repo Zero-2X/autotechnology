@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/media.schema.json",
+  "title": "media contract union",
+  "oneOf": [
+    {
+      "$ref": "./asset.schema.json"
+    },
+    {
+      "$ref": "./asset-version.schema.json"
+    }
+  ],
+  "x-module": "media"
+}

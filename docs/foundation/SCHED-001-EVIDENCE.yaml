@@ -1,0 +1,20 @@
+task_id: SCHED-001
+status: done
+trace_id: 9b53e2f7-6a04-4d18-b245-sched001
+actor: team/scheduler
+registry_ref: docs/task-registry.yaml
+verification:
+  tests:
+    - py -3.12 -m pytest tests/unit/scheduler -q
+  result: 4 passed
+  checks:
+    - py -3.12 scripts/check_task_card_precision.py --task SCHED-001 --strict
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_migrations.py
+  utc_storage: enforced
+  immutable_region_profile_version: enforced
+  lease_recovery: expired occurrences can be reclaimed
+  paused_catch_up: disabled
+side_effects:
+  real_credentials: false
+  external_publication: false

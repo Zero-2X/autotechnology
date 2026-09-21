@@ -1,0 +1,21 @@
+task_id: WORKFLOW-CORE-001
+status: done
+trace_id: 9b53e2f7-6a04-4d18-b245-workflow001
+actor: team/workflow
+registry_ref: docs/task-registry.yaml
+verification:
+  tests:
+    - py -3.12 -m pytest tests/unit/workflow -q
+  result: 3 passed
+  checks:
+    - py -3.12 scripts/check_task_card_precision.py --task WORKFLOW-CORE-001 --strict
+    - py -3.12 scripts/check_task_card_registry_refs.py
+    - py -3.12 scripts/check_migrations.py
+  version_conflict: enforced
+  retry: transient only
+  replay: new run with source reference
+  outbox: state transitions recorded
+side_effects:
+  real_scheduler: false
+  real_credentials: false
+  external_publication: false

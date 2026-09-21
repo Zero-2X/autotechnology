@@ -1,0 +1,61 @@
+task_id: GEO_REGION-002
+status: done
+trace_id: 55618e3a-a0dc-44ec-a001-000000000056
+actor: team/geo_region
+predecessors: [PROD-002, SITE-002, GEO_REGION-001]
+external_dependencies: []
+artifacts:
+  implementation:
+    - modules/geo_region/__init__.py
+    - modules/geo_region/policy.py
+    - modules/geo_region/README.md
+    - apps/knowledge-site/scripts/site_render.py
+    - apps/knowledge-site/README.md
+  contracts:
+    - packages/contracts/jsonschema/region-check-decision.schema.json
+    - packages/contracts/jsonschema/region-deletion-policy.schema.json
+  migration:
+    - packages/db/migrations/versions/20260920_geo_region_002.py
+  tests:
+    - tests/unit/geo_region/test_policy.py
+    - tests/unit/knowledge_site/test_site_render.py
+    - tests/integration/test_geo_region_002_migration.py
+    - tests/integration/test_geo_region_002_site_render.py
+    - tests/contract/test_geo_region_002_contract.py
+    - tests/contract/test_geo_region_002_migration_contract.py
+  task_spec:
+    - docs/tasks/GEO_REGION-002.md
+verification:
+  focused_command: python -m pytest tests/unit/geo_region tests/unit/knowledge_site/test_site_render.py tests/integration/test_geo_region_001.py tests/integration/test_geo_region_002_migration.py tests/integration/test_geo_region_002_site_render.py tests/contract/test_geo_region_001_contract.py tests/contract/test_geo_region_002_contract.py -q
+  focused_result: 49 passed
+  module_regression_command: python -m pytest tests/unit/geo_region tests/unit/knowledge_site tests/integration/test_geo_region_001.py tests/integration/test_geo_region_002_migration.py tests/integration/test_geo_region_002_site_render.py tests/integration/test_site_001.py tests/integration/test_site_002.py tests/integration/test_site_003.py tests/contract/test_geo_region_001_contract.py tests/contract/test_geo_region_002_contract.py tests/contract/test_geo_region_002_migration_contract.py -q
+  module_regression_result: 73 passed
+  task_precision: scoped=1 precise=1 gaps=0
+  task_card_refs: checked=157 errors=0
+  schema_check: schema_errors=0
+  architecture_check: architecture_errors=0
+  migration_graph_check: revision_count=104; head=20260920_geo_region_002; errors=0
+  migration_upgrade_and_downgrade: passed on disposable SQLite database
+  plan_consistency: validated=157; errors=0
+  full_command: python -m pytest -q
+  full_result: 885 passed
+behavior:
+  exact_immutable_region_version_resolution: true
+  tenant_and_nested_snapshot_isolation: true
+  active_profile_version_and_half_open_validity_checks: true
+  locale_market_residency_platform_topic_and_disclosure_checks: true
+  deterministic_decision_hash_and_idempotent_replay: true
+  deny_precedes_manual_review: true
+  deterministic_hreflang_normalization_sorting_and_deduplication: true
+  blocked_pages_absent_from_alternates_sitemap_rss_and_atom: true
+  renderer_without_filter_remains_site_002_compatible: true
+  immutable_retention_residency_and_sla_policy: true
+  legal_hold_and_missing_policy_require_manual_review: true
+  five_stage_deletion_port_reused: true
+  append_only_decision_projection_and_tenant_foreign_keys: true
+  raw_page_body_answer_or_credentials_persisted: false
+  real_network_or_platform_calls: false
+rollback:
+  - Stop new region checks and deletion-plan commands and export decision, plan and audit hashes before downgrade.
+  - Remove the optional renderer eligibility port to restore compatible SITE-002 behavior without changing page facts.
+  - Downgrade to 20260920_geo_region_001; only the GEO_REGION-002 projection table, indexes and triggers are removed.

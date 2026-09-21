@@ -1,0 +1,39 @@
+task_id: KNOW-002
+status: done
+implementation:
+  module: modules/knowledge/core_service.py
+  infrastructure: modules/knowledge/infrastructure/knowledge_schema.py
+  contracts:
+    - packages/contracts/jsonschema/knowledge-core.schema.json
+    - packages/contracts/jsonschema/knowledge-core-version.schema.json
+  migration: packages/db/migrations/versions/20260918_know_002.py
+  tables:
+    - knowledge_cores
+    - knowledge_core_versions
+    - knowledge_conflict_sets
+    - knowledge_core_commands
+  api_routes:
+    - /internal/knowledge-cores
+    - /internal/knowledge-cores/{core_id}:validate
+    - /internal/knowledge-cores/{core_id}:refresh
+  behaviors:
+    - tenant_scoped_core_and_version_snapshots
+    - immutable_version_rows_and_refresh_supersession
+    - verified_claim_and_valid_evidence_gate
+    - verified_rights_and_usable_source_gate
+    - deterministic_conflict_set_and_needs_review
+    - idempotent_core_commands_and_ordered_events
+verification:
+  commands:
+    - py -3.12 -m pytest tests/unit/knowledge/test_core_service.py tests/integration/test_knowledge_core_api.py -q --disable-warnings --maxfail=1
+    - py -3.12 scripts/check_json_schemas.py
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 scripts/check_migrations.py --strict --json
+    - py -3.12 scripts/check_task_card_precision.py --task KNOW-002 --strict
+    - py -3.12 -m pytest tests/contract/test_found_004a_migrations.py -q --disable-warnings --maxfail=1
+  results:
+    targeted_tests: 3 passed
+    schema_errors: 0
+    architecture_errors: 0
+    migration_errors: 0
+    precision_gaps: 0

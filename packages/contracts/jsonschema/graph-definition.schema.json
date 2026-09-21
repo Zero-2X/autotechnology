@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/graph-definition.schema.json",
+  "title": "versioned graph definition",
+  "type": "object",
+  "properties": {
+    "graph_key": {"type": "string", "minLength": 1, "maxLength": 128},
+    "workflow_version": {"type": "integer", "minimum": 1},
+    "state_version": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["active", "deprecated"]},
+    "compatible_versions": {"type": "array", "uniqueItems": true, "items": {"type": "integer", "minimum": 1}}
+  },
+  "required": ["graph_key", "workflow_version", "state_version", "status", "compatible_versions"],
+  "additionalProperties": false,
+  "x-module": "orchestration",
+  "x-task-ids": ["GRAPH-GOV-004", "GRAPH-CORE-001"]
+}

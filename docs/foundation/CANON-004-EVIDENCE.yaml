@@ -1,0 +1,42 @@
+task_id: CANON-004
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000010
+actor: team/canonical_content
+predecessors: [TOPIC-004, PROV-002, KNOW-001, CANON-003]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/canonical_content/service.py
+    - modules/canonical_content/infrastructure/canonical_schema.py
+  contracts:
+    - packages/contracts/jsonschema/canonical-content-version.schema.json
+    - packages/contracts/jsonschema/claim.schema.json
+    - packages/contracts/jsonschema/evidence.schema.json
+  migration:
+    - packages/db/migrations/versions/20260918_canon_004.py
+  tests:
+    - tests/unit/canonical_content/test_service.py
+    - tests/integration/test_canonical_content_api.py
+verification:
+  targeted_command: >-
+    python -m pytest tests/unit/canonical_content
+    tests/integration/test_canonical_content_api.py -q
+  targeted_result: 7 passed
+  task_card_precision: passed
+  task_card_registry_refs: passed
+  migration_check: passed
+  schema_and_architecture_checks: passed
+behavior:
+  high_priority_claim_requires_verified_claim_evidence_and_rights: true
+  evidence_rights_are_derived_when_omitted: true
+  tenant_scope_and_invalid_statuses_fail_before_version_write: true
+  claim_bindings_are_persisted_in_version_payload_and_projection: true
+  historical_versions_and_events_are_append_only: true
+side_effects:
+  real_credentials: false
+  real_postgresql_connection: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Stop accepting new CANON-004 commands while retaining immutable versions and audit events.
+  - Do not rewrite the accepted migration; use a forward-compatible correction if required.

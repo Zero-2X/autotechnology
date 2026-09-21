@@ -1,0 +1,55 @@
+task_id: MEDIA-003B
+status: done
+trace_id: 7c3c9b5d-63e5-4d28-9a6b-000000000003
+actor: team/media
+predecessors: [MEDIA-002, MEDIA-003A, PROD-002, PROV-002]
+external_dependencies: []
+artifacts:
+  implementation:
+    - modules/media/__init__.py
+    - modules/media/visual_asset_service.py
+    - modules/media/README.md
+  contracts:
+    - packages/contracts/jsonschema/asset-version.schema.json
+    - packages/contracts/jsonschema/rights-record-version.schema.json
+    - packages/contracts/jsonschema/media-visual-asset-set.schema.json
+    - packages/contracts/jsonschema/media-visual-asset-set-version.schema.json
+  migration:
+    - packages/db/migrations/versions/20260920_media_003b.py
+  tests:
+    - tests/unit/media/test_media_visual_asset_service.py
+    - tests/integration/test_media_003b.py
+    - tests/integration/test_media_003b_migration.py
+    - tests/contract/test_media_003b_contract.py
+  task_spec:
+    - docs/tasks/MEDIA-003B.md
+verification:
+  focused_command: python -m pytest tests/unit/media/test_media_visual_asset_service.py tests/integration/test_media_003b.py tests/integration/test_media_003b_migration.py tests/contract/test_media_003b_contract.py -q
+  focused_result: 8 passed
+  migration_graph_check: revision_count=109; head=20260920_media_003b; errors=0
+  migration_upgrade_and_downgrade: passed on disposable SQLite database
+  schema_check: schema_errors=0
+  architecture_check: architecture_errors=0
+  plan_consistency: validated=157; errors=0
+  task_card_refs: checked=157; errors=0
+  secrets_check: secret_findings=0
+  full_command: python -m pytest -q
+  full_result: 941 passed; inventory refreshed and FOUND-000 inventory test 6 passed
+behavior:
+  exact_approved_asset_version_binding: true
+  variant_region_policy_lineage_binding: true
+  cover_thumbnail_and_keyframe_role_media_gates: true
+  keyframe_timestamp_bounds_and_deterministic_item_order: true
+  verified_current_derivative_or_commercial_rights_gate: true
+  rights_market_locale_media_scope_gate: true
+  required_alt_text_and_file_snapshot_hash: true
+  optional_storyboard_source_binding: true
+  idempotent_replay_and_payload_conflict: true
+  optimistic_expected_version_revision: true
+  immutable_asset_set_version_and_item_projection: true
+  no_keyframe_generation_render_model_network_or_platform_calls: true
+  bounded_failure_audit_without_credentials_or_binary_media: true
+rollback:
+  - Stop new visual asset-set create/revise commands and export set versions, items, Rights references, snapshot hashes and audit references.
+  - Downgrade to 20260920_media_003a; only MEDIA-003B tables, indexes and guards are removed.
+  - MEDIA-003A subtitles, MEDIA-002 storyboard, MediaScript, Variant, Claim and Rights predecessor facts remain intact.

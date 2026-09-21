@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/kill-switch.schema.json",
+  "title": "KillSwitch",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "scope": {
+      "type": "string",
+      "enum": [
+        "global",
+        "platform",
+        "account",
+        "target",
+        "content"
+      ]
+    },
+    "scope_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "paused"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "changed_by": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "changed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "blocked_delivery_modes": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "./delivery-mode.schema.json"
+      }
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "scope",
+    "scope_id",
+    "status",
+    "reason",
+    "changed_by",
+    "changed_at",
+    "version",
+    "blocked_delivery_modes"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {"scope": {"const": "global"}},
+        "required": ["scope"]
+      },
+      "then": {
+        "properties": {
+          "org_id": {"type": "null"},
+          "scope_id": {"type": "null"}
+        }
+      },
+      "else": {
+        "properties": {
+          "org_id": {"type": "string", "format": "uuid"},
+          "scope_id": {"type": "string", "format": "uuid"}
+        }
+      }
+    }
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue",
+  "allOf": [
+    {
+      "if": {
+        "properties": {"scope": {"const": "global"}},
+        "required": ["scope"]
+      },
+      "then": {
+        "properties": {
+          "org_id": {"type": "null"},
+          "scope_id": {"type": "null"}
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {"scope": {"enum": ["platform", "account", "target", "content"]}},
+        "required": ["scope"]
+      },
+      "then": {
+        "properties": {
+          "org_id": {"type": "string", "format": "uuid"},
+          "scope_id": {"type": "string", "format": "uuid"}
+        }
+      }
+    }
+  ]
+}

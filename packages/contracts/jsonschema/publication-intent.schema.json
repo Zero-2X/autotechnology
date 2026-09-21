@@ -1,0 +1,214 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/publication-intent.schema.json",
+  "title": "PublicationIntent",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "variant_version_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "asset_version_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "format": "uuid"
+      }
+    },
+    "distribution_target_version_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "delivery_mode": {
+      "$ref": "./delivery-mode.schema.json"
+    },
+    "region_profile_version_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "payload_snapshot": {
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "body": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "disclosure": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "title",
+        "body",
+        "tags",
+        "disclosure"
+      ],
+      "additionalProperties": false
+    },
+    "payload_snapshot_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "scheduled_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "policy_snapshot_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "capability_snapshot_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "intent_key": {
+      "type": "string",
+      "minLength": 1
+    },
+    "derived_from_intent_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned",
+        "ready",
+        "exported",
+        "simulated",
+        "queued",
+        "dispatched",
+        "blocked",
+        "cancelled"
+      ]
+    },
+    "created_by": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "resolved_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "variant_version_id",
+    "asset_version_ids",
+    "distribution_target_version_id",
+    "delivery_mode",
+    "region_profile_version_id",
+    "payload_snapshot",
+    "payload_snapshot_hash",
+    "scheduled_at",
+    "policy_snapshot_id",
+    "capability_snapshot_hash",
+    "intent_key",
+    "derived_from_intent_id",
+    "status",
+    "created_by",
+    "created_at",
+    "updated_at",
+    "resolved_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "active",
+              "ready",
+              "queued",
+              "exported",
+              "simulated",
+              "dispatched"
+            ]
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+      "then": {
+        "properties": {
+          "policy_snapshot_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "policy_snapshot_id"
+        ]
+      }
+    }
+  ]
+}

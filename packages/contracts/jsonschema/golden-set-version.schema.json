@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/golden-set-version.schema.json",
+  "title": "Immutable synthetic golden set version",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "org_id", "dataset_key", "version_no", "dataset_hash", "input_schema_ref",
+    "output_schema_ref", "data_classification", "cases", "created_by", "created_at"
+  ],
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "dataset_key": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,127}$"},
+    "version_no": {"type": "integer", "minimum": 1},
+    "dataset_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "input_schema_ref": {"type": "string", "minLength": 1},
+    "output_schema_ref": {"type": "string", "minLength": 1},
+    "data_classification": {"const": "synthetic"},
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["case_id", "input", "expected_output", "tags"],
+        "properties": {
+          "case_id": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,127}$"},
+          "input": {},
+          "expected_output": {},
+          "tags": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+        }
+      }
+    },
+    "created_by": {"type": "string", "format": "uuid"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "x-module": "evaluation",
+  "x-task-ids": ["EVAL-001"]
+}

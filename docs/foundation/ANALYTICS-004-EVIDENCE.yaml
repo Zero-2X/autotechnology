@@ -1,0 +1,18 @@
+task_id: ANALYTICS-004
+status: done
+verification:
+  focused_command: python -m pytest tests/unit/analytics/test_geo_quality_service.py tests/integration/test_analytics_004_migration.py tests/contract/test_analytics_004_contract.py -q
+  focused_result: 6 passed
+  service_behaviors: separate GEO_CONTENT and GEO_REGION projections, latest Observation revision selection, UTC half-open windows, region/locale filtering, account-free/platform evidence gates, semantic value validation, explicit quality issues, immutable hashes, audit and outbox facts, and idempotent replay
+  migration_test: SQLite tenant/input binding and append-only guards, downgrade preservation of observations, and offline PostgreSQL trigger/function SQL emission with reversible cleanup order
+  schemas: analytics-geo-quality-snapshot schema validates as a closed Draft 2020-12 contract; Observation inputs are schema-validated
+  task_refs: registry, checklist, contract manifest and migration manifest synchronized
+  secrets: sensitive account evidence fields are rejected; metric values are not copied into audit or outbox facts
+  postgresql_runtime: not verified against a live PostgreSQL database
+verified_boundaries:
+  - GEO_CONTENT and GEO_REGION are computed independently; missing one side yields an empty projection rather than a copied score.
+  - The highest observation_version per dedupe_key is selected before time and dimension filters.
+  - Fake, manual, site, QA, GEO and support inputs remain account-free; platform inputs require verified account evidence.
+limitations:
+  - Real platform GEO measurements remain deferred until EXT-ACCOUNT-001.
+  - PostgreSQL behavior is verified through offline SQL generation and rollback ordering; live PostgreSQL execution remains unverified.

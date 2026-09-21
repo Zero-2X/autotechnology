@@ -1,0 +1,10 @@
+.local/
+.tmp/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.env
+.env.*
+!.env.example
+node_modules/
+apps/web-console/dist/

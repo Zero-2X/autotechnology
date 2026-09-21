@@ -1,0 +1,39 @@
+task_id: CANON-001
+status: done
+implementation:
+  module: modules/canonical_content/service.py
+  infrastructure: modules/canonical_content/infrastructure/canonical_schema.py
+  contracts:
+    - packages/contracts/jsonschema/canonical-content.schema.json
+    - packages/contracts/jsonschema/canonical-content-version.schema.json
+  migration: packages/db/migrations/versions/20260918_canon_001.py
+  tables:
+    - canonical_contents
+    - canonical_content_versions
+    - canonical_claims
+    - canonical_commands
+    - canonical_events
+  api_routes:
+    - /internal/canonical-contents
+    - /internal/canonical-contents/{content_id}/versions
+    - /internal/canonical-contents/{content_id}:submit-review
+  behaviors:
+    - locked_topic_brief_and_input_snapshot_gate
+    - stable_key_positioned_editorial_arrays
+    - tenant_scoped_idempotent_root_and_version_commands
+    - duplicate_content_hash_replay
+    - append_only_version_claim_and_event_records
+    - ordered_canonical_version_audit_events
+verification:
+  commands:
+    - py -3.12 -m pytest tests/unit/canonical_content tests/integration/test_canonical_content_api.py -q
+    - py -3.12 scripts/check_json_schemas.py
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 scripts/check_migrations.py --strict --json
+    - py -3.12 scripts/check_task_card_precision.py --task CANON-001 --strict
+  results:
+    targeted_tests: 4 passed
+    schema_errors: 0
+    architecture_errors: 0
+    migration_errors: 0
+    precision_gaps: 0

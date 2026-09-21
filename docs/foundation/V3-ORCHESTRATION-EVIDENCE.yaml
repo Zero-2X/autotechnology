@@ -1,0 +1,135 @@
+schema_version: 1
+scope: langgraph-v3-account-free-overlay
+status: account_free_complete
+registry_ref: docs/task-registry-langgraph-v3.yaml
+verification:
+  focused_command: python -m pytest tests/unit/orchestration tests/unit/langchain tests/contract/test_v3_task_precision.py tests/contract/test_v3_completion_evidence.py -q
+  focused_result: 24 passed
+  full_command: python -m pytest tests --maxfail=1 -q -rs
+  full_result: 1121 passed, 1 warning
+  checks:
+    - python scripts/check_langgraph_task_registry.py
+    - python scripts/check_task_card_precision.py --task GRAPH-GOV-001 --strict
+    - python scripts/check_json_schemas.py
+    - python scripts/check_architecture.py
+    - python scripts/check_secrets.py
+    - python scripts/check_migrations.py --strict
+    - python scripts/check_openapi_compatibility.py --strict
+    - python scripts/check_event_compatibility.py --strict
+  credentials: none
+  external_publication: false
+task_status:
+  GRAPH-GOV-001: done
+  GRAPH-GOV-002: done
+  GRAPH-GOV-003: done
+  GRAPH-GOV-004: done
+  GRAPH-GOV-005: done
+  GRAPH-CORE-001: done
+  GRAPH-CORE-002: done
+  GRAPH-CORE-003: done
+  GRAPH-CORE-004: done
+  GRAPH-CORE-005: done
+  GRAPH-CORE-006: done
+  GRAPH-STATE-001: done
+  GRAPH-STATE-002: done
+  GRAPH-STATE-003: done
+  GRAPH-STATE-004: done
+  GRAPH-STATE-005: done
+  LC-MODEL-001: done
+  LC-MODEL-002: done
+  LC-PROMPT-001: done
+  LC-PARSER-001: done
+  LC-RETRIEVER-001: done
+  LC-TOOL-001: done
+  GRAPH-NODE-001: done
+  GRAPH-NODE-002: done
+  GRAPH-NODE-003: done
+  GRAPH-ROUTER-001: done
+  GRAPH-HUMAN-001: done
+  GRAPH-NODE-004: done
+  GRAPH-REPLAY-001: done
+  GRAPH-OBS-001: done
+  GRAPH-OBS-002: done
+  GRAPH-EVAL-001: done
+  GRAPH-EVAL-002: done
+  GRAPH-FEEDBACK-001: done
+  GRAPH-DIST-001: blocked
+  GRAPH-DIST-002: blocked
+  GRAPH-DIST-003: blocked
+  GRAPH-DIST-004: blocked
+evidence_groups:
+  governance:
+    task_ids: [GRAPH-GOV-001, GRAPH-GOV-002, GRAPH-GOV-003, GRAPH-GOV-004, GRAPH-GOV-005]
+    artifacts:
+      - docs/adr/ADR-001-langchain-langgraph-architecture.md
+      - docs/graphs/v3-version-policy.yaml
+      - docs/runbooks/v3-upgrade-window.md
+      - requirements-v3.lock
+      - docs/CODEX_EXECUTION_PROTOCOL.md
+    tests: [tests/unit/langchain/test_compatibility.py, tests/contract/test_v3_task_precision.py]
+  runtime:
+    task_ids: [GRAPH-CORE-001, GRAPH-CORE-002, GRAPH-CORE-003, GRAPH-CORE-004, GRAPH-CORE-005, GRAPH-CORE-006]
+    artifacts:
+      - orchestration/registry.py
+      - orchestration/runtime.py
+      - orchestration/checkpoint.py
+      - orchestration/task_bridge.py
+      - orchestration/langgraph_adapter.py
+    tests: [tests/unit/orchestration/test_runtime.py, tests/unit/orchestration/test_task_feedback_topology.py, tests/unit/orchestration/test_production_boundaries.py, tests/unit/orchestration/test_langgraph_adapter.py]
+  state:
+    task_ids: [GRAPH-STATE-001, GRAPH-STATE-002, GRAPH-STATE-003, GRAPH-STATE-004, GRAPH-STATE-005]
+    artifacts:
+      - orchestration/state.py
+      - orchestration/reducers.py
+      - orchestration/state_lint.py
+      - packages/contracts/jsonschema/graph-state.schema.json
+    tests: [tests/unit/orchestration/test_runtime.py, tests/unit/orchestration/test_state_lint.py, tests/unit/orchestration/test_production_boundaries.py]
+  langchain:
+    task_ids: [LC-MODEL-001, LC-MODEL-002, LC-PROMPT-001, LC-PARSER-001, LC-RETRIEVER-001, LC-TOOL-001]
+    artifacts:
+      - integrations/langchain/model.py
+      - integrations/langchain/prompt.py
+      - integrations/langchain/parser.py
+      - integrations/langchain/retriever.py
+      - integrations/langchain/tool.py
+    tests: [tests/unit/langchain/test_ports.py, tests/unit/langchain/test_compatibility.py]
+  content:
+    task_ids: [GRAPH-NODE-001, GRAPH-NODE-002, GRAPH-NODE-003, GRAPH-ROUTER-001, GRAPH-HUMAN-001, GRAPH-NODE-004, GRAPH-REPLAY-001]
+    artifacts:
+      - orchestration/content.py
+      - orchestration/nodes.py
+      - orchestration/routers.py
+      - orchestration/human.py
+      - orchestration/replay.py
+      - orchestration/distribution.py
+    tests: [tests/unit/orchestration/test_content_graph.py, tests/unit/orchestration/test_ports_and_replay.py, tests/unit/orchestration/test_runtime.py]
+  support:
+    task_ids: [GRAPH-OBS-001, GRAPH-OBS-002, GRAPH-EVAL-001, GRAPH-EVAL-002, GRAPH-FEEDBACK-001]
+    artifacts:
+      - packages/observability/trace.py
+      - orchestration/observability.py
+      - orchestration/evaluation.py
+      - orchestration/feedback.py
+      - orchestration/topology.py
+    tests: [tests/unit/orchestration/test_ports_and_replay.py, tests/unit/orchestration/test_task_feedback_topology.py]
+blocked_tasks:
+  GRAPH-DIST-001:
+    dependency: EXT-ACCOUNT-001
+    required_evidence: [authorization_record, scope_snapshot, connection_health_check, external_id_and_requery_result]
+    fallback: manual_export_or_simulation
+    next_action: obtain approved organization account and sandbox authorization
+  GRAPH-DIST-002:
+    dependency: EXT-ACCOUNT-001
+    required_evidence: [authorization_record, scope_snapshot, vault_reference, lease_check]
+    fallback: no_real_token
+    next_action: obtain approved OAuth callback and vault integration evidence
+  GRAPH-DIST-003:
+    dependency: EXT-ACCOUNT-001
+    required_evidence: [sandbox_connection, draft_only_response, provider_idempotency_key]
+    fallback: fake_adapter
+    next_action: run provider sandbox draft_only contract test
+  GRAPH-DIST-004:
+    dependency: EXT-ACCOUNT-001
+    required_evidence: [policy_snapshot, approval_record, kill_switch_drill, unknown_result_reconciliation]
+    fallback: blocked_publish
+    next_action: complete controlled platform go/no-go review

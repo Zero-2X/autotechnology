@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/media-output-spec-version.schema.json",
+  "title": "MediaOutputSpecVersion",
+  "type": "object",
+  "$defs": {
+    "profile": {
+      "type": "object",
+      "properties": {
+        "sequence": {"type": "integer", "minimum": 1},
+        "profile_key": {"type": "string", "pattern": "^[a-z][a-z0-9._-]{0,63}$"},
+        "aspect_ratio": {"type": "string", "enum": ["9:16", "1:1", "16:9"]},
+        "width": {"type": "integer", "minimum": 2, "maximum": 7680},
+        "height": {"type": "integer", "minimum": 2, "maximum": 7680},
+        "frame_rate": {"type": "number", "exclusiveMinimum": 0, "maximum": 120},
+        "container_format": {"type": "string", "enum": ["mp4", "mov", "webm"]},
+        "video_codec": {"type": "string", "enum": ["h264", "hevc", "av1", "vp9"]},
+        "pixel_format": {"type": "string", "enum": ["yuv420p", "yuv422p", "yuv444p", "rgba"]},
+        "audio_codec": {"type": "string", "enum": ["aac", "opus", "pcm", "none"]},
+        "audio_sample_rate_hz": {"type": "integer", "enum": [0, 44100, 48000, 96000]},
+        "audio_channels": {"type": "integer", "minimum": 0, "maximum": 8},
+        "subtitle_track_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "format": "uuid"}},
+        "bitrate_kbps": {"type": "integer", "minimum": 1, "maximum": 1000000}
+      },
+      "required": [
+        "sequence", "profile_key", "aspect_ratio", "width", "height", "frame_rate",
+        "container_format", "video_codec", "pixel_format", "audio_codec", "audio_sample_rate_hz",
+        "audio_channels", "subtitle_track_ids"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "media_output_spec_id": {"type": "string", "format": "uuid"},
+    "media_visual_asset_set_version_id": {"type": "string", "format": "uuid"},
+    "media_script_version_id": {"type": "string", "format": "uuid"},
+    "media_storyboard_version_id": {"anyOf": [{"type": "string", "format": "uuid"}, {"type": "null"}]},
+    "version_no": {"type": "integer", "minimum": 1},
+    "duration_seconds": {"type": "integer", "enum": [30, 60, 90]},
+    "region_profile_version_id": {"type": "string", "format": "uuid"},
+    "policy_snapshot_id": {"type": "string", "format": "uuid"},
+    "template_version": {"const": "media-output-spec-v1"},
+    "status": {"type": "string", "enum": ["draft", "edited", "in_review", "approved", "superseded", "withdrawn"]},
+    "profiles": {"type": "array", "minItems": 1, "maxItems": 3, "items": {"$ref": "#/$defs/profile"}},
+    "profile_count": {"type": "integer", "minimum": 1, "maximum": 3},
+    "require_all_ratios": {"type": "boolean"},
+    "revision_reason": {"anyOf": [{"type": "string", "minLength": 1, "maxLength": 1000}, {"type": "null"}]},
+    "supersedes_version_id": {"anyOf": [{"type": "string", "format": "uuid"}, {"type": "null"}]},
+    "source_visual_snapshot_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "source_script_snapshot_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "source_storyboard_snapshot_hash": {"anyOf": [{"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"}, {"type": "null"}]},
+    "snapshot_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+    "created_by": {"type": "string", "format": "uuid"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "required": [
+    "id", "org_id", "media_output_spec_id", "media_visual_asset_set_version_id", "media_script_version_id",
+    "media_storyboard_version_id", "version_no", "duration_seconds", "region_profile_version_id",
+    "policy_snapshot_id", "template_version", "status", "profiles", "profile_count", "require_all_ratios",
+    "revision_reason", "supersedes_version_id", "source_visual_snapshot_hash", "source_script_snapshot_hash",
+    "source_storyboard_snapshot_hash", "snapshot_hash", "created_by", "created_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "MEDIA-003C",
+  "x-append-only": true
+}

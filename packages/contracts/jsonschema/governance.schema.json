@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/governance.schema.json",
+  "title": "governance contract union",
+  "oneOf": [
+    {"$ref": "./policy-snapshot.schema.json"},
+    {"$ref": "./policy-decision.schema.json"},
+    {"$ref": "./kill-switch.schema.json"},
+    {"$ref": "./data-processing-policy.schema.json"},
+    {"$ref": "./operational-targets.schema.json"},
+    {"$ref": "./real-account-dependency.schema.json"},
+    {"$ref": "./vendor-inventory.schema.json"},
+    {"$ref": "./vertical-scope.schema.json"},
+    {"$ref": "./risk-policy.schema.json"},
+    {"$ref": "./policy-card.schema.json"},
+    {"$ref": "./tech-stack-baseline.schema.json"},
+    {"$ref": "./release-levels.schema.json"},
+    {"$ref": "./raci-policy.schema.json"}
+  ],
+  "x-module": "governance"
+}

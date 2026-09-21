@@ -1,0 +1,26 @@
+task_id: MEDIA-004A
+status: done
+verification:
+  focused_command: python -m pytest tests/unit/media/test_media_render_service.py tests/integration/test_media_004a.py tests/integration/test_media_004a_migration.py tests/contract/test_media_004a_contract.py tests/contract/test_media_004a_postgres_sql.py -q
+  focused_result: 12 passed
+  service_behaviors: input version and snapshot locking, source lineage checks, profile snapshot, AssetVersion version lock, idempotency, private artifact head/get confirmation, hash/size/content type verification, stable unknown state, worker handler, and atomic concurrent claim
+  migration_test: 1 passed; SQLite full chain upgrade/downgrade, tenant composite references, append-only inputs/artifacts/commands, private object reference and hash guards
+  postgresql_sql_emission: 1 passed; upgrade/downgrade SQL generated and trigger/function removal order verified offline
+  migration_graph: revisions=111; head=20260920_media_004a; errors=0
+  schemas: schema_errors=0
+  architecture: architecture_errors=0
+  task_refs: checked=157; errors=0
+  precision: scoped=93; precise=93; gaps=0
+  secrets: secret_findings=0
+  plan_consistency: validated=157; errors=0
+  inventory: inventory valid; FOUND-000 inventory test 6 passed
+  full_regression: 967 passed in 213.45s; final inventory refresh and FOUND-000 inventory test passed
+  postgresql_runtime: not verified against a live PostgreSQL database
+verified_boundaries:
+  - Exact same-tenant MediaScriptVersion, optional storyboard/subtitle versions, MediaVisualAssetSetVersion and MediaOutputSpecVersion are locked by id and snapshot hash; source Script/Storyboard/Subtitle/Visual/Output lineage, Policy and Region are checked.
+  - Selected output profile is stored as a closed snapshot; target AssetVersion id, file hash and version number are retained when supplied.
+  - Renderer bytes never enter the job record; private storage ref, SHA-256, size, content type, stage/shot, sequence and input hash are the only artifact facts persisted.
+  - Same natural artifact key with a different payload is rejected; confirmed jobs replay without a second renderer call; unknown renderer/storage outcomes are held for MEDIA-004B.
+  - Migration downgrade removes only MEDIA-004A tables and leaves MEDIA-003C output-spec tables intact.
+limitations:
+  - PostgreSQL SQL generation and trigger removal order were verified offline; live PostgreSQL execution remains unverified.

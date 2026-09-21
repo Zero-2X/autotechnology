@@ -1,0 +1,12 @@
+task_id: FEEDBACK-CORE-004
+status: done
+verification:
+  focused_command: python -m pytest tests/unit/feedback/test_feedback_recommendation.py tests/integration/test_feedback_core_004_migration.py tests/contract/test_feedback_core_004_contract.py -q
+  focused_result: 4 passed
+  service_behaviors: typed recommendation mapping for topic, refresh, variant, channel and prompt targets; tenant and status gates; idempotent replay; immutable reasoning hash; audit/outbox facts; no production rule mutation
+  migration_test: SQLite feedback item binding and append-only guards plus offline PostgreSQL trigger/function cleanup ordering
+  schemas: feedback-recommendation contract is closed and validated before persistence
+  secrets: recommendation events contain metadata and hashes only
+  postgresql_runtime: not verified against a live PostgreSQL database
+limitations:
+  - Recommendations are proposals only; execution is deferred to FEEDBACK-CORE-005.

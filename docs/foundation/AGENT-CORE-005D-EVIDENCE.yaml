@@ -1,0 +1,45 @@
+task_id: AGENT-CORE-005D
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000044
+actor: team/agent
+predecessors: [AGENT-CORE-002, KNOW-001, CANON-002, AGENT-CORE-005C]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/agent/transform.py
+    - modules/agent/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/agent-run.schema.json
+    - packages/contracts/jsonschema/transform-input.schema.json
+    - packages/contracts/jsonschema/transform-output.schema.json
+    - packages/contracts/jsonschema/variant-draft.schema.json
+    - packages/contracts/jsonschema/canonical-content-version.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_agent_core_005d.py
+  tests:
+    - tests/unit/agent/test_transform.py
+    - tests/integration/test_agent_core_005d_transform.py
+verification:
+  targeted_command: python -m pytest tests/unit/agent tests/integration --maxfail=1 -q
+  targeted_result: 142 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  agent_runner_and_hash_ledger_reused: true
+  tool_allowlist_empty: true
+  write_permissions_empty: true
+  canonical_version_read_only: true
+  claim_mapping_preserved: true
+  terminology_mapping_preserved: true
+  numbers_code_and_links_preserved: true
+  draft_requires_human_review: true
+  idempotent_model_invocation: true
+  content_variant_created: false
+  variant_version_created: false
+  publication_side_effect: false
+  network_calls: false
+rollback:
+  - Disable the transform AgentDefinition while retaining AgentRun, ModelCall, transient draft, event and audit evidence.
+  - This revision creates no business table and no production fact or publication side effect requires reversal.

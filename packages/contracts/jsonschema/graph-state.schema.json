@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/graph-state.schema.json",
+  "title": "bounded graph state",
+  "type": "object",
+  "properties": {
+    "run_id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "actor_id": {"type": "string", "format": "uuid"},
+    "workflow_key": {"type": "string", "minLength": 1, "maxLength": 128},
+    "workflow_version": {"type": "integer", "minimum": 1},
+    "input_refs": {"type": "object", "additionalProperties": {"type": "string", "maxLength": 2048}},
+    "current_node": {"type": ["string", "null"], "maxLength": 128},
+    "artifact_refs": {"type": "object", "additionalProperties": {"type": "string", "maxLength": 2048}},
+    "evidence_refs": {"type": "array", "maxItems": 500, "items": {"type": "string", "maxLength": 2048}},
+    "qa_refs": {"type": "array", "maxItems": 500, "items": {"type": "string", "maxLength": 2048}},
+    "policy_decision_ref": {"type": ["string", "null"], "maxLength": 2048},
+    "human_interrupt_ref": {"type": ["string", "null"], "maxLength": 2048},
+    "retry_context": {"type": "object", "additionalProperties": true, "maxProperties": 30},
+    "idempotency_key": {"type": "string", "minLength": 1, "maxLength": 200},
+    "trace_id": {"type": "string", "minLength": 1, "maxLength": 200},
+    "error_ref": {"type": ["string", "null"], "maxLength": 2048},
+    "status": {"enum": ["running", "waiting", "paused", "succeeded", "failed", "cancelled"]},
+    "result_refs": {"type": "object", "additionalProperties": {"type": "string", "maxLength": 2048}},
+    "resume_token": {"type": ["string", "null"], "maxLength": 2048},
+    "state_version": {"type": "integer", "minimum": 1},
+    "last_node": {"type": ["string", "null"], "maxLength": 128}
+  },
+  "required": ["run_id", "org_id", "workflow_key", "workflow_version", "trace_id", "state_version"],
+  "additionalProperties": false,
+  "x-module": "orchestration",
+  "x-task-ids": ["GRAPH-STATE-001", "GRAPH-STATE-005"]
+}

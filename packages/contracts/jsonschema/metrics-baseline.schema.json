@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/metrics-baseline.schema.json",
+  "title": "Foundation health and metrics baseline",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "baseline_key",
+    "baseline_version",
+    "status",
+    "health",
+    "metrics",
+    "security",
+    "fixture",
+    "effective_at",
+    "locked_by"
+  ],
+  "properties": {
+    "baseline_key": { "const": "metrics-health" },
+    "baseline_version": { "const": 1 },
+    "status": { "enum": ["active", "superseded"] },
+    "health": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["liveness_path", "readiness_path", "default_checks", "dependency_probe_default", "statuses"],
+      "properties": {
+        "liveness_path": { "const": "/health/live" },
+        "readiness_path": { "const": "/health/ready" },
+        "default_checks": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$" }
+        },
+        "dependency_probe_default": { "const": "no_network" },
+        "statuses": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["ready", "configured", "degraded", "unavailable", "invalid_configuration", "not_configured"]
+          }
+        }
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "format", "scopes", "kinds", "max_label_value_length", "default_metrics"],
+      "properties": {
+        "path": { "const": "/metrics" },
+        "format": { "const": "prometheus-0.0.4" },
+        "scopes": {
+          "type": "array",
+          "items": { "enum": ["technical", "business"] },
+          "minItems": 2,
+          "uniqueItems": true
+        },
+        "kinds": {
+          "type": "array",
+          "items": { "enum": ["counter", "gauge", "histogram"] },
+          "minItems": 3,
+          "uniqueItems": true
+        },
+        "max_label_value_length": { "type": "integer", "minimum": 1, "maximum": 256 },
+        "default_metrics": {
+          "type": "array",
+          "minItems": 4,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^[A-Za-z_:][A-Za-z0-9_:]*$" }
+        }
+      }
+    },
+    "security": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tenant_labels", "correlation_labels", "payload_labels", "credential_labels", "external_export"],
+      "properties": {
+        "tenant_labels": { "const": false },
+        "correlation_labels": { "const": false },
+        "payload_labels": { "const": false },
+        "credential_labels": { "const": false },
+        "external_export": { "const": false }
+      }
+    },
+    "fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["process_local", "network_access", "persistence"],
+      "properties": {
+        "process_local": { "const": true },
+        "network_access": { "const": false },
+        "persistence": { "const": false }
+      }
+    },
+    "effective_at": { "type": "string", "format": "date-time" },
+    "locked_by": { "type": "string", "minLength": 1 }
+  }
+}

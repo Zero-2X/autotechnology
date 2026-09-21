@@ -1,0 +1,48 @@
+task_id: MODEL-001
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000046
+actor: team/model_gateway
+predecessors: [GOV-010, MODEL-CORE-002, CANON-002]
+external_dependencies:
+  EXT-MODEL-001: optional_unconfigured
+artifacts:
+  implementation:
+    - modules/model_gateway/approved_provider.py
+    - modules/model_gateway/service.py
+    - modules/model_gateway/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/model-gateway.schema.json
+    - packages/contracts/jsonschema/model-call.schema.json
+    - packages/contracts/jsonschema/approved-model-provider.schema.json
+    - packages/contracts/events/event-envelope.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_model_001.py
+  tests:
+    - tests/unit/model_gateway/test_approved_provider.py
+    - tests/integration/test_model_001_optional_provider.py
+verification:
+  targeted_command: python -m pytest tests/unit/model_gateway tests/integration --maxfail=1 -q
+  targeted_result: 129 passed
+  full_command: python -m pytest -q
+  full_result: 734 passed
+  inventory_regression_result: 6 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  model_port_adapter: true
+  approved_evidence_required: true
+  dev_staging_only: true
+  processing_region_checked: true
+  terms_and_retention_recorded: true
+  timeout_and_cost_bounded: true
+  raw_credentials_rejected: true
+  missing_credential_falls_back_to_fake: true
+  transient_failure_falls_back_to_fake: true
+  deterministic_errors_fail_closed: true
+  idempotent_gateway_replay: true
+  ci_external_transport_calls: 0
+  real_network_calls: false
+rollback:
+  - Remove or disable the approved external provider config; credential-free calls continue through Fake fixtures.
+  - This revision creates no business table and existing ModelCall, terms and fallback evidence remain read-only.

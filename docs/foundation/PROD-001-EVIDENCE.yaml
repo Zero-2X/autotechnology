@@ -1,0 +1,38 @@
+task_id: PROD-001
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000014
+actor: team/production
+predecessors: [CANON-002]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/production/service.py
+  contracts:
+    - packages/contracts/jsonschema/variant-draft.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_prod_001.py
+  tests:
+    - tests/unit/production/test_variant_draft.py
+    - tests/integration/test_variant_draft.py
+verification:
+  targeted_command: python -m pytest tests/unit/production tests/integration/test_variant_draft.py -q
+  targeted_result: 5 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  replaceable_transform_port: true
+  m1_rule_copy_preserves_text_and_source_mapping: true
+  canonical_source_is_tenant_scoped: true
+  withdrawn_source_rejected: true
+  draft_requires_review: true
+  idempotent_replay: true
+  content_variant_fact_created: false
+  publication_side_effect: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Stop creating transient drafts; persisted Variant facts remain owned by PROD-002.
+  - Production persistence requires a later forward migration.

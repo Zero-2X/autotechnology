@@ -1,0 +1,26 @@
+task_id: TOPIC-006
+status: done
+implementation:
+  module: modules/topic/opportunity.py
+  contracts:
+    - packages/contracts/jsonschema/topic-opportunity.schema.json
+  migration: packages/db/migrations/versions/20260918_topic_006.py
+  behaviors:
+    - explicit_opportunity_state_machine
+    - reject_and_defer_reason_required
+    - optimistic_version_and_idempotency
+    - locked_brief_state_guard
+    - append_only_ordered_state_events
+verification:
+  commands:
+    - py -3.12 -m pytest tests/unit/topic/test_state_machine.py tests/integration/test_topic_state_machine.py -q --disable-warnings --maxfail=1
+    - py -3.12 scripts/check_json_schemas.py
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 scripts/check_migrations.py --strict --json
+    - py -3.12 scripts/check_task_card_precision.py --task TOPIC-006 --strict
+  results:
+    targeted_tests: 3
+    schema_errors: 0
+    architecture_errors: 0
+    migration_errors: 0
+    precision_gaps: 0

@@ -1,0 +1,38 @@
+task_id: QA-003
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000020
+actor: team/qa
+predecessors: [FOUND-009, CANON-002, PROD-002, QA-002]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/qa/sandbox.py
+    - modules/qa/__init__.py
+  contracts:
+    - packages/contracts/jsonschema/sandbox-run.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_qa_003.py
+  tests:
+    - tests/unit/qa/test_sandbox.py
+verification:
+  targeted_command: python -m pytest tests/unit/qa tests/unit/provenance tests/integration/test_variant_store.py tests/contract/test_found_004a_migrations.py -q
+  targeted_result: 39 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  structured_argv_only_and_allowlist: true
+  shell_network_production_and_secret_blocking: true
+  disposable_workspace_and_minimal_environment: true
+  dependency_lock_hash_validation: true
+  bounded_timeout_and_resource_admission: true
+  private_output_evidence_hashes: true
+  deterministic_reproducible_cache_and_idempotent_replay: true
+  business_facts_mutated: false
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  network_calls: false
+rollback:
+  - Disable new sandbox commands through the task feature flag while retaining run audit and evidence hashes.
+  - This revision creates no business table; durable sandbox evidence uses a forward migration.

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/prompt-version.schema.json",
+  "title": "Immutable prompt version",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id", "org_id", "prompt_key", "version_no", "version_ref", "template", "variables",
+    "input_schema_ref", "output_schema_ref", "content_hash", "status", "created_by", "created_at"
+  ],
+  "properties": {
+    "id": {"type": "string", "format": "uuid"},
+    "org_id": {"type": "string", "format": "uuid"},
+    "prompt_key": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,127}$"},
+    "version_no": {"type": "integer", "minimum": 1},
+    "version_ref": {"type": "string", "pattern": "^[a-z][a-z0-9_.-]{2,127}/v[1-9][0-9]*$"},
+    "template": {"type": "string", "minLength": 1},
+    "variables": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"type": "string", "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"}
+    },
+    "input_schema_ref": {"type": "string", "minLength": 1},
+    "output_schema_ref": {"type": "string", "minLength": 1},
+    "content_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "status": {"const": "registered"},
+    "created_by": {"type": "string", "format": "uuid"},
+    "created_at": {"type": "string", "format": "date-time"}
+  },
+  "x-module": "evaluation",
+  "x-task-ids": ["EVAL-001"]
+}

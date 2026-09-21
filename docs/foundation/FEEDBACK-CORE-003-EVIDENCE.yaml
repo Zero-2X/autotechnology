@@ -1,0 +1,12 @@
+task_id: FEEDBACK-CORE-003
+status: done
+verification:
+  focused_command: python -m pytest tests/unit/feedback/test_feedback_item_service.py tests/integration/test_feedback_core_003_migration.py tests/contract/test_feedback_core_003_contract.py tests/integration/test_feedback_core_002_recommendation.py -q
+  focused_result: 6 passed
+  service_behaviors: tenant-scoped FeedbackItem creation, synthetic/manual Observation validation, immutable versioned status transitions, approver and owner fields, idempotent replay, optimistic locking, audit and outbox facts
+  migration_test: SQLite Observation binding and append-only guards, downgrade preservation, and offline PostgreSQL trigger/function cleanup ordering
+  schemas: feedback-item contract remains closed and is validated on every create/transition
+  secrets: no tokens, credentials, PII or raw metric values are persisted in audit/outbox
+  postgresql_runtime: not verified against a live PostgreSQL database
+limitations:
+  - Execution of a FeedbackAction is deferred to FEEDBACK-CORE-005; this task only owns FeedbackItem facts and status transitions.

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/geo_content.schema.json",
+  "title": "geo_content contract union",
+  "oneOf": [
+    {
+      "$ref": "./geo-query-fixture.schema.json"
+    },
+    {
+      "$ref": "./geo-run.schema.json"
+    },
+    {
+      "$ref": "./geo-content-assessment.schema.json"
+    }
+  ],
+  "x-module": "geo_content"
+}

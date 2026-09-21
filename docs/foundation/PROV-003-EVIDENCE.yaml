@@ -1,0 +1,35 @@
+task_id: PROV-003
+status: done
+implementation:
+  module: modules/provenance/guard.py
+  contracts:
+    - packages/contracts/jsonschema/rights-record.schema.json
+    - packages/contracts/jsonschema/rights-record-version.schema.json
+  migration: packages/db/migrations/versions/20260918_prov_003.py
+  tables:
+    - rights_guard_commands
+    - rights_guard_decisions
+    - rights_expiry_reminders
+    - rights_lineage_edges
+    - rights_derivative_blocks
+  behaviors:
+    - pre_use_authorization_allow_deny_gate
+    - idempotent_expiry_reminder_scanning
+    - optimistic_due_expiration
+    - multi_level_derived_lineage_reverse_trace
+    - complaint_freeze_and_derivative_blocks
+    - append_only_guard_evidence_and_tenant_isolation
+verification:
+  commands:
+    - py -3.12 -m pytest tests/unit/provenance/test_rights_guard.py tests/integration/test_rights_guard_api.py -q --disable-warnings --maxfail=1
+    - py -3.12 scripts/check_json_schemas.py
+    - py -3.12 scripts/check_architecture.py
+    - py -3.12 scripts/check_migrations.py --strict --json
+    - py -3.12 scripts/check_task_card_precision.py --task PROV-003 --strict
+    - py -3.12 -m pytest tests/contract/test_found_004a_migrations.py -q --disable-warnings --maxfail=1
+  results:
+    targeted_tests: 5
+    schema_errors: 0
+    architecture_errors: 0
+    migration_errors: 0
+    precision_gaps: 0

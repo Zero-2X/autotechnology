@@ -1,0 +1,182 @@
+policy_key: raci-role-map
+policy_version: 1
+status: active
+roles:
+  - role_key: governance_owner
+    display_name: 治理负责人
+    purpose: 维护范围、风险、Policy、Go/No-Go 和治理变更记录
+    can_approve: true
+    can_publish: false
+    can_manage_credentials: false
+  - role_key: product_owner
+    display_name: 产品负责人
+    purpose: 维护目标、优先级、受众和发布级别决策
+    can_approve: true
+    can_publish: false
+    can_manage_credentials: false
+  - role_key: topic_editor
+    display_name: 选题编辑
+    purpose: 发现、筛选和锁定 TopicOpportunity/TopicBrief
+    can_approve: false
+    can_publish: false
+    can_manage_credentials: false
+  - role_key: research_owner
+    display_name: 研究负责人
+    purpose: 采集来源、建立 Evidence 和 KnowledgeCore
+    can_approve: false
+    can_publish: false
+    can_manage_credentials: false
+  - role_key: rights_reviewer
+    display_name: 版权审查人
+    purpose: 审查来源许可、派生权利和地域限制
+    can_approve: true
+    can_publish: false
+    can_manage_credentials: false
+  - role_key: content_editor
+    display_name: 内容编辑
+    purpose: 维护 Canonical Content、Variant 和本地化质量
+    can_approve: false
+    can_publish: false
+    can_manage_credentials: false
+  - role_key: qa_reviewer
+    display_name: 质量审查人
+    purpose: 执行事实、代码、语言、可访问性和相似度检查
+    can_approve: true
+    can_publish: false
+    can_manage_credentials: false
+  - role_key: policy_reviewer
+    display_name: 策略审查人
+    purpose: 执行内容、区域、分发、模型和数据处理 Policy Gate
+    can_approve: true
+    can_publish: false
+    can_manage_credentials: false
+  - role_key: approval_reviewer
+    display_name: 发布审批人
+    purpose: 根据证据、QA、Policy 和风险等级作出人工审批决定
+    can_approve: true
+    can_publish: false
+    can_manage_credentials: false
+  - role_key: platform_operator
+    display_name: 平台运营人
+    purpose: 管理 Manual Export、Fake Adapter 和后续受控平台动作
+    can_approve: false
+    can_publish: true
+    can_manage_credentials: false
+  - role_key: security_incident_lead
+    display_name: 安全与事故负责人
+    purpose: 处理安全、账号、提示注入、数据泄露和 Kill Switch 事故
+    can_approve: false
+    can_publish: false
+    can_manage_credentials: false
+  - role_key: data_protection_owner
+    display_name: 数据保护负责人
+    purpose: 负责数据分类、删除传播、跨境处理和保留期限
+    can_approve: true
+    can_publish: false
+    can_manage_credentials: false
+  - role_key: auditor
+    display_name: 审计负责人
+    purpose: 独立复核 AuditLog、Policy、审批、发布和事故证据
+    can_approve: false
+    can_publish: false
+    can_manage_credentials: false
+  - role_key: on_call_engineer
+    display_name: 值班工程师
+    purpose: 处理运行故障、任务恢复、回放和服务降级
+    can_approve: false
+    can_publish: false
+    can_manage_credentials: false
+raci_matrix:
+  - activity_key: scope_and_release_levels
+    responsible: [governance_owner]
+    accountable: [product_owner]
+    consulted: [auditor, data_protection_owner]
+    informed: [topic_editor, content_editor, platform_operator]
+  - activity_key: topic_selection
+    responsible: [topic_editor]
+    accountable: [product_owner]
+    consulted: [research_owner, content_editor]
+    informed: [governance_owner, auditor]
+  - activity_key: source_and_rights
+    responsible: [research_owner]
+    accountable: [rights_reviewer]
+    consulted: [data_protection_owner, content_editor]
+    informed: [topic_editor, auditor]
+  - activity_key: knowledge_and_canonical_content
+    responsible: [research_owner, content_editor]
+    accountable: [content_editor]
+    consulted: [rights_reviewer, qa_reviewer]
+    informed: [topic_editor, policy_reviewer]
+  - activity_key: production_and_localization
+    responsible: [content_editor]
+    accountable: [content_editor]
+    consulted: [research_owner, qa_reviewer, policy_reviewer]
+    informed: [product_owner]
+  - activity_key: quality_and_policy_gate
+    responsible: [qa_reviewer, policy_reviewer]
+    accountable: [governance_owner]
+    consulted: [rights_reviewer, content_editor]
+    informed: [approval_reviewer, auditor]
+  - activity_key: human_approval
+    responsible: [approval_reviewer]
+    accountable: [governance_owner]
+    consulted: [qa_reviewer, policy_reviewer, rights_reviewer]
+    informed: [content_editor, platform_operator]
+  - activity_key: manual_or_simulated_distribution
+    responsible: [platform_operator]
+    accountable: [product_owner]
+    consulted: [policy_reviewer, approval_reviewer]
+    informed: [auditor, content_editor]
+  - activity_key: real_platform_distribution_m2
+    responsible: [platform_operator]
+    accountable: [governance_owner]
+    consulted: [policy_reviewer, security_incident_lead, data_protection_owner]
+    informed: [auditor, product_owner]
+  - activity_key: incident_response_and_kill_switch
+    responsible: [security_incident_lead, on_call_engineer]
+    accountable: [governance_owner]
+    consulted: [platform_operator, data_protection_owner]
+    informed: [auditor, product_owner, approval_reviewer]
+  - activity_key: deletion_and_retention
+    responsible: [data_protection_owner]
+    accountable: [governance_owner]
+    consulted: [auditor, on_call_engineer]
+    informed: [research_owner, content_editor, platform_operator]
+  - activity_key: feedback_and_metric_review
+    responsible: [topic_editor, product_owner]
+    accountable: [product_owner]
+    consulted: [auditor, qa_reviewer, content_editor]
+    informed: [governance_owner, platform_operator]
+audit_responsibilities:
+  audit_owner_role: auditor
+  evidence_retention_days: 730
+  review_cadence: monthly
+  independence_rule: 审计负责人不得审批自己创建的内容，不得作为同一发布动作的唯一执行人和审批人。
+incident_contacts:
+  - severity: R0
+    primary_role: content_editor
+    backup_roles: [qa_reviewer, topic_editor]
+    response_sla_minutes: 1440
+    escalation_trigger: 可逆的格式、元数据、草稿质量或刷新建议问题，且没有外部副作用
+  - severity: R1
+    primary_role: qa_reviewer
+    backup_roles: [content_editor, on_call_engineer]
+    response_sla_minutes: 480
+    escalation_trigger: 普通质量问题或可恢复的内部临时错误，需要有上限的自动修复或重试
+  - severity: R2
+    primary_role: governance_owner
+    backup_roles: [on_call_engineer, rights_reviewer, data_protection_owner]
+    response_sla_minutes: 120
+    escalation_trigger: 事实冲突、权利不确定、疑似隐私数据、持续运行故障或未知外部结果
+  - severity: R3
+    primary_role: security_incident_lead
+    backup_roles: [governance_owner, policy_reviewer]
+    response_sla_minutes: 30
+    escalation_trigger: 高风险内容、区域合规冲突、已拒绝权利仍请求分发、Policy 绕过或恶意提示注入
+  - severity: R4
+    primary_role: security_incident_lead
+    backup_roles: [governance_owner, data_protection_owner, on_call_engineer]
+    response_sla_minutes: 15
+    escalation_trigger: 凭证泄露、未授权真实发布、确认的重大隐私泄露、生产安全失陷或无账号阶段尝试真实平台副作用
+effective_at: '2026-09-15T00:00:00+08:00'
+locked_by: team/governance

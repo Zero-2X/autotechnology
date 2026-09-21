@@ -1,0 +1,43 @@
+task_id: AGENT-CORE-005A
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000013
+actor: team/agent
+predecessors: [AGENT-CORE-002, AGENT-CORE-004, WORKFLOW-CORE-001, TOPIC-004, CANON-002]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - modules/agent/planner.py
+    - modules/agent/registry.py
+  contracts:
+    - packages/contracts/jsonschema/planner-input.schema.json
+    - packages/contracts/jsonschema/planner-output.schema.json
+  migration:
+    - packages/db/migrations/versions/20260919_agent_core_005a.py
+  tests:
+    - tests/unit/agent/test_planner.py
+verification:
+  targeted_command: python -m pytest tests/unit/agent/test_planner.py -q
+  targeted_result: 4 passed
+  agent_and_migration_command: python -m pytest tests/unit/agent tests/contract/test_found_004a_migrations.py -q
+  agent_and_migration_result: 22 passed
+  schema_check: passed
+  architecture_check: passed
+  migration_graph_check: passed
+behavior:
+  locked_topic_brief_required: true
+  output_is_structured_plan_only: true
+  agent_tool_allowlist_empty: true
+  workflow_execution: false
+  unauthorized_actions_rejected: true
+  duplicate_or_forward_dependencies_rejected: true
+  idempotent_replay_without_model_call: true
+  low_confidence_needs_review: true
+  in_memory_ledger_hashes_and_cost_recorded: true
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  workflow_run_mutation: false
+  network_calls: false
+rollback:
+  - Stop invoking PlannerAgent and retain existing AgentRunLedger audit evidence.
+  - Production persistence requires a later forward migration.

@@ -1,0 +1,46 @@
+task_id: FOUND-000
+status: done
+trace_id: 6fef1c13-7c6b-4a08-a000-000000000000
+actor: team/foundation
+build_fingerprint: docs/repo-inventory.md#Source-fingerprint
+repository_classification: planning-and-contract-baseline
+git_availability: not a git worktree
+secret_contents_read: false
+implementation:
+  script: scripts/repo_inventory.py
+  report: docs/repo-inventory.md
+  modes:
+    write: python scripts/repo_inventory.py --write
+    check: python scripts/repo_inventory.py --check
+  check_rejects:
+    - missing report
+    - missing required section
+    - invalid or stale UTC timestamp
+    - source fingerprint mismatch
+  sensitive_handling:
+    - environment variable names only
+    - sensitive filename, type, size and metadata only
+    - no secret values or credential contents
+migration:
+  ref: packages/db/migrations/versions/20260916_found_000_repository_inventory.sql
+  verification: SQLite in-memory idempotency and immutable fingerprint uniqueness
+tests:
+  command: python -m pytest tests/contract/test_found_000_inventory.py -q
+  result: 5 passed
+  full_suite_command: python -m pytest tests --maxfail=1 -q
+  full_suite_result: 22 passed
+  output_path: docs/foundation/FOUND-000-EVIDENCE.yaml
+checks:
+  - python scripts/repo_inventory.py --check
+  - python scripts/check_task_card_precision.py --task FOUND-000 --strict
+  - python scripts/check_plan_consistency.py --strict-contracts
+  - python scripts/check_task_card_registry_refs.py
+  - python scripts/check_openapi_contract.py
+side_effects:
+  real_credentials: false
+  real_platform_api: false
+  external_publication: false
+  business_runtime_source_overwritten: false
+rollback:
+  - Keep the inventory report and evidence for audit.
+  - Revert only the FOUND-000 task status and references through a new reviewed change; do not rewrite accepted migrations or governance baselines.

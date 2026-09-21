@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/architecture-guard.schema.json",
+  "title": "FOUND-011 architecture guard",
+  "type": "object", "additionalProperties": false,
+  "required": ["baseline_key", "baseline_version", "status", "module_root", "composition_root", "forbidden_domain_import_roots", "cross_module_import_rule", "app_direct_sql_write", "unknown_module_table_write", "table_owners", "smoke_command", "smoke_checks"],
+  "properties": {
+    "baseline_key": {"const": "architecture-guard"},
+    "baseline_version": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["active", "superseded"]},
+    "module_root": {"const": "modules"},
+    "composition_root": {"const": "apps"},
+    "forbidden_domain_import_roots": {"type": "array", "const": ["apps", "adapters", "infra"]},
+    "cross_module_import_rule": {"const": "same_module_only"},
+    "app_direct_sql_write": {"const": "forbidden"},
+    "unknown_module_table_write": {"const": "forbidden"},
+    "table_owners": {"type": "object", "minProperties": 1, "additionalProperties": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"}},
+    "smoke_command": {"const": "py -3.12 scripts/smoke_foundation.py"},
+    "smoke_checks": {"type": "array", "const": ["architecture", "api_liveness", "tenant_isolation"]}
+  },
+  "x-module": "foundation",
+  "x-task-ids": ["FOUND-011"]
+}

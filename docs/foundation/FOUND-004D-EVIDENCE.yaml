@@ -1,0 +1,75 @@
+task_id: FOUND-004D
+status: done
+trace_id: 55618e3a-a0dc-44ec-a002-000000000009
+actor: team/foundation
+predecessors: [GOV-006, FOUND-000, FOUND-004C]
+external_dependencies: {}
+artifacts:
+  implementation:
+    - infra/foundation/task_failure.py
+    - infra/foundation/task_queue.py
+    - infra/foundation/__init__.py
+    - apps/api/main.py
+    - apps/worker/runtime.py
+    - infra/foundation/task_failure_facade.py
+    - packages/db/migrations/versions/20260916_found_004d_failure_retry.py
+  contracts:
+    - packages/contracts/jsonschema/task-job.schema.json
+    - packages/contracts/jsonschema/task-failure.schema.json
+    - packages/contracts/jsonschema/human-task.schema.json
+    - packages/contracts/openapi/openapi.yaml
+  tests:
+    - tests/contract/test_found_004d_failure_retry.py
+    - tests/integration/test_found_004d_failure_retry_integration.py
+    - tests/integration/test_foundation_failure_facade.py
+    - tests/integration/test_foundation_worker_runtime.py
+  manifests:
+    - docs/contracts/contract-manifest.yaml
+    - docs/contracts/migration-manifest.yaml
+runtime_evidence:
+  failure_fact: append_only_task_failure_with_stable_uuid
+  failure_idempotency: unique_job_attempt_error_code_returns_existing_fact
+  classifications: deterministic_transient_unknown
+  deterministic: failed_and_RETRY_NOT_ALLOWED
+  transient_retry: retry_scheduled_with_exponential_backoff
+  backoff_cap: bounded_by_backoff_cap_ms_with_optional_jitter
+  max_attempts: dead_letter_and_MAX_ATTEMPTS_EXCEEDED
+  unknown_result: unique_unknown_result_human_task_and_automatic_retry_paused
+  dead_requeue: new_queued_task_job_retains_old_failure_and_source_job
+  tenant_scope: cross_org_access_rejected_with_TENANT_SCOPE_VIOLATION
+  worker_commands: retry_and_requeue_dead_require_X-Worker-Id_and_Idempotency-Key
+  worker_failure_entry: TaskFailureFacade_is_the_only_composed_runtime_failure_path
+verification:
+  task_test_command: python -m pytest tests/contract/test_found_004d_failure_retry.py tests/integration/test_found_004d_failure_retry_integration.py --maxfail=1
+  task_test_result: 5 passed
+  related_test_command: python -m pytest tests/contract/test_found_004b_outbox.py tests/contract/test_found_004c_task_claim.py tests/integration/test_found_004b_outbox_integration.py tests/integration/test_found_004c_task_claim_integration.py tests/contract/test_found_004d_failure_retry.py tests/integration/test_found_004d_failure_retry_integration.py -q
+  related_test_result: 21 passed, 5 warnings
+  migration_check_command: python scripts/check_migrations.py --strict --json
+  migration_check_result: revisions=4 heads=[20260916_found_004d] errors=[]
+  targeted_checks:
+    - python scripts/check_task_card_precision.py --task FOUND-004D --strict
+    - python scripts/check_task_card_registry_refs.py
+    - python scripts/check_plan_consistency.py --strict-contracts --strict-commands
+    - python scripts/check_openapi_contract.py
+  full_test_command: python -m pytest tests --maxfail=1 -q
+  full_test_result: 90 passed, 8 warnings
+audit_revalidation:
+  date: '2026-09-16'
+  command: python -m pytest tests --maxfail=1 -q
+  result: 109 passed
+  reason: overall foundation architecture and implementation audit after failure-attempt and idempotency-header corrections
+worker_composition_revalidation:
+  date: '2026-09-18'
+  evidence: docs/foundation/WORKER-COMPOSITION-AUDIT-2026-09-18.yaml
+  targeted_result: 24 passed
+side_effects:
+  real_credentials: false
+  real_postgresql_connection: false
+  real_redis_connection: false
+  network_probe: false
+  real_platform_api: false
+  external_publication: false
+  existing_sql_migrations_rewritten: false
+rollback:
+  - Disable automatic retry and retain task_failures, human_tasks, and dead-letter task_jobs for review.
+  - Run python -m alembic downgrade 20260916_found_004c against a disposable or reviewed target database to remove this task's tables.

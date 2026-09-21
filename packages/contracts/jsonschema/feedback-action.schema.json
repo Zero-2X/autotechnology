@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/feedback-action.schema.json",
+  "title": "FeedbackAction",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "org_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "feedback_item_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "action_type": {
+      "type": "string",
+      "enum": [
+        "refresh",
+        "revise",
+        "retire",
+        "reprioritize",
+        "channel_change",
+        "prompt_eval"
+      ]
+    },
+    "target_type": {
+      "type": "string",
+      "enum": [
+        "topic_opportunity",
+        "canonical_content",
+        "variant",
+        "prompt"
+      ]
+    },
+    "target_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "target_version": {
+      "type": "integer"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "proposed",
+        "approved",
+        "executing",
+        "executed",
+        "failed",
+        "cancelled"
+      ]
+    },
+    "approved_by": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "approved_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "executed_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "format": "date-time"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "result_snapshot": {
+      "type": "object",
+      "properties": {
+        "output_hash": {"type": "string", "pattern": "^[A-Fa-f0-9]{64}$"},
+        "result_ref": {"type": "string", "minLength": 1, "maxLength": 512},
+        "status": {"type": "string", "minLength": 1, "maxLength": 64},
+        "error_code": {"type": "string", "minLength": 1, "maxLength": 128},
+        "affected_version": {"type": "integer", "minimum": 1},
+        "side_effect_blocked": {"type": "boolean"},
+        "reason": {"type": "string", "minLength": 1, "maxLength": 512}
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "id",
+    "org_id",
+    "feedback_item_id",
+    "action_type",
+    "target_type",
+    "target_id",
+    "target_version",
+    "status",
+    "approved_by",
+    "approved_at",
+    "executed_at",
+    "result_snapshot",
+    "created_at"
+  ],
+  "additionalProperties": false,
+  "x-source": "section-4.6-field-catalogue"
+}

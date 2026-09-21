@@ -1,0 +1,51 @@
+task_id: FOUND-008
+status: done
+date: '2026-09-18'
+trace_id: trace-found-008-acceptance
+actor: team/foundation
+artifacts:
+  implementation: infra/foundation/control_plane.py
+  task_card: docs/tasks/FOUND-008.md
+  contracts:
+    - packages/contracts/jsonschema/delivery-mode.schema.json
+    - packages/contracts/jsonschema/feature-flag.schema.json
+    - packages/contracts/jsonschema/kill-switch.schema.json
+    - packages/contracts/events/kill_switch-paused.schema.json
+    - packages/contracts/events/kill_switch-resumed.schema.json
+  migration: packages/db/migrations/versions/20260918_found_008_control_plane.py
+  tests:
+    - tests/contract/test_found_008_control_plane.py
+    - tests/integration/test_found_008_control_plane_integration.py
+  manifests:
+    - docs/contracts/contract-manifest.yaml
+    - docs/contracts/migration-manifest.yaml
+behavior:
+  delivery_modes: [manual_export, simulation, draft_only, authorized_api]
+  account_free_defaults:
+    manual_export: true
+    simulation: true
+    draft_only: false
+    authorized_api: false
+  feature_flags: tenant_scoped_versioned_idempotent
+  global_control: explicit_authorizer_required
+  side_effect_gate: rejected requests commit audit before returning deterministic error
+  replay: allowed replay is marked replayed and must return an existing task rather than create another
+  transaction: kill switch state, audit, command replay record, and outbox are atomic
+  external_side_effects: false
+verification:
+  targeted_command: python -m pytest tests/contract/test_found_008_control_plane.py tests/integration/test_found_008_control_plane_integration.py -q
+  targeted_result: 13 passed
+  task_precision: scoped=1 precise=1 gaps=0
+  schema_gate: schema_errors=0
+  migration_graph: revision_count=13 heads=[20260918_found_008] errors=[]
+  event_compatibility: events=162 baseline_events=162 errors=0 warnings=0
+  registry_refs: checked=157 errors=0
+  full_gate: python scripts/check_foundation_contracts.py; 419 passed
+boundaries:
+  - Feature flags are necessary controls and do not grant IAM, Policy, Rights, Region, Approval, or account authorization.
+  - The gate does not create a TaskJob; callers must honor replayed=true and create their business fact transactionally.
+  - Only the global kill switch is implemented; scoped switches remain with their owning later tasks.
+  - No provider SDK, network request, real credential, or production deployment was used.
+rollback:
+  - Pause new control commands and side-effect task creation before rollback.
+  - Export audit evidence, then downgrade to 20260916_found_007d only in a controlled environment with no production facts.

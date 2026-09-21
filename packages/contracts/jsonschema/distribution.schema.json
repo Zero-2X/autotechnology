@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.ai-content-workflow.local/distribution.schema.json",
+  "title": "distribution contract union",
+  "oneOf": [
+    {
+      "$ref": "./distribution-target.schema.json"
+    },
+    {
+      "$ref": "./distribution-target-version.schema.json"
+    },
+    {
+      "$ref": "./publication-intent.schema.json"
+    },
+    {
+      "$ref": "./export-package.schema.json"
+    },
+    {
+      "$ref": "./delivery-attempt.schema.json"
+    },
+    {
+      "$ref": "./publication-record.schema.json"
+    }
+  ],
+  "x-module": "distribution"
+}

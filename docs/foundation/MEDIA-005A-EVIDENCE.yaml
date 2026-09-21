@@ -1,0 +1,26 @@
+task_id: MEDIA-005A
+status: done
+verification:
+  focused_command: python -m pytest tests/unit/media/test_media_qa_service.py tests/integration/test_media_005a_migration.py tests/contract/test_media_005a_contract.py tests/unit/qa -q
+  focused_result: 19 passed
+  service_behaviors: visual profile checks, audio profile checks, subtitle cue bounds/order/overlap checks, private storage head/get hash verification, deterministic mismatch failures, unknown probe review, tenant isolation, expected version and idempotent replay
+  migration_test: 1 passed; SQLite full-chain upgrade/downgrade, tenant composite references and append-only report/finding/command guards
+  postgresql_sql_emission: 1 passed; upgrade/downgrade SQL and trigger/function removal order verified offline
+  schemas: schema_errors=0
+  architecture: architecture_errors=0
+  migration_graph: revisions=113; head=20260920_media_005a; errors=0
+  task_refs: checked=157; errors=0
+  precision: scoped=93; precise=93; gaps=0
+  secrets: secret_findings=0
+  plan_consistency: validated=157; errors=0
+  inventory: pending final inventory refresh
+  full_regression: pending final regression after documentation and registry refresh
+  postgresql_runtime: not verified against a live PostgreSQL database
+verified_boundaries:
+  - MediaAssetQAService consumes only immutable RenderJob/artifact projections and injectable StoragePort/MediaProbePort boundaries.
+  - Reports contain no media bytes; artifact facts retain only private refs, hashes, sizes, content types and input hashes.
+  - Storage or probe uncertainty produces needs_review without changing RenderJob state or invoking a renderer.
+  - Deterministic visual, audio, subtitle and file/hash mismatches produce failed findings with stable sorting and rule codes.
+  - QA reports, findings and command projections are tenant scoped and append only; downgrade preserves MEDIA-004B facts.
+limitations:
+  - PostgreSQL behavior is verified through offline SQL generation and trigger removal ordering; live PostgreSQL execution remains unverified.
