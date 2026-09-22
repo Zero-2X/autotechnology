@@ -59,7 +59,7 @@
     <div class="eyebrow">Executive Project Update</div>
     <h1>AI 跨境技术内容自动化工作流<br>项目开发进度汇报</h1>
     <p>面向管理层的非技术说明：项目已经完成内容生产、治理、审核、人工交付和自动化编排的主体能力，现正从“内部可运行”进入“真实平台接入与小流量试点”阶段。</p>
-    <div class="asof">数据截至 2026-09-21 · 以仓库任务注册表与测试证据为准</div>
+    <div class="asof">数据截至 2026-09-23 · 以仓库任务注册表、运行状态与测试证据为准</div>
   </header>
 
   <div class="metrics">
@@ -79,12 +79,12 @@
       <div class="verdict-main">
         <span class="tag blue">目前可交付</span>
         <strong>“AI 生成 + 质量治理 + 人工审批 + 人工导出发布”闭环</strong>
-        <p>系统已经能组织选题、内容生成、来源与版权检查、质量检查、审批、版本、审计和导出，并能用真实 LangGraph 编排这些步骤。运营人员可以把最终内容人工上传到真实账号，验证内容质量和流程效率。</p>
+        <p>系统已经能组织选题、内容生成、来源与版权检查、质量检查、审批、版本、审计和导出，并能用真实 LangGraph 编排这些步骤。小红书已经接入本机独立浏览器工作流，可以打开账号、填入图文草稿、进入客服入口并排队处理回复；当前真实会话需要账号持有人重新登录后才能继续。</p>
       </div>
       <div class="verdict-side">
         <span class="tag red">尚未开放</span>
         <h3 style="margin-top:12px">真实平台一键自动发布</h3>
-        <p>真实 OAuth、官方平台适配器、Secret Vault、生产存储、平台回查和 2–4 周 Pilot 尚未完成。现阶段不能把 Fake/Sandbox 结果描述成真实平台上线。</p>
+        <p>小红书不依赖未获批的官方 API，采用账号持有人登录后的浏览器自动化；其它平台仍需各自的官方权限或对应浏览器适配器。Secret Vault、生产存储、平台回查和 2–4 周 Pilot 尚未完成，现阶段不能把点击动作直接描述成平台已发布。</p>
       </div>
     </div>
   </section>
@@ -115,7 +115,7 @@
         <tr><td><b>内容生产</b></td><td>选题、研究、改写、多语言变体、质量检查、结构化输出</td><td>生成可审核的内容包</td><td>批准的真实模型供应商与 DPA</td></tr>
         <tr><td><b>来源与版权</b></td><td>来源、证据、声明、版权和新鲜度记录</td><td>每条内容保留可追溯依据</td><td>生产对象存储和真实素材权限流程</td></tr>
         <tr><td><b>政策与审批</b></td><td>Policy 快照、风险门禁、人工审批、职责分离</td><td>真实发布前先人工审核</td><td>真实组织 IAM/MFA 与持久化授权</td></tr>
-        <tr><td><b>分发</b></td><td>人工导出、Fake 平台、幂等、回查、Kill Switch</td><td>人工上传真实账号；自动流程用 Fake 验证</td><td>官方平台适配器、Sandbox、真实回查</td></tr>
+        <tr><td><b>分发</b></td><td>人工导出、Fake 平台、幂等、回查、Kill Switch；小红书浏览器填稿与客服任务队列</td><td>小红书可打开独立账号会话并准备图文草稿；发送和发布仍需平台页面确认</td><td>其它平台官方适配器或浏览器适配器、Sandbox、真实回查</td></tr>
         <tr><td><b>账号与 OAuth</b></td><td>账号壳、Scope、PKCE、State、Secret 引用、租约和撤销</td><td>完成无凭证开发和契约验证</td><td>官方 OAuth 应用、Vault 与真实授权证据</td></tr>
         <tr><td><b>分析与反馈</b></td><td>内容、互动、成本、线索质量等 Observation</td><td>接收合法来源的数据并形成反馈</td><td>真实平台指标权限和持续运行证据</td></tr>
         <tr><td><b>自动化编排</b></td><td>LangGraph、状态、Checkpoint、人工中断、重放和评测</td><td>稳定编排完整内容流水线</td><td>托管 PostgreSQL 的生产组合验证</td></tr>
