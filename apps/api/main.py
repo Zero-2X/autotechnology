@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 import json
 import os
 from pathlib import Path
+import subprocess
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -43,6 +44,7 @@ from modules.provenance import (
 from modules.knowledge import KnowledgeCoreService, KnowledgeError, KnowledgeService
 from modules.canonical_content import CanonicalContentError, CanonicalContentService
 from adapters.xiaohongshu.session import read_session_status
+from adapters.xiaohongshu.operator import launch_operator_session
 from modules.media.local_demo_generator import generate_cover_svg, generate_demo_content
 from modules.support.local_reply_generator import generate_local_reply
 
@@ -179,7 +181,7 @@ def create_app(
             media_type="text/plain; version=0.0.4",
         )
 
-    @app.get("/internal/xhs/accounts/{account_key}/session", tags=["internal"])
+    @app.get("/internal/xhs/accounts/{account_key}/session", tags=["internal"], include_in_schema=False)
     def xhs_session(account_key: str) -> dict[str, Any]:
         """Return redacted local browser-session state; never returns cookies or tokens."""
         try:
@@ -187,7 +189,24 @@ def create_app(
         except (ValueError, OSError, json.JSONDecodeError) as exc:
             raise HTTPException(status_code=400, detail={"code": "INVALID_XHS_ACCOUNT", "message": str(exc)}) from exc
 
-    @app.post("/internal/content/drafts:generate", tags=["internal"])
+    @app.post("/internal/xhs/accounts/{account_key}/browser:open", tags=["internal"], include_in_schema=False)
+    def open_xhs_browser(account_key: str, command: dict[str, Any] | None = None) -> dict[str, Any]:
+        """Open the account's local browser session for login, inbox work, or draft preview."""
+        payload = command or {}
+        try:
+            result = launch_operator_session(
+                account_key,
+                target=str(payload.get("target", "home")),
+                content=payload.get("content"),
+            )
+        except (ValueError, OSError, subprocess.SubprocessError) as exc:
+            raise HTTPException(
+                status_code=400,
+                detail={"code": "XHS_BROWSER_LAUNCH_FAILED", "message": str(exc)},
+            ) from exc
+        return success_response(result)
+
+    @app.post("/internal/content/drafts:generate", tags=["internal"], include_in_schema=False)
     def generate_local_draft(command: dict[str, Any] | None = None) -> dict[str, Any]:
         """Generate a deterministic draft and cover while an LLM provider is unavailable."""
         payload = command or {}
@@ -211,7 +230,7 @@ def create_app(
             "model_used": False,
         })
 
-    @app.post("/internal/support/replies:generate", tags=["internal"])
+    @app.post("/internal/support/replies:generate", tags=["internal"], include_in_schema=False)
     def generate_local_reply_draft(command: dict[str, Any] | None = None) -> dict[str, Any]:
         payload = command or {}
         message = str(payload.get("message", "")).strip()

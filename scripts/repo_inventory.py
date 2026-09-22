@@ -139,17 +139,14 @@ def git_metadata() -> dict[str, object]:
     }
 
 
-def source_fingerprint(files: list[Path], git: dict[str, object]) -> str:
+def source_fingerprint(files: list[Path], _git: dict[str, object]) -> str:
+    """Hash repository files while keeping volatile Git metadata informational."""
     digest = hashlib.sha256()
     for path in files:
         digest.update(relative(path).encode("utf-8"))
         digest.update(b"\0")
         digest.update(fingerprint_component(path).encode("utf-8"))
         digest.update(b"\0")
-    for key in ("availability", "branch", "head"):
-        digest.update(f"git:{key}:{git[key]}\0".encode("utf-8"))
-    for change in git["changes"]:
-        digest.update(f"git:change:{change}\0".encode("utf-8"))
     return f"sha256:{digest.hexdigest()}"
 
 
