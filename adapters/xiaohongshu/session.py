@@ -6,6 +6,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+try:
+    import psutil
+except ImportError:  # pragma: no cover - optional on minimal installs
+    psutil = None
+
 
 def session_dir(account_key: str, root: Path | None = None) -> Path:
     if not account_key or any(ch in account_key for ch in '\\/:*?"<>|'):
@@ -37,6 +42,22 @@ def read_session_status(account_key: str, root: Path | None = None) -> dict[str,
     return {'status': status, **payload}
 
 
+def _browser_process_running(account_key: str, root: Path) -> bool:
+    """Detect the dedicated Chromium process without reading cookies or tokens."""
+    if psutil is None:
+        return False
+    marker = str(session_dir(account_key, root)).lower().replace('/', '\\')
+    try:
+        for process in psutil.process_iter(['name', 'cmdline']):
+            name = str(process.info.get('name') or '').lower()
+            command = ' '.join(process.info.get('cmdline') or []).lower().replace('/', '\\')
+            if 'chrome' in name and '--type=' not in command and f'--user-data-dir={marker}' in command:
+                return True
+    except (OSError, psutil.Error):
+        return False
+    return False
+
+
 def diagnose_session(account_key: str, root: Path | None = None) -> dict[str, Any]:
     """Return safe, operator-facing diagnostics without exposing cookies."""
     directory = session_dir(account_key, root)
@@ -49,10 +70,14 @@ def diagnose_session(account_key: str, root: Path | None = None) -> dict[str, An
         'session_file': {'ok': session_exists, 'label': '登录会话记录'},
         'login_state': {'ok': status.get('status') == 'connected', 'label': '小红书登录状态'},
     }
+    browser_running = _browser_process_running(account_key, directory.parent)
+    checks['browser_process'] = {'ok': browser_running, 'label': '独立浏览器进程'}
     if not profile_exists:
         next_step = '先点击“打开账号”，在弹出的创作者中心完成登录。'
     elif status.get('status') == 'login_required':
         next_step = '登录已失效，请在小红书窗口重新扫码或登录后再重试。'
+    elif status.get('status') == 'connected' and not browser_running:
+        next_step = '登录记录仍在，但独立浏览器窗口已关闭；请点击“打开账号”重新启动会话。'
     elif status.get('status') == 'connected':
         next_step = '会话可用；如果发布仍失败，请关闭同账号的其他浏览器窗口后重试。'
     else:
@@ -62,6 +87,7 @@ def diagnose_session(account_key: str, root: Path | None = None) -> dict[str, An
         'status': status.get('status', 'pending'),
         'profile_directory': str(directory.resolve()),
         'session_file_exists': session_exists,
+        'browser_running': browser_running,
         'connected_at': status.get('connected_at'),
         'url': status.get('url'),
         'checks': checks,
