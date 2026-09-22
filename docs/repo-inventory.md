@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-22T17:27:13+00:00`
-- Source fingerprint: `sha256:0b1a35ea1ca6d10d571b8ab4b885b78d1475de5b56aacb69f4f1432cfd2c5e29`
+- Generated at (UTC): `2026-09-22T17:36:01+00:00`
+- Source fingerprint: `sha256:70c198aebc2654993ba79ef68466ba50f268650aed6e52963706da93de8a2b87`
 - Repository root: `D:/akagent`
 - Scanned files: `1646`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `e6de24f9fffad45e7d0f5594e673751cf2d36067`
+- HEAD: `b411dbbaa8e2cd13e92af3c2864ff2df9704d3d1`
 
 ## Top-level directories
 
@@ -587,8 +587,7 @@ Recommended repository gate: `python -m pytest tests --maxfail=1 -q`
 
 ## Uncommitted changes
 
-- ` M scripts/restart-web-console.ps1`
-- ` M scripts/start-web-console.ps1`
+Clean worktree.
 
 ## Repository classification
 
@@ -784,7 +783,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `adapters/xiaohongshu/browser.py` | 6263 | `sha256:be18963a5eb9ebfa7ac18d07763743f676cbe69e2c21d5cfa809816b075ca959` |
 | `adapters/xiaohongshu/inbox.py` | 4601 | `sha256:ed627e7406bb679045c97cf8cacb1758f78f17156a0931811c3a70f1fcf205a5` |
 | `adapters/xiaohongshu/operator.py` | 7066 | `sha256:82fce0963b03107100683482187407613ba30b0c0416ff4182b1a0e2a83713b5` |
-| `adapters/xiaohongshu/session.py` | 3056 | `sha256:f9f11fed00fed89c36850dac094b39c51a0282041ffbbe4f89d3c39b1e6822df` |
+| `adapters/xiaohongshu/session.py` | 4289 | `sha256:237a942bf838ef53433308f7b8bd5813e2ede273e7af4d2fc36d03b7da057aad` |
 | `alembic.ini` | 576 | `sha256:43cb71b556fae313d03aea59033aab50e46b03d00c5e6857bfd90a920b508247` |
 | `apps/__init__.py` | 62 | `sha256:1cdc47f24c4d8980cd92e816bb63a156ef30cad06aa12d1af84d407bb740c579` |
 | `apps/api/README.md` | 446 | `sha256:00ee4c3fb0d3bdf46ad5086e7ebd73e9b2da477d860283c09b90cbfb92c0ba51` |
