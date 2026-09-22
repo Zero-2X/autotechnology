@@ -1,4 +1,4 @@
-from adapters.platforms.routing import XHS_PROFILE, profile_for, resolve_delivery_route
+from modules.platforms.routing import XHS_PROFILE, profile_for, resolve_delivery_route
 
 
 def test_xhs_uses_browser_when_api_is_not_available():

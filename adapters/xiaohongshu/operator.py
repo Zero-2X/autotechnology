@@ -17,7 +17,7 @@ except ImportError:  # pragma: no cover - optional on minimal installs
 
 from adapters.xiaohongshu.session import session_dir
 from modules.media.local_demo_generator import DemoContent, generate_cover_png
-from adapters.platforms.routing import profile_for, resolve_delivery_route
+from modules.platforms.routing import profile_for, resolve_delivery_route
 
 
 TARGETS = {"home", "inbox", "publish"}

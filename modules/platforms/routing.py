@@ -1,6 +1,6 @@
 """Choose an official API, browser session, or manual export per account.
 
-The router does not infer permissions from a platform name.  An API route is
+The router does not infer permissions from a platform name. An API route is
 selected only when the account has an explicit approved capability snapshot;
 otherwise a platform-specific browser adapter may be used when the operator
 has a logged-in session.
