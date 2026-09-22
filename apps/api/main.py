@@ -43,10 +43,12 @@ from modules.provenance import (
 )
 from modules.knowledge import KnowledgeCoreService, KnowledgeError, KnowledgeService
 from modules.canonical_content import CanonicalContentError, CanonicalContentService
-from adapters.xiaohongshu.session import read_session_status
+from adapters.xiaohongshu.session import diagnose_session, read_session_status
 from adapters.xiaohongshu.operator import launch_operator_session, read_launch_status
 from modules.media.local_demo_generator import generate_cover_svg, generate_demo_content
 from modules.support.local_reply_generator import generate_local_reply
+from modules.model_gateway.console_provider import generate_structured, model_config
+from integrations.langchain.model import ModelError
 
 
 SERVICE_NAME = "api"
@@ -196,6 +198,14 @@ def create_app(
         except (ValueError, OSError, json.JSONDecodeError) as exc:
             raise HTTPException(status_code=400, detail={"code": "INVALID_XHS_ACCOUNT", "message": str(exc)}) from exc
 
+    @app.get("/internal/xhs/accounts/{account_key}/diagnostics", tags=["internal"], include_in_schema=False)
+    def xhs_diagnostics(account_key: str) -> dict[str, Any]:
+        """Explain local login readiness without returning cookies or tokens."""
+        try:
+            return success_response(diagnose_session(account_key))
+        except (ValueError, OSError, json.JSONDecodeError) as exc:
+            raise HTTPException(status_code=400, detail={"code": "INVALID_XHS_ACCOUNT", "message": str(exc)}) from exc
+
     @app.get("/internal/xhs/launches/{job_id}", tags=["internal"], include_in_schema=False)
     def xhs_launch(job_id: str) -> dict[str, Any]:
         try:
@@ -231,6 +241,18 @@ def create_app(
             raise HTTPException(status_code=500, detail={"code": "CONSOLE_STATE_WRITE_FAILED", "message": str(exc)}) from exc
         return success_response(record)
 
+    @app.get("/internal/model/status", tags=["internal"], include_in_schema=False)
+    def model_status() -> dict[str, Any]:
+        """Expose redacted model readiness for the local console."""
+        config = model_config()
+        return success_response({
+            "provider": config["provider"],
+            "base_url": config["base_url"],
+            "model": config["model"],
+            "configured": config["configured"],
+            "key_present": config["key_present"],
+        })
+
     @app.post("/internal/xhs/accounts/{account_key}/browser:open", tags=["internal"], include_in_schema=False)
     def open_xhs_browser(account_key: str, command: dict[str, Any] | None = None) -> dict[str, Any]:
         """Open the account's local browser session for login, inbox work, or draft preview."""
@@ -251,14 +273,43 @@ def create_app(
 
     @app.post("/internal/content/drafts:generate", tags=["internal"], include_in_schema=False)
     def generate_local_draft(command: dict[str, Any] | None = None) -> dict[str, Any]:
-        """Generate a deterministic draft and cover while an LLM provider is unavailable."""
+        """Generate a model draft when configured, with a deterministic fallback."""
         payload = command or {}
         topic = str(payload.get("topic", "")).strip()
         audience = str(payload.get("audience", "AI 工程团队")).strip() or "AI 工程团队"
         if not topic or len(topic) > 120:
             raise HTTPException(status_code=400, detail={"code": "INVALID_DRAFT_TOPIC", "message": "topic is required and must be <= 120 characters"})
         try:
-            content = generate_demo_content(topic, audience=audience)
+            schema = {
+                "type": "object",
+                "properties": {
+                    "title": {"type": "string", "minLength": 1},
+                    "body": {"type": "string", "minLength": 1},
+                    "hashtags": {"type": "array", "items": {"type": "string"}, "maxItems": 8},
+                },
+                "required": ["title", "body", "hashtags"],
+                "additionalProperties": False,
+            }
+            try:
+                content_data = generate_structured(
+                    messages=[
+                        {"role": "system", "content": "你是内容运营编辑。输出适合小红书图文的中文标题、正文和话题。只返回 JSON。"},
+                        {"role": "user", "content": f"目标受众：{audience}\n选题：{topic}"},
+                    ], schema=schema, purpose="content_draft",
+                )
+                hashtags = tuple(str(item).strip() for item in content_data.get("hashtags", []) if str(item).strip())
+                content = type("GeneratedContent", (), {
+                    "title": str(content_data["title"]).strip(),
+                    "body": str(content_data["body"]).strip(),
+                    "hashtags": hashtags,
+                })()
+                source = "model"
+                model_used = True
+            except (ModelError, ValueError) as exc:
+                content = generate_demo_content(topic, audience=audience)
+                source = "local-template"
+                model_used = False
+                fallback_reason = getattr(exc, "code", "MODEL_CONFIG_INVALID")
             cover_path = Path(".tmp") / "generated-content" / "api-cover.svg"
             generate_cover_svg(content, cover_path)
             cover_svg = cover_path.read_text(encoding="utf-8")
@@ -269,8 +320,9 @@ def create_app(
             "body": content.body,
             "hashtags": list(content.hashtags),
             "cover_svg": cover_svg,
-            "source": "local-template",
-            "model_used": False,
+            "source": source,
+            "model_used": model_used,
+            **({"fallback_reason": fallback_reason} if not model_used and "fallback_reason" in locals() else {}),
         })
 
     @app.post("/internal/support/replies:generate", tags=["internal"], include_in_schema=False)
@@ -280,11 +332,26 @@ def create_app(
         if not message or len(message) > 2000:
             raise HTTPException(status_code=400, detail={"code": "INVALID_SUPPORT_MESSAGE", "message": "message is required and must be <= 2000 characters"})
         try:
-            result = generate_local_reply(
-                message,
-                intent=str(payload.get("intent", "question")),
-                risk=str(payload.get("risk", "low")),
-            )
+            intent = str(payload.get("intent", "question"))
+            risk = str(payload.get("risk", "low"))
+            if risk == "high":
+                result = generate_local_reply(message, intent=intent, risk=risk)
+            else:
+                schema = {
+                    "type": "object",
+                    "properties": {"reply": {"type": "string", "minLength": 1}, "requires_human": {"type": "boolean"}},
+                    "required": ["reply", "requires_human"], "additionalProperties": False,
+                }
+                try:
+                    result = generate_structured(
+                        messages=[
+                            {"role": "system", "content": "你是谨慎的品牌客服。只输出 JSON，回复简洁、友好，不承诺未核实的事实。"},
+                            {"role": "user", "content": f"意图：{intent}\n用户消息：{message}"},
+                        ], schema=schema, purpose="support_reply",
+                    )
+                except (ModelError, ValueError) as exc:
+                    result = generate_local_reply(message, intent=intent, risk=risk)
+                    result["fallback_reason"] = getattr(exc, "code", "MODEL_CONFIG_INVALID")
         except ValueError as exc:
             raise HTTPException(status_code=400, detail={"code": "INVALID_SUPPORT_MESSAGE", "message": str(exc)}) from exc
         return success_response(result)
