@@ -33,8 +33,20 @@ def installed_chromium() -> str | None:
 
 
 async def select_image_note(page) -> None:
-    if await page.locator('input[type="file"]').count() == 1:
-        return
+    for upload_selector in ('input[type="file"]', '.upload-input', '.upload-button'):
+        if await page.locator(upload_selector).count() == 1:
+            return
+    for selector in ('.publish-video .btn', "button:has-text('发布笔记')", ".btn:text('发布笔记')"):
+        candidate = page.locator(selector)
+        if await candidate.count() == 1:
+            try:
+                if hasattr(candidate, 'is_visible') and not await candidate.is_visible():
+                    continue
+                await candidate.click()
+                await asyncio.sleep(2)
+                break
+            except Exception:
+                continue
     image_entries = page.get_by_text("上传图文", exact=True)
     if await image_entries.count():
         await image_entries.first.click()

@@ -54,8 +54,13 @@ class XiaohongshuDraftPreparer:
         if 'publish' not in url.path:
             raise BrowserPreparationError('OPEN_CREATOR_PUBLISH_PAGE')
         # The operator opens the image-note editor. Never guess which tab to click.
-        upload = page.locator('input[type="file"]')
-        if await upload.count() != 1:
+        upload = None
+        for selector in ('input[type="file"]', '.upload-input'):
+            candidate = page.locator(selector)
+            if await candidate.count() == 1:
+                upload = candidate
+                break
+        if upload is None:
             raise BrowserPreparationError('IMAGE_UPLOAD_CONTROL_AMBIGUOUS')
         fingerprint = note.fingerprint()
         await upload.set_input_files([str(p.resolve()) for p in note.images])
