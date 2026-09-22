@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-22T17:17:11+00:00`
-- Source fingerprint: `sha256:b9d0ad7a41f9d67e90a783ce63ed6dbaaa7b2842c0a24ebcbe9770868c7d877b`
+- Generated at (UTC): `2026-09-22T17:27:13+00:00`
+- Source fingerprint: `sha256:0b1a35ea1ca6d10d571b8ab4b885b78d1475de5b56aacb69f4f1432cfd2c5e29`
 - Repository root: `D:/akagent`
 - Scanned files: `1646`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `b0b63c68993156b29e5d8925c1ab907d2764f96e`
+- HEAD: `e6de24f9fffad45e7d0f5594e673751cf2d36067`
 
 ## Top-level directories
 
@@ -587,15 +587,8 @@ Recommended repository gate: `python -m pytest tests --maxfail=1 -q`
 
 ## Uncommitted changes
 
-- ` D adapters/platforms/__init__.py`
-- ` D adapters/platforms/routing.py`
-- ` M adapters/xiaohongshu/operator.py`
-- ` M apps/api/main.py`
-- ` M docs/repo-inventory.md`
-- ` M scripts/start-workflow.ps1`
-- ` M tests/unit/test_platform_routing.py`
-- `?? modules/platforms/__init__.py`
-- `?? modules/platforms/routing.py`
+- ` M scripts/restart-web-console.ps1`
+- ` M scripts/start-web-console.ps1`
 
 ## Repository classification
 
@@ -2104,10 +2097,10 @@ Formal runtime source was detected under apps/modules/services/src:
 | `scripts/open-xhs-session.py` | 12363 | `sha256:8533d70e4e50c82debfeaa2564ad90817d32fd2ea845cba030cfe376ae867c8d` |
 | `scripts/prepare-xhs-draft.py` | 4479 | `sha256:3801de621f5d06af87f4353d06f7a110dfcd87d09e2e4691e5a2d8d5040737d8` |
 | `scripts/repo_inventory.py` | 18479 | `sha256:f2a469a06c788a4449c7db7257c59a6dbaf828aa9cd9989365d8f01690cb56ad` |
-| `scripts/restart-web-console.ps1` | 579 | `sha256:3b7737c04b2b62199a5f23b2f3e7f111d8cd26fec75607e4600d1cd0f95319e3` |
+| `scripts/restart-web-console.ps1` | 627 | `sha256:20ab63ddb90f1043036389e8d0df3828352e38b2e6039847b3510545466c1202` |
 | `scripts/setup-browser-dependencies.ps1` | 234 | `sha256:a96476f918a1cafd32b118fd383e733527575c31de63c39faf9e50b8294e4b32` |
 | `scripts/smoke_foundation.py` | 1554 | `sha256:d4943f9fc0c2899145f5ca99dfa31ef181ff4fcd9e72e17217376de0e5c67c46` |
-| `scripts/start-web-console.ps1` | 503 | `sha256:92aff9444fadfd270a3e152c8bd8a8a3d4d4cbdf6a68d2693f18ea4e610a0866` |
+| `scripts/start-web-console.ps1` | 582 | `sha256:fe46e03fd2143071634967026afdf72018f0ab81905fa23072bee0739dd14d37` |
 | `scripts/start-workflow.ps1` | 2097 | `sha256:522f28d70c1976fc31467e8da591aafb5a3f078c25e738a145ca8ac74e48c7b0` |
 | `scripts/start-xhs-login.ps1` | 167 | `sha256:0f418e9a703934fefad8ea2d83f623eb544f4e7db29ee5b0b64cc1a51fb67cc5` |
 | `scripts/start-xhs-login.py` | 2385 | `sha256:cb89b1b7a27201cf137ad4f8827f7bdb827ac924e53f76a37a74e342bea99ed4` |
