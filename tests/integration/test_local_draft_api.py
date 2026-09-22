@@ -68,3 +68,17 @@ def test_console_state_round_trip(tmp_path, monkeypatch):
     assert response.json()['data']['state'] == state
     assert client.get('/internal/console/state').json()['data']['state'] == state
     assert (Path(tmp_path) / '.local' / 'workflow-state.json').exists()
+
+
+def test_platform_route_prefers_browser_for_xhs_without_api_scope():
+    client = TestClient(create_app())
+    response = client.get('/internal/platforms/%E5%B0%8F%E7%BA%A2%E4%B9%A6/route?action=publish&browser_session_ready=true')
+    assert response.status_code == 200
+    assert response.json()['data']['mode'] == 'browser_automation'
+
+
+def test_platform_route_uses_approved_api_when_explicitly_authorized():
+    client = TestClient(create_app())
+    response = client.get('/internal/platforms/YouTube/route?action=publish&api_authorized=true&browser_session_ready=true')
+    assert response.status_code == 200
+    assert response.json()['data']['mode'] == 'authorized_api'

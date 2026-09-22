@@ -49,6 +49,7 @@ from modules.media.local_demo_generator import generate_cover_svg, generate_demo
 from modules.support.local_reply_generator import generate_local_reply
 from modules.model_gateway.console_provider import generate_structured, model_config
 from integrations.langchain.model import ModelError
+from adapters.platforms.routing import profile_for, resolve_delivery_route
 
 
 SERVICE_NAME = "api"
@@ -252,6 +253,20 @@ def create_app(
             "configured": config["configured"],
             "key_present": config["key_present"],
         })
+
+    @app.get("/internal/platforms/{platform}/route", tags=["internal"], include_in_schema=False)
+    def platform_route(platform: str, action: str = "publish", api_authorized: bool = False,
+                       browser_session_ready: bool = False) -> dict[str, Any]:
+        """Explain why an account uses API, browser automation, or manual export."""
+        allowed = {"publish", "inbox", "comment_reply", "message_reply"}
+        if action not in allowed:
+            raise HTTPException(status_code=400, detail={"code": "INVALID_PLATFORM_ACTION", "message": "unsupported platform action"})
+        route = resolve_delivery_route(
+            profile=profile_for(platform), action=action,
+            api_authorized=api_authorized, browser_session_ready=browser_session_ready,
+        )
+        return success_response({"platform": route.platform, "action": route.action,
+                                 "mode": route.mode, "reason": route.reason})
 
     @app.post("/internal/xhs/accounts/{account_key}/browser:open", tags=["internal"], include_in_schema=False)
     def open_xhs_browser(account_key: str, command: dict[str, Any] | None = None) -> dict[str, Any]:

@@ -27,6 +27,15 @@ def test_existing_window_returns_reuse_status(monkeypatch, tmp_path):
     assert operator.read_launch_status(result["job_id"], tmp_path) == result
 
 
+def test_publish_route_is_browser_automation(monkeypatch, tmp_path):
+    monkeypatch.setattr(operator, "_existing_profile_pid", lambda profile: None)
+    monkeypatch.setattr(operator.subprocess, "Popen", lambda *args, **kwargs: Mock(pid=123))
+    result = operator.launch_operator_session(
+        "account-1", target="publish", content={"title": "标题", "body": "正文"}, root=tmp_path,
+    )
+    assert result["delivery_mode"] == "browser_automation"
+
+
 def test_login_page_is_not_reported_as_connected(tmp_path):
     write_session_status("account-1", url="https://creator.xiaohongshu.com/login", root=tmp_path)
     assert read_session_status("account-1", tmp_path)["status"] == "login_required"
