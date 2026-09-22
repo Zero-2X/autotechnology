@@ -146,9 +146,9 @@
   </section>
 
   <section id="quality">
-    <div class="section-head"><div><h2>为什么可以认为主体研发质量可靠</h2><p class="lead">项目不是靠演示页面判断完成，而是通过机器注册表、契约和可重复测试验证。</p></div><span class="tag green"><i class="dot"></i>最终门禁通过</span></div>
+    <div class="section-head"><div><h2>为什么可以认为主体研发质量可靠</h2><p class="lead">项目不是靠演示页面判断完成，而是通过机器注册表、契约和可重复测试验证。</p></div><span class="tag amber"><i class="dot"></i>工作流门禁通过</span></div>
     <div class="checklist">
-      <div class="check"><b>✓</b><span><strong>1121 项测试通过</strong><br>最终全量回归失败为 0。</span></div>
+      <div class="check"><b>✓</b><span><strong>23 项工作流测试通过</strong><br>小红书会话、发布路由、客服任务和后台启动检查通过；全量仓库回归仍有 5 项旧门禁待清理。</span></div>
       <div class="check"><b>✓</b><span><strong>架构检查通过</strong><br>领域逻辑不直接依赖平台 SDK。</span></div>
       <div class="check"><b>✓</b><span><strong>密钥扫描通过</strong><br>仓库未发现生产凭据。</span></div>
       <div class="check"><b>✓</b><span><strong>数据库迁移有效</strong><br>125 个 revision，迁移图只有一个合法 head。</span></div>
@@ -161,7 +161,7 @@
     <div class="section-head"><div><h2>从现在到账号矩阵上线</h2><p class="lead">后续工作的重点已经从“继续搭框架”转为“接真实平台、部署生产基础设施、跑小流量 Pilot”。</p></div></div>
     <div class="timeline">
       <div class="titem done"><h3>阶段 1｜主体平台和无账号闭环 — 已完成</h3><p>内容、知识、媒体、质量、审批、人工分发、分析、反馈、支持和编排底座已完成。</p></div>
-      <div class="titem wait"><h3>阶段 2｜选定首个平台和首个账号 — 待提供条件</h3><p>确认主体、授权联系人、官方应用/Sandbox、Scope、回调和平台账号所有权。</p></div>
+      <div class="titem wait"><h3>阶段 2｜确认首个平台和首个账号 — 账号登录待完成</h3><p>小红书先由账号持有人在独立浏览器完成登录；其它平台再分别确认官方应用、Scope、回调和账号所有权。</p></div>
       <div class="titem wait"><h3>阶段 3｜生产接入 — 待建设</h3><p>接入 Vault、托管 PostgreSQL、对象存储、Worker、告警和一个官方平台适配器。</p></div>
       <div class="titem wait"><h3>阶段 4｜Draft-only / Sandbox 验证 — 待执行</h3><p>验证授权、草稿创建、幂等、回查、撤销、过期、权限变化和 Kill Switch。</p></div>
       <div class="titem wait"><h3>阶段 5｜单账号 2–4 周 Pilot — 待执行</h3><p>低频发布，持续记录质量、成本、平台健康、投诉、指标和人工工作量。</p></div>

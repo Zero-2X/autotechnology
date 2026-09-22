@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-22T16:55:28+00:00`
-- Source fingerprint: `sha256:3adcd75d7f5b57510c1ea15d58b9b6df62e390f441f96f3d0c872916c58758b7`
+- Generated at (UTC): `2026-09-22T16:58:25+00:00`
+- Source fingerprint: `sha256:7766ff2e46f80982fb384d6feca0a34d737697b42f2f4f8fbec0b5684d09ede7`
 - Repository root: `D:/akagent`
 - Scanned files: `1646`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `09cdd472db9abbae293f9ffa3170af32ab1049e0`
+- HEAD: `27cd6317ec1be746aeced8099a752b3ef54a10cf`
 
 ## Top-level directories
 
@@ -587,7 +587,7 @@ Recommended repository gate: `python -m pytest tests --maxfail=1 -q`
 
 ## Uncommitted changes
 
-- ` M "docs/\345\271\263\345\217\260\345\217\221\345\270\203\346\216\245\345\217\243\350\260\203\347\240\224\344\270\216\345\260\217\347\272\242\344\271\246\350\277\201\347\247\273\346\226\271\346\241\210.md"`
+- ` M "docs/\351\241\271\347\233\256\345\274\200\345\217\221\350\277\233\345\272\246\346\261\207\346\212\245.html"`
 
 ## Repository classification
 
@@ -1227,7 +1227,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `docs/平台发布接口调研与小红书迁移方案.md` | 10293 | `sha256:d4cf9e8f20f8b347214c169eff57d059d780948d9087796be08d51476d1b81c1` |
 | `docs/真实账号自动化运营操作手册.md` | 13224 | `sha256:e2c72ad762193c61ae3d99eaf80447be1f9e8612462903fcecc8e0968f8386b2` |
 | `docs/网页管理后台测试说明.md` | 8134 | `sha256:89833833815e6945229ee8de2a157a03ae4aba625bc5e9038abc5b30535a4fd3` |
-| `docs/项目开发进度汇报.html` | 23176 | `sha256:e6b29e128591415e6c3a2edeecf5e17adb1c90469ba0d0ff4a212aa25b9d75f3` |
+| `docs/项目开发进度汇报.html` | 23329 | `sha256:06708d559fc507a10f20c739b3b4096852569aaaa3319140af0d987205c709dd` |
 | `infra/__init__.py` | 47 | `sha256:8517a486e9a61a8d1e10284f75abe76808de8d787a0422021f07ba28d935cc82` |
 | `infra/compose/README.md` | 434 | `sha256:1e161168885e43eef8aa36e0db56f7c3efeb1017f724da61d6ff2dd4889f20e7` |
 | `infra/compose/postgresql.dev.yaml` | 327 | `sha256:de8bbf10639bb4d2e0d84fc0c4bc5d3c00a35bc28c006fe1c9c1c218833342bf` |
