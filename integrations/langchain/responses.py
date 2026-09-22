@@ -76,13 +76,13 @@ class ResponsesProvider:
             raise ModelError('MODEL_RESPONSE_INVALID', 'Model response is incomplete or invalid') from None
 
 
-def zpproxy_adapter(*, transport: httpx.BaseTransport | None = None) -> ChatModelAdapter:
+def zpproxy_adapter(*, transport: httpx.BaseTransport | None = None, base_url: str | None = None) -> ChatModelAdapter:
     """Call only after the operator has bound OPENAI_API_KEY to this proxy.
 
 Never reads ChatGPT login credentials; usage cost is not priced by this adapter.
 """
     if os.environ.get('MODEL_PROVIDER') != 'zpproxy':
         raise ValueError('Set MODEL_PROVIDER=zpproxy to explicitly select this credential destination')
-    provider = ResponsesProvider(base_url='https://webaiproxy.top/v1',
+    provider = ResponsesProvider(base_url=base_url or os.environ.get('MODEL_BASE_URL', 'https://webaiproxy.top/v1'),
                                  api_key=os.environ.get('OPENAI_API_KEY', ''), transport=transport)
     return ChatModelAdapter(provider, provider_name='zpproxy')

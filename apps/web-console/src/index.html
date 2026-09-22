@@ -76,32 +76,36 @@ async function pollXhsSession(){const accounts=state.accounts.filter(a=>a.platfo
 
   </script>
   <script>
-    // Local fallback generation keeps the content workflow usable while the model provider is unavailable.
-    document.addEventListener('click',e=>{
+    // The API uses the configured model when available and returns a local fallback otherwise.
+    async function requestModelDraft(topic,audience){const base=state.settings.apiBase.replace(/\/$/,'');const response=await fetch(`${base}/internal/content/drafts:generate`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({topic,audience})});const payload=await response.json();if(!response.ok)throw new Error(payload?.detail?.message||'生成失败');return payload.data||payload}
+    async function requestModelReply(thread){const base=state.settings.apiBase.replace(/\/$/,'');const response=await fetch(`${base}/internal/support/replies:generate`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:thread.message,intent:thread.intent,risk:thread.risk})});const payload=await response.json();if(!response.ok)throw new Error(payload?.detail?.message||'回复生成失败');return payload.data||payload}
+    document.addEventListener('click',async e=>{
       if(e.target.id!=='confirmModal'||modalMode!=='content')return;
       e.preventDefault();e.stopImmediatePropagation();
       const topic=$('#modalContentTitle').value.trim();
       if(!topic)return toast('请填写选题或内容要求');
       const account=$('#modalContentAccount').value;
       const pillar=$('#modalContentPillar').value.trim()||'AI 工程';
-      const clean=topic.replace(/\s+/g,' ');
-      const title=`${clean.slice(0,28)}：一份可执行的实践清单`;
-      const body=`给 AI 工程团队的一个小结：围绕“${clean}”，先把目标、素材、审核和发布回查拆开。\n\n建议先做单账号、小批量、人工确认；每次发布都保存内容版本、素材来源和平台回执。\n\n这样可以先验证内容质量，再逐步增加账号和自动化动作。`;
-      const hashtags=['#AI工程','#内容运营','#工作流'];
-      const coverSvg=`<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200"><rect width="900" height="1200" rx="48" fill="#f7efe3"/><circle cx="760" cy="150" r="130" fill="#f4b183" opacity=".8"/><rect x="70" y="72" width="160" height="44" rx="22" fill="#112033"/><text x="96" y="103" fill="white" font-size="22">运营中枢</text><text x="90" y="280" fill="#112033" font-size="56" font-weight="700">${esc(clean.slice(0,13))}</text><text x="90" y="372" fill="#112033" font-size="56" font-weight="700">${esc(clean.slice(13,26))}</text><text x="90" y="1030" fill="#536171" font-size="26">单账号试点 · 人工审核 · 可回查</text></svg>`;
+      const clean=topic.replace(/\s+/g,' ');let generated;
+      try{generated=await requestModelDraft(clean,'AI 工程团队')}catch{generated=null}
+      const title=generated?.title||`${clean.slice(0,28)}：一份可执行的实践清单`;
+      const body=generated?.body||`给 AI 工程团队的一个小结：围绕“${clean}”，先把目标、素材、审核和发布回查拆开。\n\n建议先做单账号、小批量、人工确认；每次发布都保存内容版本、素材来源和平台回执。\n\n这样可以先验证内容质量，再逐步增加账号和自动化动作。`;
+      const hashtags=generated?.hashtags||['#AI工程','#内容运营','#工作流'];
+      const coverSvg=generated?.cover_svg||`<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1200"><rect width="900" height="1200" rx="48" fill="#f7efe3"/><circle cx="760" cy="150" r="130" fill="#f4b183" opacity=".8"/><rect x="70" y="72" width="160" height="44" rx="22" fill="#112033"/><text x="96" y="103" fill="white" font-size="22">运营中枢</text><text x="90" y="280" fill="#112033" font-size="56" font-weight="700">${esc(clean.slice(0,13))}</text><text x="90" y="372" fill="#112033" font-size="56" font-weight="700">${esc(clean.slice(13,26))}</text><text x="90" y="1030" fill="#536171" font-size="26">单账号试点 · 人工审核 · 可回查</text></svg>`;
       const id=`CNT-${String(Date.now()).slice(-5)}`;
       state.contents.unshift({id,title,pillar,account,status:'review',version:'v1',updated:'刚刚',body:`${body}\n\n${hashtags.join(' ')}`,hashtags,coverData:`data:image/svg+xml;charset=utf-8,${encodeURIComponent(coverSvg)}`,source:'local-template'});
-      save();closeModal();renderAll();showView('content');toast('草稿、话题和封面已生成，等待审批');
+      save();closeModal();renderAll();showView('content');toast(generated?.model_used?'模型草稿已生成，等待审批':'本地草稿已生成，等待审批');
     },true);
     const coverObserver=new MutationObserver(()=>{$$('#contentGrid .content-card').forEach(card=>{if(card.querySelector('[data-cover-preview]'))return;const heading=card.querySelector('h3');const record=state.contents.find(c=>c.title===heading?.textContent);if(record?.coverData){const image=document.createElement('img');image.src=record.coverData;image.alt='草稿封面预览';image.dataset.coverPreview='true';image.style.cssText='width:100%;height:150px;object-fit:cover;border-radius:14px;margin-bottom:12px';card.prepend(image)}})});coverObserver.observe($('#contentGrid'),{childList:true});
-    document.addEventListener('click',e=>{
+    document.addEventListener('click',async e=>{
       if(e.target.id!=='draftReplyBtn')return;
       e.preventDefault();e.stopImmediatePropagation();
       const thread=state.inbox.find(x=>x.id===currentThread);
       if(!thread)return toast('请先选择会话');
       if(thread.risk==='high'){thread.status='escalated';save();renderInbox();return toast('高风险会话已转人工')}
-      thread.reply=thread.intent==='feedback'?'感谢你的建议，我们会把这条反馈加入后续内容和产品迭代记录。':'感谢你的提问。可以先从一个主题、一个账号和人工审核流程开始，再逐步扩大范围。';
-      save();renderInbox();toast('客服回复草稿已生成，尚未发送');
+      let generated=null;try{generated=await requestModelReply(thread)}catch{}
+      thread.reply=generated?.reply||(thread.intent==='feedback'?'感谢你的建议，我们会把这条反馈加入后续内容和产品迭代记录。':'感谢你的提问。可以先从一个主题、一个账号和人工审核流程开始，再逐步扩大范围。');
+      save();renderInbox();toast(generated?.model_used?'模型客服草稿已生成，尚未发送':'本地客服草稿已生成，尚未发送');
     },true);
     $('#saveReplyBtn').addEventListener('click',()=>{
       const thread=state.inbox.find(x=>x.id===currentThread);
@@ -194,5 +198,16 @@ async function pollXhsSession(){const accounts=state.accounts.filter(a=>a.platfo
       setInterval(pollXhsSession,5000);
     });
   </script>
+<script>
+  // Show model readiness without exposing the server-side key.
+  (async()=>{
+    const settingsGrid=document.querySelector('#view-settings .settings-grid');
+    if(!settingsGrid||document.querySelector('#modelStatusCard'))return;
+    const card=document.createElement('div');card.className='setting-card';card.id='modelStatusCard';card.innerHTML='<h3>模型服务</h3><p>后台服务端读取中转站配置，页面只显示连接状态。</p><div class="field"><label>当前模型</label><input id="modelStatus" value="检测中…" disabled /></div><button class="ghost-btn" id="modelHealth">检测模型</button>';settingsGrid.insertBefore(card,settingsGrid.children[1]||null);
+    async function check(){try{const base=(document.querySelector('#apiBase')?.value||'http://127.0.0.1:8000').replace(/\/$/,'');const r=await fetch(`${base}/internal/model/status`);const d=(await r.json()).data||{};document.querySelector('#modelStatus').value=d.configured?`${d.provider} · ${d.model} · 已配置`:`${d.provider||'未配置'} · 待配置`;toast(d.configured?'模型服务已配置':'模型服务未配置，使用本地回退')}catch{document.querySelector('#modelStatus').value='API 未连接'}}
+    document.querySelector('#modelHealth').addEventListener('click',check);await check();
+    ['#newContentBtn','#quickContent','#generateTop'].forEach(sel=>document.querySelector(sel)?.addEventListener('click',()=>setTimeout(()=>{const notice=document.querySelector('#modalBody .notice');if(notice)notice.textContent='模型服务已配置时会优先调用模型；如果暂时不可用，后台会自动使用本地模板生成。生成后可以编辑、审核，并进入小红书发布流程。'},0)));
+  })();
+</script>
 </body>
 </html>
