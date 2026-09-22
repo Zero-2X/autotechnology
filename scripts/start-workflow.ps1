@@ -18,5 +18,11 @@ if (-not $ready) { throw "API failed to start; check whether port $ApiPort is al
 if (-not (Test-LocalEndpoint "http://127.0.0.1:$WebPort/")) {
     Start-Process -WindowStyle Hidden -FilePath python -ArgumentList @('-m','http.server',"$WebPort",'--bind','127.0.0.1','--directory',(Join-Path $console 'dist')) -WorkingDirectory $console
 }
+$webReady = $false
+for ($i = 0; $i -lt 20; $i++) {
+    if (Test-LocalEndpoint "http://127.0.0.1:$WebPort/") { $webReady = $true; break }
+    Start-Sleep -Milliseconds 250
+}
+if (-not $webReady) { throw "Web console failed to start; check whether port $WebPort is already in use." }
 Write-Host "Web: http://127.0.0.1:$WebPort/"
 Write-Host "API:  http://127.0.0.1:$ApiPort/health/live"
