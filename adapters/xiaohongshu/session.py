@@ -35,3 +35,35 @@ def read_session_status(account_key: str, root: Path | None = None) -> dict[str,
     url = str(payload.get('url', ''))
     status = 'login_required' if '/login' in url else 'connected'
     return {'status': status, **payload}
+
+
+def diagnose_session(account_key: str, root: Path | None = None) -> dict[str, Any]:
+    """Return safe, operator-facing diagnostics without exposing cookies."""
+    directory = session_dir(account_key, root)
+    session_file = directory / 'session.json'
+    status = read_session_status(account_key, root)
+    profile_exists = directory.exists()
+    session_exists = session_file.exists()
+    checks = {
+        'profile_directory': {'ok': profile_exists, 'label': '账号浏览器目录'},
+        'session_file': {'ok': session_exists, 'label': '登录会话记录'},
+        'login_state': {'ok': status.get('status') == 'connected', 'label': '小红书登录状态'},
+    }
+    if not profile_exists:
+        next_step = '先点击“打开账号”，在弹出的创作者中心完成登录。'
+    elif status.get('status') == 'login_required':
+        next_step = '登录已失效，请在小红书窗口重新扫码或登录后再重试。'
+    elif status.get('status') == 'connected':
+        next_step = '会话可用；如果发布仍失败，请关闭同账号的其他浏览器窗口后重试。'
+    else:
+        next_step = '先打开账号会话，等待后台记录登录状态。'
+    return {
+        'account_key': account_key,
+        'status': status.get('status', 'pending'),
+        'profile_directory': str(directory.resolve()),
+        'session_file_exists': session_exists,
+        'connected_at': status.get('connected_at'),
+        'url': status.get('url'),
+        'checks': checks,
+        'next_step': next_step,
+    }

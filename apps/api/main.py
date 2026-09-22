@@ -43,7 +43,7 @@ from modules.provenance import (
 )
 from modules.knowledge import KnowledgeCoreService, KnowledgeError, KnowledgeService
 from modules.canonical_content import CanonicalContentError, CanonicalContentService
-from adapters.xiaohongshu.session import read_session_status
+from adapters.xiaohongshu.session import diagnose_session, read_session_status
 from adapters.xiaohongshu.operator import launch_operator_session, read_launch_status
 from modules.media.local_demo_generator import generate_cover_svg, generate_demo_content
 from modules.support.local_reply_generator import generate_local_reply
@@ -193,6 +193,14 @@ def create_app(
         """Return redacted local browser-session state; never returns cookies or tokens."""
         try:
             return success_response(read_session_status(account_key))
+        except (ValueError, OSError, json.JSONDecodeError) as exc:
+            raise HTTPException(status_code=400, detail={"code": "INVALID_XHS_ACCOUNT", "message": str(exc)}) from exc
+
+    @app.get("/internal/xhs/accounts/{account_key}/diagnostics", tags=["internal"], include_in_schema=False)
+    def xhs_diagnostics(account_key: str) -> dict[str, Any]:
+        """Explain local login readiness without returning cookies or tokens."""
+        try:
+            return success_response(diagnose_session(account_key))
         except (ValueError, OSError, json.JSONDecodeError) as exc:
             raise HTTPException(status_code=400, detail={"code": "INVALID_XHS_ACCOUNT", "message": str(exc)}) from exc
 
