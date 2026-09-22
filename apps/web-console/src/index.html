@@ -146,7 +146,7 @@ async function pollXhsSession(){const accounts=state.accounts.filter(a=>a.platfo
             if(job.status==='inbox_scanned'){const messages=Array.isArray(job.messages)?job.messages:[];let added=0;for(const item of messages){if(!item?.text||state.inbox.some(t=>t.external_id&&t.external_id===item.external_id))continue;state.inbox.unshift({id:`THR-${Date.now()}-${added}`,external_id:item.external_id,account:accountKey,name:'小红书用户',channel:'消息',risk:'low',intent:'question',time:'刚刚',message:item.text,reply:'',status:'open'});added++}if(added){currentThread=state.inbox[0].id;save();renderInbox()}toast(messages.length?`已扫描 ${messages.length} 条消息${added?`，导入 ${added} 条`:''}`:'消息页暂未找到可导入内容');return}
             if(job.status==='reply_ready'){toast('回复已填入小红书，请检查后发送');return}
             if(job.status==='reply_submitted'){toast('已点击小红书发送，请回查消息确认发送成功');return}
-            if(job.status==='browser_running'&&target!=='publish'){toast(target==='inbox'?(job.reused_existing?'小红书窗口已经打开，请切换到消息页处理客服':'小红书客服窗口已打开，请在创作者中心进入消息页'):job.reused_existing?'小红书窗口已经打开，请切换到该窗口操作':'小红书账号窗口已打开');return}
+            if(job.status==='browser_running'&&target!=='publish'){const accountState=state.accounts.find(item=>item.id===accountKey);if(accountState?.status==='login_required'){toast('小红书窗口已打开但登录已失效，请切换到该窗口重新扫码或登录');return}toast(target==='inbox'?(job.reused_existing?'小红书窗口已经打开，请切换到消息页处理客服':'小红书客服窗口已打开，请在创作者中心进入消息页'):job.reused_existing?'小红书窗口已经打开，请切换到该窗口操作':'小红书账号窗口已打开');return}
            if(job.status==='browser_closed'){toast('小红书窗口已关闭，未确认发布结果');return}
          }}
          toast('仍在处理中，请查看小红书窗口；尚未确认填稿或发布成功');
@@ -159,7 +159,7 @@ async function pollXhsSession(){const accounts=state.accounts.filter(a=>a.platfo
         const payload=await response.json();
         if(!response.ok)throw new Error(payload?.detail?.message||'诊断失败');
         const d=payload?.data||{};const rows=Object.values(d.checks||{}).map(c=>`<div class="alert ${c.ok?'':'warn'}"><div class="alert-icon">${c.ok?'✓':'!'}</div><div><strong>${esc(c.label)}</strong><p>${c.ok?'已通过':'未通过'}</p></div></div>`).join('');
-        modalMode='diagnostics';$('#modalTitle').textContent='小红书连接诊断';$('#modalBody').innerHTML=`${rows}<div class="notice">${esc(d.next_step||'请重新打开账号会话')}</div><small style="color:#657184">最近页面：${esc(d.url||'尚未记录')}<br>会话目录：${esc(d.profile_directory||'')}</small>`;$('#confirmModal').textContent='关闭';$('#modalBackdrop').classList.add('open');
+        modalMode='diagnostics';$('#modalTitle').textContent='小红书连接诊断';$('#modalBody').innerHTML=`${rows}<div class="notice">${esc(d.next_step||'请重新打开账号会话')}</div><div class="row-actions" style="justify-content:flex-start;margin:12px 0 16px"><button class="primary-btn" id="diagnosticOpenXhs">打开账号窗口并重新登录</button></div><small style="color:#657184">最近页面：${esc(d.url||'尚未记录')}<br>会话目录：${esc(d.profile_directory||'')}</small>`;$('#confirmModal').textContent='关闭';$('#modalBackdrop').classList.add('open');$('#diagnosticOpenXhs').addEventListener('click',()=>{closeModal();openXhsBrowser('home',null,accountKey,false)});
       }catch(error){toast(`诊断失败：${error.message}`)}
     }
     document.addEventListener('click',e=>{

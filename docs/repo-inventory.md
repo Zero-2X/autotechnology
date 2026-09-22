@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-22T18:04:12+00:00`
-- Source fingerprint: `sha256:a7ca8f0615d68e8e3c8ef57f9c5c6640112a956948b4b27b7e72c140c9c80128`
+- Generated at (UTC): `2026-09-22T18:19:04+00:00`
+- Source fingerprint: `sha256:2719fb582c600b8d86366b70e4a7295ae75181b74384ca9e5ea73ef3a9505e3f`
 - Repository root: `D:/akagent`
 - Scanned files: `1646`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `2f372a3088e637d6697120bb5e4974b40a33a88c`
+- HEAD: `36f392adfeaee7de64d71793f285be4a7f1da742`
 
 ## Top-level directories
 
@@ -810,7 +810,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `apps/web-console/package.json` | 167 | `sha256:9b5d3d2153ac4164c691902f80b75a3911a4be54f82b3579b9f6f39e078f3066` |
 | `apps/web-console/pnpm-lock.yaml` | 114 | `sha256:17c814b167307942d3609c7b9d916ceddb85839573ab39baa114e30edb132a1a` |
 | `apps/web-console/scripts/build.mjs` | 851 | `sha256:eae2a2b621e5162dde56ffc02b716fc21c71146456cb69cf7bfdd23727030609` |
-| `apps/web-console/src/index.html` | 83429 | `sha256:bd670b07aba8ab0d07f2bb60aca5048fb7c44e2ce4948f12e73555ce9162fec2` |
+| `apps/web-console/src/index.html` | 83936 | `sha256:65bc4e78f8df7bd8e0dbe31eacac191079e005542af51beeefa3a066bb6c53ef` |
 | `apps/worker/README.md` | 843 | `sha256:585eb3815e3271923e72d2c66325ce36be5af3c66135774cb734008315742021` |
 | `apps/worker/__init__.py` | 31 | `sha256:53da4abf7d557e2589aa76efd85c921469f44127a4035ec9f6c2f6361484ee76` |
 | `apps/worker/__main__.py` | 81 | `sha256:954eaddc192523ee47f44769ae571e58baf451c0e67d752edd3874b6393600d0` |
@@ -1226,7 +1226,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `docs/workflows/README.md` | 217 | `sha256:b5669edc2191f6b372a613724dfca501f25f27895f95dc03b8a9e1abdb520432` |
 | `docs/平台发布接口调研与小红书迁移方案.md` | 10293 | `sha256:d4cf9e8f20f8b347214c169eff57d059d780948d9087796be08d51476d1b81c1` |
 | `docs/真实账号自动化运营操作手册.md` | 13224 | `sha256:e2c72ad762193c61ae3d99eaf80447be1f9e8612462903fcecc8e0968f8386b2` |
-| `docs/网页管理后台测试说明.md` | 8134 | `sha256:89833833815e6945229ee8de2a157a03ae4aba625bc5e9038abc5b30535a4fd3` |
+| `docs/网页管理后台测试说明.md` | 8318 | `sha256:72759031d7322607af1d3016fd504ff5084396b6e4093936e007a9b88d0be586` |
 | `docs/项目开发进度汇报.html` | 23341 | `sha256:82b38ec0bdceaa025fc53ef439b6eff412984f3622b062883eb033815185ac22` |
 | `infra/__init__.py` | 47 | `sha256:8517a486e9a61a8d1e10284f75abe76808de8d787a0422021f07ba28d935cc82` |
 | `infra/compose/README.md` | 434 | `sha256:1e161168885e43eef8aa36e0db56f7c3efeb1017f724da61d6ff2dd4889f20e7` |
