@@ -193,6 +193,10 @@ async function pollXhsSession(){const accounts=state.accounts.filter(a=>a.platfo
   </script>
   <script>
     document.addEventListener('DOMContentLoaded', async()=>{
+      const accountNotice=document.querySelector('#view-accounts .notice');
+      if(accountNotice)accountNotice.textContent='小红书账号“我想tycc”（小红书号 9653254890）已登记，实际连接状态会根据本机浏览器会话自动更新。';
+      const initialXhsStatus=document.querySelector('#view-settings input[value="已连接本机会话"]');
+      if(initialXhsStatus){initialXhsStatus.id='xhsSettingsStatus';initialXhsStatus.value='正在检查本机会话';}
       health();
       await hydrateServerState();
       await pollXhsSession();
