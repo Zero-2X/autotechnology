@@ -10,6 +10,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
 import json
+import asyncio
 
 
 class BrowserPreparationError(RuntimeError):
@@ -58,26 +59,32 @@ class XiaohongshuDraftPreparer:
             raise BrowserPreparationError('IMAGE_UPLOAD_CONTROL_AMBIGUOUS')
         fingerprint = note.fingerprint()
         await upload.set_input_files([str(p.resolve()) for p in note.images])
+        # The creator center renders title/body controls asynchronously after image decoding.
+        await asyncio.sleep(3)
         title = None
-        for selector in (
-            'input[placeholder*="标题"]',
-            'input[placeholder="填写标题会有更多赞哦～"]',
-            'input.d-text', 'input.title',
-            '[data-placeholder="标题"]', '.note-editor-wrapper input', '.edit-wrapper input',
-        ):
-            candidate = page.locator(selector)
-            visible = await candidate.is_visible() if hasattr(candidate, 'is_visible') else True
-            if await candidate.count() == 1 and visible:
-                title = candidate
-                break
         body = None
-        for selector in ('.ql-editor', '[data-placeholder="添加正文"]', '#post-textarea',
-                         '.post-content', 'div[contenteditable="true"]', '[role="textbox"]'):
-            candidate = page.locator(selector)
-            visible = await candidate.is_visible() if hasattr(candidate, 'is_visible') else True
-            if await candidate.count() == 1 and visible:
-                body = candidate
+        for _ in range(8):
+            for selector in (
+                'input[placeholder*="标题"]',
+                'input[placeholder="填写标题会有更多赞哦～"]',
+                'input.d-text', 'input.title',
+                '[data-placeholder="标题"]', '.note-editor-wrapper input', '.edit-wrapper input',
+            ):
+                candidate = page.locator(selector)
+                visible = await candidate.is_visible() if hasattr(candidate, 'is_visible') else True
+                if await candidate.count() == 1 and visible:
+                    title = candidate
+                    break
+            for selector in ('.ql-editor', '[data-placeholder="添加正文"]', '#post-textarea',
+                             '.post-content', 'div[contenteditable="true"]', '[role="textbox"]'):
+                candidate = page.locator(selector)
+                visible = await candidate.is_visible() if hasattr(candidate, 'is_visible') else True
+                if await candidate.count() == 1 and visible:
+                    body = candidate
+                    break
+            if title is not None and body is not None:
                 break
+            await asyncio.sleep(1)
         if title is None or body is None:
             raise BrowserPreparationError('EDITOR_CONTROL_AMBIGUOUS')
         await title.fill(note.title)

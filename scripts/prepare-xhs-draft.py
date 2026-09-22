@@ -46,6 +46,11 @@ async def main(account_key: str, manual_editor: bool = False) -> None:
         await page.goto('https://creator.xiaohongshu.com/publish/publish', wait_until='domcontentloaded')
         # The creator center opens on a media-type tab; select the image-note tab
         # before handing control to the strict editor adapter.
+        if 'from=tab_switch' not in page.url:
+            image_entries = page.get_by_text('上传图文', exact=True)
+            if await image_entries.count():
+                await image_entries.first.click()
+                await asyncio.sleep(2)
         tabs = page.locator('.creator-tab')
         if await tabs.count() > 1:
             await tabs.nth(1).click()
