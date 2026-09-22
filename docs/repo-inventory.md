@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-22T16:49:19+00:00`
-- Source fingerprint: `sha256:0cb5d73a778b1c8a6709d038dc168ea80cbeaab0524dab8522f155a1148a723c`
+- Generated at (UTC): `2026-09-22T16:55:28+00:00`
+- Source fingerprint: `sha256:3adcd75d7f5b57510c1ea15d58b9b6df62e390f441f96f3d0c872916c58758b7`
 - Repository root: `D:/akagent`
 - Scanned files: `1646`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `87b2d504904c132dcf9eefa52e2d2542fe6a4d98`
+- HEAD: `09cdd472db9abbae293f9ffa3170af32ab1049e0`
 
 ## Top-level directories
 
@@ -587,9 +587,7 @@ Recommended repository gate: `python -m pytest tests --maxfail=1 -q`
 
 ## Uncommitted changes
 
-- ` M "docs/\347\234\237\345\256\236\350\264\246\345\217\267\350\207\252\345\212\250\345\214\226\350\277\220\350\220\245\346\223\215\344\275\234\346\211\213\345\206\214.md"`
-- ` M "docs/\351\241\271\347\233\256\345\274\200\345\217\221\350\277\233\345\272\246\346\261\207\346\212\245.html"`
-- ` M apps/web-console/src/index.html`
+- ` M "docs/\345\271\263\345\217\260\345\217\221\345\270\203\346\216\245\345\217\243\350\260\203\347\240\224\344\270\216\345\260\217\347\272\242\344\271\246\350\277\201\347\247\273\346\226\271\346\241\210.md"`
 
 ## Repository classification
 
@@ -1226,7 +1224,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `docs/tasks/WORKFLOW-CORE-002.md` | 4975 | `sha256:a81fe9635ca8a6e18f73ddb7892bd60c34fb6bdc79232ee6a1ad815f47f31333` |
 | `docs/tasks/WORKFLOW-CORE-003.md` | 4559 | `sha256:5151941eb2fe23b6585f097c3992692a9bee91f2943a8111b2e04c15d1c92a3b` |
 | `docs/workflows/README.md` | 217 | `sha256:b5669edc2191f6b372a613724dfca501f25f27895f95dc03b8a9e1abdb520432` |
-| `docs/平台发布接口调研与小红书迁移方案.md` | 10218 | `sha256:53d0f65c998f04150b8a48d3b97a68072f0cf9fd611b9e4c2cdb7a842072b19d` |
+| `docs/平台发布接口调研与小红书迁移方案.md` | 10293 | `sha256:d4cf9e8f20f8b347214c169eff57d059d780948d9087796be08d51476d1b81c1` |
 | `docs/真实账号自动化运营操作手册.md` | 13224 | `sha256:e2c72ad762193c61ae3d99eaf80447be1f9e8612462903fcecc8e0968f8386b2` |
 | `docs/网页管理后台测试说明.md` | 8134 | `sha256:89833833815e6945229ee8de2a157a03ae4aba625bc5e9038abc5b30535a4fd3` |
 | `docs/项目开发进度汇报.html` | 23176 | `sha256:e6b29e128591415e6c3a2edeecf5e17adb1c90469ba0d0ff4a212aa25b9d75f3` |
