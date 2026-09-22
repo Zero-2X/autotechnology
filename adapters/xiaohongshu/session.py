@@ -32,4 +32,6 @@ def read_session_status(account_key: str, root: Path | None = None) -> dict[str,
     if not path.exists():
         return {'account_key': account_key, 'status': 'pending', 'publish_performed': False}
     payload = json.loads(path.read_text(encoding='utf-8'))
-    return {'status': 'connected', **payload}
+    url = str(payload.get('url', ''))
+    status = 'login_required' if '/login' in url else 'connected'
+    return {'status': status, **payload}

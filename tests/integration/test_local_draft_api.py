@@ -1,4 +1,5 @@
 from fastapi.testclient import TestClient
+from pathlib import Path
 
 from apps.api.main import create_app
 
@@ -54,3 +55,15 @@ def test_xhs_browser_endpoint_rejects_invalid_target(monkeypatch):
     )
     assert response.status_code == 400
     assert response.json()['detail']['code'] == 'XHS_BROWSER_LAUNCH_FAILED'
+
+
+def test_console_state_round_trip(tmp_path, monkeypatch):
+    monkeypatch.setattr('apps.api.main.CONSOLE_STATE_PATH', Path(tmp_path) / '.local' / 'workflow-state.json')
+    client = TestClient(create_app())
+    assert client.get('/internal/console/state').json()['data']['state'] is None
+    state = {'tasks': [{'id': 'TASK-TEST', 'status': 'todo'}], 'settings': {'runMode': 'browser_preview'}}
+    response = client.put('/internal/console/state', json={'state': state})
+    assert response.status_code == 200
+    assert response.json()['data']['state'] == state
+    assert client.get('/internal/console/state').json()['data']['state'] == state
+    assert (Path(tmp_path) / '.local' / 'workflow-state.json').exists()

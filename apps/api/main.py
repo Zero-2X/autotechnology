@@ -44,13 +44,15 @@ from modules.provenance import (
 from modules.knowledge import KnowledgeCoreService, KnowledgeError, KnowledgeService
 from modules.canonical_content import CanonicalContentError, CanonicalContentService
 from adapters.xiaohongshu.session import read_session_status
-from adapters.xiaohongshu.operator import launch_operator_session
+from adapters.xiaohongshu.operator import launch_operator_session, read_launch_status
 from modules.media.local_demo_generator import generate_cover_svg, generate_demo_content
 from modules.support.local_reply_generator import generate_local_reply
 
 
 SERVICE_NAME = "api"
 RUNTIME_NAME = "modular-monolith"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+CONSOLE_STATE_PATH = PROJECT_ROOT / ".local" / "workflow-state.json"
 
 
 def dependency_status(registry: HealthRegistry) -> dict[str, Any]:
@@ -112,7 +114,7 @@ def create_app(
             'http://127.0.0.1:8765', 'http://127.0.0.1:8766',
             'http://localhost:8765', 'http://localhost:8766',
         ],
-        allow_methods=['GET', 'POST', 'OPTIONS'],
+        allow_methods=['GET', 'POST', 'PUT', 'OPTIONS'],
         allow_headers=['*'],
     )
     install_api_observability(app)
@@ -188,6 +190,41 @@ def create_app(
             return success_response(read_session_status(account_key))
         except (ValueError, OSError, json.JSONDecodeError) as exc:
             raise HTTPException(status_code=400, detail={"code": "INVALID_XHS_ACCOUNT", "message": str(exc)}) from exc
+
+    @app.get("/internal/xhs/launches/{job_id}", tags=["internal"], include_in_schema=False)
+    def xhs_launch(job_id: str) -> dict[str, Any]:
+        try:
+            return success_response(read_launch_status(job_id))
+        except (ValueError, OSError, json.JSONDecodeError, FileNotFoundError) as exc:
+            raise HTTPException(status_code=404, detail={"code": "XHS_LAUNCH_NOT_FOUND", "message": str(exc)}) from exc
+
+    @app.get("/internal/console/state", tags=["internal"], include_in_schema=False)
+    def console_state() -> dict[str, Any]:
+        path = CONSOLE_STATE_PATH
+        if not path.exists():
+            return success_response({"state": None, "updated_at": None})
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError) as exc:
+            raise HTTPException(status_code=500, detail={"code": "CONSOLE_STATE_READ_FAILED", "message": str(exc)}) from exc
+        return success_response(payload)
+
+    @app.put("/internal/console/state", tags=["internal"], include_in_schema=False)
+    async def put_console_state(request: Request) -> dict[str, Any]:
+        try:
+            payload = await request.json()
+        except json.JSONDecodeError as exc:
+            raise HTTPException(status_code=400, detail={"code": "CONSOLE_STATE_INVALID", "message": "请求内容不是有效 JSON"}) from exc
+        if not isinstance(payload, dict) or not isinstance(payload.get("state"), dict):
+            raise HTTPException(status_code=400, detail={"code": "CONSOLE_STATE_INVALID", "message": "state 必须是对象"})
+        path = CONSOLE_STATE_PATH
+        path.parent.mkdir(parents=True, exist_ok=True)
+        record = {"state": payload["state"], "updated_at": datetime.now(timezone.utc).isoformat()}
+        try:
+            path.write_text(json.dumps(record, ensure_ascii=False, indent=2), encoding="utf-8")
+        except OSError as exc:
+            raise HTTPException(status_code=500, detail={"code": "CONSOLE_STATE_WRITE_FAILED", "message": str(exc)}) from exc
+        return success_response(record)
 
     @app.post("/internal/xhs/accounts/{account_key}/browser:open", tags=["internal"], include_in_schema=False)
     def open_xhs_browser(account_key: str, command: dict[str, Any] | None = None) -> dict[str, Any]:

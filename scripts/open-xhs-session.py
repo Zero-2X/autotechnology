@@ -45,7 +45,7 @@ async def select_image_note(page) -> None:
         await asyncio.sleep(1)
 
 
-async def run(account_key: str, target: str, job_path: str | None) -> None:
+async def run(account_key: str, target: str, job_path: str | None, job_id: str | None = None) -> None:
     root = Path(__file__).resolve().parents[1]
     profile = root / ".local" / "browser-accounts" / account_key
     profile.mkdir(parents=True, exist_ok=True)
@@ -58,7 +58,9 @@ async def run(account_key: str, target: str, job_path: str | None) -> None:
         page = context.pages[0] if context.pages else await context.new_page()
         await page.goto(URLS[target], wait_until="domcontentloaded")
 
-        if "creator.xiaohongshu.com" in page.url and "login" not in page.url:
+        update_job(root, job_id, status="preparing" if target == "publish" else "browser_running")
+
+        if "creator.xiaohongshu.com" in page.url:
             write_session_status(account_key, url=page.url)
 
         if target == "publish" and job_path:
@@ -77,7 +79,9 @@ async def run(account_key: str, target: str, job_path: str | None) -> None:
                 Path(job_path).with_name("result.json").write_text(
                     json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
                 )
+                update_job(root, job_id, status="draft_prepared")
             except BrowserPreparationError as exc:
+                update_job(root, job_id, status="operator_action_required", error=str(exc))
                 Path(job_path).with_name("result.json").write_text(
                     json.dumps({"status": "operator_action_required", "error": str(exc), "url": page.url},
                                ensure_ascii=False, indent=2),
@@ -85,7 +89,36 @@ async def run(account_key: str, target: str, job_path: str | None) -> None:
                 )
 
         while context.pages:
+            current_url = page.url
+            if "creator.xiaohongshu.com" in current_url:
+                write_session_status(account_key, url=current_url)
             await asyncio.sleep(2)
+
+
+def update_job(root: Path, job_id: str | None, **values: object) -> None:
+    if not job_id:
+        return
+    path = root / ".local" / "xhs-launches" / f"{job_id}.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    current = {}
+    if path.exists():
+        try:
+            current = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            current = {}
+    current.update(values)
+    path.write_text(json.dumps(current, ensure_ascii=False, indent=2), encoding="utf-8")
+
+
+async def run_with_status(account_key: str, target: str, job_path: str | None, job_id: str | None) -> None:
+    root = Path(__file__).resolve().parents[1]
+    update_job(root, job_id, status="browser_starting")
+    try:
+        await run(account_key, target, job_path, job_id)
+        update_job(root, job_id, status="browser_closed")
+    except Exception as exc:
+        update_job(root, job_id, status="failed", error=f"{type(exc).__name__}: {exc}")
+        raise
 
 
 if __name__ == "__main__":
@@ -93,5 +126,6 @@ if __name__ == "__main__":
     parser.add_argument("--account-key", required=True)
     parser.add_argument("--target", choices=tuple(URLS), required=True)
     parser.add_argument("--job")
+    parser.add_argument("--job-id")
     args = parser.parse_args()
-    asyncio.run(run(args.account_key, args.target, args.job))
+    asyncio.run(run_with_status(args.account_key, args.target, args.job, args.job_id))
