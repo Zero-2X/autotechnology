@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-22T02:19:35+00:00`
-- Source fingerprint: `sha256:8ada326642adbf8eb713386d3019272ab9db40c4102fcadc9ebc40d47f4fd7cf`
+- Generated at (UTC): `2026-09-22T02:20:00+00:00`
+- Source fingerprint: `sha256:8ab066c78860c0f7ba96a0fb8bfaa48833ee254b650c5a49d4e67794a8b15ccc`
 - Repository root: `D:/akagent`
 - Scanned files: `1633`
 - Secret contents read: `false`
@@ -575,7 +575,7 @@ Recommended repository gate: `python -m pytest tests --maxfail=1 -q`
 
 ## Uncommitted changes
 
-Clean worktree.
+- ` M docs/repo-inventory.md`
 
 ## Repository classification
 
