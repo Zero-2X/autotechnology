@@ -111,9 +111,14 @@ def create_app(
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[
+            # A locally opened HTML file sends the literal `null` origin.  It
+            # is still a local, operator-owned dashboard and needs to be able
+            # to reach the loopback API during setup.
+            'null',
             'http://127.0.0.1:8765', 'http://127.0.0.1:8766',
             'http://localhost:8765', 'http://localhost:8766',
         ],
+        allow_origin_regex=r'https?://(?:127\.0\.0\.1|localhost)(?::\d+)?$',
         allow_methods=['GET', 'POST', 'PUT', 'OPTIONS'],
         allow_headers=['*'],
     )

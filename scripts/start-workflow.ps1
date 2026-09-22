@@ -9,14 +9,14 @@ function Test-LocalEndpoint([string]$Url) {
 if (-not (Test-LocalEndpoint "http://127.0.0.1:$ApiPort/health/live")) {
     Start-Process -WindowStyle Hidden -FilePath python -ArgumentList @('-m','uvicorn','apps.api.main:create_app','--factory','--host','127.0.0.1','--port',"$ApiPort") -WorkingDirectory $root
 }
-if (-not (Test-LocalEndpoint "http://127.0.0.1:$WebPort/")) {
-    Start-Process -WindowStyle Hidden -FilePath python -ArgumentList @('-m','http.server',"$WebPort",'--bind','127.0.0.1','--directory',(Join-Path $console 'dist')) -WorkingDirectory $console
-}
 $ready = $false
 for ($i = 0; $i -lt 20; $i++) {
     if (Test-LocalEndpoint "http://127.0.0.1:$ApiPort/health/live") { $ready = $true; break }
     Start-Sleep -Milliseconds 500
 }
 if (-not $ready) { throw "API failed to start; check whether port $ApiPort is already in use." }
+if (-not (Test-LocalEndpoint "http://127.0.0.1:$WebPort/")) {
+    Start-Process -WindowStyle Hidden -FilePath python -ArgumentList @('-m','http.server',"$WebPort",'--bind','127.0.0.1','--directory',(Join-Path $console 'dist')) -WorkingDirectory $console
+}
 Write-Host "Web: http://127.0.0.1:$WebPort/"
 Write-Host "API:  http://127.0.0.1:$ApiPort/health/live"

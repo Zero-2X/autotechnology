@@ -46,7 +46,7 @@ for(const match of html.matchAll(/<script>([\s\S]*?)<\/script>/g)) vm.runInConte
   assert(calls.some(([url,method])=>url.endsWith('/internal/console/state')&&method==='GET'));
   assert(calls.some(([url,method])=>url.endsWith('/internal/console/state')&&method==='PUT'));
   assert(calls.some(([url])=>url.endsWith('/session')));
-  assert.equal(intervals.length,1);
+  assert.equal(intervals.length,2);
   assert.equal(vm.runInContext('state.accounts[0].status',sandbox),'connected');
   assert.equal(vm.runInContext("migrate({...seed,accounts:[{...XHS_ACCOUNT,name:'已修改名称'}]}).accounts[0].name",sandbox),'已修改名称');
 })().catch(error=>{console.error(error);process.exitCode=1});
