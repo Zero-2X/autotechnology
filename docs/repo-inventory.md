@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-22T17:36:01+00:00`
-- Source fingerprint: `sha256:70c198aebc2654993ba79ef68466ba50f268650aed6e52963706da93de8a2b87`
+- Generated at (UTC): `2026-09-22T17:47:29+00:00`
+- Source fingerprint: `sha256:07c3154628eef0aab41fea0e47a25f7206a2ff3401f45f14ab4546dad73fe330`
 - Repository root: `D:/akagent`
 - Scanned files: `1646`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `b411dbbaa8e2cd13e92af3c2864ff2df9704d3d1`
+- HEAD: `2a7a870f69a31a61e32298fce7b49bfe17d083e7`
 
 ## Top-level directories
 
@@ -587,7 +587,7 @@ Recommended repository gate: `python -m pytest tests --maxfail=1 -q`
 
 ## Uncommitted changes
 
-Clean worktree.
+- ` M apps/web-console/src/index.html`
 
 ## Repository classification
 
@@ -810,7 +810,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `apps/web-console/package.json` | 167 | `sha256:9b5d3d2153ac4164c691902f80b75a3911a4be54f82b3579b9f6f39e078f3066` |
 | `apps/web-console/pnpm-lock.yaml` | 114 | `sha256:17c814b167307942d3609c7b9d916ceddb85839573ab39baa114e30edb132a1a` |
 | `apps/web-console/scripts/build.mjs` | 851 | `sha256:eae2a2b621e5162dde56ffc02b716fc21c71146456cb69cf7bfdd23727030609` |
-| `apps/web-console/src/index.html` | 81327 | `sha256:d6abb53c61d7f426f5bbf50590bbd06d343727c53507ef61bddbd90e386ef819` |
+| `apps/web-console/src/index.html` | 83002 | `sha256:41ad7df95d8553509862e800ccb1c99b4fec6a0c5f19274a1d067014b7bac5f0` |
 | `apps/worker/README.md` | 843 | `sha256:585eb3815e3271923e72d2c66325ce36be5af3c66135774cb734008315742021` |
 | `apps/worker/__init__.py` | 31 | `sha256:53da4abf7d557e2589aa76efd85c921469f44127a4035ec9f6c2f6361484ee76` |
 | `apps/worker/__main__.py` | 81 | `sha256:954eaddc192523ee47f44769ae571e58baf451c0e67d752edd3874b6393600d0` |
