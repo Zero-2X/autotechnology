@@ -17,6 +17,7 @@ except ImportError:  # pragma: no cover - optional on minimal installs
 
 from adapters.xiaohongshu.session import session_dir
 from modules.media.local_demo_generator import DemoContent, generate_cover_png
+from adapters.platforms.routing import profile_for, resolve_delivery_route
 
 
 TARGETS = {"home", "inbox", "publish"}
@@ -124,6 +125,13 @@ def launch_operator_session(
         "auto_publish_requested": bool(auto_publish),
         "reused_existing": bool(existing_pid),
     }
+    if target in {"publish", "inbox"}:
+        route = resolve_delivery_route(
+            profile=profile_for("小红书"), action=target,
+            browser_session_ready=True, prefer_api=False,
+        )
+        result["delivery_mode"] = route.mode
+        result["delivery_reason"] = route.reason
     launch_dir = project_root / ".local" / "xhs-launches"
     launch_dir.mkdir(parents=True, exist_ok=True)
     launch_status_path(job_id, project_root).write_text(
