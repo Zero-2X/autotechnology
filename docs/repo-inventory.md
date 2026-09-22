@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-22T17:58:14+00:00`
-- Source fingerprint: `sha256:15037c660863d53d3e1586fe8fb8629a2dcd6f3a2ae43939223409942b88e8fd`
+- Generated at (UTC): `2026-09-22T18:04:12+00:00`
+- Source fingerprint: `sha256:a7ca8f0615d68e8e3c8ef57f9c5c6640112a956948b4b27b7e72c140c9c80128`
 - Repository root: `D:/akagent`
 - Scanned files: `1646`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `bd15bef0122d104a6d33cc2a200dbc28c3955613`
+- HEAD: `2f372a3088e637d6697120bb5e4974b40a33a88c`
 
 ## Top-level directories
 
@@ -587,7 +587,7 @@ Recommended repository gate: `python -m pytest tests --maxfail=1 -q`
 
 ## Uncommitted changes
 
-- ` M "docs/\351\241\271\347\233\256\345\274\200\345\217\221\350\277\233\345\272\246\346\261\207\346\212\245.html"`
+- ` M apps/web-console/src/index.html`
 
 ## Repository classification
 
@@ -810,7 +810,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `apps/web-console/package.json` | 167 | `sha256:9b5d3d2153ac4164c691902f80b75a3911a4be54f82b3579b9f6f39e078f3066` |
 | `apps/web-console/pnpm-lock.yaml` | 114 | `sha256:17c814b167307942d3609c7b9d916ceddb85839573ab39baa114e30edb132a1a` |
 | `apps/web-console/scripts/build.mjs` | 851 | `sha256:eae2a2b621e5162dde56ffc02b716fc21c71146456cb69cf7bfdd23727030609` |
-| `apps/web-console/src/index.html` | 83002 | `sha256:41ad7df95d8553509862e800ccb1c99b4fec6a0c5f19274a1d067014b7bac5f0` |
+| `apps/web-console/src/index.html` | 83429 | `sha256:bd670b07aba8ab0d07f2bb60aca5048fb7c44e2ce4948f12e73555ce9162fec2` |
 | `apps/worker/README.md` | 843 | `sha256:585eb3815e3271923e72d2c66325ce36be5af3c66135774cb734008315742021` |
 | `apps/worker/__init__.py` | 31 | `sha256:53da4abf7d557e2589aa76efd85c921469f44127a4035ec9f6c2f6361484ee76` |
 | `apps/worker/__main__.py` | 81 | `sha256:954eaddc192523ee47f44769ae571e58baf451c0e67d752edd3874b6393600d0` |
