@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-21T16:48:08+00:00`
-- Source fingerprint: `sha256:ce14d46b0ad436c388acad60bcb7b2057ad94d84a90a4a165076561cab65e6e3`
+- Generated at (UTC): `2026-09-22T02:19:35+00:00`
+- Source fingerprint: `sha256:8ada326642adbf8eb713386d3019272ab9db40c4102fcadc9ebc40d47f4fd7cf`
 - Repository root: `D:/akagent`
 - Scanned files: `1633`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `759bea6c4b5931fac26519f69034e5df802291be`
+- HEAD: `ff5449dae3d5909f6f9fc4a1b7bc360a38d1a492`
 
 ## Top-level directories
 
@@ -575,7 +575,7 @@ Recommended repository gate: `python -m pytest tests --maxfail=1 -q`
 
 ## Uncommitted changes
 
-- ` M scripts/repo_inventory.py`
+Clean worktree.
 
 ## Repository classification
 
@@ -765,7 +765,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `adapters/fake/official_server.py` | 13806 | `sha256:c5441c384b29dc36bf5b5893b24232007b45b382e183f9accb044e95d724ca91` |
 | `adapters/manual/README.md` | 273 | `sha256:d59bef0fc5f4a9cc268df05437b9ce4ee8f4242ecca67fee326bb5e4e7b87195` |
 | `adapters/xiaohongshu/__init__.py` | 75 | `sha256:bf99d42faa7c125384db75b10d0f90c78a4f212c45b18eb9df7d94f0aee7f39c` |
-| `adapters/xiaohongshu/browser.py` | 3494 | `sha256:6a191fda087fdf6b55bd5c017909cd9582aeb67093d5dbf17375c2cdda2ff263` |
+| `adapters/xiaohongshu/browser.py` | 4631 | `sha256:2b2fd30145e7aca3f9dc19286de6b4f972b314ef57489f6a0f4a5577bf62cd4c` |
 | `adapters/xiaohongshu/session.py` | 1402 | `sha256:bae6960d6c0b126947bf770b7a414ca64d038ab2fd2d34a425e141a0d16d67a0` |
 | `alembic.ini` | 576 | `sha256:43cb71b556fae313d03aea59033aab50e46b03d00c5e6857bfd90a920b508247` |
 | `apps/__init__.py` | 62 | `sha256:1cdc47f24c4d8980cd92e816bb63a156ef30cad06aa12d1af84d407bb740c579` |
@@ -2073,7 +2073,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `scripts/generate_state_registry.py` | 1959 | `sha256:853590fcb2159809a39bc09dd7ae3d8541ded167e8722f387292ed4e0d5b7b73` |
 | `scripts/generate_task_cards.py` | 3336 | `sha256:c1a41746312aba12ce1130d839dc02f406385a550a37cb9101873a3be770a3f9` |
 | `scripts/generate_task_registry.py` | 58473 | `sha256:ca307184e7be636e690103f7ea6702d761bded25009fbb0a21e7cb8b84321539` |
-| `scripts/prepare-xhs-draft.py` | 4227 | `sha256:1f617895dd0833cf01d86f881084930e0021065f7d8126fa5ca9c3b5e27b1a6c` |
+| `scripts/prepare-xhs-draft.py` | 4479 | `sha256:3801de621f5d06af87f4353d06f7a110dfcd87d09e2e4691e5a2d8d5040737d8` |
 | `scripts/repo_inventory.py` | 18609 | `sha256:f03fa6537a908b5e6e45ae3eed9764af191c0c938f5e2c5eb10830bbff96f07a` |
 | `scripts/restart-web-console.ps1` | 579 | `sha256:3b7737c04b2b62199a5f23b2f3e7f111d8cd26fec75607e4600d1cd0f95319e3` |
 | `scripts/smoke_foundation.py` | 1554 | `sha256:d4943f9fc0c2899145f5ca99dfa31ef181ff4fcd9e72e17217376de0e5c67c46` |
