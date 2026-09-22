@@ -118,6 +118,8 @@ async def select_inbox(page) -> dict[str, str]:
 async def handle_inbox(page, root: Path, account_key: str, job_path: str | None,
                        job_id: str | None) -> None:
     inbox_state = await select_inbox(page)
+    if inbox_state["status"] == "login_required":
+        write_session_status(account_key, url="https://creator.xiaohongshu.com/login")
     update_job(root, job_id, **inbox_state,
                error=None if inbox_state["status"] == "inbox_ready" else (
                    "小红书会话已失效，请先在窗口登录" if inbox_state["status"] == "login_required"
