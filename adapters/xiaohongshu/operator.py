@@ -67,33 +67,39 @@ def launch_operator_session(
         raise ValueError("target must be home, inbox, or publish")
     if auto_publish and target != "publish":
         raise ValueError("auto_publish is only valid for publish target")
+    if target == "publish" and not content:
+        raise ValueError("publish preview requires title and body")
 
     existing_pid = _existing_profile_pid(profile)
     if existing_pid and target == "publish":
         raise ValueError("该账号的小红书窗口已打开。请先保存未完成的内容并关闭该窗口，再准备新草稿；本次尚未填稿或发布。")
+    if existing_pid and target == "inbox" and content and content.get("reply"):
+        raise ValueError("该账号的小红书窗口已打开。请先关闭该窗口，再执行受控客服回复；本次尚未发送。")
 
     job_id = f"xhs-{uuid4().hex[:12]}"
     job_path: Path | None = None
-    if target == "publish":
+    if target in {"publish", "inbox"} and content:
         payload = content or {}
-        title = str(payload.get("title", "")).strip()
-        body = str(payload.get("body", "")).strip()
-        hashtags = tuple(str(item).strip() for item in payload.get("hashtags", []) if str(item).strip())
-        if not title or not body:
-            raise ValueError("publish preview requires title and body")
         queue_dir = project_root / ".local" / "xhs-jobs" / job_id
         queue_dir.mkdir(parents=True, exist_ok=True)
-        cover_path = generate_cover_png(DemoContent(title, body, hashtags), queue_dir / "cover.png")
         job_path = queue_dir / "job.json"
-        job_path.write_text(
-            json.dumps(
-                {"job_id": job_id, "account_key": account_key, "title": title,
-                 "body": body, "hashtags": list(hashtags), "cover_path": str(cover_path.resolve())},
-                ensure_ascii=False,
-                indent=2,
-            ),
-            encoding="utf-8",
-        )
+        if target == "publish":
+            title = str(payload.get("title", "")).strip()
+            body = str(payload.get("body", "")).strip()
+            hashtags = tuple(str(item).strip() for item in payload.get("hashtags", []) if str(item).strip())
+            if not title or not body:
+                raise ValueError("publish preview requires title and body")
+            cover_path = generate_cover_png(DemoContent(title, body, hashtags), queue_dir / "cover.png")
+            payload = {"job_id": job_id, "account_key": account_key, "title": title,
+                       "body": body, "hashtags": list(hashtags), "cover_path": str(cover_path.resolve())}
+        else:
+            message_id = str(payload.get("message_id", "")).strip()
+            reply = str(payload.get("reply", "")).strip()
+            if bool(message_id) != bool(reply):
+                raise ValueError("inbox reply requires message_id and reply together")
+            payload = {"job_id": job_id, "account_key": account_key, "message_id": message_id,
+                       "reply": reply, "send": bool(payload.get("send", False))}
+        job_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
     command = [sys.executable, str(project_root / "scripts" / "open-xhs-session.py"),
                "--account-key", account_key, "--target", target, "--job-id", job_id]

@@ -19,6 +19,15 @@ def test_busy_profile_does_not_claim_to_prepare_a_draft(monkeypatch, tmp_path):
     assert not (tmp_path / ".local" / "xhs-jobs").exists()
 
 
+def test_busy_profile_does_not_claim_to_send_reply(monkeypatch, tmp_path):
+    monkeypatch.setattr(operator, "_existing_profile_pid", lambda profile: 123)
+    with pytest.raises(ValueError, match="尚未发送"):
+        operator.launch_operator_session(
+            "account-1", target="inbox",
+            content={"message_id": "msg-1", "reply": "回复"}, root=tmp_path,
+        )
+
+
 def test_existing_window_returns_reuse_status(monkeypatch, tmp_path):
     monkeypatch.setattr(operator, "_existing_profile_pid", lambda profile: 123)
     result = operator.launch_operator_session("account-1", target="home", root=tmp_path)

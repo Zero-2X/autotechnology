@@ -139,10 +139,14 @@ async function pollXhsSession(){const accounts=state.accounts.filter(a=>a.platfo
            const probe=await fetch(`${base}/internal/xhs/launches/${encodeURIComponent(jobId)}`);
            if(!probe.ok)continue;
            const job=(await probe.json()).data||{};
-           if(['failed','operator_action_required'].includes(job.status))throw new Error(job.error||'请检查小红书窗口');
+            if(['failed','operator_action_required','inbox_needs_operator'].includes(job.status))throw new Error(job.error||'请检查小红书窗口');
            if(job.status==='draft_prepared'){toast('图文已填入小红书，请检查后确认发布');return}
            if(job.status==='publish_submitted'){toast('已提交小红书发布，请检查平台回执后登记结果');return}
-           if(job.status==='browser_running'&&target!=='publish'){toast(target==='inbox'?(job.reused_existing?'小红书窗口已经打开，请切换到消息页处理客服':'小红书客服窗口已打开，请在创作者中心进入消息页'):job.reused_existing?'小红书窗口已经打开，请切换到该窗口操作':'小红书账号窗口已打开');return}
+            if(job.status==='inbox_ready'){toast('已进入小红书消息/互动页，可以继续处理客服');return}
+            if(job.status==='inbox_scanned'){const messages=Array.isArray(job.messages)?job.messages:[];let added=0;for(const item of messages){if(!item?.text||state.inbox.some(t=>t.external_id&&t.external_id===item.external_id))continue;state.inbox.unshift({id:`THR-${Date.now()}-${added}`,external_id:item.external_id,account:accountKey,name:'小红书用户',channel:'消息',risk:'low',intent:'question',time:'刚刚',message:item.text,reply:'',status:'open'});added++}if(added){currentThread=state.inbox[0].id;save();renderInbox()}toast(messages.length?`已扫描 ${messages.length} 条消息${added?`，导入 ${added} 条`:''}`:'消息页暂未找到可导入内容');return}
+            if(job.status==='reply_ready'){toast('回复已填入小红书，请检查后发送');return}
+            if(job.status==='reply_submitted'){toast('已点击小红书发送，请回查消息确认发送成功');return}
+            if(job.status==='browser_running'&&target!=='publish'){toast(target==='inbox'?(job.reused_existing?'小红书窗口已经打开，请切换到消息页处理客服':'小红书客服窗口已打开，请在创作者中心进入消息页'):job.reused_existing?'小红书窗口已经打开，请切换到该窗口操作':'小红书账号窗口已打开');return}
            if(job.status==='browser_closed'){toast('小红书窗口已关闭，未确认发布结果');return}
          }}
          toast('仍在处理中，请查看小红书窗口；尚未确认填稿或发布成功');
@@ -207,6 +211,11 @@ async function pollXhsSession(){const accounts=state.accounts.filter(a=>a.platfo
     async function check(){try{const base=(document.querySelector('#apiBase')?.value||'http://127.0.0.1:8000').replace(/\/$/,'');const r=await fetch(`${base}/internal/model/status`);const d=(await r.json()).data||{};document.querySelector('#modelStatus').value=d.configured?`${d.provider} · ${d.model} · 已配置`:`${d.provider||'未配置'} · 待配置`;toast(d.configured?'模型服务已配置':'模型服务未配置，使用本地回退')}catch{document.querySelector('#modelStatus').value='API 未连接'}}
     document.querySelector('#modelHealth').addEventListener('click',check);await check();
     ['#newContentBtn','#quickContent','#generateTop'].forEach(sel=>document.querySelector(sel)?.addEventListener('click',()=>setTimeout(()=>{const notice=document.querySelector('#modalBody .notice');if(notice)notice.textContent='模型服务已配置时会优先调用模型；如果暂时不可用，后台会自动使用本地模板生成。生成后可以编辑、审核，并进入小红书发布流程。'},0)));
+    const composeActions=document.querySelector('.conversation-compose .row-actions');
+    if(composeActions&&!document.querySelector('#sendReplyBrowserBtn')){
+      const sendButton=document.createElement('button');sendButton.className='primary-btn';sendButton.id='sendReplyBrowserBtn';sendButton.textContent='打开并发送到小红书';composeActions.appendChild(sendButton);
+      sendButton.addEventListener('click',()=>{const thread=state.inbox.find(x=>x.id===currentThread);const reply=document.querySelector('#replyText')?.value.trim();const externalId=thread?.external_id||thread?.externalId;if(!thread||!reply)return toast('请先选择会话并保存回复');if(!externalId)return toast('这条消息没有平台会话标识，请先在小红书消息页打开并导入');const account=state.accounts.find(a=>a.id===thread.account)||state.accounts.find(a=>a.platform==='小红书');if(!account)return toast('没有可用的小红书账号');openXhsBrowser('inbox',{message_id:externalId,reply,send:true},account.id,false)});
+    }
   })();
 </script>
 </body>
