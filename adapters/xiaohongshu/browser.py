@@ -108,8 +108,11 @@ class XiaohongshuDraftPreparer:
             '[class*="submit"] button',
         )
         clicked = False
-        for selector in selectors:
-            candidate = page.locator(selector)
+        candidates = []
+        if hasattr(page, 'get_by_role'):
+            candidates.append(page.get_by_role('button', name='发布', exact=True))
+        candidates.extend(page.locator(selector) for selector in selectors)
+        for candidate in candidates:
             if await candidate.count() != 1:
                 continue
             if hasattr(candidate, 'is_visible') and not await candidate.is_visible():
