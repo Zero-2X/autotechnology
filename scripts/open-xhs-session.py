@@ -116,7 +116,7 @@ async def select_inbox(page) -> dict[str, str]:
 
 
 async def handle_inbox(page, root: Path, account_key: str, job_path: str | None,
-                       job_id: str | None) -> None:
+                       job_id: str | None) -> str:
     inbox_state = await select_inbox(page)
     if inbox_state["status"] == "login_required":
         write_session_status(account_key, url="https://creator.xiaohongshu.com/login")
@@ -125,7 +125,7 @@ async def handle_inbox(page, root: Path, account_key: str, job_path: str | None,
                    "小红书会话已失效，请先在窗口登录" if inbox_state["status"] == "login_required"
                    else "未找到消息/互动入口，请在小红书窗口手动进入消息页"))
     if inbox_state["status"] != "inbox_ready":
-        return
+        return inbox_state["status"]
     inbox_job = json.loads(Path(job_path).read_text(encoding="utf-8")) if job_path else {}
     scan = await XiaohongshuInboxOperator().scan(page=page)
     update_job(root, job_id, **scan, error=None if scan["status"] == "inbox_scanned" else scan.get("reason"))
@@ -141,20 +141,22 @@ async def handle_inbox(page, root: Path, account_key: str, job_path: str | None,
             update_job(root, job_id, **result, error=None)
         except (InboxAutomationError, ValueError) as exc:
             update_job(root, job_id, status="inbox_needs_operator", error=str(exc))
+    return scan["status"]
 
 
-async def handle_command(page, root: Path, account_key: str, command: dict) -> None:
+async def handle_command(page, root: Path, account_key: str, command: dict) -> str | None:
     target = str(command.get("target", "home"))
     job_id = str(command.get("job_id", "")) or None
     job_path = command.get("job_path")
     if target not in URLS:
         update_job(root, job_id, status="failed", error="invalid queued target")
-        return
+        return "failed"
     await page.goto(URLS[target], wait_until="domcontentloaded")
     if target == "inbox":
-        await handle_inbox(page, root, account_key, job_path, job_id)
+        return await handle_inbox(page, root, account_key, job_path, job_id)
     else:
         update_job(root, job_id, status="browser_running", url=page.url)
+        return "browser_running"
 
 
 async def session_url(page) -> str:
@@ -188,12 +190,13 @@ async def run(account_key: str, target: str, job_path: str | None, job_id: str |
         await page.goto(URLS[target], wait_until="domcontentloaded")
 
         update_job(root, job_id, status="preparing" if target == "publish" else "browser_running")
+        session_requires_login = False
 
         if "creator.xiaohongshu.com" in page.url:
             write_session_status(account_key, url=await session_url(page))
 
         if target == "inbox":
-            await handle_inbox(page, root, account_key, job_path, job_id)
+            session_requires_login = (await handle_inbox(page, root, account_key, job_path, job_id)) == "login_required"
 
         if target == "publish" and job_path:
             job = json.loads(Path(job_path).read_text(encoding="utf-8"))
@@ -226,10 +229,15 @@ async def run(account_key: str, target: str, job_path: str | None, job_id: str |
         while context.pages:
             current_url = page.url
             if "creator.xiaohongshu.com" in current_url:
-                write_session_status(account_key, url=await session_url(page))
+                write_session_status(account_key, url=(
+                    "https://creator.xiaohongshu.com/login" if session_requires_login
+                    else await session_url(page)
+                ))
             for command in take_commands(root, account_key):
                 try:
-                    await handle_command(page, root, account_key, command)
+                    command_status = await handle_command(page, root, account_key, command)
+                    if command.get("target") == "inbox":
+                        session_requires_login = command_status == "login_required"
                 except Exception as exc:
                     update_job(root, str(command.get("job_id", "")) or None,
                                status="failed", error=f"{type(exc).__name__}: {exc}")
