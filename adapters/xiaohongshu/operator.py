@@ -23,6 +23,18 @@ from adapters.platforms.routing import profile_for, resolve_delivery_route
 TARGETS = {"home", "inbox", "publish"}
 
 
+def command_queue_path(account_key: str, root: Path | None = None) -> Path:
+    project_root = root or Path(__file__).resolve().parents[2]
+    return project_root / ".local" / "xhs-commands" / f"{account_key}.jsonl"
+
+
+def enqueue_command(account_key: str, command: dict[str, Any], root: Path | None = None) -> None:
+    path = command_queue_path(account_key, root)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(command, ensure_ascii=False) + "\n")
+
+
 def _existing_profile_pid(profile: Path) -> int | None:
     """Find an already running Playwright browser using this profile."""
     if psutil is None:
@@ -73,8 +85,6 @@ def launch_operator_session(
     existing_pid = _existing_profile_pid(profile)
     if existing_pid and target == "publish":
         raise ValueError("该账号的小红书窗口已打开。请先保存未完成的内容并关闭该窗口，再准备新草稿；本次尚未填稿或发布。")
-    if existing_pid and target == "inbox" and content and content.get("reply"):
-        raise ValueError("该账号的小红书窗口已打开。请先关闭该窗口，再执行受控客服回复；本次尚未发送。")
 
     job_id = f"xhs-{uuid4().hex[:12]}"
     job_path: Path | None = None
@@ -111,6 +121,7 @@ def launch_operator_session(
     if os.name == "nt":
         creation_flags = subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW
     process = None
+    command_queued = False
     if existing_pid is None:
         process = subprocess.Popen(
             command,
@@ -120,11 +131,18 @@ def launch_operator_session(
             stderr=subprocess.DEVNULL,
             creationflags=creation_flags,
         )
+    else:
+        enqueue_command(account_key, {
+            "job_id": job_id, "target": target,
+            "job_path": str(job_path.resolve()) if job_path is not None else None,
+            "auto_publish": bool(auto_publish),
+        }, project_root)
+        command_queued = True
     result = {
         "job_id": job_id,
         "account_key": account_key,
         "target": target,
-        "status": "browser_running" if existing_pid else "browser_starting",
+        "status": "command_queued" if command_queued else "browser_starting",
         "pid": existing_pid or process.pid,
         "started_at": datetime.now(timezone.utc).isoformat(),
         "publishes_automatically": False,

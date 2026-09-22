@@ -24,6 +24,30 @@ URLS = {
 }
 
 
+def command_queue_path(root: Path, account_key: str) -> Path:
+    return root / ".local" / "xhs-commands" / f"{account_key}.jsonl"
+
+
+def take_commands(root: Path, account_key: str) -> list[dict]:
+    path = command_queue_path(root, account_key)
+    if not path.exists():
+        return []
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+        path.write_text("", encoding="utf-8")
+    except OSError:
+        return []
+    commands = []
+    for line in lines:
+        try:
+            value = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(value, dict):
+            commands.append(value)
+    return commands
+
+
 def installed_chromium() -> str | None:
     roots = [Path(playwright.__file__).resolve().parents[4] / "ms-playwright",
              Path.home() / "AppData" / "Local" / "ms-playwright"]
@@ -60,6 +84,16 @@ async def select_image_note(page) -> None:
 
 async def select_inbox(page) -> dict[str, str]:
     """Open the creator-center interaction area without guessing a URL."""
+    if "/login" in page.url:
+        return {"status": "login_required", "url": page.url}
+    for selector in ('input[placeholder*="手机号"]', 'input[placeholder*="验证码"]',
+                     'text=扫码登录', 'text=登录小红书'):
+        try:
+            candidate = page.locator(selector)
+            if await candidate.count() and await candidate.first.is_visible():
+                return {"status": "login_required", "url": "https://creator.xiaohongshu.com/login"}
+        except Exception:
+            continue
     selectors = (
         'a[href*="message"]', 'a[href*="comment"]', 'a[href*="interaction"]',
         'button:has-text("消息")', 'button:has-text("互动")',
@@ -81,6 +115,62 @@ async def select_inbox(page) -> dict[str, str]:
     return {"status": "inbox_needs_operator", "url": page.url}
 
 
+async def handle_inbox(page, root: Path, account_key: str, job_path: str | None,
+                       job_id: str | None) -> None:
+    inbox_state = await select_inbox(page)
+    update_job(root, job_id, **inbox_state,
+               error=None if inbox_state["status"] == "inbox_ready" else (
+                   "小红书会话已失效，请先在窗口登录" if inbox_state["status"] == "login_required"
+                   else "未找到消息/互动入口，请在小红书窗口手动进入消息页"))
+    if inbox_state["status"] != "inbox_ready":
+        return
+    inbox_job = json.loads(Path(job_path).read_text(encoding="utf-8")) if job_path else {}
+    scan = await XiaohongshuInboxOperator().scan(page=page)
+    update_job(root, job_id, **scan, error=None if scan["status"] == "inbox_scanned" else scan.get("reason"))
+    if inbox_job.get("message_id") and inbox_job.get("reply"):
+        try:
+            result = await XiaohongshuInboxOperator().reply(
+                page=page, external_id=str(inbox_job["message_id"]),
+                text=str(inbox_job["reply"]), send=bool(inbox_job.get("send", False)),
+            )
+            Path(job_path).with_name("result.json").write_text(
+                json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+            update_job(root, job_id, **result, error=None)
+        except (InboxAutomationError, ValueError) as exc:
+            update_job(root, job_id, status="inbox_needs_operator", error=str(exc))
+
+
+async def handle_command(page, root: Path, account_key: str, command: dict) -> None:
+    target = str(command.get("target", "home"))
+    job_id = str(command.get("job_id", "")) or None
+    job_path = command.get("job_path")
+    if target not in URLS:
+        update_job(root, job_id, status="failed", error="invalid queued target")
+        return
+    await page.goto(URLS[target], wait_until="domcontentloaded")
+    if target == "inbox":
+        await handle_inbox(page, root, account_key, job_path, job_id)
+    else:
+        update_job(root, job_id, status="browser_running", url=page.url)
+
+
+async def session_url(page) -> str:
+    """Return a conservative URL marker when creator center shows login UI."""
+    current = page.url
+    if "/login" in current:
+        return "https://creator.xiaohongshu.com/login"
+    for selector in ('input[placeholder*="手机号"]', 'input[placeholder*="验证码"]',
+                     'text=扫码登录', 'text=登录小红书'):
+        try:
+            candidate = page.locator(selector)
+            if await candidate.count() and await candidate.first.is_visible():
+                return "https://creator.xiaohongshu.com/login"
+        except Exception:
+            continue
+    return current
+
+
 async def run(account_key: str, target: str, job_path: str | None, job_id: str | None = None,
               auto_publish: bool = False) -> None:
     root = Path(__file__).resolve().parents[1]
@@ -98,33 +188,10 @@ async def run(account_key: str, target: str, job_path: str | None, job_id: str |
         update_job(root, job_id, status="preparing" if target == "publish" else "browser_running")
 
         if "creator.xiaohongshu.com" in page.url:
-            write_session_status(account_key, url=page.url)
+            write_session_status(account_key, url=await session_url(page))
 
         if target == "inbox":
-            inbox_state = await select_inbox(page)
-            update_job(root, job_id, **inbox_state,
-                       error=None if inbox_state["status"] == "inbox_ready" else "未找到消息/互动入口，请在小红书窗口手动进入消息页")
-            if job_path and inbox_state["status"] == "inbox_ready":
-                inbox_job = json.loads(Path(job_path).read_text(encoding="utf-8"))
-                scan = await XiaohongshuInboxOperator().scan(page=page)
-                update_job(root, job_id, **scan, error=None if scan["status"] == "inbox_scanned" else scan.get("reason"))
-                if inbox_job.get("message_id") and inbox_job.get("reply"):
-                    try:
-                        result = await XiaohongshuInboxOperator().reply(
-                            page=page,
-                            external_id=str(inbox_job["message_id"]),
-                            text=str(inbox_job["reply"]),
-                            send=bool(inbox_job.get("send", False)),
-                        )
-                        Path(job_path).with_name("result.json").write_text(
-                            json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
-                        )
-                        update_job(root, job_id, **result, error=None)
-                    except (InboxAutomationError, ValueError) as exc:
-                        update_job(root, job_id, status="inbox_needs_operator", error=str(exc))
-            elif target == "inbox" and not job_path and inbox_state["status"] == "inbox_ready":
-                scan = await XiaohongshuInboxOperator().scan(page=page)
-                update_job(root, job_id, **scan, error=None if scan["status"] == "inbox_scanned" else scan.get("reason"))
+            await handle_inbox(page, root, account_key, job_path, job_id)
 
         if target == "publish" and job_path:
             job = json.loads(Path(job_path).read_text(encoding="utf-8"))
@@ -157,7 +224,13 @@ async def run(account_key: str, target: str, job_path: str | None, job_id: str |
         while context.pages:
             current_url = page.url
             if "creator.xiaohongshu.com" in current_url:
-                write_session_status(account_key, url=current_url)
+                write_session_status(account_key, url=await session_url(page))
+            for command in take_commands(root, account_key):
+                try:
+                    await handle_command(page, root, account_key, command)
+                except Exception as exc:
+                    update_job(root, str(command.get("job_id", "")) or None,
+                               status="failed", error=f"{type(exc).__name__}: {exc}")
             await asyncio.sleep(2)
 
 

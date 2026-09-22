@@ -139,7 +139,7 @@ async function pollXhsSession(){const accounts=state.accounts.filter(a=>a.platfo
            const probe=await fetch(`${base}/internal/xhs/launches/${encodeURIComponent(jobId)}`);
            if(!probe.ok)continue;
            const job=(await probe.json()).data||{};
-            if(['failed','operator_action_required','inbox_needs_operator'].includes(job.status))throw new Error(job.error||'请检查小红书窗口');
+            if(['failed','operator_action_required','inbox_needs_operator','login_required'].includes(job.status))throw new Error(job.error||'请先在小红书窗口完成登录');
            if(job.status==='draft_prepared'){toast('图文已填入小红书，请检查后确认发布');return}
            if(job.status==='publish_submitted'){toast('已提交小红书发布，请检查平台回执后登记结果');return}
             if(job.status==='inbox_ready'){toast('已进入小红书消息/互动页，可以继续处理客服');return}
