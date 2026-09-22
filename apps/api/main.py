@@ -235,6 +235,7 @@ def create_app(
                 account_key,
                 target=str(payload.get("target", "home")),
                 content=payload.get("content"),
+                auto_publish=bool(payload.get("auto_publish", False)),
             )
         except (ValueError, OSError, subprocess.SubprocessError) as exc:
             raise HTTPException(

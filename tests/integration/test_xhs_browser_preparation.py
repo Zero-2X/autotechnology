@@ -25,6 +25,20 @@ class Page:
         return self.controls.setdefault(selector, Control())
 
 
+class PublishButton:
+    async def count(self): return 1
+    async def is_visible(self): return True
+    async def is_enabled(self): return True
+    async def click(self): self.clicked = True
+
+
+class PublishPage:
+    url = 'https://creator.xiaohongshu.com/publish/publish'
+    def __init__(self): self.button = PublishButton()
+    def locator(self, selector):
+        return self.button if selector.startswith('button:') else Control()
+
+
 def note(tmp_path):
     image = tmp_path / 'test.png'
     image.write_bytes(b'fixture')
@@ -66,3 +80,13 @@ def test_fingerprint_tracks_image_bytes(tmp_path):
     before = item.fingerprint()
     item.images[0].write_bytes(b'changed')
     assert before != item.fingerprint()
+
+
+def test_publish_submission_is_explicit_and_not_marked_published():
+    page = PublishPage()
+    result = asyncio.run(XiaohongshuDraftPreparer().submit_publish(page=page))
+    assert result == {
+        'status': 'publish_submitted', 'platform_post_id': None,
+        'published': False, 'requires_requery': True,
+    }
+    assert getattr(page.button, 'clicked', False) is True

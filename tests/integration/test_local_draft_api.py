@@ -26,8 +26,8 @@ def test_local_draft_endpoint_rejects_empty_topic():
 def test_xhs_browser_endpoint_launches_requested_local_session(monkeypatch):
     launched = {}
 
-    def fake_launch(account_key, *, target, content=None):
-        launched.update(account_key=account_key, target=target, content=content)
+    def fake_launch(account_key, *, target, content=None, auto_publish=False):
+        launched.update(account_key=account_key, target=target, content=content, auto_publish=auto_publish)
         return {'account_key': account_key, 'target': target, 'status': 'browser_starting'}
 
     monkeypatch.setattr('apps.api.main.launch_operator_session', fake_launch)
@@ -42,11 +42,12 @@ def test_xhs_browser_endpoint_launches_requested_local_session(monkeypatch):
         'account_key': 'xhs-9653254890',
         'target': 'publish',
         'content': {'title': '标题', 'body': '正文'},
+        'auto_publish': False,
     }
 
 
 def test_xhs_browser_endpoint_rejects_invalid_target(monkeypatch):
-    def fake_launch(account_key, *, target, content=None):
+    def fake_launch(account_key, *, target, content=None, auto_publish=False):
         raise ValueError('target must be home, inbox, or publish')
 
     monkeypatch.setattr('apps.api.main.launch_operator_session', fake_launch)

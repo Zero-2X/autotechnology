@@ -45,7 +45,8 @@ async def select_image_note(page) -> None:
         await asyncio.sleep(1)
 
 
-async def run(account_key: str, target: str, job_path: str | None, job_id: str | None = None) -> None:
+async def run(account_key: str, target: str, job_path: str | None, job_id: str | None = None,
+              auto_publish: bool = False) -> None:
     root = Path(__file__).resolve().parents[1]
     profile = root / ".local" / "browser-accounts" / account_key
     profile.mkdir(parents=True, exist_ok=True)
@@ -76,10 +77,13 @@ async def run(account_key: str, target: str, job_path: str | None, job_id: str |
                 result = await XiaohongshuDraftPreparer().prepare(
                     page=page, note=note, bound_account_key=account_key
                 )
+                if auto_publish:
+                    result.update(await XiaohongshuDraftPreparer().submit_publish(page=page))
                 Path(job_path).with_name("result.json").write_text(
                     json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
                 )
-                update_job(root, job_id, status="draft_prepared")
+                update_job(root, job_id, status=result.get("status", "draft_prepared"),
+                           publish_submitted=bool(auto_publish))
             except BrowserPreparationError as exc:
                 update_job(root, job_id, status="operator_action_required", error=str(exc))
                 Path(job_path).with_name("result.json").write_text(
@@ -110,11 +114,12 @@ def update_job(root: Path, job_id: str | None, **values: object) -> None:
     path.write_text(json.dumps(current, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
-async def run_with_status(account_key: str, target: str, job_path: str | None, job_id: str | None) -> None:
+async def run_with_status(account_key: str, target: str, job_path: str | None, job_id: str | None,
+                          auto_publish: bool = False) -> None:
     root = Path(__file__).resolve().parents[1]
     update_job(root, job_id, status="browser_starting")
     try:
-        await run(account_key, target, job_path, job_id)
+        await run(account_key, target, job_path, job_id, auto_publish)
         update_job(root, job_id, status="browser_closed")
     except Exception as exc:
         update_job(root, job_id, status="failed", error=f"{type(exc).__name__}: {exc}")
@@ -127,5 +132,6 @@ if __name__ == "__main__":
     parser.add_argument("--target", choices=tuple(URLS), required=True)
     parser.add_argument("--job")
     parser.add_argument("--job-id")
+    parser.add_argument("--auto-publish", action="store_true")
     args = parser.parse_args()
-    asyncio.run(run_with_status(args.account_key, args.target, args.job, args.job_id))
+    asyncio.run(run_with_status(args.account_key, args.target, args.job, args.job_id, args.auto_publish))

@@ -95,3 +95,32 @@ class XiaohongshuDraftPreparer:
                 'content_hash': fingerprint, 'platform_post_id': None,
                 'published': False, 'images_require_visual_check': True,
                 'account_identity_requires_visual_check': True}
+
+    async def submit_publish(self, *, page: Any) -> dict[str, Any]:
+        """Click the explicit platform publish button and leave result for recheck."""
+        url = urlsplit(page.url)
+        if url.hostname != 'creator.xiaohongshu.com' or url.scheme != 'https' or 'publish' not in url.path:
+            raise BrowserPreparationError('OPEN_CREATOR_PUBLISH_PAGE')
+        selectors = (
+            'button:has-text("发布")',
+            '.submit-button',
+            '.publish-btn',
+            '[class*="submit"] button',
+        )
+        clicked = False
+        for selector in selectors:
+            candidate = page.locator(selector)
+            if await candidate.count() != 1:
+                continue
+            if hasattr(candidate, 'is_visible') and not await candidate.is_visible():
+                continue
+            if hasattr(candidate, 'is_enabled') and not await candidate.is_enabled():
+                continue
+            await candidate.click()
+            clicked = True
+            break
+        if not clicked:
+            raise BrowserPreparationError('PUBLISH_BUTTON_AMBIGUOUS')
+        await asyncio.sleep(2)
+        return {'status': 'publish_submitted', 'platform_post_id': None,
+                'published': False, 'requires_requery': True}

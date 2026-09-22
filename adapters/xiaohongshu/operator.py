@@ -56,6 +56,7 @@ def launch_operator_session(
     *,
     target: str,
     content: dict[str, Any] | None = None,
+    auto_publish: bool = False,
     root: Path | None = None,
 ) -> dict[str, Any]:
     """Start a headed browser without returning credentials or waiting for it."""
@@ -63,6 +64,8 @@ def launch_operator_session(
     profile = session_dir(account_key, project_root / ".local" / "browser-accounts")
     if target not in TARGETS:
         raise ValueError("target must be home, inbox, or publish")
+    if auto_publish and target != "publish":
+        raise ValueError("auto_publish is only valid for publish target")
 
     existing_pid = _existing_profile_pid(profile)
     if existing_pid and target == "publish":
@@ -93,6 +96,8 @@ def launch_operator_session(
 
     command = [sys.executable, str(project_root / "scripts" / "open-xhs-session.py"),
                "--account-key", account_key, "--target", target, "--job-id", job_id]
+    if auto_publish:
+        command.append("--auto-publish")
     if job_path is not None:
         command.extend(["--job", str(job_path.resolve())])
     creation_flags = 0
@@ -116,6 +121,7 @@ def launch_operator_session(
         "pid": existing_pid or process.pid,
         "started_at": datetime.now(timezone.utc).isoformat(),
         "publishes_automatically": False,
+        "auto_publish_requested": bool(auto_publish),
         "reused_existing": bool(existing_pid),
     }
     launch_dir = project_root / ".local" / "xhs-launches"
