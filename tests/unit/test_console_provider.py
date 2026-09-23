@@ -20,13 +20,20 @@ def test_generate_structured_uses_configured_responses(monkeypatch):
     monkeypatch.setenv("MODEL_PROVIDER", "zpproxy")
     monkeypatch.setenv("OPENAI_API_KEY", "secret")
     monkeypatch.setenv("MODEL_ID", "test-model")
+    monkeypatch.delenv("MODEL_TIMEOUT_SECONDS", raising=False)
     transport = httpx.MockTransport(lambda request: httpx.Response(200, json={
         "status": "completed",
         "output": [{"type": "message", "content": [{"type": "output_text", "text": '{"reply":"好的","requires_human":false}'}]}],
         "usage": {"input_tokens": 3, "output_tokens": 2},
     }))
     original = console_provider.ResponsesProvider
-    monkeypatch.setattr(console_provider, "ResponsesProvider", lambda **kwargs: original(transport=transport, **kwargs))
+    captured = {}
+
+    def provider_factory(**kwargs):
+        captured.update(kwargs)
+        return original(transport=transport, **kwargs)
+
+    monkeypatch.setattr(console_provider, "ResponsesProvider", provider_factory)
     result = generate_structured(
         messages=[{"role": "user", "content": "测试"}],
         schema={"type": "object", "properties": {"reply": {"type": "string"}, "requires_human": {"type": "boolean"}}, "required": ["reply", "requires_human"]},
@@ -34,3 +41,4 @@ def test_generate_structured_uses_configured_responses(monkeypatch):
     )
     assert result["reply"] == "好的"
     assert result["model_used"] is True
+    assert captured["timeout"] == 60

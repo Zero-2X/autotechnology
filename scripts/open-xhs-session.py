@@ -154,6 +154,7 @@ async def handle_inbox(page, root: Path, account_key: str, job_path: str | None,
             result = await XiaohongshuInboxOperator().reply(
                 page=page, external_id=str(inbox_job["message_id"]),
                 text=str(inbox_job["reply"]), send=bool(inbox_job.get("send", False)),
+                risk=str(inbox_job.get("risk", "unknown")),
             )
             Path(job_path).with_name("result.json").write_text(
                 json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"

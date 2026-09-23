@@ -144,8 +144,8 @@ async function pollXhsSession(){const accounts=state.accounts.filter(a=>a.platfo
            if(job.status==='publish_submitted'){toast('已提交小红书发布，请检查平台回执后登记结果');return}
             if(job.status==='inbox_ready'){toast('已进入小红书消息/互动页，可以继续处理客服');return}
             if(job.status==='inbox_scanned'){const messages=Array.isArray(job.messages)?job.messages:[];let added=0;for(const item of messages){if(!item?.text||state.inbox.some(t=>t.external_id&&t.external_id===item.external_id))continue;state.inbox.unshift({id:`THR-${Date.now()}-${added}`,external_id:item.external_id,account:accountKey,name:'小红书用户',channel:'消息',risk:'low',intent:'question',time:'刚刚',message:item.text,reply:'',status:'open'});added++}if(added){currentThread=state.inbox[0].id;save();renderInbox()}toast(messages.length?`已扫描 ${messages.length} 条消息${added?`，导入 ${added} 条`:''}`:'消息页暂未找到可导入内容');return}
-            if(job.status==='reply_ready'){toast('回复已填入小红书，请检查后发送');return}
-            if(job.status==='reply_submitted'){toast('已点击小红书发送，请回查消息确认发送成功');return}
+            if(job.status==='reply_ready'){const thread=state.inbox.find(item=>String(item.external_id||item.externalId||'')===String(content?.message_id||''));if(thread){thread.reply=String(content.reply||'');thread.status='reply_ready';save();renderInbox()}toast('回复已填入小红书，请检查后发送');return}
+            if(job.status==='reply_submitted'){const thread=state.inbox.find(item=>String(item.external_id||item.externalId||'')===String(content?.message_id||''));if(thread){thread.reply=String(content.reply||'');thread.status='sent_unverified';thread.repliedAt='等待平台核实';save();renderInbox()}toast('已点击小红书发送；请回到消息页核实后再标记完成');return}
             if(job.status==='browser_running'&&target!=='publish'){const accountState=state.accounts.find(item=>item.id===accountKey);if(accountState?.status==='login_required'){toast('小红书窗口已打开但登录已失效，请切换到该窗口重新扫码或登录');return}toast(target==='inbox'?(job.reused_existing?'小红书窗口已经打开，请切换到消息页处理客服':'小红书客服窗口已打开，请在创作者中心进入消息页'):job.reused_existing?'小红书窗口已经打开，请切换到该窗口操作':'小红书账号窗口已打开');return}
            if(job.status==='browser_closed'){toast('小红书窗口已关闭，未确认发布结果');return}
          }}
@@ -217,11 +217,40 @@ async function pollXhsSession(){const accounts=state.accounts.filter(a=>a.platfo
     async function check(){const base=(document.querySelector('#apiBase')?.value||'http://127.0.0.1:8000').replace(/\/$/,'');modelButton.disabled=true;modelButton.textContent='正在请求模型…';modelStatus.value='正在进行真实连通性检查…';try{const r=await fetch(`${base}/internal/model/test`,{method:'POST'});const d=(await r.json()).data||{};if(!r.ok)throw new Error('API 请求失败');if(d.status==='connected'){modelStatus.value=`连接成功 · ${d.provider} · ${d.model} · ${(d.elapsed_ms/1000).toFixed(1)} 秒`;toast('模型连接正常')}else if(d.status==='not_configured'){modelStatus.value='未配置模型服务';toast('缺少模型服务配置')}else{modelStatus.value=`连接失败 · ${d.error_code||'未知错误'}`;toast(`模型请求失败：${d.error_code||'未知错误'}`)}}catch{modelStatus.value='连接失败 · 无法访问模型检测接口';toast('模型检测失败，请检查 API 和服务日志')}finally{modelButton.disabled=false;modelButton.textContent='重新测试模型连接'}}
     modelButton.addEventListener('click',check);await loadConfig();
     ['#newContentBtn','#quickContent','#generateTop'].forEach(sel=>document.querySelector(sel)?.addEventListener('click',()=>setTimeout(()=>{const notice=document.querySelector('#modalBody .notice');if(notice)notice.textContent='模型服务已配置时会优先调用模型；如果暂时不可用，后台会自动使用本地模板生成。生成后可以编辑、审核，并进入小红书发布流程。'},0)));
-    const composeActions=document.querySelector('.conversation-compose .row-actions');
-    if(composeActions&&!document.querySelector('#sendReplyBrowserBtn')){
-      const sendButton=document.createElement('button');sendButton.className='primary-btn';sendButton.id='sendReplyBrowserBtn';sendButton.textContent='打开并发送到小红书';composeActions.appendChild(sendButton);
-      sendButton.addEventListener('click',()=>{const thread=state.inbox.find(x=>x.id===currentThread);const reply=document.querySelector('#replyText')?.value.trim();const externalId=thread?.external_id||thread?.externalId;if(!thread||!reply)return toast('请先选择会话并保存回复');if(!externalId)return toast('这条消息没有平台会话标识，请先在小红书消息页打开并导入');const account=state.accounts.find(a=>a.id===thread.account)||state.accounts.find(a=>a.platform==='小红书');if(!account)return toast('没有可用的小红书账号');openXhsBrowser('inbox',{message_id:externalId,reply,send:true},account.id,false)});
-    }
+     labels.reply_ready='待发送';labels.sent_unverified='待核实';
+     const composeActions=document.querySelector('.conversation-compose .row-actions');
+     if(composeActions&&!document.querySelector('#sendReplyBrowserBtn')){
+       const sendButton=document.createElement('button');sendButton.className='primary-btn';sendButton.id='sendReplyBrowserBtn';sendButton.textContent='打开并发送到小红书';composeActions.appendChild(sendButton);
+       function syncReplySendButton(){
+         const thread=state.inbox.find(x=>x.id===currentThread);
+         const externalId=thread?.external_id||thread?.externalId;
+         const blocked=!thread||thread.risk!=='low'||!externalId||['done','escalated','sent_unverified'].includes(thread.status);
+         sendButton.disabled=blocked;
+         sendButton.textContent=thread?.status==='sent_unverified'?'等待核实平台结果':thread?.risk==='low'?'打开并发送到小红书':'仅低风险回复可自动发送';
+         const bubbleStatus=document.querySelector('#conversationBody .bubble.out small');
+         if(bubbleStatus&&thread){bubbleStatus.textContent=thread.status==='done'?'已确认发送':thread.status==='sent_unverified'?'已点击发送 · 待平台核实':thread.status==='reply_ready'?'已填入小红书 · 待发送':'回复草稿 · 尚未发送'}
+       }
+       window.syncXhsReplySendButton=syncReplySendButton;
+       const originalRenderInbox=window.renderInbox;
+       if(typeof originalRenderInbox==='function')window.renderInbox=function(){originalRenderInbox();syncReplySendButton()};
+       sendButton.addEventListener('click',async()=>{
+         const thread=state.inbox.find(x=>x.id===currentThread);const reply=document.querySelector('#replyText')?.value.trim();const externalId=thread?.external_id||thread?.externalId;
+         if(!thread||!reply)return toast('请先选择会话并填写回复');
+         if(thread.risk!=='low')return toast('只有低风险消息可从后台发送；中高风险请人工处理');
+         if(!externalId)return toast('这条消息没有稳定的平台会话标识，请在小红书消息页核对后人工回复');
+         const account=state.accounts.find(a=>a.id===thread.account);
+         if(!account||account.platform!=='小红书')return toast('这条消息没有绑定小红书账号');
+         thread.reply=reply;save();renderInbox();sendButton.disabled=true;
+         try{await openXhsBrowser('inbox',{message_id:externalId,reply,risk:thread.risk,send:true},account.id,false)}
+         finally{syncReplySendButton()}
+       });
+       document.addEventListener('click',event=>{
+         if(!event.target.closest('#sendReplyBrowserBtn'))return;
+         const thread=state.inbox.find(x=>x.id===currentThread);
+         if(thread&&thread.risk!=='low'){event.preventDefault();event.stopImmediatePropagation();toast('只有低风险消息可从后台发送；中高风险请人工处理')}
+       },true);
+       syncReplySendButton();
+     }
   })();
 </script>
 <script>

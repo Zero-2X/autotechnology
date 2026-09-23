@@ -79,7 +79,7 @@
       <div class="verdict-main">
         <span class="tag blue">目前可交付</span>
         <strong>“AI 生成 + 质量治理 + 人工审批 + 人工导出发布”闭环</strong>
-        <p>系统已经能组织选题、内容生成、来源与版权检查、质量检查、审批、版本、审计和导出，并能用真实 LangGraph 编排这些步骤。文本模型已接入 zpproxy Responses，内容草稿和低风险客服回复均完成真实请求验证，后台现在可以实际检测连接；Seedance 视频生成尚未接入。小红书已接入本机独立浏览器工作流，本轮修复了连接误报、发稿任务排队和草稿状态回传；只读检查进入消息区时被平台要求重新登录，账号持有人完成扫码前，真实客服和发布流程不能继续验收。</p>
+        <p>系统已经能组织选题、内容生成、来源与版权检查、质量检查、审批、版本、审计和导出，并能用真实 LangGraph 编排这些步骤。文本模型已接入 zpproxy Responses；重启后连通检测成功，内容草稿与低风险客服草稿均完成真实请求验证，单次生成通常需 45–50 秒，后台会标出是否实际使用模型；Seedance 视频生成尚未接入。小红书已接入本机独立浏览器工作流，本轮修复了连接误报、发稿任务排队和草稿状态回传；只读检查进入消息区时被平台要求重新登录，账号持有人完成扫码前，真实客服和发布流程不能继续验收。</p>
       </div>
       <div class="verdict-side">
         <span class="tag red">尚未开放</span>
@@ -148,7 +148,7 @@
   <section id="quality">
     <div class="section-head"><div><h2>为什么可以认为主体研发质量可靠</h2><p class="lead">项目不是靠演示页面判断完成，而是通过机器注册表、契约和可重复测试验证。</p></div><span class="tag amber"><i class="dot"></i>工作流门禁通过</span></div>
     <div class="checklist">
-      <div class="check"><b>✓</b><span><strong>小红书专项检查 27 项通过</strong><br>覆盖草稿与客服排队、旧运行器拦截、未保存编辑保护、消息区登录重定向识别和会话状态自动恢复。真实页面检查发现消息区要求重新登录；本轮未发布内容、未读取或发送客服消息。</span></div>
+      <div class="check"><b>✓</b><span><strong>小红书专项检查 32 项通过</strong><br>覆盖草稿与客服排队、旧运行器拦截、未保存编辑保护、消息区登录重定向识别、会话状态恢复，以及客服只允许低风险且有稳定消息 ID 的主动发送。发送后仍需回查平台；真实页面检查发现消息区要求重新登录，本轮未发布内容、未读取或发送真实客服消息。</span></div>
       <div class="check"><b>✓</b><span><strong>架构检查通过</strong><br>领域逻辑不直接依赖平台 SDK。</span></div>
       <div class="check"><b>✓</b><span><strong>密钥扫描通过</strong><br>仓库未发现生产凭据。</span></div>
       <div class="check"><b>✓</b><span><strong>数据库迁移有效</strong><br>125 个 revision，迁移图只有一个合法 head。</span></div>

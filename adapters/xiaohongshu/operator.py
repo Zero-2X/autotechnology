@@ -118,14 +118,13 @@ def launch_operator_session(
     if target in {"publish", "inbox"} and content:
         payload = content or {}
         queue_dir = project_root / ".local" / "xhs-jobs" / job_id
-        queue_dir.mkdir(parents=True, exist_ok=True)
-        job_path = queue_dir / "job.json"
         if target == "publish":
             title = str(payload.get("title", "")).strip()
             body = str(payload.get("body", "")).strip()
             hashtags = tuple(str(item).strip() for item in payload.get("hashtags", []) if str(item).strip())
             if not title or not body:
                 raise ValueError("publish preview requires title and body")
+            queue_dir.mkdir(parents=True, exist_ok=True)
             cover_path = generate_cover_png(DemoContent(title, body, hashtags), queue_dir / "cover.png")
             payload = {"job_id": job_id, "account_key": account_key, "title": title,
                        "body": body, "hashtags": list(hashtags), "cover_path": str(cover_path.resolve())}
@@ -134,8 +133,16 @@ def launch_operator_session(
             reply = str(payload.get("reply", "")).strip()
             if bool(message_id) != bool(reply):
                 raise ValueError("inbox reply requires message_id and reply together")
+            risk = str(payload.get("risk", "unknown")).strip()
+            send_requested = payload.get("send", False)
+            if not isinstance(send_requested, bool):
+                raise ValueError("inbox reply send flag must be a boolean")
+            if send_requested and risk != "low":
+                raise ValueError("only low-risk inbox replies may be sent through the browser")
             payload = {"job_id": job_id, "account_key": account_key, "message_id": message_id,
-                       "reply": reply, "send": bool(payload.get("send", False))}
+                       "reply": reply, "risk": risk, "send": send_requested}
+            queue_dir.mkdir(parents=True, exist_ok=True)
+        job_path = queue_dir / "job.json"
         job_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
     command = [sys.executable, str(project_root / "scripts" / "open-xhs-session.py"),

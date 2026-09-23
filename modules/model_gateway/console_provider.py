@@ -39,7 +39,9 @@ def generate_structured(*, messages: list[Mapping[str, str]], schema: dict[str, 
     provider = ResponsesProvider(
         base_url=config["base_url"],
         api_key=os.environ["OPENAI_API_KEY"],
-        timeout=float(os.getenv("MODEL_TIMEOUT_SECONDS", "20")),
+        # Real generation requests through the configured proxy can take close
+        # to a minute even when the short connectivity probe is fast.
+        timeout=float(os.getenv("MODEL_TIMEOUT_SECONDS", "60")),
     )
     result = provider(messages=messages, model=config["model"], response_schema=schema)
     output = result.get("output")

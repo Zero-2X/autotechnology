@@ -65,15 +65,19 @@ class XiaohongshuInboxOperator:
             if not text:
                 continue
             external_id = await row.get_attribute("data-id") if hasattr(row, "get_attribute") else None
-            messages.append({"external_id": external_id or f"row-{index}", "text": text})
+            # A synthetic row index is not a stable platform identifier and must
+            # never be used later to address a reply action.
+            messages.append({"external_id": external_id, "text": text})
         return {"status": "inbox_scanned", "messages": messages,
                 "requires_operator": False}
 
     async def reply(self, *, page: Any, external_id: str, text: str,
-                    send: bool = False) -> dict[str, Any]:
+                    send: bool = False, risk: str = "unknown") -> dict[str, Any]:
         self._validate_page(page)
         if not external_id.strip() or not text.strip():
             raise ValueError("external_id and text are required")
+        if send and risk != "low":
+            raise InboxAutomationError("LOW_RISK_REQUIRED_FOR_SEND")
         if not re.fullmatch(r"[A-Za-z0-9._:-]{1,200}", external_id):
             raise ValueError("external_id contains unsupported characters")
         row = page.locator(f'[data-id="{external_id}"]')

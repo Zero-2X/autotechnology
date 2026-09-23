@@ -40,9 +40,37 @@ def test_busy_profile_queues_reply_command(monkeypatch, tmp_path):
     monkeypatch.setattr(operator, "_session_runner_is_current", lambda pid, script_path: True)
     result = operator.launch_operator_session(
         "account-1", target="inbox",
-        content={"message_id": "msg-1", "reply": "回复", "send": True}, root=tmp_path,
+        content={"message_id": "msg-1", "reply": "回复", "risk": "low", "send": True}, root=tmp_path,
     )
     assert result["status"] == "command_queued"
+
+
+def test_high_risk_reply_is_rejected_before_browser_work(monkeypatch, tmp_path):
+    monkeypatch.setattr(operator, "_existing_profile_pid", lambda profile: None)
+    spawn = Mock()
+    monkeypatch.setattr(operator.subprocess, "Popen", spawn)
+    with pytest.raises(ValueError, match="only low-risk"):
+        operator.launch_operator_session(
+            "account-1", target="inbox",
+            content={"message_id": "msg-1", "reply": "转人工", "risk": "high", "send": True},
+            root=tmp_path,
+        )
+    spawn.assert_not_called()
+    assert not (tmp_path / ".local" / "xhs-jobs").exists()
+
+
+def test_reply_send_flag_requires_json_boolean(monkeypatch, tmp_path):
+    monkeypatch.setattr(operator, "_existing_profile_pid", lambda profile: None)
+    spawn = Mock()
+    monkeypatch.setattr(operator.subprocess, "Popen", spawn)
+    with pytest.raises(ValueError, match="must be a boolean"):
+        operator.launch_operator_session(
+            "account-1", target="inbox",
+            content={"message_id": "msg-1", "reply": "回复", "risk": "low", "send": "false"},
+            root=tmp_path,
+        )
+    spawn.assert_not_called()
+    assert not (tmp_path / ".local" / "xhs-jobs").exists()
 
 
 def test_existing_window_returns_reuse_status(monkeypatch, tmp_path):
