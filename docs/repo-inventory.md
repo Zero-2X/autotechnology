@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-23T12:48:55+00:00`
-- Source fingerprint: `sha256:fed9057da5934b5ddeb90355d30e739910b04c250f749f08c97ee8bf2678c230`
+- Generated at (UTC): `2026-09-23T13:35:28+00:00`
+- Source fingerprint: `sha256:401ed60eebc398380121ae7fd12ced0f8033b318ad1ca3c9eb1ffe0b8bf9643b`
 - Repository root: `D:/akagent`
 - Scanned files: `1646`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `0e46bcc814b91dedcd1fdc59ef256315446de2fc`
+- HEAD: `6831e2d20b3482cb895794f1064253024955d7af`
 
 ## Top-level directories
 
@@ -810,7 +810,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `apps/web-console/package.json` | 167 | `sha256:9b5d3d2153ac4164c691902f80b75a3911a4be54f82b3579b9f6f39e078f3066` |
 | `apps/web-console/pnpm-lock.yaml` | 114 | `sha256:17c814b167307942d3609c7b9d916ceddb85839573ab39baa114e30edb132a1a` |
 | `apps/web-console/scripts/build.mjs` | 851 | `sha256:eae2a2b621e5162dde56ffc02b716fc21c71146456cb69cf7bfdd23727030609` |
-| `apps/web-console/src/index.html` | 91814 | `sha256:f1d1677f149f96ad12acf9bcd10fa4a63ce41e9d58cdd9e5ab374ea01469d74c` |
+| `apps/web-console/src/index.html` | 93569 | `sha256:2ef22d9b7441f9ea585ce9811bbdf68a689b226f60509107807ec22e67d656c7` |
 | `apps/worker/README.md` | 843 | `sha256:585eb3815e3271923e72d2c66325ce36be5af3c66135774cb734008315742021` |
 | `apps/worker/__init__.py` | 31 | `sha256:53da4abf7d557e2589aa76efd85c921469f44127a4035ec9f6c2f6361484ee76` |
 | `apps/worker/__main__.py` | 81 | `sha256:954eaddc192523ee47f44769ae571e58baf451c0e67d752edd3874b6393600d0` |
@@ -2197,7 +2197,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `tests/integration/test_analytics_004_migration.py` | 1887 | `sha256:c2e57b4cb15180a535ab1ba909417987f26fb96e1c34e3307fe5a9863277c672` |
 | `tests/integration/test_audit_persistence.py` | 2334 | `sha256:e452ff075aff2a31f72ef1b495eadc468d3b13ab85b9fcbeb1d39f4f5ffb29db` |
 | `tests/integration/test_canonical_content_api.py` | 2537 | `sha256:749b7dcac7b61ce853324f1820e761dd128bef8ececd77e8d06d12b7bed774c7` |
-| `tests/integration/test_console_startup.py` | 2514 | `sha256:887d8e3dc233323c8ee65db860e45146fb714c8de4d3bc259a8e85ee82788916` |
+| `tests/integration/test_console_startup.py` | 3017 | `sha256:6b752ed627089d05c0a6ca09e5643f355109b1b9e198c57ef64be91da880743b` |
 | `tests/integration/test_deletion_persistence.py` | 1743 | `sha256:03051ff7f73c0ce051db5aa42992a7db9787f890445bdc86917883398edd3b65` |
 | `tests/integration/test_dist_010_fake_workflow.py` | 3873 | `sha256:c2f9a2c888d72461adca1c54ef5cf9f38a33abc9d91739350187b6475d1e18b3` |
 | `tests/integration/test_dist_011_webhook_ingress.py` | 2546 | `sha256:a104f88f335d27cb6ce374538aa4f0665e711f73cd8563991860b1b50816e8dc` |
