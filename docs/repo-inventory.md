@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-23T16:52:12+00:00`
-- Source fingerprint: `sha256:4186394a5b58b9baa9fc5368c699edff682d60df65527b7cf6c202c32cfd81f2`
+- Generated at (UTC): `2026-09-23T17:10:47+00:00`
+- Source fingerprint: `sha256:2eb9e6e350add5beb79b337649f3df53a61c6c3ba250ceccde0645e3679f5600`
 - Repository root: `D:/akagent`
 - Scanned files: `1653`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `4c3cc0a320eeb06af47a6367222d23fa6b426cc3`
+- HEAD: `0f535af852a7c890016be87c9c3528ff9c7d6279`
 
 ## Top-level directories
 
@@ -592,18 +592,12 @@ Recommended repository gate: `python -m pytest tests --maxfail=1 -q`
 
 ## Uncommitted changes
 
-- ` M "docs/\347\234\237\345\256\236\350\264\246\345\217\267\350\207\252\345\212\250\345\214\226\350\277\220\350\220\245\346\223\215\344\275\234\346\211\213\345\206\214.md"`
 - ` M "docs/\347\275\221\351\241\265\347\256\241\347\220\206\345\220\216\345\217\260\346\265\213\350\257\225\350\257\264\346\230\216.md"`
+- ` M "docs/\350\277\220\350\220\245\350\247\204\345\210\231\344\270\216\350\267\250\345\271\263\345\217\260\344\275\216\351\243\216\351\231\251\346\223\215\344\275\234.md"`
 - ` M README.md`
-- ` M apps/api/main.py`
 - ` M apps/web-console/src/index.html`
-- ` M modules/distribution/account/service.py`
-- `?? "docs/\350\277\220\350\220\245\350\247\204\345\210\231\344\270\216\350\267\250\345\271\263\345\217\260\344\275\216\351\243\216\351\231\251\346\223\215\344\275\234.md"`
-- `?? modules/operations/__init__.py`
-- `?? modules/operations/policy.py`
-- `?? tests/integration/test_account_management_api.py`
-- `?? tests/integration/test_operations_policy_api.py`
-- `?? tests/unit/operations/test_policy.py`
+- ` M modules/operations/policy.py`
+- ` M tests/unit/operations/test_policy.py`
 
 ## Repository classification
 
@@ -791,7 +785,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `AI跨境技术内容自动化工作流开发清单_审计与优化版.md` | 178643 | `sha256:779643afe11e18fc62beae09576f2df517675349a02b78129ec42aecfdf7ed87` |
 | `CODEOWNERS` | 514 | `sha256:152da1963e31d07517b9c4cafaa9b8b497111d7c9df309345a96f9c63e7c0052` |
 | `CONTRIBUTING.md` | 2036 | `sha256:0621ce2d1d50a30c19d34d3ebf62b763ca80abe0dcaf4d348998b98d8a265469` |
-| `README.md` | 4447 | `sha256:9b2f681146cdd52e3b542559d820ddb920799ec9ca14feac85bf8b8fda3af752` |
+| `README.md` | 4507 | `sha256:a637cf8b19dc8d0d95fe5a7ac6c9ba376323fc0d9c82839a7752b61fc5c314c6` |
 | `adapters/contract/README.md` | 275 | `sha256:4ff153566dfec036aa7e80ee022c5c4ac7e0581b30cb93bffadf877940a3d27c` |
 | `adapters/fake/README.md` | 283 | `sha256:ba31e050c12680d184143138f37e6095db03bef747afb09483d946f3e39c5ab3` |
 | `adapters/fake/__init__.py` | 181 | `sha256:700998fe8f70d81fee803803aac25cd0b3b325b390f237056325331fd826364c` |
@@ -828,7 +822,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `apps/web-console/package.json` | 167 | `sha256:9b5d3d2153ac4164c691902f80b75a3911a4be54f82b3579b9f6f39e078f3066` |
 | `apps/web-console/pnpm-lock.yaml` | 114 | `sha256:17c814b167307942d3609c7b9d916ceddb85839573ab39baa114e30edb132a1a` |
 | `apps/web-console/scripts/build.mjs` | 851 | `sha256:eae2a2b621e5162dde56ffc02b716fc21c71146456cb69cf7bfdd23727030609` |
-| `apps/web-console/src/index.html` | 142184 | `sha256:0e9e5014e71a8227e20bef6c4dd5f0ce28b760325e9bdfa7c21253cceafdcc2a` |
+| `apps/web-console/src/index.html` | 142295 | `sha256:370cf4ab50ddeb01047460624bb03f38af5ef4fc685ba059eacc5dff7567022e` |
 | `apps/worker/README.md` | 843 | `sha256:585eb3815e3271923e72d2c66325ce36be5af3c66135774cb734008315742021` |
 | `apps/worker/__init__.py` | 31 | `sha256:53da4abf7d557e2589aa76efd85c921469f44127a4035ec9f6c2f6361484ee76` |
 | `apps/worker/__main__.py` | 81 | `sha256:954eaddc192523ee47f44769ae571e58baf451c0e67d752edd3874b6393600d0` |
@@ -1245,8 +1239,8 @@ Formal runtime source was detected under apps/modules/services/src:
 | `docs/客服回复策略方案.md` | 4615 | `sha256:b278464a077a3f95186547769672c0bfb53413c1f4c95b49148af06eabb3ace7` |
 | `docs/平台发布接口调研与小红书迁移方案.md` | 10417 | `sha256:46af7f0106d2e98a4676937cbd49d204e6772b8dc5e6b324922a9c8194ad0977` |
 | `docs/真实账号自动化运营操作手册.md` | 15897 | `sha256:8b2d4b5bd041f79184ca50e4d613cb2e31c954748d31b44ab7815f29f879b93b` |
-| `docs/网页管理后台测试说明.md` | 10894 | `sha256:833f06cb99e5c9582f96bb54426c94dc885a1d9ef26e1a020dcc183f650a87b6` |
-| `docs/运营规则与跨平台低风险操作.md` | 3592 | `sha256:f32087f2010bf665dbd8abd820c4c7e0b25bd1052ebf580ab619e6c06613806a` |
+| `docs/网页管理后台测试说明.md` | 10963 | `sha256:4a6dff7bd88d8329390a63ecd2061ba5a770ed17735942fdfcc42420e35828dd` |
+| `docs/运营规则与跨平台低风险操作.md` | 3776 | `sha256:d874f8b6931dc7f0604e9786a8895cc975eb774e8e3bae0496b47e43f4661f7c` |
 | `docs/项目开发进度汇报.html` | 24382 | `sha256:a1343ecf06b7f43f629f391bb62b6c40657226cb9578b53e95cb4ba2ba6fa85c` |
 | `infra/__init__.py` | 47 | `sha256:8517a486e9a61a8d1e10284f75abe76808de8d787a0422021f07ba28d935cc82` |
 | `infra/compose/README.md` | 434 | `sha256:1e161168885e43eef8aa36e0db56f7c3efeb1017f724da61d6ff2dd4889f20e7` |
@@ -1455,7 +1449,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `modules/model_gateway/projections/.gitkeep` | 1 | `sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b` |
 | `modules/model_gateway/service.py` | 17409 | `sha256:7f242d7c949105e0184e9603ce1c2c291b67428feaf320cbec4f2ecae09f5a3b` |
 | `modules/operations/__init__.py` | 234 | `sha256:6ae95dd8d6af4665cc0c65d1e1eebaa1f262c6b511ad6c8439220a806ced8ac6` |
-| `modules/operations/policy.py` | 12332 | `sha256:c081091ad8b6f6604ca2a2c2fc880cec8b1f0feb6719dc7e2dba231cdfb647f0` |
+| `modules/operations/policy.py` | 13101 | `sha256:caf494c2e4d74e6d6032bec53e36a620db559c44b4b61b0c94b48f0187d1fcdb` |
 | `modules/platforms/__init__.py` | 390 | `sha256:c8b60a2aac0138ce8832ad4405e96927e8c3f93b8600603e8eafe120aaf751e8` |
 | `modules/platforms/routing.py` | 7657 | `sha256:9def8a13de0cb44b1e6b1cacc7bbd866c32364a699f1f71f1fb90380689b3b52` |
 | `modules/policy/README.md` | 975 | `sha256:954bd9759bdc72358078bfaada95d1abc3ca7de4e4844eb865808379e01ee55a` |
@@ -2392,7 +2386,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `tests/unit/model_gateway/test_budget.py` | 7668 | `sha256:15d95f18f9eaaa2e96431cdd1388fb325397c2015d6ea2dda20e88d2579b7402` |
 | `tests/unit/model_gateway/test_gateway.py` | 1824 | `sha256:342241ba3e87acebc0eb333ee8d767dfc97fffd7291af75f8cf6e4cd9b6714c5` |
 | `tests/unit/model_gateway/test_service.py` | 1961 | `sha256:4bd2bfbb43e7e20b0a43645b207ada2d060214d673521b3bac19f04df9f697f7` |
-| `tests/unit/operations/test_policy.py` | 2079 | `sha256:1591679c8b38beb91aabdfa37aaddc0c8a625bbcedc09ad2003214fc35f352e1` |
+| `tests/unit/operations/test_policy.py` | 2509 | `sha256:902273e620bacee4b258484f87c71714f7ad495a51cd0330e84714d37cf1ff5b` |
 | `tests/unit/orchestration/test_content_graph.py` | 920 | `sha256:f84be70bde8f798bced4fc074f847a3a0128e31250adad9ed4bc3f8c1ab7cc4f` |
 | `tests/unit/orchestration/test_langgraph_adapter.py` | 858 | `sha256:4cd056ada9b9f2bda430421ad0e03f11564dcf7cd10e5873fd8f965b244102b8` |
 | `tests/unit/orchestration/test_ports_and_replay.py` | 2314 | `sha256:e2ec048b8a1b839b9687ae7bb9d8fdeb77fdab04a5c54c16e7821929b97641d8` |

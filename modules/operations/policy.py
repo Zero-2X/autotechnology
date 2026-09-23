@@ -35,6 +35,8 @@ def default_policy() -> dict[str, Any]:
         "emergency_stop_reason": "",
         "timezone": "Asia/Shanghai",
         "default_limits": {"daily_publish": 3, "weekly_publish": 15},
+        "allow_browser_submit": False,
+        "allow_browser_reply": False,
         "accounts": {},
         "updated_at": None,
     }
@@ -65,6 +67,10 @@ def _clean_policy(value: Mapping[str, Any]) -> dict[str, Any]:
         ZoneInfo(timezone_name.strip())
     except ZoneInfoNotFoundError as exc:
         raise OperationsPolicyError("INVALID_POLICY", "timezone must be a valid IANA timezone") from exc
+    allow_browser_submit = value.get("allow_browser_submit", False)
+    allow_browser_reply = value.get("allow_browser_reply", False)
+    if type(allow_browser_submit) is not bool or type(allow_browser_reply) is not bool:
+        raise OperationsPolicyError("INVALID_POLICY", "browser side-effect switches must be booleans")
     raw_limits = value.get("default_limits", {})
     if not isinstance(raw_limits, Mapping):
         raise OperationsPolicyError("INVALID_POLICY", "default_limits must be an object")
@@ -110,6 +116,8 @@ def _clean_policy(value: Mapping[str, Any]) -> dict[str, Any]:
         "emergency_stop_reason": reason.strip(),
         "timezone": timezone_name.strip(),
         "default_limits": limits,
+        "allow_browser_submit": allow_browser_submit,
+        "allow_browser_reply": allow_browser_reply,
         "accounts": accounts,
         "updated_at": value.get("updated_at"),
     }
@@ -187,6 +195,10 @@ class OperationsPolicyStore:
         reasons: list[str] = []
         if policy["emergency_stop"] and action in {"prepare_publish", "publish", "reply"}:
             reasons.append(policy["emergency_stop_reason"] or "运营人员已启用紧急停止")
+        if action == "publish" and not policy["allow_browser_submit"]:
+            reasons.append("网页自动点击发布未启用")
+        if action == "reply" and not policy["allow_browser_reply"]:
+            reasons.append("网页自动回复未启用")
         if not enabled:
             reasons.append("该账号已在运营规则中停用")
 

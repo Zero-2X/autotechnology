@@ -45,3 +45,10 @@ def test_emergency_stop_blocks_reply_and_invalid_policy_is_rejected(tmp_path):
     assert result["emergency_stop"] is True
     with pytest.raises(OperationsPolicyError):
         store.replace({"default_limits": {"daily_publish": 5, "weekly_publish": 2}})
+
+
+def test_browser_side_effects_are_disabled_even_when_stop_is_off(tmp_path):
+    store = OperationsPolicyStore(tmp_path / "operations-policy.json")
+    assert store.guard(action="publish", account_key="acct-1", now=NOW)["allowed"] is False
+    assert store.guard(action="reply", account_key="acct-1", now=NOW)["allowed"] is False
+    assert store.guard(action="prepare_publish", account_key="acct-1", now=NOW)["allowed"] is True
