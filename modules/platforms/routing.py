@@ -37,7 +37,13 @@ def resolve_delivery_route(*, profile: PlatformProfile, action: str,
     if browser_session_ready and action in profile.browser_actions:
         reason = "official API approval is required" if action not in profile.api_actions else "API capability is not enabled for this account"
         return DeliveryRoute(profile.platform, action, "browser_automation", reason)
-    return DeliveryRoute(profile.platform, action, "manual_export", "no approved API or logged-in browser capability")
+    if action not in profile.api_actions and action not in profile.browser_actions:
+        reason = "platform action has no registered adapter"
+    elif action in profile.api_actions and not api_authorized:
+        reason = "API capability is not approved for this account"
+    else:
+        reason = "no logged-in browser session is available"
+    return DeliveryRoute(profile.platform, action, "manual_export", reason)
 
 
 XHS_PROFILE = PlatformProfile(
@@ -48,16 +54,14 @@ XHS_PROFILE = PlatformProfile(
 
 
 def profile_for(platform: str) -> PlatformProfile:
-    """Return a conservative profile for the first supported platform set."""
+    """Return only explicitly registered platform capabilities.
+
+    An unknown platform must not inherit fictional API or browser support just
+    because the account claims to be authorized or logged in.
+    """
     if platform == "小红书":
         return XHS_PROFILE
-    # Other platforms can opt into API actions only after their account has an
-    # approved capability snapshot. Browser fallback remains explicit.
-    return PlatformProfile(
-        platform=platform,
-        api_actions=frozenset({"publish", "inbox", "comment_reply", "message_reply"}),
-        browser_actions=frozenset({"publish", "inbox", "comment_reply", "message_reply"}),
-    )
+    return PlatformProfile(platform=platform)
 
 
 __all__ = ["DeliveryRoute", "PlatformProfile", "XHS_PROFILE", "profile_for", "resolve_delivery_route"]

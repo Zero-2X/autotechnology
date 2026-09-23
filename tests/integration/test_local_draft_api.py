@@ -79,8 +79,9 @@ def test_platform_route_prefers_browser_for_xhs_without_api_scope():
     assert response.json()['data']['mode'] == 'browser_automation'
 
 
-def test_platform_route_uses_approved_api_when_explicitly_authorized():
+def test_platform_route_does_not_claim_unregistered_api_adapter():
     client = TestClient(create_app())
     response = client.get('/internal/platforms/YouTube/route?action=publish&api_authorized=true&browser_session_ready=true')
     assert response.status_code == 200
-    assert response.json()['data']['mode'] == 'authorized_api'
+    assert response.json()['data']['mode'] == 'manual_export'
+    assert response.json()['data']['reason'] == 'platform action has no registered adapter'
