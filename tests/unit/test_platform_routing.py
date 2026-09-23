@@ -1,10 +1,10 @@
 from modules.platforms.routing import XHS_PROFILE, profile_for, resolve_delivery_route
 
 
-def test_xhs_uses_browser_when_api_is_not_available():
+def test_xhs_stays_manual_even_when_browser_session_is_ready():
     route = resolve_delivery_route(profile=XHS_PROFILE, action="publish", browser_session_ready=True)
-    assert route.mode == "browser_automation"
-    assert "API" in route.reason
+    assert route.mode == "manual_export"
+    assert route.reason == "platform action has no registered adapter"
 
 
 def test_unregistered_platform_does_not_claim_api_support():

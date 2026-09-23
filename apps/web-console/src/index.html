@@ -215,7 +215,8 @@ async function pollXhsSession(){const accounts=state.accounts.filter(a=>a.platfo
       // The API may still be starting when the page opens. Keep checking so
       // a temporary startup race does not leave the dashboard in demo mode.
       setInterval(health,5000);
-      setInterval(pollXhsSession,5000);
+      // Read local session metadata only; never poll or scan the platform webpage.
+      setInterval(pollXhsSession,30000);
     });
   </script>
 <script>
@@ -231,7 +232,7 @@ async function pollXhsSession(){const accounts=state.accounts.filter(a=>a.platfo
     ['#newContentBtn','#quickContent','#generateTop'].forEach(sel=>document.querySelector(sel)?.addEventListener('click',()=>setTimeout(()=>{const notice=document.querySelector('#modalBody .notice');if(notice)notice.textContent='模型服务已配置时会优先调用模型；如果暂时不可用，后台会自动使用本地模板生成。生成后可以编辑、审核，并进入小红书发布流程。'},0)));
      labels.reply_ready='待发送';labels.sent_unverified='待核实';
      const composeActions=document.querySelector('.conversation-compose .row-actions');
-     if(composeActions&&!document.querySelector('#sendReplyBrowserBtn')){
+     if(false&&composeActions&&!document.querySelector('#sendReplyBrowserBtn')){
        const sendButton=document.createElement('button');sendButton.className='primary-btn';sendButton.id='sendReplyBrowserBtn';sendButton.textContent='打开并发送到小红书';composeActions.appendChild(sendButton);
        function syncReplySendButton(){
          const thread=state.inbox.find(x=>x.id===currentThread);
@@ -282,5 +283,238 @@ async function pollXhsSession(){const accounts=state.accounts.filter(a=>a.platfo
   if(contentGrid){new MutationObserver(ensureContentExportButtons).observe(contentGrid,{childList:true});ensureContentExportButtons()}
   document.addEventListener('click',e=>{const button=e.target.closest('[data-content-export]');if(!button)return;e.preventDefault();e.stopImmediatePropagation();exportContentPackage(button.dataset.contentExport)},true);
 </script>
+  <script>
+  (() => {
+    const PLATFORM_URLS = {
+      '小红书':'https://creator.xiaohongshu.com/', '抖音':'https://creator.douyin.com/',
+      'TikTok':'https://www.tiktok.com/creator-center/', 'YouTube':'https://studio.youtube.com/',
+      'Instagram':'https://business.facebook.com/latest/home', 'LinkedIn':'https://www.linkedin.com/',
+      '微博':'https://weibo.com/', 'Bilibili':'https://member.bilibili.com/', '微信公众号':'https://mp.weixin.qq.com/'
+    };
+    const PLATFORM_GUIDES = [
+      {name:'小红书',state:'当前：本机登录窗口 + 人工确认',detail:'当前开放平台首期主要开放基础资料权限；发笔记权限列为规划/敏感审核范围。普通创作者评论和私信未在当前接入中启用。',refs:[['权限说明','https://openaccount.xiaohongshu.com/docs/scope'],['API 参考','https://openaccount.xiaohongshu.com/docs/api-reference']]},
+      {name:'Instagram',state:'可申请官方接入，当前未连接',detail:'发布、评论管理和消息能力面向专业账号；需要 Meta 应用、相应权限与应用审核，个人普通账号不在该路径范围内。',refs:[['Meta 官方 API 文档','https://www.postman.com/meta/instagram/documentation/6yqw8pt/instagram-api']]},
+      {name:'YouTube',state:'可申请官方接入，当前未连接',detail:'官方 API 支持视频上传、读取评论和回复；需要 Google OAuth、配额管理。未通过审核的项目上传会被限制为私有。',refs:[['上传视频','https://developers.google.com/youtube/v3/docs/videos/insert'],['评论接口','https://developers.google.com/youtube/v3/docs/commentThreads']]},
+      {name:'TikTok',state:'可申请官方发布权限，当前未连接',detail:'Content Posting API 需要注册应用、获批 video.publish 并由账号授权；未审核应用发布内容仅自己可见。该发布文档不代表评论/私信已接通。',refs:[['接入条件','https://developers.tiktok.com/docs/en/content-posting-api-get-started'],['发布接口','https://developers.tiktok.com/docs/en/content-posting-api-reference-direct-post']]},
+      {name:'LinkedIn',state:'有官方帖子/评论接口，权限受限',detail:'组织帖子和评论需要对应组织权限与管理员角色；个人评论读取权限只向部分开发者开放。当前工作台尚未配置应用或账号授权。',refs:[['评论接口与权限','https://learn.microsoft.com/en-us/linkedin/marketing/community-management/shares/comments-api']]},
+      {name:'抖音、微博、Bilibili、微信等',state:'需要逐个平台核对官方条件',detail:'尚未在本工作台接入。不会以网页抓取或模拟点击冒充官方连接；取得可用权限后再配置对应官方接口，否则使用人工发布和消息导入。',refs:[]}
+    ];
+    const originalMigrate = migrate;
+    migrate = function(value) {
+      const next = originalMigrate(value);
+      next.inbox = (next.inbox || []).filter(item => !(['THR-001','THR-002','THR-003'].includes(item.id) && /^读者 [ABC]$/.test(item.name || '') && !item.external_id));
+      next.settings = {...next.settings, runMode:'manual_export', inboxAccountId:next.settings?.inboxAccountId || 'all'};
+      return next;
+    };
+    state = migrate(state);
+    currentThread = state.inbox[0]?.id || null;
+    labels.manual_export = '未接官方连接';
+    labels.connected = '本机登录会话已连接';
+    const originalPollXhsSession = pollXhsSession;
+    pollXhsSession = async function() {
+      await originalPollXhsSession();
+      const statusField=$('#xhsSettingsStatus');
+      if(statusField)statusField.value='仅本机创作者中心会话已连接；发布/客服 API 未授权';
+    };
+    function addKnownPlatformChoices() {
+      const list=$('#platformOptions'); if(!list)return;
+      ['小红书','抖音','TikTok','YouTube','Instagram','LinkedIn','微博','Bilibili','微信公众号','视频号'].forEach(name=>{
+        if([...list.options].some(option=>option.value===name||option.textContent===name))return;
+        const option=document.createElement('option');option.textContent=name;list.appendChild(option);
+      });
+    }
+    ['#openAccountTop','#addAccountBtn','#quickAccount'].forEach(selector=>$(selector)?.addEventListener('click',()=>setTimeout(addKnownPlatformChoices,0)));
+    const oldAccountSelect = $('#xhsInboxAccount');
+    if(oldAccountSelect) oldAccountSelect.id = 'inboxAccount';
+
+    function platformUrl(platform) { return PLATFORM_URLS[platform] || ''; }
+    function safeHttpUrl(value) {
+      try { const url = new URL(String(value || '')); return ['http:','https:'].includes(url.protocol) ? url.href : ''; } catch { return ''; }
+    }
+    function routeText(account) {
+      if(account.platform === '小红书') return account.status === 'connected' ? '本机登录可用 · 人工确认发布' : '可手动打开官方创作中心';
+      return account.status === 'demo' ? '模拟账号' : '未接入官方 API · 可人工发布';
+    }
+    renderAccounts = function() {
+      $('#accountGrid').innerHTML = state.accounts.map(account => {
+        const glyph = ({'小红书':'书','抖音':'抖',TikTok:'T',YouTube:'▶',Instagram:'◎',LinkedIn:'in',微博:'微',Bilibili:'B'})[account.platform] || '◎';
+        return `<article class="account-card"><div class="account-top"><div class="platform-badge"><div class="platform-icon ${account.status==='demo'?'demo':''}">${glyph}</div><div><h3>${esc(account.name)}</h3><div class="handle">${esc(account.platform)} · ${esc(account.handle)}</div></div></div>${status(account.status)}</div><div class="account-meta"><div class="meta-box"><span>负责人</span><b>${esc(account.owner)}</b></div><div class="meta-box"><span>语言</span><b>${esc(account.locale)}</b></div><div class="meta-box"><span>内容栏目</span><b>${esc(account.topics)}</b></div><div class="meta-box"><span>当前路径</span><b>${esc(routeText(account))}</b></div></div><div class="account-foot"><small>${esc(account.posts || '0')} · ${esc(account.health || '待配置')}</small><div class="row-actions"><button class="tiny-btn" data-account-open="${esc(account.id)}">打开平台</button><button class="tiny-btn" data-account-inbox="${esc(account.id)}">查看评论</button>${account.platform==='小红书'?`<button class="tiny-btn" data-xhs-diagnostics="${esc(account.id)}">连接诊断</button>`:''}<button class="tiny-btn" data-account-action="edit" data-id="${esc(account.id)}">编辑</button></div></div></article>`;
+      }).join('');
+    };
+    renderContent = function() {
+      const query = ($('#contentSearch')?.value || '').toLowerCase(), filter = $('#contentFilter')?.value || 'all';
+      const rows = state.contents.filter(item => (filter==='all'||item.status===filter) && (!query||`${item.title}${item.pillar}${item.account}`.toLowerCase().includes(query)));
+      $('#contentGrid').innerHTML = rows.length ? rows.map(item => {
+        const image = item.mediaData || item.coverData || '';
+        const buttons = `<button class="tiny-btn" data-content-media="${esc(item.id)}">${item.mediaData?'更换配图':'上传配图'}</button>${image?`<button class="tiny-btn" data-content-media-download="${esc(item.id)}">下载配图</button>`:''}<button class="tiny-btn" data-content-export="${esc(item.id)}">导出文案</button><button class="tiny-btn" data-content-action="${item.status==='review'?'approve':'edit'}" data-id="${esc(item.id)}">${item.status==='review'?'审批':'编辑'}</button>`;
+        return `<article class="content-card">${image?`<img src="${esc(image)}" alt="${esc(item.mediaName || '内容配图')}" style="width:100%;height:150px;object-fit:cover;border-radius:12px;margin-bottom:12px">`:''}<div class="content-meta"><span class="status ${item.status==='published'?'green':item.status==='review'?'amber':item.status==='ready'?'blue':'gray'}">${labels[item.status]||esc(item.status)}</span><small class="small-code">${esc(item.version||'v1')}</small></div><h3>${esc(item.title)}</h3><p>${esc(item.body)}</p><div class="content-foot"><small>${esc(item.account||'未指定账号')} · ${esc(item.updated||'')}</small></div><div class="row-actions" style="justify-content:flex-start;flex-wrap:wrap;margin-top:10px">${buttons}</div></article>`;
+      }).join('') : empty('没有匹配的内容');
+    };
+    renderPublish = function() {
+      const rows = state.contents.filter(item => ['ready','review','published'].includes(item.status));
+      $('#publishList').innerHTML = rows.length ? rows.map(item => {
+        const account = state.accounts.find(candidate => candidate.id===item.accountId || candidate.name===item.account);
+        const platform = account?.platform || '未指定平台';
+        const details = `${platform} · ${item.account||'未指定账号'} · ${item.id}`;
+        if(item.status==='published') return `<div class="task-row"><i class="task-priority low"></i><div class="task-main"><strong>${esc(item.title)}</strong><small>${esc(details)} · ${esc(item.publishedAt||item.updated||'')}</small></div><div class="task-side">${status(item.status)}${item.platformPostId?`<a class="tiny-btn" style="display:inline-block;margin-top:5px" href="${esc(safeHttpUrl(item.platformPostId)||'#')}" target="_blank" rel="noopener">打开发布记录</a>`:''}</div></div>`;
+        if(item.status==='review') return `<div class="task-row"><i class="task-priority med"></i><div class="task-main"><strong>${esc(item.title)}</strong><small>${esc(details)}</small></div><div class="task-side">${status(item.status)}<button class="tiny-btn" data-publish-id="${esc(item.id)}" style="margin-top:5px">去内容页审批</button></div></div>`;
+        return `<div class="task-row"><i class="task-priority low"></i><div class="task-main"><strong>${esc(item.title)}</strong><small>${esc(details)} · 发布前由你在官方平台确认</small></div><div class="task-side">${status(item.status)}<div class="row-actions" style="margin-top:5px"><button class="tiny-btn" data-content-export="${esc(item.id)}">导出内容包</button>${account?`<button class="tiny-btn" data-account-open="${esc(account.id)}">打开官方工作台</button>`:''}${item.mediaData||item.coverData?`<button class="tiny-btn" data-content-media-download="${esc(item.id)}">下载配图</button>`:''}<button class="tiny-btn" data-publish-record="${esc(item.id)}">登记发布结果</button></div></div></div>`;
+      }).join('') : empty('当前没有已审批的内容');
+    };
+    renderConversation = function() {
+      const thread = state.inbox.find(item => item.id===currentThread);
+      if(!thread) { $('#conversationTitle').textContent='选择一个会话'; $('#conversationMeta').textContent='真实评论或私信可从官方后台手动导入'; $('#conversationStatus').className='status gray'; $('#conversationStatus').textContent='未选择'; $('#conversationBody').innerHTML=empty('选择左侧会话开始处理'); $('#replyText').value=''; $('#draftReplyBtn').disabled=true; $('#markReplySentBtn').disabled=true; return; }
+      const account = state.accounts.find(item => item.id===thread.account), permalink = safeHttpUrl(thread.source_url);
+      $('#conversationTitle').textContent=thread.name||'平台用户';
+      $('#conversationMeta').textContent=`${account?.platform||thread.platform||'平台'} · ${account?.name||'未绑定账号'} · ${thread.channel||'评论'} · ${thread.intent||'未分类'} · ${riskLabel(thread.risk)}`;
+      $('#conversationStatus').outerHTML=`<span class="status ${thread.status==='escalated'?'red':thread.status==='done'?'green':'blue'}" id="conversationStatus">${labels[thread.status]||'待处理'}</span>`;
+      const origin = permalink ? `<p><a href="${esc(permalink)}" target="_blank" rel="noopener">打开这条评论/私信的来源页面</a></p>` : '';
+      const source = thread.source==='manual_import'?'人工导入':thread.source==='official_webhook'?'官方推送':'平台消息';
+      $('#conversationBody').innerHTML=`${origin}<div class="bubble in">${esc(thread.message)}<small>${esc(account?.platform||thread.platform||'平台')} ${esc(thread.channel||'评论')} · ${esc(thread.time||'')} · ${source}</small></div>${thread.reply?`<div class="bubble out">${esc(thread.reply)}<small>${thread.status==='done'?'已由你确认发送':'回复草稿 · 尚未发送'}</small></div>`:`<div class="empty" style="padding:20px 0">还没有回复草稿</div>`}`;
+      $('#replyText').value=thread.reply||''; $('#replyRiskSelect').value=thread.risk||'unknown';
+      $('#draftReplyBtn').disabled=thread.risk==='high'; $('#draftReplyBtn').textContent=thread.risk==='high'?'已转人工':'生成回复草稿';
+      $('#markReplySentBtn').disabled=!thread.reply||thread.risk==='high'||thread.status==='done';
+    };
+    renderInbox = function() {
+      const select=$('#inboxAccount');
+      if(select) {
+        const saved=state.settings.inboxAccountId||'all';
+        select.innerHTML=`<option value="all">全部账号 / 平台</option>${state.accounts.map(item=>`<option value="${esc(item.id)}">${esc(item.platform)} · ${esc(item.name)} (${esc(item.handle)})</option>`).join('')}`;
+        select.value=state.accounts.some(item=>item.id===saved)?saved:'all';
+        select.disabled=state.accounts.length===0;
+      }
+      const filter=select?.value||'all', rows=state.inbox.filter(item=>filter==='all'||item.account===filter);
+      if(!rows.some(item=>item.id===currentThread)) currentThread=rows[0]?.id||null;
+      $('#threadList').innerHTML=rows.length?rows.map(item=>{const account=state.accounts.find(a=>a.id===item.account);return `<button class="thread ${item.id===currentThread?'active':''}" data-thread-id="${esc(item.id)}"><div class="thread-top"><strong>${esc(item.name||'平台用户')}</strong><time>${esc(item.time||'')}</time></div><p>${esc(item.message)}</p><small>${esc(account?.platform||item.platform||'平台')} · ${esc(account?.name||'未绑定账号')} · ${esc(item.channel||'评论')}</small><div style="margin-top:7px">${status(item.status||'open')} <span class="status ${riskClass(item.risk)}" style="margin-left:4px">${riskLabel(item.risk)}</span></div></button>`}).join('') : empty('没有匹配的会话。可点击“导入评论/私信”，或等待正式的官方 API / 推送接入。');
+      renderConversation(); updateKpis();
+    };
+    openInboxImport = function() {
+      if(!state.accounts.length) { toast('请先登记一个平台账号'); showView('accounts'); return; }
+      const selected=state.settings.inboxAccountId||'all';
+      modalMode='cross-platform-inbox-import'; $('#modalTitle').textContent='导入评论或私信';
+      $('#modalBody').innerHTML=`<div class="notice">当前还没有跨平台实时收件箱授权。请从平台官方后台复制消息到这里；系统只保存你提供的内容并生成草稿，不扫描网页，也不会自动发送。</div><div class="field"><label>关联账号</label><select id="importAccount">${state.accounts.map(item=>`<option value="${esc(item.id)}" ${item.id===selected?'selected':''}>${esc(item.platform)} · ${esc(item.name)} (${esc(item.handle)})</option>`).join('')}</select></div><div class="field-row"><div class="field"><label>联系人</label><input id="importName" placeholder="可留空，例如：读者" /></div><div class="field"><label>类型</label><select id="importChannel"><option>评论</option><option>私信</option><option>提及</option></select></div></div><div class="field-row"><div class="field"><label>风险初判</label><select id="importRisk"><option value="unknown">待人工判断</option><option value="low">低风险</option><option value="medium">需关注</option><option value="high">高风险/投诉</option></select></div><div class="field"><label>问题类型</label><input id="importIntent" value="question" placeholder="咨询、售后、投诉、版权等" /></div></div><div class="field"><label>平台来源链接（可选）</label><input id="importSourceUrl" placeholder="https://..." /></div><div class="field"><label>平台消息/评论 ID（可选）</label><input id="importExternalId" placeholder="仅用于回查；不会触发自动回复" /></div><div class="field"><label>评论或私信原文</label><textarea id="importMessage" rows="5" placeholder="粘贴平台原文"></textarea></div>`;
+      $('#modalBackdrop').classList.add('open');
+    };
+    openPublishRecord = function(id) {
+      modalMode='cross-platform-publish-result'; window.__publishId=id;
+      $('#modalTitle').textContent='登记平台发布结果';
+      $('#modalBody').innerHTML='<div class="notice">仅在你确认内容已通过平台官方页面成功发布后登记。打开工作台或导出内容包本身不代表发布成功。</div><div class="field"><label>平台内容链接或对象 ID（可选）</label><input id="publishObjectId" placeholder="粘贴已发布内容的链接或平台编号" /></div><div class="field"><label>备注</label><textarea id="publishNote" rows="4" placeholder="账号、时间或需要跟进的情况"></textarea></div>';
+      $('#modalBackdrop').classList.add('open');
+    };
+    exportContentPackage = function(id) {
+      const item=state.contents.find(row=>row.id===id); if(!item)return;
+      const account=state.accounts.find(row=>row.id===item.accountId||row.name===item.account);
+      const lines=[`# ${item.title||'内容草稿'}`,'',`- 平台：${account?.platform||'未指定'}`,`- 账号：${account?.name||item.account||'未指定'}`,`- 栏目：${item.pillar||'未分类'}`,`- 版本：${item.version||'v1'}`,`- 导出时间：${new Date().toISOString()}`,'',item.body||'', '',(item.hashtags||[]).join(' '),'',item.mediaData?`配图文件：${item.mediaName||'请从工作台单独下载配图'}`:'未附用户上传配图。'];
+      const blob=new Blob([lines.join('\n')],{type:'text/markdown;charset=utf-8'}),link=document.createElement('a');
+      link.href=URL.createObjectURL(blob); link.download=`${item.id}-${(item.title||'content').replace(/[\\/:*?"<>|]/g,'_').slice(0,40)}.md`; link.click(); setTimeout(()=>URL.revokeObjectURL(link.href),1000);
+      toast(item.mediaData?'文案已导出；请同时点击“下载配图”':'发布文案包已导出');
+    };
+    function openAccountPlatform(account) {
+      if(!account)return toast('请先选择平台账号');
+      if(account.platform==='小红书') { openXhsBrowser('home',null,account.id,false); return; }
+      const url=platformUrl(account.platform); if(!url)return toast('请从该平台的官方应用或官方网站操作');
+      window.open(url,'_blank','noopener,noreferrer'); toast('已打开平台官方工作台；登录和发布由你在平台页面完成');
+    }
+    function downloadContentImage(id) {
+      const item=state.contents.find(row=>row.id===id),src=item?.mediaData||item?.coverData; if(!src)return toast('这条内容没有配图');
+      const image=new Image(); image.onload=()=>{const canvas=document.createElement('canvas');canvas.width=image.naturalWidth;canvas.height=image.naturalHeight;canvas.getContext('2d').drawImage(image,0,0);canvas.toBlob(blob=>{if(!blob)return toast('配图无法转换');const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=`${item.id}-${(item.mediaName||'配图').replace(/[\\/:*?"<>|]/g,'_').slice(0,40)}.png`;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);},'image/png');}; image.onerror=()=>toast('配图无法读取'); image.src=src;
+    }
+    const mediaPicker=document.createElement('input'); mediaPicker.type='file'; mediaPicker.accept='image/*'; mediaPicker.hidden=true; document.body.appendChild(mediaPicker);
+    async function compressImage(file) {
+      if(!file||!file.type.startsWith('image/'))throw new Error('请选择图片文件');
+      if(file.size>12*1024*1024)throw new Error('原图超过 12 MB');
+      const loaded=await new Promise((resolve,reject)=>{const image=new Image(),url=URL.createObjectURL(file);image.onload=()=>{URL.revokeObjectURL(url);resolve(image)};image.onerror=()=>{URL.revokeObjectURL(url);reject(new Error('图片读取失败'))};image.src=url;});
+      const scale=Math.min(1,1600/Math.max(loaded.naturalWidth,loaded.naturalHeight)),canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(loaded.naturalWidth*scale));canvas.height=Math.max(1,Math.round(loaded.naturalHeight*scale));canvas.getContext('2d').drawImage(loaded,0,0,canvas.width,canvas.height);
+      let blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.82)); if(!blob)throw new Error('图片处理失败');
+      if(blob.size>500*1024)blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/jpeg',.62));
+      if(!blob||blob.size>500*1024)throw new Error('压缩后仍超过 500 KB，请换一张较小图片');
+      const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result);reader.onerror=()=>reject(new Error('图片保存失败'));reader.readAsDataURL(blob);});
+      return {data,name:(file.name||'配图').replace(/\.[^.]+$/,'')+'.jpg'};
+    }
+    document.addEventListener('click',event=>{
+      const open=event.target.closest('[data-account-open],[data-publish-open]');
+      if(open){event.preventDefault();event.stopImmediatePropagation();const account=state.accounts.find(row=>row.id===(open.dataset.accountOpen||open.dataset.publishOpen));openAccountPlatform(account);return;}
+      const inbox=event.target.closest('[data-account-inbox]');
+      if(inbox){event.preventDefault();event.stopImmediatePropagation();state.settings.inboxAccountId=inbox.dataset.accountInbox;save();showView('inbox');return;}
+      const upload=event.target.closest('[data-content-media]');
+      if(upload){event.preventDefault();event.stopImmediatePropagation();window.__mediaContentId=upload.dataset.contentMedia;mediaPicker.click();return;}
+      const download=event.target.closest('[data-content-media-download]');
+      if(download){event.preventDefault();event.stopImmediatePropagation();downloadContentImage(download.dataset.contentMediaDownload);return;}
+      const openInbox=$('#openSelectedInboxAccount');
+      if(openInbox&&event.target.closest('#openSelectedInboxAccount')){event.preventDefault();event.stopImmediatePropagation();const id=$('#inboxAccount')?.value;if(!id||id==='all')return toast('先选择一个账号，再打开其官方工作台');openAccountPlatform(state.accounts.find(row=>row.id===id));return;}
+    },true);
+    mediaPicker.addEventListener('change',async()=>{
+      const file=mediaPicker.files?.[0],item=state.contents.find(row=>row.id===window.__mediaContentId);mediaPicker.value='';if(!file||!item)return;
+      try{const media=await compressImage(file),previous={mediaData:item.mediaData,mediaName:item.mediaName};item.mediaData=media.data;item.mediaName=media.name;try{save()}catch(error){Object.assign(item,previous);throw new Error('本地空间不足，图片未保存');}renderContent();toast('配图已保存到内容草稿');}catch(error){toast(error.message||'图片添加失败');}
+    });
+    const inboxSelect=$('#inboxAccount');
+    inboxSelect?.addEventListener('change',()=>{state.settings.inboxAccountId=inboxSelect.value;save();renderInbox();});
+    const inboxOpenButton=$('#view-inbox [data-xhs-action="inbox"]');
+    if(inboxOpenButton){inboxOpenButton.removeAttribute('data-xhs-action');inboxOpenButton.id='openSelectedInboxAccount';inboxOpenButton.textContent='打开所选平台工作台';}
+    const scanButton=$('#view-inbox button[disabled]'); if(scanButton){scanButton.textContent='自动网页扫描已关闭';scanButton.title='为减少账号风险，请从平台官方后台手动查看并导入消息';}
+    const replySendButton=$('#sendReplyBrowserBtn'); if(replySendButton)replySendButton.remove();
+    $('#view-inbox .page-head p').textContent='跨平台查看已导入的评论和私信，生成回复草稿并复制到平台官方页面发送。没有已授权的官方消息接口时，系统不会持续扫描网页。';
+    $('#view-inbox .panel-head p').textContent='按平台或账号筛选；当前消息通过人工导入，官方接口接入后再启用同步。';
+    $('#simulateMessage').textContent='＋ 导入评论 / 私信';
+    const replyHint=$('.conversation-compose .field small');if(replyHint)replyHint.textContent='高风险内容转人工；AI 生成的回复只保存为草稿，实际发送由你在官方平台确认。';
+    $('#markReplySentBtn').textContent='确认已手动发送';
+    $('#copyReplyBtn').textContent='复制回复';
+    $('#view-publishing .page-head p').textContent='统一排队、导出内容和素材，并打开对应平台官方工作台；未获官方授权的账号需由你手动上传。';
+    $('#view-publishing .panel-head p').textContent='审批通过后导出发布包，发布结果由你核实并登记。';
+    const publishPanelDescriptions=$$('#view-publishing .panel-head p');
+    if(publishPanelDescriptions[1])publishPanelDescriptions[1].textContent='先导出文案和素材，再由账号持有人在平台官方页面上传并确认。';
+    $('#view-content .page-head p').textContent='从选题到审批，并为草稿添加图片；每个平台使用独立的正式授权或人工发布路径。';
+    $('#view-settings .page-head p').textContent='查看各平台官方发布和评论能力、权限条件以及当前工作台接入状态。';
+    const settingCards=$$('#view-settings .setting-card');
+    const publishSettings=settingCards.find(card=>card.querySelector('h3')?.textContent.trim()==='发布模式');
+    if(publishSettings?.querySelector('p'))publishSettings.querySelector('p').textContent='当前默认导出发布包并由你在平台官方页面完成发布。工作台不会自动点击发布或扫描评论页面。';
+    const publishFoot=$$('.kpi .kpi-foot')[2];if(publishFoot)publishFoot.textContent='待在官方平台人工发布';
+    const inboxFoot=$$('.kpi .kpi-foot')[3];if(inboxFoot)inboxFoot.textContent='导入消息后生成回复草稿';
+    const overviewPublish=$('#view-overview .alert.warn p');if(overviewPublish)overviewPublish.textContent='审批通过后导出内容包，再到对应平台官方工作台手动发布。';
+    const overviewReply=$('#view-overview .alert.danger p');if(overviewReply)overviewReply.textContent='客服回复先保存为草稿；你复制到官方平台发送后再登记结果。';
+    const publishPanelTitles=$$('#view-publishing .panel-head h2');
+    const flowTitle=publishPanelTitles.find(item=>item.textContent.trim()==='操作流程');if(flowTitle)flowTitle.textContent='跨平台人工确认流程';
+    const publishSteps=$$('#view-publishing .alert-list .alert p');
+    if(publishSteps[0])publishSteps[0].textContent='在内容工作室选择目标账号，检查内容和素材。';
+    if(publishSteps[1])publishSteps[1].textContent='导出发布包，再打开该平台的官方工作台上传。';
+    if(publishSteps[2])publishSteps[2].textContent='在官方页面确认发布成功后，回后台登记内容链接或平台编号。';
+    const runMode=$('#runMode'); if(runMode){const browserOption=runMode.querySelector('option[value="browser_preview"]');if(browserOption)browserOption.textContent='关闭自动提交（平台页面由我确认）';const manualOption=runMode.querySelector('option[value="manual_export"]');if(manualOption)manualOption.textContent='官方页面人工发布（低风险）';runMode.value='manual_export';}
+    const grid=$('#view-settings .settings-grid');
+    if(grid&&!$('#platformAccessMatrix')){
+      const card=document.createElement('div');card.className='setting-card';card.id='platformAccessMatrix';card.style.gridColumn='1 / -1';
+      card.innerHTML=`<h3>平台接入能力与当前状态</h3><p>这里显示的是官方接口条件，不代表本工作台已经连接。现在可以跨账号登记内容、导出发布包、手动导入评论并生成回复草稿；后台没有启用网页持续扫描或自动回复。</p><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px">${PLATFORM_GUIDES.map(guide=>`<article style="border:1px solid #e8edf4;border-radius:12px;padding:13px;background:#fbfcfe"><strong>${esc(guide.name)}</strong><small style="display:block;color:#5573a1;margin-top:4px">${esc(guide.state)}</small><p style="margin:8px 0;color:#667085;font-size:12px;line-height:1.55">${esc(guide.detail)}</p><div>${guide.refs.map(ref=>`<a style="font-size:11px;margin-right:10px" href="${esc(ref[1])}" target="_blank" rel="noopener">${esc(ref[0])} ↗</a>`).join('')}</div></article>`).join('')}</div><div class="notice" style="margin-top:14px">要让某个平台在后台直接发布或同步评论，需要你持有开发者应用、完成平台要求的审核与账号授权；未开通时使用官方页面人工操作。平台规则、接口限额和内容审核仍适用，任何方案都不能保证零风控。</div>`;
+      grid.appendChild(card);
+    }
+    document.addEventListener('click',event=>{
+      if(event.target.closest('#confirmModal')&&modalMode==='cross-platform-inbox-import'){
+        event.preventDefault();event.stopImmediatePropagation();
+        const message=$('#importMessage').value.trim(),accountId=$('#importAccount').value;
+        if(!message)return toast('请填写评论或私信原文');
+        if(!state.accounts.some(row=>row.id===accountId))return toast('请选择已登记的平台账号');
+        const externalId=$('#importExternalId').value.trim();
+        state.inbox.unshift({id:`THR-${Date.now()}`,account:accountId,name:$('#importName').value.trim()||'平台用户',channel:$('#importChannel').value,risk:$('#importRisk').value,intent:$('#importIntent').value.trim()||'unknown',time:'刚刚',message,reply:'',status:'open',source:'manual_import',external_id:externalId,source_url:safeHttpUrl($('#importSourceUrl').value.trim())});
+        state.settings.inboxAccountId=accountId;currentThread=state.inbox[0].id;save();closeModal();renderInbox();toast('评论/私信已导入，未向平台发送任何内容');return;
+      }
+      if(event.target.closest('#confirmModal')&&modalMode==='cross-platform-publish-result'){
+        event.preventDefault();event.stopImmediatePropagation();const item=state.contents.find(row=>row.id===window.__publishId);if(!item)return closeModal();
+        item.status='published';item.platformPostId=$('#publishObjectId').value.trim();item.publishNote=$('#publishNote').value.trim();item.publishedAt='刚刚';item.updated='刚刚';save();closeModal();renderAll();toast('发布结果已登记；请确认平台链接/对象编号准确');return;
+      }
+      if(event.target.closest('#confirmModal')&&modalMode==='account'){
+        event.preventDefault();event.stopImmediatePropagation();const name=$('#modalAccountName').value.trim();if(!name)return toast('请填写账号名称');
+        const platform=$('#modalAccountPlatform').value.trim()||'未指定平台';
+        state.accounts.unshift({id:`acct-${Date.now()}`,platform,name,handle:$('#modalAccountHandle').value.trim()||'待填写',owner:$('#modalAccountOwner').value.trim()||'待分配',locale:$('#modalAccountLocale').value.trim()||'zh-CN',topics:$('#modalAccountTopics').value.trim()||'未设置',status:platform==='小红书'?'pending':platform==='演示平台'?'demo':'manual_export',posts:'0',health:platform==='小红书'?'本机登录会话待检查':platform==='演示平台'?'模拟正常':'未配置官方 API；可先人工发布'});
+        save();closeModal();renderAll();toast('账号已登记；凭据请只在平台官方授权页填写');return;
+      }
+    },true);
+    $('#copyReplyBtn')?.addEventListener('click',async event=>{event.preventDefault();event.stopImmediatePropagation();const text=$('#replyText').value.trim();if(!text)return toast('当前没有可复制的回复');const thread=state.inbox.find(row=>row.id===currentThread);if(thread){thread.reply=text;save();renderInbox()}try{await navigator.clipboard.writeText(text);toast('回复已复制；请粘贴到对应平台官方页面')}catch{toast('浏览器未允许复制，请手动选择文本')}},true);
+    $('#markReplySentBtn')?.addEventListener('click',event=>{event.preventDefault();event.stopImmediatePropagation();const thread=state.inbox.find(row=>row.id===currentThread);if(!thread||!thread.reply)return toast('请先生成或保存回复草稿');if(thread.risk==='high')return toast('高风险会话仍需人工处理');if(!window.confirm('请先确认你已在对应平台页面手动发送这条回复。是否登记为已发送？'))return;thread.status='done';thread.repliedAt='刚刚';save();renderInbox();toast('已登记为人工发送')},true);
+    document.addEventListener('DOMContentLoaded',()=>{
+      const notice=$('#view-accounts .notice');if(notice)notice.textContent='账号矩阵支持登记多个平台账号。小红书本机登录已连接不代表获得发布/客服 API 权限；其他平台的后台入口、发布包与消息导入也可先人工使用。';
+      const oldXhsStatus=$('#xhsSettingsStatus');if(oldXhsStatus)oldXhsStatus.value='仅本机创作者中心会话已连接；未获得发布或客服 API 权限';
+      renderAll();loadSettings();
+    });
+    renderAll();
+  })();
+  </script>
 </body>
 </html>

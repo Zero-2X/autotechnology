@@ -49,7 +49,8 @@ def resolve_delivery_route(*, profile: PlatformProfile, action: str,
 XHS_PROFILE = PlatformProfile(
     platform="小红书",
     api_actions=frozenset(),
-    browser_actions=frozenset({"publish", "inbox", "comment_reply", "message_reply"}),
+    # A creator-center login is not permission to publish, scan an inbox, or send replies.
+    browser_actions=frozenset(),
 )
 
 

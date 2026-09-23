@@ -72,11 +72,11 @@ def test_console_state_round_trip(tmp_path, monkeypatch):
     assert (Path(tmp_path) / '.local' / 'workflow-state.json').exists()
 
 
-def test_platform_route_prefers_browser_for_xhs_without_api_scope():
+def test_platform_route_keeps_xhs_manual_without_an_api_scope():
     client = TestClient(create_app())
     response = client.get('/internal/platforms/%E5%B0%8F%E7%BA%A2%E4%B9%A6/route?action=publish&browser_session_ready=true')
     assert response.status_code == 200
-    assert response.json()['data']['mode'] == 'browser_automation'
+    assert response.json()['data']['mode'] == 'manual_export'
 
 
 def test_platform_route_does_not_claim_unregistered_api_adapter():

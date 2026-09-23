@@ -16,18 +16,22 @@ const vm = require('node:vm'), fs = require('node:fs'), assert = require('node:a
 const listeners = {}, calls = [], intervals = [], elements = new Map();
 let persisted = JSON.stringify({settings:{apiBase:'http://127.0.0.1:65534'}});
 function element(key) {
-  if (!elements.has(key)) elements.set(key, {
-    value:'', innerHTML:'', textContent:'', className:'',
-    classList:{contains:()=>false,add(){},remove(){},toggle(){}},
-    addEventListener(){}, dataset:{}, querySelector:()=>null
-  });
+    if (!elements.has(key)) elements.set(key, {
+      value:'', innerHTML:'', textContent:'', className:'',
+      style:{}, children:[], files:[],
+      classList:{contains:()=>false,add(){},remove(){},toggle(){}},
+      addEventListener(){}, dataset:{}, querySelector:()=>null, querySelectorAll:()=>[],
+      appendChild(child){this.children.push(child);return child}, insertBefore(child){this.children.push(child);return child},
+      remove(){}, removeAttribute(){}, click(){}
+    });
   return elements.get(key);
 }
 const sandbox = {
   console, structuredClone, AbortController,
   MutationObserver:class {observe(){}},
   document: {
-    querySelector:element, querySelectorAll:()=>[],
+        querySelector:element, querySelectorAll:()=>[], createElement:tag=>element(`created-${tag}-${elements.size}`),
+        body:element('body'),
     addEventListener(type, fn){(listeners[type] ??= []).push(fn)}
   },
   location:{protocol:'http:',hostname:'127.0.0.1'},
