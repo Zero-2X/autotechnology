@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-22T18:25:33+00:00`
-- Source fingerprint: `sha256:955374c184bb3b6a1a182353a067be54c9b932bca43ad6399d7d3a759d72ab69`
+- Generated at (UTC): `2026-09-23T02:37:16+00:00`
+- Source fingerprint: `sha256:2d2a5f51d77b255e70433c75fc2e05b2420d04ce60d4e1163ed253cf2f0b36e0`
 - Repository root: `D:/akagent`
 - Scanned files: `1646`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `a524010ddea4428694c5d5451719f90d7b40a0c6`
+- HEAD: `a4b71166ff9c52c6c0308efd92b6ab125a77c86c`
 
 ## Top-level directories
 
@@ -587,7 +587,12 @@ Recommended repository gate: `python -m pytest tests --maxfail=1 -q`
 
 ## Uncommitted changes
 
+- ` M "docs/\347\234\237\345\256\236\350\264\246\345\217\267\350\207\252\345\212\250\345\214\226\350\277\220\350\220\245\346\223\215\344\275\234\346\211\213\345\206\214.md"`
+- ` M "docs/\347\275\221\351\241\265\347\256\241\347\220\206\345\220\216\345\217\260\346\265\213\350\257\225\350\257\264\346\230\216.md"`
+- ` M "docs/\351\241\271\347\233\256\345\274\200\345\217\221\350\277\233\345\272\246\346\261\207\346\212\245.html"`
+- ` M apps/api/main.py`
 - ` M apps/web-console/src/index.html`
+- ` M scripts/start-workflow.ps1`
 
 ## Repository classification
 
@@ -789,7 +794,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `apps/api/README.md` | 446 | `sha256:00ee4c3fb0d3bdf46ad5086e7ebd73e9b2da477d860283c09b90cbfb92c0ba51` |
 | `apps/api/__init__.py` | 32 | `sha256:28c766504a198d3c17832b792c4924608f4a4fda643c7c3a22f440390f761ba5` |
 | `apps/api/__main__.py` | 161 | `sha256:bae5b4c98263891c73bb5a0ac56635e07eab1321074660c1b1b94dcfffb55ffc` |
-| `apps/api/main.py` | 109302 | `sha256:9c2459820267b37e3c20b154ed9976524d62f71c99afc898bc3b0dd2afd68b04` |
+| `apps/api/main.py` | 111045 | `sha256:fa19237b4c584512efed3315bf40c6cb5aa91f3779a69b00f04243f002102889` |
 | `apps/knowledge-site/README.md` | 2283 | `sha256:4b2c9d85f876a568737f6a8348461f7ced28bf747c9797aec7aa30c44d8b6a60` |
 | `apps/knowledge-site/package.json` | 170 | `sha256:32d859006b73671808cad8fd910f1db1532d65e8b5a9fd6e1f13f07d0f960238` |
 | `apps/knowledge-site/pnpm-lock.yaml` | 114 | `sha256:17c814b167307942d3609c7b9d916ceddb85839573ab39baa114e30edb132a1a` |
@@ -810,7 +815,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `apps/web-console/package.json` | 167 | `sha256:9b5d3d2153ac4164c691902f80b75a3911a4be54f82b3579b9f6f39e078f3066` |
 | `apps/web-console/pnpm-lock.yaml` | 114 | `sha256:17c814b167307942d3609c7b9d916ceddb85839573ab39baa114e30edb132a1a` |
 | `apps/web-console/scripts/build.mjs` | 851 | `sha256:eae2a2b621e5162dde56ffc02b716fc21c71146456cb69cf7bfdd23727030609` |
-| `apps/web-console/src/index.html` | 84427 | `sha256:34b45486f496a52fe4368886865ae8ef8dcb19d2208be110b845e2bdafaad781` |
+| `apps/web-console/src/index.html` | 85517 | `sha256:3efe65cc1a494d2d31ed26a2bb946bf4abd40bb5322a683624c7b30e5af347fb` |
 | `apps/worker/README.md` | 843 | `sha256:585eb3815e3271923e72d2c66325ce36be5af3c66135774cb734008315742021` |
 | `apps/worker/__init__.py` | 31 | `sha256:53da4abf7d557e2589aa76efd85c921469f44127a4035ec9f6c2f6361484ee76` |
 | `apps/worker/__main__.py` | 81 | `sha256:954eaddc192523ee47f44769ae571e58baf451c0e67d752edd3874b6393600d0` |
@@ -1225,9 +1230,9 @@ Formal runtime source was detected under apps/modules/services/src:
 | `docs/tasks/WORKFLOW-CORE-003.md` | 4559 | `sha256:5151941eb2fe23b6585f097c3992692a9bee91f2943a8111b2e04c15d1c92a3b` |
 | `docs/workflows/README.md` | 217 | `sha256:b5669edc2191f6b372a613724dfca501f25f27895f95dc03b8a9e1abdb520432` |
 | `docs/平台发布接口调研与小红书迁移方案.md` | 10293 | `sha256:d4cf9e8f20f8b347214c169eff57d059d780948d9087796be08d51476d1b81c1` |
-| `docs/真实账号自动化运营操作手册.md` | 13224 | `sha256:e2c72ad762193c61ae3d99eaf80447be1f9e8612462903fcecc8e0968f8386b2` |
-| `docs/网页管理后台测试说明.md` | 8318 | `sha256:72759031d7322607af1d3016fd504ff5084396b6e4093936e007a9b88d0be586` |
-| `docs/项目开发进度汇报.html` | 23341 | `sha256:82b38ec0bdceaa025fc53ef439b6eff412984f3622b062883eb033815185ac22` |
+| `docs/真实账号自动化运营操作手册.md` | 13434 | `sha256:a9eb78861faeaf51d9e6aa8d2da80358a020ad8d029a24e0b4599bef4724849f` |
+| `docs/网页管理后台测试说明.md` | 8764 | `sha256:e2c65ccbf1555c09059f32f245c03452e7d1b6e37fcb88632dbd066f7a7d9f0b` |
+| `docs/项目开发进度汇报.html` | 23536 | `sha256:57c5cd8f0fc94dce5ecb889bcd5edc13d8c8901b2f27fb0f2ae6b6fc54371f08` |
 | `infra/__init__.py` | 47 | `sha256:8517a486e9a61a8d1e10284f75abe76808de8d787a0422021f07ba28d935cc82` |
 | `infra/compose/README.md` | 434 | `sha256:1e161168885e43eef8aa36e0db56f7c3efeb1017f724da61d6ff2dd4889f20e7` |
 | `infra/compose/postgresql.dev.yaml` | 327 | `sha256:de8bbf10639bb4d2e0d84fc0c4bc5d3c00a35bc28c006fe1c9c1c218833342bf` |
@@ -2100,7 +2105,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `scripts/setup-browser-dependencies.ps1` | 234 | `sha256:a96476f918a1cafd32b118fd383e733527575c31de63c39faf9e50b8294e4b32` |
 | `scripts/smoke_foundation.py` | 1554 | `sha256:d4943f9fc0c2899145f5ca99dfa31ef181ff4fcd9e72e17217376de0e5c67c46` |
 | `scripts/start-web-console.ps1` | 582 | `sha256:fe46e03fd2143071634967026afdf72018f0ab81905fa23072bee0739dd14d37` |
-| `scripts/start-workflow.ps1` | 2097 | `sha256:522f28d70c1976fc31467e8da591aafb5a3f078c25e738a145ca8ac74e48c7b0` |
+| `scripts/start-workflow.ps1` | 2097 | `sha256:9fbb5eb3849f4b41aebc7473ff070c2b0ddfd3f0c80a7ca514db007e9f909362` |
 | `scripts/start-xhs-login.ps1` | 167 | `sha256:0f418e9a703934fefad8ea2d83f623eb544f4e7db29ee5b0b64cc1a51fb67cc5` |
 | `scripts/start-xhs-login.py` | 2385 | `sha256:cb89b1b7a27201cf137ad4f8827f7bdb827ac924e53f76a37a74e342bea99ed4` |
 | `tests/accessibility/README.md` | 243 | `sha256:67b53f18b556cac2dfb0a1f0aa5a2828967494b724bcb2401ad100cf74fdef8c` |

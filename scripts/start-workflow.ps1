@@ -9,7 +9,7 @@ if ($env:OPENAI_API_KEY) {
     if (-not $env:MODEL_PROVIDER) { $env:MODEL_PROVIDER = 'zpproxy' }
     if (-not $env:MODEL_BASE_URL) { $env:MODEL_BASE_URL = 'https://webaiproxy.top/v1' }
     if (-not $env:MODEL_ID) { $env:MODEL_ID = 'gpt-5.6-sol' }
-    if (-not $env:MODEL_TIMEOUT_SECONDS) { $env:MODEL_TIMEOUT_SECONDS = '20' }
+    if (-not $env:MODEL_TIMEOUT_SECONDS) { $env:MODEL_TIMEOUT_SECONDS = '60' }
 }
 node (Join-Path $console 'scripts\build.mjs') --out-dir $webBuild
 function Test-LocalEndpoint([string]$Url) {

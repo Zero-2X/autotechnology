@@ -10,6 +10,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import time
 from typing import Any
 from uuid import UUID, uuid4
 
@@ -251,6 +252,48 @@ def create_app(
             "model": config["model"],
             "configured": config["configured"],
             "key_present": config["key_present"],
+        })
+
+    @app.post("/internal/model/test", tags=["internal"], include_in_schema=False)
+    def test_model_connection() -> dict[str, Any]:
+        """Make a small real Responses request; never return credentials or output text."""
+        config = model_config()
+        if not config["configured"]:
+            return success_response({
+                "status": "not_configured",
+                "provider": config["provider"],
+                "model": config["model"],
+                "error_code": "MODEL_NOT_CONFIGURED",
+            })
+        started = time.perf_counter()
+        schema = {
+            "type": "object",
+            "properties": {"ok": {"type": "boolean"}},
+            "required": ["ok"],
+            "additionalProperties": False,
+        }
+        try:
+            generate_structured(
+                messages=[
+                    {"role": "system", "content": "只返回符合格式的 JSON。"},
+                    {"role": "user", "content": "请返回 {\\\"ok\\\":true}。"},
+                ],
+                schema=schema,
+                purpose="connectivity_check",
+            )
+        except (ModelError, ValueError) as exc:
+            return success_response({
+                "status": "failed",
+                "provider": config["provider"],
+                "model": config["model"],
+                "error_code": getattr(exc, "code", "MODEL_CONFIG_INVALID"),
+                "elapsed_ms": round((time.perf_counter() - started) * 1000),
+            })
+        return success_response({
+            "status": "connected",
+            "provider": config["provider"],
+            "model": config["model"],
+            "elapsed_ms": round((time.perf_counter() - started) * 1000),
         })
 
     @app.get("/internal/platforms/{platform}/route", tags=["internal"], include_in_schema=False)

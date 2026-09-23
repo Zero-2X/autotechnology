@@ -79,7 +79,7 @@
       <div class="verdict-main">
         <span class="tag blue">目前可交付</span>
         <strong>“AI 生成 + 质量治理 + 人工审批 + 人工导出发布”闭环</strong>
-        <p>系统已经能组织选题、内容生成、来源与版权检查、质量检查、审批、版本、审计和导出，并能用真实 LangGraph 编排这些步骤。小红书已经接入本机独立浏览器工作流，可以打开账号、填入图文草稿、进入客服入口并排队处理回复；当前真实会话需要账号持有人重新登录后才能继续。</p>
+        <p>系统已经能组织选题、内容生成、来源与版权检查、质量检查、审批、版本、审计和导出，并能用真实 LangGraph 编排这些步骤。文本模型已接入 zpproxy Responses，内容草稿和低风险客服回复均完成真实请求验证，后台现在可以实际检测连接；Seedance 视频生成尚未接入。小红书已接入本机独立浏览器工作流；当前账号会话需要账号持有人重新登录后才能继续。</p>
       </div>
       <div class="verdict-side">
         <span class="tag red">尚未开放</span>
@@ -112,7 +112,7 @@
     <div class="table-wrap"><table>
       <thead><tr><th>能力域</th><th>已实现</th><th>现在可以怎么用</th><th>上线前还缺什么</th></tr></thead>
       <tbody>
-        <tr><td><b>内容生产</b></td><td>选题、研究、改写、多语言变体、质量检查、结构化输出</td><td>生成可审核的内容包</td><td>批准的真实模型供应商与 DPA</td></tr>
+        <tr><td><b>内容生产</b></td><td>文本模型调用、选题、研究、改写、多语言变体、质量检查、结构化输出</td><td>生成可审核的内容包；失败时使用本地模板</td><td>模型供应商条款与费用审核、视频生成服务</td></tr>
         <tr><td><b>来源与版权</b></td><td>来源、证据、声明、版权和新鲜度记录</td><td>每条内容保留可追溯依据</td><td>生产对象存储和真实素材权限流程</td></tr>
         <tr><td><b>政策与审批</b></td><td>Policy 快照、风险门禁、人工审批、职责分离</td><td>真实发布前先人工审核</td><td>真实组织 IAM/MFA 与持久化授权</td></tr>
         <tr><td><b>分发</b></td><td>人工导出、Fake 平台、幂等、回查、Kill Switch；小红书浏览器填稿与客服任务队列</td><td>小红书可打开独立账号会话并准备图文草稿；发送和发布仍需平台页面确认</td><td>其它平台官方适配器或浏览器适配器、Sandbox、真实回查</td></tr>
@@ -174,7 +174,7 @@
     <div class="grid two">
       <article class="card"><h3>1. 指定首个平台和试点账号</h3><p>从几个真实账号中选 1 个风险最低、授权最清晰的账号，指定账号负责人和替补。</p></article>
       <article class="card"><h3>2. 确认平台与法律授权</h3><p>提供主体、授权联系人、官方开发者应用/Sandbox、批准 Scope、平台条款和撤销路径。</p></article>
-      <article class="card"><h3>3. 批准生产基础设施</h3><p>确定模型供应商、Vault、托管 PostgreSQL、私有对象存储、告警渠道和费用预算。</p></article>
+      <article class="card"><h3>3. 批准生产基础设施</h3><p>确认已接入模型服务的数据条款与费用预算，建设 Vault、托管 PostgreSQL、私有对象存储和告警渠道。</p></article>
       <article class="card"><h3>4. 批准 2–4 周受控 Pilot</h3><p>确定日/周发布上限、人工审批、暂停条件、质量和成本指标，并接受先低频后扩张。</p></article>
     </div>
     <div class="callout" style="margin-top:20px;background:#eef7ff;border-color:#c8e1ff;color:#184a85"><div class="icon">→</div><div><strong>建议的管理决策</strong><p style="color:#285e9d">批准“一个平台、一个账号、人工必审、Draft-only/低频发布”的第一阶段试点；暂不批准多账号无人值守发布。Pilot 完成后再根据质量、成本和平台健康数据决定扩张。</p></div></div>
