@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-23T14:23:10+00:00`
-- Source fingerprint: `sha256:0b6870a400510216f3ee8e927e22a7e72fd973c855a4862df373e1427938e520`
+- Generated at (UTC): `2026-09-23T14:46:15+00:00`
+- Source fingerprint: `sha256:6c60d7a38b9d5ecf68b7d93924223aeb34adc4582d0f2568801cc199dcf6d193`
 - Repository root: `D:/akagent`
 - Scanned files: `1646`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `ba553f2bd3c5edaa0b598fa608549ac34592ec61`
+- HEAD: `1151b222c1da592ac70e97371d50f94e5c7209b7`
 
 ## Top-level directories
 
@@ -810,7 +810,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `apps/web-console/package.json` | 167 | `sha256:9b5d3d2153ac4164c691902f80b75a3911a4be54f82b3579b9f6f39e078f3066` |
 | `apps/web-console/pnpm-lock.yaml` | 114 | `sha256:17c814b167307942d3609c7b9d916ceddb85839573ab39baa114e30edb132a1a` |
 | `apps/web-console/scripts/build.mjs` | 851 | `sha256:eae2a2b621e5162dde56ffc02b716fc21c71146456cb69cf7bfdd23727030609` |
-| `apps/web-console/src/index.html` | 93636 | `sha256:73134ea8a28e87bcf48e4b41bcb2452a171a313cce79ea414e721286145f71a6` |
+| `apps/web-console/src/index.html` | 93797 | `sha256:74609fc3801551d26b315ab7dd06bd93263d3ca845eb80377874da7b36caec87` |
 | `apps/worker/README.md` | 843 | `sha256:585eb3815e3271923e72d2c66325ce36be5af3c66135774cb734008315742021` |
 | `apps/worker/__init__.py` | 31 | `sha256:53da4abf7d557e2589aa76efd85c921469f44127a4035ec9f6c2f6361484ee76` |
 | `apps/worker/__main__.py` | 81 | `sha256:954eaddc192523ee47f44769ae571e58baf451c0e67d752edd3874b6393600d0` |
