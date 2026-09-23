@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-23T14:46:15+00:00`
-- Source fingerprint: `sha256:6c60d7a38b9d5ecf68b7d93924223aeb34adc4582d0f2568801cc199dcf6d193`
+- Generated at (UTC): `2026-09-23T15:01:54+00:00`
+- Source fingerprint: `sha256:4aeb4778cdd9c2c5070b5046fc47946607d7508a6b8a9852cb676da3ff0c61f6`
 - Repository root: `D:/akagent`
 - Scanned files: `1646`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `1151b222c1da592ac70e97371d50f94e5c7209b7`
+- HEAD: `63969fab51963e549cd2239bc80eab5d014af08e`
 
 ## Top-level directories
 
@@ -587,7 +587,8 @@ Recommended repository gate: `python -m pytest tests --maxfail=1 -q`
 
 ## Uncommitted changes
 
-Clean worktree.
+- ` M "docs/\347\234\237\345\256\236\350\264\246\345\217\267\350\207\252\345\212\250\345\214\226\350\277\220\350\220\245\346\223\215\344\275\234\346\211\213\345\206\214.md"`
+- ` M "docs/\351\241\271\347\233\256\345\274\200\345\217\221\350\277\233\345\272\246\346\261\207\346\212\245.html"`
 
 ## Repository classification
 
@@ -1225,9 +1226,9 @@ Formal runtime source was detected under apps/modules/services/src:
 | `docs/tasks/WORKFLOW-CORE-003.md` | 4559 | `sha256:5151941eb2fe23b6585f097c3992692a9bee91f2943a8111b2e04c15d1c92a3b` |
 | `docs/workflows/README.md` | 217 | `sha256:b5669edc2191f6b372a613724dfca501f25f27895f95dc03b8a9e1abdb520432` |
 | `docs/平台发布接口调研与小红书迁移方案.md` | 10293 | `sha256:d4cf9e8f20f8b347214c169eff57d059d780948d9087796be08d51476d1b81c1` |
-| `docs/真实账号自动化运营操作手册.md` | 14702 | `sha256:fcba651176a88c902eb006413bf70f9c6fb0e4091e1b7523ae29c8e3475eaac6` |
+| `docs/真实账号自动化运营操作手册.md` | 14356 | `sha256:dc3c2a8132d8f839449b3625c7616afd5d2d7aa3bfcb753896e4d84421900dd0` |
 | `docs/网页管理后台测试说明.md` | 11448 | `sha256:0f6eb579d748c3dc72e288c7d9023c50fa6b8122b892073113743a5e554d2d75` |
-| `docs/项目开发进度汇报.html` | 24364 | `sha256:5884106a194f7a581b6a42674a14f315602aa7630736d0704384b3de2aa88d2d` |
+| `docs/项目开发进度汇报.html` | 24526 | `sha256:24b6902e6a65033557fb27ce840a1bbd0614ade57afb67b8033c202fb701af94` |
 | `infra/__init__.py` | 47 | `sha256:8517a486e9a61a8d1e10284f75abe76808de8d787a0422021f07ba28d935cc82` |
 | `infra/compose/README.md` | 434 | `sha256:1e161168885e43eef8aa36e0db56f7c3efeb1017f724da61d6ff2dd4889f20e7` |
 | `infra/compose/postgresql.dev.yaml` | 327 | `sha256:de8bbf10639bb4d2e0d84fc0c4bc5d3c00a35bc28c006fe1c9c1c218833342bf` |
