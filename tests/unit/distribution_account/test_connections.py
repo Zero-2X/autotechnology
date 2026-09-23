@@ -116,6 +116,77 @@ def test_health_check_restricts_expired_or_policy_disallowed_connections():
     assert restricted.last_refresh_error == "POLICY_CHANGED"
 
 
+def test_expired_authorization_evidence_removes_readiness_and_restricts_connection():
+    service, org_id, _, connection = _service()
+    valid_until = NOW + timedelta(hours=1)
+    for evidence_type, reference in (("oauth_consent", "oauth"), ("sandbox_membership", "sandbox")):
+        service.attach_authorization_evidence(
+            org_id=org_id, connection_id=connection.id, evidence_type=evidence_type,
+            external_reference=reference, scope_snapshot={"provider": "fake", "scopes": ["profile"]},
+            valid_until=valid_until, now=NOW,
+        )
+
+    assert service.connections[(org_id, connection.id)].connection_status == "connected"
+    passport = service.account_passport(
+        org_id=org_id, connection_id=connection.id, as_of=NOW + timedelta(hours=2),
+    )
+    assert passport["evidence_completeness_percent"] == 0.0
+    assert passport["ready_for_side_effects"] is False
+
+    checked = service.check_health(
+        org_id=org_id, connection_id=connection.id, now=NOW + timedelta(hours=2),
+    )
+    assert checked.connection_status == "restricted"
+    assert checked.health_status == "restricted"
+    assert checked.last_refresh_error == "AUTHORIZATION_EVIDENCE_EXPIRED"
+
+
+def test_newest_revoked_evidence_supersedes_old_grant_until_renewed():
+    service, org_id, _, connection = _service()
+    for evidence_type, reference in (("oauth_consent", "oauth"), ("sandbox_membership", "sandbox")):
+        service.attach_authorization_evidence(
+            org_id=org_id, connection_id=connection.id, evidence_type=evidence_type,
+            external_reference=reference, scope_snapshot={"provider": "fake", "scopes": ["profile"]},
+            now=NOW,
+        )
+    assert service.connections[(org_id, connection.id)].connection_status == "connected"
+
+    revoked_at = NOW + timedelta(minutes=1)
+    service.attach_authorization_evidence(
+        org_id=org_id, connection_id=connection.id, evidence_type="sandbox_membership",
+        external_reference="sandbox-revoked", scope_snapshot={"provider": "fake", "scopes": ["profile"]},
+        status="revoked", now=revoked_at,
+    )
+    assert service.connections[(org_id, connection.id)].connection_status == "restricted"
+    assert service.account_passport(
+        org_id=org_id, connection_id=connection.id, as_of=revoked_at,
+    )["ready_for_side_effects"] is False
+
+    renewed_at = revoked_at + timedelta(minutes=1)
+    service.attach_authorization_evidence(
+        org_id=org_id, connection_id=connection.id, evidence_type="sandbox_membership",
+        external_reference="sandbox-renewed", scope_snapshot={"provider": "fake", "scopes": ["profile"]},
+        valid_until=renewed_at + timedelta(hours=1), now=renewed_at,
+    )
+    assert service.connections[(org_id, connection.id)].connection_status == "connected"
+    assert service.account_passport(
+        org_id=org_id, connection_id=connection.id, as_of=renewed_at,
+    )["ready_for_side_effects"] is True
+
+    revoked_at = renewed_at + timedelta(minutes=1)
+    service.attach_authorization_evidence(
+        org_id=org_id, connection_id=connection.id, evidence_type="oauth_consent",
+        external_reference="oauth-revoked", scope_snapshot={"provider": "fake", "scopes": ["profile"]},
+        status="revoked", now=revoked_at,
+    )
+    revoked = service.connections[(org_id, connection.id)]
+    assert revoked.connection_status == "revoked"
+    assert revoked.authorization_status == "revoked"
+    assert service.check_health(
+        org_id=org_id, connection_id=connection.id, now=revoked_at + timedelta(minutes=1),
+    ).connection_status == "revoked"
+
+
 def test_scope_escalation_is_rejected():
     service, org_id, _, connection = _service()
     with pytest.raises(AccountError) as error:

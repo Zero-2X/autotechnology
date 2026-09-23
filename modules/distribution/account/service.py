@@ -299,20 +299,24 @@ class InMemoryAccountService:
             self._event("account.authorization_evidence.attached", tenant, actor, trace_id, key, evidence.as_contract(), at)
             return evidence
 
-    def account_passport(self, *, org_id: UUID | str, connection_id: UUID | str) -> dict[str, Any]:
+    def account_passport(
+        self, *, org_id: UUID | str, connection_id: UUID | str,
+        as_of: datetime | str | None = None,
+    ) -> dict[str, Any]:
         """Return a read-only, secret-free readiness summary."""
 
         tenant, identity = UUID(_uuid(org_id, "org_id")), UUID(_uuid(connection_id, "connection_id"))
         connection = self.connections.get((tenant, identity))
         if connection is None:
             raise AccountError("CONNECTION_NOT_FOUND", "account connection is not available")
+        at = _time(as_of, "as_of") or datetime.now(timezone.utc)
         profile = self.profiles.get(connection.account_profile_id)
         related = [item for (scope, _), item in self.evidence.items()
                    if scope == tenant and item.account_connection_id == identity]
         required = {"oauth_consent", "sandbox_membership"} if connection.environment == "sandbox" else {
             "oauth_consent", "owner_confirmation", "policy_acceptance"
         }
-        verified = {item.evidence_type for item in related if item.status == "verified"}
+        verified = self._current_evidence_types(related, at)
         missing = sorted(required - verified)
         completeness = round((len(required) - len(missing)) / len(required) * 100, 2)
         return {
@@ -394,13 +398,20 @@ class InMemoryAccountService:
             restricted_reason = "AUTHORIZATION_INVALID"
         elif expiry is not None and expiry <= at:
             restricted_reason = "TOKEN_EXPIRED"
+        elif (evidence_failure := self._evidence_failure_reason(current, at)) is not None:
+            restricted_reason = evidence_failure
         elif not owner_present:
             restricted_reason = "OWNER_UNAVAILABLE"
         elif not policy_allowed:
             restricted_reason = "POLICY_CHANGED"
         elif provider_status in {"restricted", "degraded"}:
             restricted_reason = "PROVIDER_HEALTH"
-        status = "restricted" if restricted_reason else ("connected" if current.authorization_status == "authorized" else "pending")
+        evidence_ready = self._connection_evidence_ready(current, at)
+        status = (
+            "revoked" if current.authorization_status == "revoked" else
+            "restricted" if restricted_reason else
+            "connected" if current.authorization_status == "authorized" and evidence_ready else "pending"
+        )
         health = "restricted" if restricted_reason else provider_status
         updated = replace(current, connection_status=status, health_status=health,
                           token_expires_at=expiry, last_health_check_at=at,
@@ -437,12 +448,90 @@ class InMemoryAccountService:
         required = {"oauth_consent", "sandbox_membership"} if current.environment == "sandbox" else {
             "oauth_consent", "owner_confirmation", "policy_acceptance"
         }
-        verified = {item.evidence_type for item in evidence if item.status == "verified"}
+        latest = self._latest_evidence_by_type(evidence)
+        verified = self._current_evidence_types(evidence, at)
         ready = required.issubset(verified)
+        oauth = latest.get("oauth_consent")
+        authorization_status = current.authorization_status
+        if oauth is not None:
+            if oauth.status == "revoked":
+                authorization_status = "revoked"
+            elif oauth.status == "expired" or (oauth.valid_until is not None and oauth.valid_until <= at):
+                authorization_status = "expired"
+            elif oauth.status == "verified" and oauth.captured_at <= at:
+                authorization_status = "authorized"
+        failure = self._evidence_failure_reason(current, at, evidence=evidence, required=required)
+        if authorization_status in {"expired", "revoked"}:
+            failure = failure or "AUTHORIZATION_INVALID"
+        if authorization_status == "revoked":
+            status, health = "revoked", "restricted"
+        elif failure:
+            status, health = "restricted", "restricted"
+        elif ready and authorization_status == "authorized":
+            status, health = "connected", "healthy"
+        else:
+            status, health = "pending", "unknown"
         return replace(current,
-                       connection_status="connected" if ready else "pending",
-                       authorization_status="authorized" if "oauth_consent" in verified else current.authorization_status,
-                       health_status="healthy" if ready else "unknown", updated_at=at)
+                       connection_status=status, authorization_status=authorization_status,
+                       health_status=health, updated_at=at)
+
+    @staticmethod
+    def _latest_evidence_by_type(evidence: list[AuthorizationEvidence]) -> dict[str, AuthorizationEvidence]:
+        latest: dict[str, AuthorizationEvidence] = {}
+        for item in evidence:
+            previous = latest.get(item.evidence_type)
+            if previous is None or item.captured_at >= previous.captured_at:
+                latest[item.evidence_type] = item
+        return latest
+
+    @staticmethod
+    def _current_evidence_types(evidence: list[AuthorizationEvidence], at: datetime) -> set[str]:
+        latest = InMemoryAccountService._latest_evidence_by_type(evidence)
+        return {
+            item.evidence_type for item in latest.values()
+            if item.status == "verified"
+            and item.captured_at <= at
+            and (item.valid_until is None or item.valid_until > at)
+        }
+
+    def _connection_evidence_ready(self, connection: AccountConnection, at: datetime) -> bool:
+        evidence = [item for (tenant, _), item in self.evidence.items()
+                    if tenant == connection.org_id and item.account_connection_id == connection.id]
+        required = {"oauth_consent", "sandbox_membership"} if connection.environment == "sandbox" else {
+            "oauth_consent", "owner_confirmation", "policy_acceptance"
+        }
+        return required.issubset(self._current_evidence_types(evidence, at))
+
+    def _evidence_failure_reason(
+        self, connection: AccountConnection, at: datetime, *,
+        evidence: list[AuthorizationEvidence] | None = None,
+        required: set[str] | None = None,
+    ) -> str | None:
+        related = evidence if evidence is not None else [
+            item for (tenant, _), item in self.evidence.items()
+            if tenant == connection.org_id and item.account_connection_id == connection.id
+        ]
+        required_types = required or (
+            {"oauth_consent", "sandbox_membership"} if connection.environment == "sandbox" else
+            {"oauth_consent", "owner_confirmation", "policy_acceptance"}
+        )
+        latest = self._latest_evidence_by_type(related)
+        for evidence_type, item in latest.items():
+            if evidence_type not in required_types:
+                continue
+            if item.status == "revoked":
+                return "AUTHORIZATION_EVIDENCE_REVOKED"
+            if item.status == "expired" or (
+                item.status == "verified" and item.valid_until is not None and item.valid_until <= at
+            ):
+                return "AUTHORIZATION_EVIDENCE_EXPIRED"
+            if item.captured_at > at:
+                return "AUTHORIZATION_EVIDENCE_FROM_FUTURE"
+        if connection.connection_status == "connected" and not required_types.issubset(
+            self._current_evidence_types(related, at)
+        ):
+            return "AUTHORIZATION_EVIDENCE_INCOMPLETE"
+        return None
 
     @staticmethod
     def _validate_connection(value: dict[str, Any]) -> None:
