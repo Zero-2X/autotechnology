@@ -119,8 +119,15 @@ async def select_inbox(page) -> dict[str, str]:
 
 
 async def handle_inbox(page, root: Path, account_key: str, job_path: str | None,
-                       job_id: str | None) -> str:
-    inbox_state = await select_inbox(page)
+                       job_id: str | None, current_page: bool = False) -> str:
+    if current_page:
+        current = await session_url(page)
+        if "/login" in current:
+            inbox_state = {"status": "login_required", "url": current}
+        else:
+            inbox_state = {"status": "inbox_ready", "url": page.url}
+    else:
+        inbox_state = await select_inbox(page)
     if inbox_state["status"] == "login_required":
         write_session_status(account_key, url="https://creator.xiaohongshu.com/login",
                              root=root / ".local" / "browser-accounts")
@@ -280,10 +287,13 @@ async def handle_command(page, root: Path, account_key: str, command: dict) -> s
             page, root, account_key, str(job_path), job_id,
             bool(command.get("auto_publish", False)),
         )
-    await page.goto(URLS[target], wait_until="domcontentloaded")
     if target == "inbox":
+        if command.get("scan_current"):
+            return await handle_inbox(page, root, account_key, job_path, job_id, current_page=True)
+        await page.goto(URLS[target], wait_until="domcontentloaded")
         return await handle_inbox(page, root, account_key, job_path, job_id)
     else:
+        await page.goto(URLS[target], wait_until="domcontentloaded")
         update_job(root, job_id, status="browser_running", url=page.url)
         return "browser_running"
 

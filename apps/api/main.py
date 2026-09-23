@@ -314,12 +314,20 @@ def create_app(
     def open_xhs_browser(account_key: str, command: dict[str, Any] | None = None) -> dict[str, Any]:
         """Open the account's local browser session for login, inbox work, or draft preview."""
         payload = command or {}
+        content = payload.get("content")
+        scan_current = content.get("scan_current", False) if isinstance(content, dict) else False
+        auto_publish = payload.get("auto_publish", False)
+        if not isinstance(scan_current, bool):
+            raise HTTPException(status_code=400, detail={"code": "INVALID_XHS_SCAN_MODE", "message": "content.scan_current must be a boolean"})
+        if not isinstance(auto_publish, bool):
+            raise HTTPException(status_code=400, detail={"code": "INVALID_XHS_PUBLISH_MODE", "message": "auto_publish must be a boolean"})
         try:
             result = launch_operator_session(
                 account_key,
                 target=str(payload.get("target", "home")),
-                content=payload.get("content"),
-                auto_publish=bool(payload.get("auto_publish", False)),
+                content=content,
+                auto_publish=auto_publish,
+                scan_current=scan_current,
             )
         except (ValueError, OSError, subprocess.SubprocessError) as exc:
             raise HTTPException(

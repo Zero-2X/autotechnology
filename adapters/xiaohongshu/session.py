@@ -83,7 +83,7 @@ def diagnose_session(account_key: str, root: Path | None = None) -> dict[str, An
     if not profile_exists:
         next_step = '先点击“打开账号”，在弹出的创作者中心完成登录。'
     elif status.get('status') == 'login_required':
-        next_step = '登录已失效，请在小红书窗口重新扫码或登录后再重试。'
+        next_step = '请在本工作流打开的小红书专用窗口重新扫码或登录；普通浏览器的登录状态不会共享。回到创作者中心后再重试。'
     elif status.get('status') == 'connected' and not browser_running:
         next_step = '登录记录仍在，但独立浏览器窗口已关闭；请点击“打开账号”重新启动会话。'
     elif status.get('status') == 'connected':

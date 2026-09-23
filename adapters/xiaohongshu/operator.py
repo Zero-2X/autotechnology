@@ -96,6 +96,7 @@ def launch_operator_session(
     target: str,
     content: dict[str, Any] | None = None,
     auto_publish: bool = False,
+    scan_current: bool = False,
     root: Path | None = None,
 ) -> dict[str, Any]:
     """Start a headed browser without returning credentials or waiting for it."""
@@ -103,12 +104,20 @@ def launch_operator_session(
     profile = session_dir(account_key, project_root / ".local" / "browser-accounts")
     if target not in TARGETS:
         raise ValueError("target must be home, inbox, or publish")
+    if not isinstance(auto_publish, bool):
+        raise ValueError("auto_publish must be a boolean")
+    if not isinstance(scan_current, bool):
+        raise ValueError("scan_current must be a boolean")
     if auto_publish and target != "publish":
         raise ValueError("auto_publish is only valid for publish target")
+    if scan_current and target != "inbox":
+        raise ValueError("scan_current is only valid for inbox target")
     if target == "publish" and not content:
         raise ValueError("publish preview requires title and body")
 
     existing_pid = _existing_profile_pid(profile)
+    if scan_current and existing_pid is None:
+        raise ValueError("请先打开小红书账号窗口，并在窗口中手动进入消息页后再扫描。")
     script_path = project_root / "scripts" / "open-xhs-session.py"
     if existing_pid and target in {"publish", "inbox"} and not _session_runner_is_current(existing_pid, script_path):
         raise ValueError("该账号窗口仍运行旧版小红书流程。请先保存未完成内容、关闭该窗口后再点“打开账号”更新会话；本次操作尚未执行。")
@@ -135,12 +144,16 @@ def launch_operator_session(
                 raise ValueError("inbox reply requires message_id and reply together")
             risk = str(payload.get("risk", "unknown")).strip()
             send_requested = payload.get("send", False)
+            scan_current_requested = payload.get("scan_current", False)
             if not isinstance(send_requested, bool):
                 raise ValueError("inbox reply send flag must be a boolean")
+            if not isinstance(scan_current_requested, bool):
+                raise ValueError("inbox scan_current flag must be a boolean")
             if send_requested and risk != "low":
                 raise ValueError("only low-risk inbox replies may be sent through the browser")
             payload = {"job_id": job_id, "account_key": account_key, "message_id": message_id,
-                       "reply": reply, "risk": risk, "send": send_requested}
+                       "reply": reply, "risk": risk, "send": send_requested,
+                       "scan_current": scan_current_requested}
             queue_dir.mkdir(parents=True, exist_ok=True)
         job_path = queue_dir / "job.json"
         job_path.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -194,5 +207,6 @@ def launch_operator_session(
             "job_id": job_id, "target": target,
             "job_path": str(job_path.resolve()) if job_path is not None else None,
             "auto_publish": bool(auto_publish),
+            "scan_current": bool(scan_current),
         }, project_root)
     return result
