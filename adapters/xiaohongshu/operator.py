@@ -41,9 +41,15 @@ def _existing_profile_pid(profile: Path) -> int | None:
         return None
     marker = str(profile.resolve()).lower().replace("/", "\\")
     try:
-        for process in psutil.process_iter(["pid", "name", "cmdline"]):
-            cmdline = " ".join(process.info.get("cmdline") or []).lower().replace("/", "\\")
-            if "chrome" in str(process.info.get("name", "")).lower() and "--type=" not in cmdline and f"--user-data-dir={marker}" in cmdline:
+        for process in psutil.process_iter(["pid", "name"]):
+            try:
+                name = str(process.info.get("name", "")).lower()
+                if "chrome" not in name:
+                    continue
+                cmdline = " ".join(process.cmdline()).lower().replace("/", "\\")
+            except (OSError, psutil.Error):
+                continue
+            if "--type=" not in cmdline and f"--user-data-dir={marker}" in cmdline:
                 return int(process.info["pid"])
     except (OSError, psutil.Error):
         return None

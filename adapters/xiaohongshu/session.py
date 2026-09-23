@@ -48,9 +48,17 @@ def _browser_process_running(account_key: str, root: Path) -> bool:
         return False
     marker = str(session_dir(account_key, root)).lower().replace('/', '\\')
     try:
-        for process in psutil.process_iter(['name', 'cmdline']):
-            name = str(process.info.get('name') or '').lower()
-            command = ' '.join(process.info.get('cmdline') or []).lower().replace('/', '\\')
+        for process in psutil.process_iter(['name']):
+            try:
+                name = str(process.info.get('name') or '').lower()
+                if 'chrome' not in name:
+                    continue
+                command = ' '.join(process.cmdline()).lower().replace('/', '\\')
+            except (OSError, psutil.Error):
+                # Windows commonly denies command-line inspection for unrelated
+                # protected processes. Keep checking instead of returning a false
+                # "browser closed" result for the account we are looking for.
+                continue
             if 'chrome' in name and '--type=' not in command and f'--user-data-dir={marker}' in command:
                 return True
     except (OSError, psutil.Error):
