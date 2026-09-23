@@ -674,5 +674,129 @@ async function pollXhsSession(){const accounts=state.accounts.filter(a=>a.platfo
     ensureOperationsPolicyCard(); ensurePublishGuardBanner();
   })();
   </script>
+  <script>
+  (() => {
+    // Local pilot calendar. It deliberately talks only to the loopback API;
+    // creating or editing a plan never opens a platform and never sends a
+    // message.
+    let pilotRuns = [];
+    let selectedPilotId = null;
+    const pilotLabels = {planned:'待开始', running:'进行中', completed:'已完成', stopped:'已停止'};
+    const itemLabels = {planned:'待排期', ready:'待人工确认', published:'已登记发布', stopped:'已停止'};
+    const pilotStatusClass = value => ({planned:'amber',running:'blue',completed:'green',stopped:'red'})[value] || 'gray';
+    const itemStatusClass = value => ({planned:'gray',ready:'blue',published:'green',stopped:'red'})[value] || 'gray';
+    const pilotBase = () => (state.settings.apiBase || 'http://127.0.0.1:8000').replace(/\/$/, '');
+    const pilotApi = async (path, options = {}) => {
+      const response = await fetch(`${pilotBase()}${path}`, {headers:{'Content-Type':'application/json', ...(options.headers || {})}, ...options});
+      let payload = {};
+      try { payload = await response.json(); } catch {}
+      if (!response.ok) throw new Error(payload?.detail?.message || '试点服务暂不可用');
+      return payload?.data;
+    };
+    const localDateTime = value => value ? new Date(value).toLocaleString('zh-CN', {hour12:false}) : '未设置';
+    const inputDateTime = value => value ? new Date(value).toISOString().slice(0,16) : '';
+    const isoFromInput = value => value ? new Date(value).toISOString() : null;
+    function ensurePilotStyles() {
+      if ($('#pilotStyles')) return;
+      const style = document.createElement('style'); style.id = 'pilotStyles';
+      style.textContent = `
+        .pilot-layout{display:grid;grid-template-columns:minmax(260px,.8fr) minmax(420px,1.6fr);gap:16px}
+        .pilot-list{display:flex;flex-direction:column;gap:8px}.pilot-card{border:1px solid var(--line);background:#fff;border-radius:12px;padding:13px;text-align:left;cursor:pointer}.pilot-card:hover,.pilot-card.active{border-color:#9dbcf2;background:var(--blue-soft)}.pilot-card h3{font-size:13px;margin:0 0 5px}.pilot-card p{font-size:11px;color:var(--muted);margin:3px 0}.pilot-detail{min-height:540px}.pilot-meta{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-bottom:15px}.pilot-meta .meta-box{min-height:58px}.pilot-table{width:100%;border-collapse:collapse}.pilot-table th,.pilot-table td{padding:9px 8px;border-bottom:1px solid #eef1f5;text-align:left;font-size:11px;vertical-align:top}.pilot-table th{font-size:10px;color:var(--muted);background:#fafbfc}.pilot-form{display:grid;gap:10px}.pilot-form .field{margin-bottom:0}.pilot-actions{display:flex;gap:8px;flex-wrap:wrap}.pilot-muted{font-size:11px;color:var(--muted)}
+        @media(max-width:900px){.pilot-layout{grid-template-columns:1fr}.pilot-meta{grid-template-columns:repeat(2,1fr)}}
+      `;
+      document.head.appendChild(style);
+    }
+    function accountOptions(selected = '') {
+      const accounts = (state.accounts || []).filter(item => item && item.id);
+      return accounts.map(item => `<option value="${esc(item.id)}" ${item.id === selected ? 'selected' : ''}>${esc(item.name || item.id)} · ${esc(item.platform || '平台')}</option>`).join('');
+    }
+    function ensurePilotView() {
+      ensurePilotStyles();
+      const nav = document.querySelector('.sidebar .nav-label + .nav-btn')?.parentElement || document.querySelector('.sidebar');
+      if (!document.querySelector('.nav-btn[data-view="pilot"]')) {
+        const settingsButton = document.querySelector('.nav-btn[data-view="settings"]');
+        const button = document.createElement('button'); button.className = 'nav-btn'; button.dataset.view = 'pilot';
+        button.innerHTML = '<span class="nav-icon">◷</span><span>试点与排期</span>';
+        settingsButton?.parentElement?.insertBefore(button, settingsButton);
+        button.addEventListener('click', () => { showView('pilot'); $('#crumbLabel').textContent = '试点与排期'; loadPilotRuns(); });
+      }
+      if ($('#view-pilot')) return;
+      const view = document.createElement('section'); view.className = 'view'; view.id = 'view-pilot';
+      view.innerHTML = `
+        <div class="page-head"><div><h1>试点与排期</h1><p>先建立可暂停的本地计划，再逐条人工确认平台动作。这里不会自动扫描网页，也不会自动发布或回复。</p></div><div class="head-actions"><button class="ghost-btn" id="refreshPilotRuns">↻ 刷新计划</button><button class="primary-btn" id="newPilotRun">＋ 新建试点</button></div></div>
+        <div class="notice">安全边界：试点计划只记录内容引用、账号标识、时间和责任人。真正的发布、评论和回复仍需平台官方页面或获批 API；触发异常时可在“连接与设置”使用紧急停止。</div>
+        <div class="pilot-layout"><div class="panel"><div class="panel-head"><div><h2>试点计划</h2><p>单账号起步，确认稳定后再增加账号</p></div><span class="status gray" id="pilotRunCount">0 个</span></div><div class="panel-body"><div class="pilot-list" id="pilotRunList"></div></div></div><div class="panel pilot-detail"><div class="panel-head"><div><h2 id="pilotDetailTitle">选择一个试点</h2><p id="pilotDetailMeta">负责人、停发条件和内容排期会显示在这里</p></div><span class="status gray" id="pilotDetailStatus">未选择</span></div><div class="panel-body" id="pilotDetailBody"><div class="empty"><div class="empty-icon">◷</div>先创建或选择一个试点计划</div></div></div></div>`;
+      const settingsView = $('#view-settings'); settingsView?.parentElement?.insertBefore(view, settingsView);
+      $('#newPilotRun').addEventListener('click', () => renderPilotCreateForm());
+      $('#refreshPilotRuns').addEventListener('click', () => loadPilotRuns(true));
+    }
+    function renderPilotCreateForm() {
+      const body = $('#pilotDetailBody'); if (!body) return;
+      const now = new Date(); const end = new Date(now.getTime() + 14 * 86400000);
+      body.innerHTML = `<div class="pilot-form"><div class="field"><label for="pilotName">试点名称</label><input id="pilotName" placeholder="例如：小红书单账号首周人工确认" /></div><div class="field-row"><div class="field"><label for="pilotOwner">负责人</label><input id="pilotOwner" placeholder="运营负责人" /></div><div class="field"><label for="pilotBackup">替补负责人</label><input id="pilotBackup" placeholder="审核负责人" /></div></div><div class="field-row"><div class="field"><label for="pilotStart">开始时间</label><input id="pilotStart" type="datetime-local" value="${inputDateTime(now)}" /></div><div class="field"><label for="pilotEnd">结束时间</label><input id="pilotEnd" type="datetime-local" value="${inputDateTime(end)}" /></div></div><div class="field"><label for="pilotAccounts">试点账号</label><select id="pilotAccounts" multiple size="4">${accountOptions()}</select><small class="pilot-muted">按住 Ctrl/⌘ 可选择多个账号；建议先选一个。</small></div><div class="field-row"><div class="field"><label for="pilotDaily">每日发布上限</label><input id="pilotDaily" type="number" min="0" max="1000" value="2" /></div><div class="field"><label for="pilotWeekly">每周发布上限</label><input id="pilotWeekly" type="number" min="0" max="1000" value="8" /></div></div><div class="field"><label for="pilotStops">停发条件</label><textarea id="pilotStops" rows="4">出现版权投诉\n平台提示异常登录\n账号负责人无法复核内容</textarea><small class="pilot-muted">每行一个条件，任何一项出现都应停止发布并转人工。</small></div><div class="pilot-actions"><button class="primary-btn" id="savePilotRun">保存试点计划</button><button class="ghost-btn" id="cancelPilotForm">取消</button></div></div>`;
+      $('#savePilotRun').addEventListener('click', createPilotRun);
+      $('#cancelPilotForm').addEventListener('click', () => renderPilotDetail(selectedPilotId));
+    }
+    async function createPilotRun() {
+      const selected = [...($('#pilotAccounts')?.selectedOptions || [])].map(option => option.value);
+      const daily = Number($('#pilotDaily')?.value), weekly = Number($('#pilotWeekly')?.value);
+      const stops = ($('#pilotStops')?.value || '').split(/\r?\n/).map(item => item.trim()).filter(Boolean);
+      if (!$('#pilotName')?.value.trim() || !$('#pilotOwner')?.value.trim() || !$('#pilotBackup')?.value.trim()) return toast('请填写试点名称、负责人和替补负责人');
+      if (!selected.length) return toast('至少选择一个试点账号');
+      if (!Number.isInteger(daily) || !Number.isInteger(weekly) || daily < 0 || weekly < daily) return toast('发布上限无效：每周上限不能小于每日上限');
+      if (!stops.length) return toast('至少填写一个停发条件');
+      try {
+        const record = await pilotApi('/internal/operations/pilot-runs', {method:'POST', body:JSON.stringify({name:$('#pilotName').value.trim(),owner:$('#pilotOwner').value.trim(),backup:$('#pilotBackup').value.trim(),start_at:isoFromInput($('#pilotStart').value),end_at:isoFromInput($('#pilotEnd').value),account_keys:selected,publish_limits:{daily_publish:daily,weekly_publish:weekly},stop_conditions:stops})});
+        selectedPilotId = record.id; toast('试点计划已保存，只建立本地排期'); await loadPilotRuns();
+      } catch (error) { toast(error.message || '试点计划保存失败'); }
+    }
+    function renderPilotList() {
+      const list = $('#pilotRunList'); if (!list) return;
+      $('#pilotRunCount').textContent = `${pilotRuns.length} 个`;
+      list.innerHTML = pilotRuns.length ? pilotRuns.map(run => `<button class="pilot-card ${run.id === selectedPilotId ? 'active' : ''}" data-pilot-id="${esc(run.id)}"><h3>${esc(run.name)}</h3><p><span class="status ${pilotStatusClass(run.status)}">${esc(pilotLabels[run.status] || run.status)}</span> · ${esc(localDateTime(run.start_at))}</p><p>${esc(run.owner)} / 替补 ${esc(run.backup)}</p><p>${(run.items || []).length} 条内容排期 · ${esc((run.account_keys || []).join('、') || '未指定账号')}</p></button>`).join('') : empty('还没有试点计划');
+      $$('#pilotRunList [data-pilot-id]').forEach(button => button.addEventListener('click', () => { selectedPilotId = button.dataset.pilotId; renderPilotList(); renderPilotDetail(selectedPilotId); }));
+    }
+    async function renderPilotDetail(runId) {
+      const body = $('#pilotDetailBody'); if (!body) return;
+      if (!runId) { $('#pilotDetailTitle').textContent='选择一个试点'; $('#pilotDetailMeta').textContent='负责人、停发条件和内容排期会显示在这里'; $('#pilotDetailStatus').className='status gray'; $('#pilotDetailStatus').textContent='未选择'; body.innerHTML='<div class="empty"><div class="empty-icon">◷</div>先创建或选择一个试点计划</div>'; return; }
+      let run = pilotRuns.find(item => item.id === runId);
+      try { run = await pilotApi(`/internal/operations/pilot-runs/${encodeURIComponent(runId)}`); } catch (error) { toast(error.message || '试点详情读取失败'); return; }
+      const summary = {items:run.items || [], item_counts:{planned:0,ready:0,published:0,stopped:0}}; summary.items.forEach(item => {summary.item_counts[item.status]=(summary.item_counts[item.status]||0)+1});
+      $('#pilotDetailTitle').textContent = run.name; $('#pilotDetailMeta').textContent = `${run.owner} · 替补 ${run.backup} · ${localDateTime(run.start_at)} 至 ${run.end_at ? localDateTime(run.end_at) : '未设置结束时间'}`; $('#pilotDetailStatus').className=`status ${pilotStatusClass(run.status)}`; $('#pilotDetailStatus').textContent=pilotLabels[run.status] || run.status;
+      const accountKey = run.account_keys?.[0] || '';
+      body.innerHTML = `<div class="pilot-meta"><div class="meta-box"><span>每日上限</span><b>${run.publish_limits?.daily_publish ?? 0} 条</b></div><div class="meta-box"><span>每周上限</span><b>${run.publish_limits?.weekly_publish ?? 0} 条</b></div><div class="meta-box"><span>已排期</span><b>${summary.items.length} 条</b></div><div class="meta-box"><span>复盘次数</span><b>${(run.review_log || []).length}</b></div></div><div class="alert ${run.status==='stopped'?'danger':'warn'}"><div class="alert-icon">${run.status==='stopped'?'!':'i'}</div><div><strong>${run.status==='stopped'?'试点已停止':'停发条件'}</strong><p>${esc(run.status==='stopped' ? (run.stop_reason || '运营人员停止') : (run.stop_conditions || []).join('；'))}</p></div></div><div class="pilot-actions" style="margin:12px 0 16px">${run.status==='planned'?'<button class="primary-btn" id="startPilot">开始试点</button>':''}${run.status==='running'?'<button class="primary-btn" id="completePilot">完成试点</button>':''}${['planned','running'].includes(run.status)?'<button class="ghost-btn" id="stopPilot">立即停止</button>':''}<button class="ghost-btn" id="reviewPilot">记录复盘</button></div><div class="panel" style="box-shadow:none;margin-bottom:14px"><div class="panel-head"><div><h2>内容排期</h2><p>这里只登记时间和内容引用，不会自动发布</p></div></div><div class="panel-body"><div class="table-wrap"><table class="pilot-table"><thead><tr><th>内容</th><th>账号</th><th>时间</th><th>状态</th></tr></thead><tbody>${summary.items.length ? summary.items.map(item => `<tr><td><b>${esc(item.title)}</b><small>${esc(item.content_id || '未关联内容')}</small></td><td>${esc(item.account_key)}</td><td>${esc(localDateTime(item.scheduled_at))}</td><td><span class="status ${itemStatusClass(item.status)}">${itemLabels[item.status] || item.status}</span></td></tr>`).join('') : '<tr><td colspan="4"><div class="empty">还没有排期内容</div></td></tr>'}</tbody></table></div></div></div><div class="panel" style="box-shadow:none"><div class="panel-head"><div><h2>添加排期</h2><p>保存后仍需人工审批和平台页面确认</p></div></div><div class="panel-body"><div class="field-row"><div class="field"><label for="pilotItemTitle">内容标题</label><input id="pilotItemTitle" placeholder="选择一个已审核内容" /></div><div class="field"><label for="pilotItemAccount">目标账号</label><select id="pilotItemAccount">${(run.account_keys || []).map(key => `<option value="${esc(key)}">${esc(key)}</option>`).join('')}</select></div></div><div class="field-row"><div class="field"><label for="pilotItemTime">计划时间</label><input id="pilotItemTime" type="datetime-local" value="${inputDateTime(new Date(Date.now()+86400000))}" /></div><div class="field"><label for="pilotItemContent">内容 ID（可选）</label><input id="pilotItemContent" placeholder="例如 CNT-001" /></div></div><button class="ghost-btn" id="addPilotItem">添加到排期</button></div></div>`;
+      $('#startPilot')?.addEventListener('click', () => changePilotStatus(run.id, 'start'));
+      $('#completePilot')?.addEventListener('click', () => changePilotStatus(run.id, 'complete'));
+      $('#stopPilot')?.addEventListener('click', () => changePilotStatus(run.id, 'stop'));
+      $('#reviewPilot')?.addEventListener('click', () => recordPilotReview(run.id));
+      $('#addPilotItem')?.addEventListener('click', () => addPilotItem(run.id));
+    }
+    async function changePilotStatus(runId, action) {
+      const reason = action === 'stop' ? window.prompt('请填写停止原因（例如：平台出现异常登录提示）', '') : '';
+      if (action === 'stop' && !reason?.trim()) return;
+      try { await pilotApi(`/internal/operations/pilot-runs/${encodeURIComponent(runId)}:${action}`, {method:'POST', body:JSON.stringify(reason ? {reason:reason.trim()} : {})}); toast(action==='start'?'试点已开始':action==='complete'?'试点已完成':'试点已停止'); await loadPilotRuns(); }
+      catch (error) { toast(error.message || '试点状态更新失败'); }
+    }
+    async function addPilotItem(runId) {
+      const title=$('#pilotItemTitle')?.value.trim(), accountKey=$('#pilotItemAccount')?.value, scheduled=isoFromInput($('#pilotItemTime')?.value);
+      if (!title || !accountKey || !scheduled) return toast('请填写内容标题、账号和计划时间');
+      try { await pilotApi(`/internal/operations/pilot-runs/${encodeURIComponent(runId)}/items`, {method:'POST', body:JSON.stringify({title,account_key:accountKey,scheduled_at:scheduled,content_id:$('#pilotItemContent')?.value.trim()||''})}); toast('内容已加入本地排期'); await loadPilotRuns(); }
+      catch (error) { toast(error.message || '排期保存失败'); }
+    }
+    async function recordPilotReview(runId) {
+      const note = window.prompt('请输入本次复盘记录（例如：首周内容质量稳定，继续人工确认）', '');
+      if (!note?.trim()) return;
+      try { await pilotApi(`/internal/operations/pilot-runs/${encodeURIComponent(runId)}/review`, {method:'POST', body:JSON.stringify({note:note.trim(),metrics:{source:'local_console'}})}); toast('复盘记录已保存'); await loadPilotRuns(); }
+      catch (error) { toast(error.message || '复盘保存失败'); }
+    }
+    async function loadPilotRuns(showError = false) {
+      ensurePilotView();
+      try { pilotRuns = await pilotApi('/internal/operations/pilot-runs'); if (!selectedPilotId && pilotRuns[0]) selectedPilotId=pilotRuns[0].id; if (selectedPilotId && !pilotRuns.some(item => item.id===selectedPilotId)) selectedPilotId=pilotRuns[0]?.id || null; renderPilotList(); await renderPilotDetail(selectedPilotId); }
+      catch (error) { pilotRuns=[]; renderPilotList(); renderPilotDetail(null); if (showError) toast(error.message || '试点服务暂不可用，请确认 API 已启动'); }
+    }
+    document.addEventListener('DOMContentLoaded', () => { ensurePilotView(); loadPilotRuns(); });
+    ensurePilotView();
+  })();
+  </script>
 </body>
 </html>

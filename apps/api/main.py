@@ -50,7 +50,7 @@ from modules.media.local_demo_generator import generate_cover_svg, generate_demo
 from modules.support.local_reply_generator import generate_local_reply
 from modules.model_gateway.console_provider import ModelError, generate_structured, model_config
 from modules.platforms.routing import platform_catalog, profile_for, resolve_delivery_route
-from modules.operations import OperationsPolicyError, OperationsPolicyStore
+from modules.operations import OperationsPolicyError, OperationsPolicyStore, PilotRunError, PilotRunStore
 
 
 SERVICE_NAME = "api"
@@ -58,6 +58,7 @@ RUNTIME_NAME = "modular-monolith"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CONSOLE_STATE_PATH = PROJECT_ROOT / ".local" / "workflow-state.json"
 OPERATIONS_POLICY_PATH = PROJECT_ROOT / ".local" / "operations-policy.json"
+PILOT_RUNS_PATH = PROJECT_ROOT / ".local" / "pilot-runs.json"
 
 
 def dependency_status(registry: HealthRegistry) -> dict[str, Any]:
@@ -104,6 +105,7 @@ def create_app(
     knowledge_core_service: KnowledgeCoreService | None = None,
     canonical_content_service: CanonicalContentService | None = None,
     operations_policy_store: OperationsPolicyStore | None = None,
+    pilot_run_store: PilotRunStore | None = None,
 ) -> FastAPI:
     health_checks = health_registry or default_health_registry()
     metrics = metric_registry or default_metric_registry()
@@ -151,6 +153,7 @@ def create_app(
         topic_brief_service=app.state.topic_brief_service,
     )
     app.state.operations_policy = operations_policy_store or OperationsPolicyStore(OPERATIONS_POLICY_PATH)
+    app.state.pilot_runs = pilot_run_store or PilotRunStore(PILOT_RUNS_PATH)
 
     def correlation_fields() -> dict[str, str | None]:
         context = get_tenant_context()
@@ -302,6 +305,100 @@ def create_app(
         except OperationsPolicyError as exc:
             raise HTTPException(status_code=400, detail={"code": exc.code, "message": str(exc)}) from exc
         return success_response(result)
+
+    def pilot_error(exc: PilotRunError) -> HTTPException:
+        status_code = 404 if exc.code == "PILOT_RUN_NOT_FOUND" else 400
+        return HTTPException(status_code=status_code, detail={"code": exc.code, "message": str(exc)})
+
+    @app.get("/internal/operations/pilot-runs", tags=["internal"], include_in_schema=False)
+    def list_pilot_runs(status: str | None = None, account_key: str | None = None) -> dict[str, Any]:
+        """List local pilot plans and schedules without contacting a platform."""
+        try:
+            return success_response(app.state.pilot_runs.list(status=status, account_key=account_key))
+        except PilotRunError as exc:
+            raise pilot_error(exc) from exc
+
+    @app.post("/internal/operations/pilot-runs", tags=["internal"], include_in_schema=False)
+    async def create_pilot_run(request: Request) -> dict[str, Any]:
+        try:
+            payload = await request.json()
+        except json.JSONDecodeError as exc:
+            raise HTTPException(status_code=400, detail={"code": "INVALID_PILOT_RUN", "message": "请求内容不是有效 JSON"}) from exc
+        try:
+            return success_response(app.state.pilot_runs.create(payload))
+        except PilotRunError as exc:
+            raise pilot_error(exc) from exc
+
+    @app.get("/internal/operations/pilot-runs/{run_id}", tags=["internal"], include_in_schema=False)
+    def get_pilot_run(run_id: str) -> dict[str, Any]:
+        try:
+            return success_response(app.state.pilot_runs.get(run_id))
+        except PilotRunError as exc:
+            raise pilot_error(exc) from exc
+
+    @app.get("/internal/operations/pilot-runs/{run_id}/summary", tags=["internal"], include_in_schema=False)
+    def get_pilot_summary(run_id: str) -> dict[str, Any]:
+        try:
+            return success_response(app.state.pilot_runs.summary(run_id))
+        except PilotRunError as exc:
+            raise pilot_error(exc) from exc
+
+    @app.put("/internal/operations/pilot-runs/{run_id}", tags=["internal"], include_in_schema=False)
+    async def update_pilot_run(run_id: str, request: Request) -> dict[str, Any]:
+        try:
+            payload = await request.json()
+        except json.JSONDecodeError as exc:
+            raise HTTPException(status_code=400, detail={"code": "INVALID_PILOT_RUN", "message": "请求内容不是有效 JSON"}) from exc
+        try:
+            return success_response(app.state.pilot_runs.update(run_id, payload))
+        except PilotRunError as exc:
+            raise pilot_error(exc) from exc
+
+    async def transition_pilot_run(run_id: str, target_status: str, request: Request) -> dict[str, Any]:
+        try:
+            payload = await request.json()
+        except json.JSONDecodeError:
+            payload = {}
+        if not isinstance(payload, dict):
+            payload = {}
+        try:
+            return success_response(app.state.pilot_runs.transition(run_id, target_status, reason=str(payload.get("reason", ""))))
+        except PilotRunError as exc:
+            raise pilot_error(exc) from exc
+
+    @app.post("/internal/operations/pilot-runs/{run_id}:start", tags=["internal"], include_in_schema=False)
+    async def start_pilot_run(run_id: str, request: Request) -> dict[str, Any]:
+        return await transition_pilot_run(run_id, "running", request)
+
+    @app.post("/internal/operations/pilot-runs/{run_id}:stop", tags=["internal"], include_in_schema=False)
+    async def stop_pilot_run(run_id: str, request: Request) -> dict[str, Any]:
+        return await transition_pilot_run(run_id, "stopped", request)
+
+    @app.post("/internal/operations/pilot-runs/{run_id}:complete", tags=["internal"], include_in_schema=False)
+    async def complete_pilot_run(run_id: str, request: Request) -> dict[str, Any]:
+        return await transition_pilot_run(run_id, "completed", request)
+
+    @app.post("/internal/operations/pilot-runs/{run_id}/items", tags=["internal"], include_in_schema=False)
+    async def add_pilot_item(run_id: str, request: Request) -> dict[str, Any]:
+        try:
+            payload = await request.json()
+        except json.JSONDecodeError as exc:
+            raise HTTPException(status_code=400, detail={"code": "INVALID_PILOT_ITEM", "message": "请求内容不是有效 JSON"}) from exc
+        try:
+            return success_response(app.state.pilot_runs.add_item(run_id, payload))
+        except PilotRunError as exc:
+            raise pilot_error(exc) from exc
+
+    @app.post("/internal/operations/pilot-runs/{run_id}/review", tags=["internal"], include_in_schema=False)
+    async def review_pilot_run(run_id: str, request: Request) -> dict[str, Any]:
+        try:
+            payload = await request.json()
+        except json.JSONDecodeError as exc:
+            raise HTTPException(status_code=400, detail={"code": "INVALID_REVIEW", "message": "请求内容不是有效 JSON"}) from exc
+        try:
+            return success_response(app.state.pilot_runs.review(run_id, payload))
+        except PilotRunError as exc:
+            raise pilot_error(exc) from exc
 
     @app.get("/internal/model/status", tags=["internal"], include_in_schema=False)
     def model_status() -> dict[str, Any]:
