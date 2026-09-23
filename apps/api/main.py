@@ -49,7 +49,7 @@ from adapters.xiaohongshu.operator import launch_operator_session, read_launch_s
 from modules.media.local_demo_generator import generate_cover_svg, generate_demo_content
 from modules.support.local_reply_generator import generate_local_reply
 from modules.model_gateway.console_provider import ModelError, generate_structured, model_config
-from modules.platforms.routing import profile_for, resolve_delivery_route
+from modules.platforms.routing import platform_catalog, profile_for, resolve_delivery_route
 
 
 SERVICE_NAME = "api"
@@ -309,6 +309,74 @@ def create_app(
         )
         return success_response({"platform": route.platform, "action": route.action,
                                  "mode": route.mode, "reason": route.reason})
+
+    @app.get("/internal/platforms/catalog", tags=["internal"], include_in_schema=False)
+    def platforms_catalog() -> dict[str, Any]:
+        """Return the redacted platform capability matrix used by the console.
+
+        ``official_api_actions`` is a statement about the platform's public
+        product surface.  ``current_adapter_actions`` is deliberately empty
+        until this workspace has a verified adapter and account authorization.
+        Keeping both fields prevents a logged-in browser session from being
+        mistaken for an approved API connection.
+        """
+        actions = ("publish", "inbox", "comment_reply", "message_reply")
+        rows: list[dict[str, Any]] = []
+        for item in platform_catalog():
+            profile = profile_for(str(item["platform"]))
+            routes = {}
+            for action in actions:
+                route = resolve_delivery_route(profile=profile, action=action)
+                routes[action] = {
+                    "mode": route.mode,
+                    "reason": route.reason,
+                }
+            rows.append({**item, "routes_without_authorization": routes})
+        return success_response(rows)
+
+    @app.get("/internal/xhs/accounts/{account_key}/capabilities", tags=["internal"], include_in_schema=False)
+    def xhs_capabilities(account_key: str) -> dict[str, Any]:
+        """Explain the difference between a local login and XHS operations."""
+        try:
+            session = read_session_status(account_key)
+            diagnostics = diagnose_session(account_key)
+        except (ValueError, OSError, json.JSONDecodeError) as exc:
+            raise HTTPException(status_code=400, detail={"code": "INVALID_XHS_ACCOUNT", "message": str(exc)}) from exc
+        session_ready = session.get("status") == "connected"
+        profile = profile_for("小红书")
+        actions = ("publish", "inbox", "comment_reply", "message_reply")
+        routes = {}
+        for action in actions:
+            route = resolve_delivery_route(
+                profile=profile,
+                action=action,
+                browser_session_ready=session_ready,
+            )
+            routes[action] = {"mode": route.mode, "reason": route.reason}
+        return success_response({
+            "account_key": account_key,
+            "session": {
+                "status": session.get("status", "pending"),
+                "url": session.get("url"),
+                "connected_at": session.get("connected_at"),
+            },
+            "api": {
+                "status": "not_authorized",
+                "reason": "当前没有经过验证的小红书发布、评论或私信 API Scope",
+            },
+            "publish": {
+                "mode": "draft_only",
+                "auto_submit": "disabled_by_default",
+                "reason": "可以准备图文草稿；发布必须在官方页面由运营人员确认",
+            },
+            "inbox": {
+                "mode": "manual_import",
+                "background_scan": "disabled",
+                "reason": "当前账号没有已验证的消息列表适配器，后台不会持续扫描",
+            },
+            "routes": routes,
+            "diagnostics": diagnostics,
+        })
 
     @app.post("/internal/xhs/accounts/{account_key}/browser:open", tags=["internal"], include_in_schema=False)
     def open_xhs_browser(account_key: str, command: dict[str, Any] | None = None) -> dict[str, Any]:

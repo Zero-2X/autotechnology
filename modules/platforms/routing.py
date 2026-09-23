@@ -8,7 +8,7 @@ has a logged-in session.
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import FrozenSet
+from typing import Any, FrozenSet
 
 
 @dataclass(frozen=True)
@@ -54,6 +54,118 @@ XHS_PROFILE = PlatformProfile(
 )
 
 
+# This catalog describes what a platform may offer officially.  It is kept
+# separate from ``PlatformProfile.api_actions`` on purpose: an official API
+# can exist while this workspace still has no approved credentials or adapter
+# for a particular account.  The router therefore continues to choose
+# ``manual_export`` until an account capability snapshot is supplied.
+PLATFORM_CATALOG: tuple[dict[str, Any], ...] = (
+    {
+        "platform": "小红书",
+        "official_api_actions": (),
+        "current_adapter_actions": (),
+        "message_mode": "manual_import",
+        "status": "browser_session_only",
+        "summary": "当前只确认本机创作者中心会话；发布、评论读取和私信回复未获官方权限。",
+        "docs": (
+            ("权限说明", "https://openaccount.xiaohongshu.com/docs/scope"),
+            ("API 参考", "https://openaccount.xiaohongshu.com/docs/api-reference"),
+        ),
+    },
+    {
+        "platform": "YouTube",
+        "official_api_actions": ("publish", "inbox", "comment_reply"),
+        "current_adapter_actions": (),
+        "message_mode": "official_api_or_manual_import",
+        "status": "official_api_possible",
+        "summary": "官方接口支持上传视频、读取评论和回复；需要 Google OAuth、配额和项目审核条件。",
+        "docs": (
+            ("上传视频", "https://developers.google.com/youtube/v3/docs/videos/insert"),
+            ("评论接口", "https://developers.google.com/youtube/v3/docs/commentThreads"),
+        ),
+    },
+    {
+        "platform": "TikTok",
+        "official_api_actions": ("publish",),
+        "current_adapter_actions": (),
+        "message_mode": "manual_import",
+        "status": "official_api_possible",
+        "summary": "Content Posting API 需要 video.publish、账号授权和平台审核；评论/私信不在当前适配器中。",
+        "docs": (
+            ("接入条件", "https://developers.tiktok.com/docs/en/content-posting-api-get-started"),
+            ("发布接口", "https://developers.tiktok.com/docs/en/content-posting-api-reference-direct-post"),
+        ),
+    },
+    {
+        "platform": "Instagram",
+        "official_api_actions": ("publish", "comment_reply"),
+        "current_adapter_actions": (),
+        "message_mode": "official_api_or_manual_import",
+        "status": "official_api_possible",
+        "summary": "专业账号可以申请内容和评论能力；需要 Meta 应用、权限审核及账号授权。",
+        "docs": (("Meta API 文档", "https://www.postman.com/meta/instagram/documentation/6yqw8pt/instagram-api"),),
+    },
+    {
+        "platform": "LinkedIn",
+        "official_api_actions": ("publish", "comment_reply"),
+        "current_adapter_actions": (),
+        "message_mode": "official_api_or_manual_import",
+        "status": "official_api_possible",
+        "summary": "组织内容和评论能力受组织管理员角色及开发者权限限制；当前尚未连接应用。",
+        "docs": (("评论接口与权限", "https://learn.microsoft.com/en-us/linkedin/marketing/community-management/shares/comments-api"),),
+    },
+    {
+        "platform": "抖音",
+        "official_api_actions": (),
+        "current_adapter_actions": (),
+        "message_mode": "manual_import",
+        "status": "not_configured",
+        "summary": "当前没有经过验证的官方适配器；使用官方页面人工发布和导入消息。",
+        "docs": (),
+    },
+    {
+        "platform": "微博",
+        "official_api_actions": (),
+        "current_adapter_actions": (),
+        "message_mode": "manual_import",
+        "status": "not_configured",
+        "summary": "当前没有经过验证的官方适配器；使用官方页面人工发布和导入消息。",
+        "docs": (),
+    },
+    {
+        "platform": "Bilibili",
+        "official_api_actions": (),
+        "current_adapter_actions": (),
+        "message_mode": "manual_import",
+        "status": "not_configured",
+        "summary": "当前没有经过验证的官方适配器；使用官方页面人工发布和导入消息。",
+        "docs": (),
+    },
+    {
+        "platform": "微信公众号",
+        "official_api_actions": (),
+        "current_adapter_actions": (),
+        "message_mode": "manual_import",
+        "status": "not_configured",
+        "summary": "当前没有经过验证的官方适配器；使用官方页面人工发布和导入消息。",
+        "docs": (),
+    },
+)
+
+
+def platform_catalog() -> list[dict[str, Any]]:
+    """Return JSON-safe copies for the console capability matrix."""
+    return [
+        {
+            **item,
+            "official_api_actions": list(item["official_api_actions"]),
+            "current_adapter_actions": list(item["current_adapter_actions"]),
+            "docs": [{"label": label, "url": url} for label, url in item["docs"]],
+        }
+        for item in PLATFORM_CATALOG
+    ]
+
+
 def profile_for(platform: str) -> PlatformProfile:
     """Return only explicitly registered platform capabilities.
 
@@ -65,4 +177,7 @@ def profile_for(platform: str) -> PlatformProfile:
     return PlatformProfile(platform=platform)
 
 
-__all__ = ["DeliveryRoute", "PlatformProfile", "XHS_PROFILE", "profile_for", "resolve_delivery_route"]
+__all__ = [
+    "DeliveryRoute", "PlatformProfile", "XHS_PROFILE", "PLATFORM_CATALOG",
+    "platform_catalog", "profile_for", "resolve_delivery_route",
+]

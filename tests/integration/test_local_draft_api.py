@@ -85,3 +85,32 @@ def test_platform_route_does_not_claim_unregistered_api_adapter():
     assert response.status_code == 200
     assert response.json()['data']['mode'] == 'manual_export'
     assert response.json()['data']['reason'] == 'platform action has no registered adapter'
+
+
+def test_platform_catalog_explains_official_and_current_capabilities():
+    client = TestClient(create_app())
+    response = client.get('/internal/platforms/catalog')
+    assert response.status_code == 200
+    rows = {row['platform']: row for row in response.json()['data']}
+    assert rows['小红书']['current_adapter_actions'] == []
+    assert 'publish' in rows['YouTube']['official_api_actions']
+    assert rows['YouTube']['routes_without_authorization']['publish']['mode'] == 'manual_export'
+
+
+def test_xhs_capabilities_separate_login_from_publish_and_inbox(monkeypatch):
+    monkeypatch.setattr('apps.api.main.read_session_status', lambda account_key: {
+        'account_key': account_key, 'status': 'connected', 'url': 'https://creator.xiaohongshu.com/',
+        'connected_at': 'now',
+    })
+    monkeypatch.setattr('apps.api.main.diagnose_session', lambda account_key: {
+        'account_key': account_key, 'status': 'connected', 'checks': {}, 'next_step': '会话可用',
+    })
+    client = TestClient(create_app())
+    response = client.get('/internal/xhs/accounts/xhs-test/capabilities')
+    assert response.status_code == 200
+    data = response.json()['data']
+    assert data['session']['status'] == 'connected'
+    assert data['api']['status'] == 'not_authorized'
+    assert data['publish']['mode'] == 'draft_only'
+    assert data['inbox']['mode'] == 'manual_import'
+    assert data['routes']['publish']['mode'] == 'manual_export'

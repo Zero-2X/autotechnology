@@ -84,7 +84,7 @@
       <div class="verdict-side">
         <span class="tag red">尚未开放</span>
         <h3 style="margin-top:12px">已验收的无人值守自动发布</h3>
-        <p>发布中心有二次确认后的浏览器自动点击尝试，但尚未在真实账号完成端到端成功和平台回查，因此不能算可靠的无人值守发布，也不能把按钮点击当作发布成功。官方开放平台目前仅列 basic_info 已开放，发布笔记 write_notes 仍为规划中。Secret Vault、生产存储、平台回查和 2–4 周 Pilot 也尚未完成。</p>
+        <p>发布中心当前只把图文填入小红书创作页并停在发布前；网页自动点击发布默认关闭。官方开放平台目前仅列 basic_info 已开放，发布笔记 write_notes 仍为规划中。Secret Vault、生产存储、平台回查和 2–4 周 Pilot 也尚未完成。</p>
       </div>
     </div>
   </section>
@@ -115,7 +115,7 @@
         <tr><td><b>内容生产</b></td><td>选题、研究、文本流程、多语言变体、质量检查、结构化输出；模型端口已预留</td><td>用本地模板形成可审核草稿；模型当前未实测</td><td>模型接入与数据条款、费用审核、视频生成服务</td></tr>
         <tr><td><b>来源与版权</b></td><td>来源、证据、声明、版权和新鲜度记录</td><td>每条内容保留可追溯依据</td><td>生产对象存储和真实素材权限流程</td></tr>
         <tr><td><b>政策与审批</b></td><td>Policy 快照、风险门禁、人工审批、职责分离</td><td>真实发布前先人工审核</td><td>真实组织 IAM/MFA 与持久化授权</td></tr>
-        <tr><td><b>分发</b></td><td>人工导出、模拟平台、幂等、回查、停止开关；小红书浏览器填稿与发布尝试</td><td>小红书会话已连接；可填入草稿，自动点击需二次确认；客服消息由人工导入，草稿由人工核验和发送，无后台持续扫描</td><td>真实发布成功回执、消息收件入口和客服回查；其它平台官方/浏览器适配器</td></tr>
+        <tr><td><b>分发</b></td><td>人工导出、模拟平台、幂等、回查、停止开关；小红书浏览器填稿</td><td>小红书会话已连接；可填入草稿并停在发布前；客服消息由人工导入，草稿由人工核验和发送，无后台持续扫描</td><td>真实发布成功回执、消息收件入口和客服回查；其它平台官方/浏览器适配器</td></tr>
         <tr><td><b>账号与 OAuth</b></td><td>账号壳、Scope、PKCE、State、Secret 引用、租约和撤销</td><td>完成无凭证开发和契约验证</td><td>官方 OAuth 应用、Vault 与真实授权证据</td></tr>
         <tr><td><b>分析与反馈</b></td><td>内容、互动、成本、线索质量等 Observation</td><td>接收合法来源的数据并形成反馈</td><td>真实平台指标权限和持续运行证据</td></tr>
         <tr><td><b>自动化编排</b></td><td>LangGraph、状态、Checkpoint、人工中断、重放和评测</td><td>稳定编排完整内容流水线</td><td>托管 PostgreSQL 的生产组合验证</td></tr>
@@ -131,7 +131,7 @@
       <div class="step"><span class="n">2</span><strong>研究与生成</strong><p>基于来源和证据生成可编辑草稿。</p></div>
       <div class="step"><span class="n">3</span><strong>质量与合规</strong><p>检查事实、版权、政策、格式和风险。</p></div>
       <div class="step"><span class="n">4</span><strong>人工审批</strong><p>审核内容、目标账号、媒体和发布时间。</p></div>
-      <div class="step"><span class="n">5</span><strong>导出或发布</strong><p>小红书可用浏览器准备草稿；默认由人检查并发布，也可在二次确认后尝试自动点击，之后必须回平台核验。其它平台按已批准的 API 能力或人工导出处理。</p></div>
+      <div class="step"><span class="n">5</span><strong>导出或发布</strong><p>小红书可用浏览器准备草稿；由人检查并在官方页面发布，之后回后台登记结果。其它平台按已批准的 API 能力或人工导出处理。</p></div>
       <div class="step"><span class="n">6</span><strong>回查与反馈</strong><p>登记平台对象、指标、投诉和改进建议。</p></div>
     </div>
   </section>
@@ -161,7 +161,7 @@
     <div class="section-head"><div><h2>从现在到账号矩阵上线</h2><p class="lead">后续工作的重点已经从“继续搭框架”转为“接真实平台、部署生产基础设施、跑小流量 Pilot”。</p></div></div>
     <div class="timeline">
       <div class="titem done"><h3>阶段 1｜主体平台和无账号闭环 — 已完成</h3><p>内容、知识、媒体、质量、审批、人工分发、分析、反馈、支持和编排底座已完成。</p></div>
-      <div class="titem wait"><h3>阶段 2｜首个平台和首个账号 — 登录会话已连接</h3><p>当前后台和小红书专用登录会话均正常；创作者中心没有可识别的客服消息页，消息需手动导入。自动提交发布尚未完成真实成功回查。其它平台仍需分别确认官方应用、Scope、回调和账号所有权。</p></div>
+      <div class="titem wait"><h3>阶段 2｜首个平台和首个账号 — 登录会话已连接</h3><p>当前后台和小红书专用登录会话均正常；创作者中心没有可识别的客服消息页，消息需手动导入。当前只支持填入草稿并人工发布，自动提交默认关闭。其它平台仍需分别确认官方应用、Scope、回调和账号所有权。</p></div>
       <div class="titem wait"><h3>阶段 3｜生产接入 — 待建设</h3><p>接入 Vault、托管 PostgreSQL、对象存储、Worker、告警和一个官方平台适配器。</p></div>
       <div class="titem wait"><h3>阶段 4｜Draft-only / Sandbox 验证 — 待执行</h3><p>验证授权、草稿创建、幂等、回查、撤销、过期、权限变化和 Kill Switch。</p></div>
       <div class="titem wait"><h3>阶段 5｜单账号 2–4 周 Pilot — 待执行</h3><p>低频发布，持续记录质量、成本、平台健康、投诉、指标和人工工作量。</p></div>

@@ -23,6 +23,11 @@ from modules.platforms.routing import profile_for, resolve_delivery_route
 TARGETS = {"home", "inbox", "publish"}
 
 
+def experimental_browser_submit_enabled() -> bool:
+    """Return whether the operator explicitly opted into a risky browser click."""
+    return os.getenv("XHS_ALLOW_EXPERIMENTAL_SUBMIT", "").strip().lower() in {"1", "true", "yes"}
+
+
 def command_queue_path(account_key: str, root: Path | None = None) -> Path:
     project_root = root or Path(__file__).resolve().parents[2]
     return project_root / ".local" / "xhs-commands" / f"{account_key}.jsonl"
@@ -178,6 +183,7 @@ def launch_operator_session(
         "started_at": datetime.now(timezone.utc).isoformat(),
         "publishes_automatically": False,
         "auto_publish_requested": bool(auto_publish),
+        "auto_publish_allowed": bool(auto_publish and experimental_browser_submit_enabled()),
         "reused_existing": bool(existing_pid),
     }
     if target in {"publish", "inbox"}:

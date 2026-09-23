@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import asyncio
 import json
+import os
 from pathlib import Path
 import sys
 
@@ -22,6 +23,15 @@ URLS = {
     "inbox": "https://creator.xiaohongshu.com/",
     "publish": "https://creator.xiaohongshu.com/publish/publish",
 }
+
+
+def browser_action_enabled(name: str) -> bool:
+    """Require an explicit local opt-in for browser side effects."""
+    env_name = {
+        "publish": "XHS_ALLOW_EXPERIMENTAL_SUBMIT",
+        "reply": "XHS_ALLOW_EXPERIMENTAL_REPLY",
+    }.get(name)
+    return bool(env_name and os.getenv(env_name, "").strip().lower() in {"1", "true", "yes"})
 
 
 def command_queue_path(root: Path, account_key: str) -> Path:
@@ -157,6 +167,18 @@ async def handle_inbox(page, root: Path, account_key: str, job_path: str | None,
         return "inbox_needs_operator"
     update_job(root, job_id, **scan, error=None if scan["status"] == "inbox_scanned" else scan.get("reason"))
     if inbox_job.get("message_id") and inbox_job.get("reply"):
+        if inbox_job.get("send") and not browser_action_enabled("reply"):
+            result = {
+                "status": "reply_ready",
+                "sent": False,
+                "requires_operator": True,
+                "send_blocked_reason": "默认关闭网页自动回复；请在官方页面人工发送，或由管理员按账号风险策略显式启用。",
+            }
+            Path(job_path).with_name("result.json").write_text(
+                json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
+            update_job(root, job_id, **result, error=None)
+            return "reply_ready"
         try:
             result = await XiaohongshuInboxOperator().reply(
                 page=page, external_id=str(inbox_job["message_id"]),
@@ -230,9 +252,12 @@ async def prepare_publish(page, root: Path, account_key: str, job_path: str,
         result = await XiaohongshuDraftPreparer().prepare(
             page=page, note=note, bound_account_key=account_key
         )
-        if auto_publish:
+        if auto_publish and browser_action_enabled("publish"):
             update_job(root, job_id, status="submitting_publish", url=page.url)
             result.update(await XiaohongshuDraftPreparer().submit_publish(page=page))
+        elif auto_publish:
+            result["auto_submit_blocked"] = True
+            result["auto_submit_reason"] = "默认关闭网页自动点击发布；请在官方页面人工确认。"
         workflow_status = result.get("status", "awaiting_operator_review")
         if workflow_status == "awaiting_operator_review":
             workflow_status = "draft_prepared"
