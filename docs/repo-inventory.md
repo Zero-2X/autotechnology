@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-23T13:35:28+00:00`
-- Source fingerprint: `sha256:401ed60eebc398380121ae7fd12ced0f8033b318ad1ca3c9eb1ffe0b8bf9643b`
+- Generated at (UTC): `2026-09-23T14:18:50+00:00`
+- Source fingerprint: `sha256:0df6db76680fe029c06c5c2ea0409bf65c619ae89a480b12094243d6454a8bfd`
 - Repository root: `D:/akagent`
 - Scanned files: `1646`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `6831e2d20b3482cb895794f1064253024955d7af`
+- HEAD: `a2d72f4a52aaff0be7aad5b2a40289d31112eb8d`
 
 ## Top-level directories
 
@@ -587,7 +587,7 @@ Recommended repository gate: `python -m pytest tests --maxfail=1 -q`
 
 ## Uncommitted changes
 
-Clean worktree.
+- ` M docs/repo-inventory.md`
 
 ## Repository classification
 
@@ -810,7 +810,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `apps/web-console/package.json` | 167 | `sha256:9b5d3d2153ac4164c691902f80b75a3911a4be54f82b3579b9f6f39e078f3066` |
 | `apps/web-console/pnpm-lock.yaml` | 114 | `sha256:17c814b167307942d3609c7b9d916ceddb85839573ab39baa114e30edb132a1a` |
 | `apps/web-console/scripts/build.mjs` | 851 | `sha256:eae2a2b621e5162dde56ffc02b716fc21c71146456cb69cf7bfdd23727030609` |
-| `apps/web-console/src/index.html` | 93569 | `sha256:2ef22d9b7441f9ea585ce9811bbdf68a689b226f60509107807ec22e67d656c7` |
+| `apps/web-console/src/index.html` | 93612 | `sha256:f8d71f7d466dd0fa69c9bc76a4d8cd90884a5d3d0c63b4b8fabbe8b3b94f83f7` |
 | `apps/worker/README.md` | 843 | `sha256:585eb3815e3271923e72d2c66325ce36be5af3c66135774cb734008315742021` |
 | `apps/worker/__init__.py` | 31 | `sha256:53da4abf7d557e2589aa76efd85c921469f44127a4035ec9f6c2f6361484ee76` |
 | `apps/worker/__main__.py` | 81 | `sha256:954eaddc192523ee47f44769ae571e58baf451c0e67d752edd3874b6393600d0` |
