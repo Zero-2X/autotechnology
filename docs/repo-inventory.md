@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-23T12:30:40+00:00`
-- Source fingerprint: `sha256:04d7b1e8ae77652ff2424187409481bbeff3650c74954e9c49833fe3713d2097`
+- Generated at (UTC): `2026-09-23T12:48:55+00:00`
+- Source fingerprint: `sha256:fed9057da5934b5ddeb90355d30e739910b04c250f749f08c97ee8bf2678c230`
 - Repository root: `D:/akagent`
 - Scanned files: `1646`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `72ecf7c861e4812918999e44e8bd90a3426990c8`
+- HEAD: `0e46bcc814b91dedcd1fdc59ef256315446de2fc`
 
 ## Top-level directories
 
@@ -1318,7 +1318,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `modules/distribution/README.md` | 994 | `sha256:787483e08928d109818b917c5d929aa3ef8859bb8bead15dcf6e1927ac05c28e` |
 | `modules/distribution/__init__.py` | 2357 | `sha256:fe221caa6043bec6b75e2c878fa3e6ad9cf7544bbe39c6118418d9f5def9f450` |
 | `modules/distribution/account/__init__.py` | 424 | `sha256:749f177fd52b3ce1d5ffd03a432f9163f157872bb777ed7d4b538d17a13e48e7` |
-| `modules/distribution/account/service.py` | 30229 | `sha256:10937516ec07a890b110f8857ad6c6b7fb3ecb5e7fc19b4ab34196b06d73b09a` |
+| `modules/distribution/account/service.py` | 34488 | `sha256:3ad1d57ce23ab9fdfd4646fd584cbec8333808ab211cff49417f9d9c46e36632` |
 | `modules/distribution/application/.gitkeep` | 1 | `sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b` |
 | `modules/distribution/deadletter.py` | 26876 | `sha256:743a1cf43fa0de5722c18591f5120d72fad5aee8e3c78da4a284c3360206429c` |
 | `modules/distribution/domain/.gitkeep` | 1 | `sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b` |
@@ -2319,7 +2319,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `tests/unit/distribution/test_vertical_slice.py` | 4566 | `sha256:7529450a9cd7faa11346c4a8d1e6b9bd0c3b1c3b02abac02d897155a1e84e736` |
 | `tests/unit/distribution/test_webhook.py` | 6973 | `sha256:537b8f9c723d718250a88671422cdd402f420b769df4ff7b3aa2bda3881263a6` |
 | `tests/unit/distribution_account/__init__.py` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
-| `tests/unit/distribution_account/test_connections.py` | 7706 | `sha256:fc913ae3d1f867f46aca914dca2e6c7f7ac290933bbe28cbe69d2c17156cb5cb` |
+| `tests/unit/distribution_account/test_connections.py` | 11310 | `sha256:dfb7d7f02b51ec30a1906bc5fa97265ed7b284a09ebceb3694e6efed3e90db88` |
 | `tests/unit/distribution_account/test_service.py` | 2183 | `sha256:dbb69b4111573082c0ccd3b9df9343e0d095485b68bebe2a1f53c0c64284685b` |
 | `tests/unit/distribution_oauth/__init__.py` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
 | `tests/unit/distribution_oauth/test_service.py` | 8357 | `sha256:36f16ad04fd84b6a5ae0b07ea360c075e1ec9ace522a72f5b1a2f8d9d84cbe85` |
