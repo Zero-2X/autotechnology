@@ -24,13 +24,14 @@ class Locator:
         return self._visible
 
     async def click(self):
-        self.page.url = "https://creator.xiaohongshu.com/interaction"
+        self.page.url = self.page.click_url
 
 
 class Page:
-    def __init__(self, active_selector=None):
+    def __init__(self, active_selector=None, click_url="https://creator.xiaohongshu.com/interaction"):
         self.url = "https://creator.xiaohongshu.com/"
         self.active_selector = active_selector
+        self.click_url = click_url
 
     def locator(self, selector):
         return Locator(count=1 if selector == self.active_selector else 0, page=self)
@@ -46,6 +47,40 @@ def test_inbox_navigation_uses_visible_interaction_entry():
 def test_inbox_navigation_reports_operator_action_when_entry_missing():
     result = asyncio.run(module.select_inbox(Page()))
     assert result["status"] == "inbox_needs_operator"
+
+
+def test_inbox_navigation_detects_login_redirect_after_click():
+    page = Page('a:has-text("互动")', click_url="https://creator.xiaohongshu.com/login")
+    result = asyncio.run(module.select_inbox(page))
+    assert result["status"] == "login_required"
+    assert result["url"].endswith("/login")
+
+
+def test_handle_inbox_records_login_redirect_for_dashboard(monkeypatch, tmp_path):
+    page = Page('a:has-text("互动")', click_url="https://creator.xiaohongshu.com/login")
+    status = asyncio.run(module.handle_inbox(page, tmp_path, "account-1", None, "xhs-login"))
+    launch = json.loads((tmp_path / ".local" / "xhs-launches" / "xhs-login.json").read_text(encoding="utf-8"))
+    session = json.loads((tmp_path / ".local" / "browser-accounts" / "account-1" / "session.json").read_text(encoding="utf-8"))
+    assert status == "login_required"
+    assert launch["status"] == "login_required"
+    assert session["url"].endswith("/login")
+
+
+def test_session_status_can_recover_after_visible_login(monkeypatch, tmp_path):
+    from adapters.xiaohongshu.session import read_session_status
+
+    page = Page()
+    async def current_url(_page):
+        return _page.url
+    monkeypatch.setattr(module, "session_url", current_url)
+
+    page.url = "https://creator.xiaohongshu.com/login"
+    asyncio.run(module.sync_session_status(page, "account-1", tmp_path))
+    assert read_session_status("account-1", tmp_path / ".local" / "browser-accounts")["status"] == "login_required"
+
+    page.url = "https://creator.xiaohongshu.com/"
+    asyncio.run(module.sync_session_status(page, "account-1", tmp_path))
+    assert read_session_status("account-1", tmp_path / ".local" / "browser-accounts")["status"] == "connected"
 
 
 def test_prepared_draft_uses_dashboard_terminal_status(monkeypatch, tmp_path):

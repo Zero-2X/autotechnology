@@ -39,17 +39,23 @@ def _setup():
     return source, rights, guard, org_id, actor_id, verified["version"], valid_to
 
 
+def _as_of_before(valid_to: str, *, days: int = 1) -> str:
+    expiry = datetime.fromisoformat(valid_to.replace("Z", "+00:00"))
+    return (expiry - timedelta(days=days)).isoformat().replace("+00:00", "Z")
+
+
 def test_authorization_gate_allows_matching_scope_and_blocks_unauthorized_scope() -> None:
-    source, rights, guard, org_id, actor_id, version, _ = _setup()
+    source, rights, guard, org_id, actor_id, version, valid_to = _setup()
+    as_of = _as_of_before(valid_to)
     allowed = guard.check_authorization(
         org_id=org_id, rights_record_version_id=version["id"], actor_id=actor_id,
         trace_id="trace", idempotency_key="guard-check-1", region="US", locale="en-US", media="text", use="commercial",
-        as_of="2026-09-18T12:00:00Z",
+        as_of=as_of,
     )
     blocked = guard.check_authorization(
         org_id=org_id, rights_record_version_id=version["id"], actor_id=actor_id,
         trace_id="trace", idempotency_key="guard-check-2", region="DE", locale="de-DE", media="video", use="commercial",
-        as_of="2026-09-18T12:00:00Z",
+        as_of=as_of,
     )
     assert allowed["allowed"] is True and allowed["decision"] == "allowed"
     assert blocked["allowed"] is False
@@ -57,22 +63,23 @@ def test_authorization_gate_allows_matching_scope_and_blocks_unauthorized_scope(
     assert guard.check_authorization(
         org_id=org_id, rights_record_version_id=version["id"], actor_id=actor_id,
         trace_id="other", idempotency_key="guard-check-1", region="US", locale="en-US", media="text", use="commercial",
-        as_of="2026-09-18T12:00:00Z",
+        as_of=as_of,
     ) == allowed
     source.close()
 
 
 def test_expiry_scan_is_idempotent_and_lineage_blocks_propagate() -> None:
     source, rights, guard, org_id, actor_id, version, valid_to = _setup()
+    as_of = _as_of_before(valid_to, days=2)
     reminders = guard.schedule_expiry_reminders(
         org_id=org_id, actor_id=actor_id, trace_id="trace", idempotency_key="guard-reminder-1",
-        horizon_seconds=5 * 24 * 60 * 60, lead_seconds=24 * 60 * 60, as_of="2026-09-18T12:00:00Z",
+        horizon_seconds=5 * 24 * 60 * 60, lead_seconds=24 * 60 * 60, as_of=as_of,
     )
     assert len(reminders["reminders"]) == 1
     assert reminders["reminders"][0]["valid_to"] == valid_to
     assert guard.schedule_expiry_reminders(
         org_id=org_id, actor_id=actor_id, trace_id="other", idempotency_key="guard-reminder-1",
-        horizon_seconds=5 * 24 * 60 * 60, lead_seconds=24 * 60 * 60, as_of="2026-09-18T12:00:00Z",
+        horizon_seconds=5 * 24 * 60 * 60, lead_seconds=24 * 60 * 60, as_of=as_of,
     ) == reminders
     first = guard.register_lineage(
         org_id=org_id, actor_id=actor_id, trace_id="trace", idempotency_key="guard-lineage-1",
@@ -93,7 +100,7 @@ def test_expiry_scan_is_idempotent_and_lineage_blocks_propagate() -> None:
 
 
 def test_complaint_freeze_transitions_rights_and_blocks_registered_derivatives() -> None:
-    source, rights, guard, org_id, actor_id, version, _ = _setup()
+    source, rights, guard, org_id, actor_id, version, valid_to = _setup()
     derived_id = uuid4()
     guard.register_lineage(
         org_id=org_id, actor_id=actor_id, trace_id="trace", idempotency_key="guard-complaint-lineage",
@@ -109,7 +116,7 @@ def test_complaint_freeze_transitions_rights_and_blocks_registered_derivatives()
     denied = guard.check_authorization(
         org_id=org_id, rights_record_version_id=version["id"], actor_id=actor_id,
         trace_id="trace", idempotency_key="guard-complaint-check", region="US", locale="en-US", media="text", use="commercial",
-        as_of="2026-09-18T12:00:00Z",
+        as_of=_as_of_before(valid_to),
     )
     assert denied["allowed"] is False and "RIGHTS_STATUS_COMPLAINT_HOLD" in denied["reason_codes"]
     with pytest.raises(sqlite3.DatabaseError):

@@ -56,8 +56,8 @@ def _existing_profile_pid(profile: Path) -> int | None:
     return None
 
 
-def _publish_runner_is_current(pid: int, script_path: Path) -> bool:
-    """Avoid queuing publish work to a browser worker that loaded older code."""
+def _session_runner_is_current(pid: int, script_path: Path) -> bool:
+    """Avoid queuing browser work to a session worker that loaded older code."""
     if psutil is None:
         return False
     try:
@@ -110,8 +110,8 @@ def launch_operator_session(
 
     existing_pid = _existing_profile_pid(profile)
     script_path = project_root / "scripts" / "open-xhs-session.py"
-    if existing_pid and target == "publish" and not _publish_runner_is_current(existing_pid, script_path):
-        raise ValueError("该账号窗口仍运行旧版发稿流程。请先保存未完成内容、关闭该窗口后再点“打开账号”更新会话；本次尚未填稿或发布。")
+    if existing_pid and target in {"publish", "inbox"} and not _session_runner_is_current(existing_pid, script_path):
+        raise ValueError("该账号窗口仍运行旧版小红书流程。请先保存未完成内容、关闭该窗口后再点“打开账号”更新会话；本次操作尚未执行。")
 
     job_id = f"xhs-{uuid4().hex[:12]}"
     job_path: Path | None = None

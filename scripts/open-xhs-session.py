@@ -109,6 +109,9 @@ async def select_inbox(page) -> dict[str, str]:
         try:
             await candidate.click()
             await asyncio.sleep(2)
+            current = await session_url(page)
+            if "/login" in current:
+                return {"status": "login_required", "url": current}
             return {"status": "inbox_ready", "url": page.url}
         except Exception:
             continue
@@ -119,7 +122,8 @@ async def handle_inbox(page, root: Path, account_key: str, job_path: str | None,
                        job_id: str | None) -> str:
     inbox_state = await select_inbox(page)
     if inbox_state["status"] == "login_required":
-        write_session_status(account_key, url="https://creator.xiaohongshu.com/login")
+        write_session_status(account_key, url="https://creator.xiaohongshu.com/login",
+                             root=root / ".local" / "browser-accounts")
     update_job(root, job_id, **inbox_state,
                error=None if inbox_state["status"] == "inbox_ready" else (
                    "小红书会话已失效，请先在窗口登录" if inbox_state["status"] == "login_required"
@@ -127,7 +131,23 @@ async def handle_inbox(page, root: Path, account_key: str, job_path: str | None,
     if inbox_state["status"] != "inbox_ready":
         return inbox_state["status"]
     inbox_job = json.loads(Path(job_path).read_text(encoding="utf-8")) if job_path else {}
-    scan = await XiaohongshuInboxOperator().scan(page=page)
+    try:
+        scan = await XiaohongshuInboxOperator().scan(page=page)
+    except InboxAutomationError as exc:
+        if str(exc) == "LOGIN_REQUIRED":
+            login_url = "https://creator.xiaohongshu.com/login"
+            write_session_status(account_key, url=login_url,
+                                 root=root / ".local" / "browser-accounts")
+            update_job(root, job_id, status="login_required", url=login_url,
+                       error="小红书消息区要求重新登录，请在账号窗口扫码后重试")
+            if job_path:
+                Path(job_path).with_name("result.json").write_text(
+                    json.dumps({"status": "login_required", "url": login_url}, ensure_ascii=False, indent=2),
+                    encoding="utf-8",
+                )
+            return "login_required"
+        update_job(root, job_id, status="inbox_needs_operator", error=str(exc))
+        return "inbox_needs_operator"
     update_job(root, job_id, **scan, error=None if scan["status"] == "inbox_scanned" else scan.get("reason"))
     if inbox_job.get("message_id") and inbox_job.get("reply"):
         try:
@@ -186,7 +206,7 @@ async def prepare_publish(page, root: Path, account_key: str, job_path: str,
         return "failed"
     current = await session_url(page)
     if "/login" in current:
-        write_session_status(account_key, url=current)
+        write_session_status(account_key, url=current, root=root / ".local" / "browser-accounts")
         update_job(root, job_id, status="login_required", url=current,
                    error="请先在小红书窗口完成登录")
         return "login_required"
@@ -219,7 +239,8 @@ async def prepare_publish(page, root: Path, account_key: str, job_path: str,
     except BrowserPreparationError as exc:
         status = "login_required" if str(exc) == "LOGIN_REQUIRED" else "operator_action_required"
         if status == "login_required":
-            write_session_status(account_key, url="https://creator.xiaohongshu.com/login")
+            write_session_status(account_key, url="https://creator.xiaohongshu.com/login",
+                                 root=root / ".local" / "browser-accounts")
         update_job(root, job_id, status=status, error=str(exc), url=page.url)
         Path(job_path).with_name("result.json").write_text(
             json.dumps({"status": status, "error": str(exc), "url": page.url},
@@ -245,7 +266,7 @@ async def handle_command(page, root: Path, account_key: str, command: dict) -> s
             return "failed"
         current = await session_url(page)
         if "/login" in current:
-            write_session_status(account_key, url=current)
+            write_session_status(account_key, url=current, root=root / ".local" / "browser-accounts")
             update_job(root, job_id, status="login_required", url=current,
                        error="请先在小红书窗口完成登录")
             return "login_required"
@@ -282,6 +303,13 @@ async def session_url(page) -> str:
     return current
 
 
+async def sync_session_status(page, account_key: str, root: Path | None = None) -> None:
+    """Refresh the saved login marker from the visible creator-center page."""
+    if "creator.xiaohongshu.com" in page.url:
+        session_root = root / ".local" / "browser-accounts" if root else None
+        write_session_status(account_key, url=await session_url(page), root=session_root)
+
+
 async def run(account_key: str, target: str, job_path: str | None, job_id: str | None = None,
               auto_publish: bool = False) -> None:
     root = Path(__file__).resolve().parents[1]
@@ -297,29 +325,19 @@ async def run(account_key: str, target: str, job_path: str | None, job_id: str |
         await page.goto(URLS[target], wait_until="domcontentloaded")
 
         update_job(root, job_id, status="preparing" if target == "publish" else "browser_running")
-        session_requires_login = False
-
-        if "creator.xiaohongshu.com" in page.url:
-            write_session_status(account_key, url=await session_url(page))
+        await sync_session_status(page, account_key, root)
 
         if target == "inbox":
-            session_requires_login = (await handle_inbox(page, root, account_key, job_path, job_id)) == "login_required"
+            await handle_inbox(page, root, account_key, job_path, job_id)
 
         if target == "publish" and job_path:
             await prepare_publish(page, root, account_key, job_path, job_id, auto_publish)
 
         while context.pages:
-            current_url = page.url
-            if "creator.xiaohongshu.com" in current_url:
-                write_session_status(account_key, url=(
-                    "https://creator.xiaohongshu.com/login" if session_requires_login
-                    else await session_url(page)
-                ))
+            await sync_session_status(page, account_key, root)
             for command in take_commands(root, account_key):
                 try:
-                    command_status = await handle_command(page, root, account_key, command)
-                    if command.get("target") == "inbox":
-                        session_requires_login = command_status == "login_required"
+                    await handle_command(page, root, account_key, command)
                 except Exception as exc:
                     update_job(root, str(command.get("job_id", "")) or None,
                                status="failed", error=f"{type(exc).__name__}: {exc}")

@@ -8,10 +8,10 @@ from adapters.xiaohongshu.session import diagnose_session, read_session_status, 
 
 def test_busy_profile_does_not_claim_to_prepare_a_draft(monkeypatch, tmp_path):
     monkeypatch.setattr(operator, "_existing_profile_pid", lambda profile: 123)
-    monkeypatch.setattr(operator, "_publish_runner_is_current", lambda pid, script_path: False)
+    monkeypatch.setattr(operator, "_session_runner_is_current", lambda pid, script_path: False)
     spawn = Mock()
     monkeypatch.setattr(operator.subprocess, "Popen", spawn)
-    with pytest.raises(ValueError, match="尚未填稿"):
+    with pytest.raises(ValueError, match="旧版小红书流程"):
         operator.launch_operator_session(
             "account-1", target="publish",
             content={"title": "标题", "body": "正文"}, root=tmp_path,
@@ -22,7 +22,7 @@ def test_busy_profile_does_not_claim_to_prepare_a_draft(monkeypatch, tmp_path):
 
 def test_current_busy_profile_queues_publish_job(monkeypatch, tmp_path):
     monkeypatch.setattr(operator, "_existing_profile_pid", lambda profile: 123)
-    monkeypatch.setattr(operator, "_publish_runner_is_current", lambda pid, script_path: True)
+    monkeypatch.setattr(operator, "_session_runner_is_current", lambda pid, script_path: True)
     result = operator.launch_operator_session(
         "account-1", target="publish",
         content={"title": "标题", "body": "正文"}, root=tmp_path,
@@ -37,6 +37,7 @@ def test_current_busy_profile_queues_publish_job(monkeypatch, tmp_path):
 
 def test_busy_profile_queues_reply_command(monkeypatch, tmp_path):
     monkeypatch.setattr(operator, "_existing_profile_pid", lambda profile: 123)
+    monkeypatch.setattr(operator, "_session_runner_is_current", lambda pid, script_path: True)
     result = operator.launch_operator_session(
         "account-1", target="inbox",
         content={"message_id": "msg-1", "reply": "回复", "send": True}, root=tmp_path,
@@ -63,10 +64,19 @@ def test_publish_route_is_browser_automation(monkeypatch, tmp_path):
 
 def test_existing_window_queues_inbox_command(monkeypatch, tmp_path):
     monkeypatch.setattr(operator, "_existing_profile_pid", lambda profile: 123)
+    monkeypatch.setattr(operator, "_session_runner_is_current", lambda pid, script_path: True)
     result = operator.launch_operator_session("account-1", target="inbox", root=tmp_path)
     assert result["status"] == "command_queued"
     queue = (tmp_path / ".local" / "xhs-commands" / "account-1.jsonl").read_text(encoding="utf-8")
     assert '"target": "inbox"' in queue
+
+
+def test_old_inbox_worker_is_rejected_before_job_creation(monkeypatch, tmp_path):
+    monkeypatch.setattr(operator, "_existing_profile_pid", lambda profile: 123)
+    monkeypatch.setattr(operator, "_session_runner_is_current", lambda pid, script_path: False)
+    with pytest.raises(ValueError, match="旧版小红书流程"):
+        operator.launch_operator_session("account-1", target="inbox", root=tmp_path)
+    assert not (tmp_path / ".local" / "xhs-jobs").exists()
 
 
 def test_login_page_is_not_reported_as_connected(tmp_path):
