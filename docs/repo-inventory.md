@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-23T07:07:21+00:00`
-- Source fingerprint: `sha256:04e866a4d459e728f20f842475b4d6204f3c34f552c12f0d411d124e932f2b40`
+- Generated at (UTC): `2026-09-23T12:30:40+00:00`
+- Source fingerprint: `sha256:04d7b1e8ae77652ff2424187409481bbeff3650c74954e9c49833fe3713d2097`
 - Repository root: `D:/akagent`
 - Scanned files: `1646`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `baec04973c354a0bda4fee404d25a7b935ade5b2`
+- HEAD: `72ecf7c861e4812918999e44e8bd90a3426990c8`
 
 ## Top-level directories
 
@@ -810,7 +810,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `apps/web-console/package.json` | 167 | `sha256:9b5d3d2153ac4164c691902f80b75a3911a4be54f82b3579b9f6f39e078f3066` |
 | `apps/web-console/pnpm-lock.yaml` | 114 | `sha256:17c814b167307942d3609c7b9d916ceddb85839573ab39baa114e30edb132a1a` |
 | `apps/web-console/scripts/build.mjs` | 851 | `sha256:eae2a2b621e5162dde56ffc02b716fc21c71146456cb69cf7bfdd23727030609` |
-| `apps/web-console/src/index.html` | 92017 | `sha256:24306956c9e763080e22f186146eb68c53dd4b18f0c5b49ce8a16c67e31b4a98` |
+| `apps/web-console/src/index.html` | 91814 | `sha256:f1d1677f149f96ad12acf9bcd10fa4a63ce41e9d58cdd9e5ab374ea01469d74c` |
 | `apps/worker/README.md` | 843 | `sha256:585eb3815e3271923e72d2c66325ce36be5af3c66135774cb734008315742021` |
 | `apps/worker/__init__.py` | 31 | `sha256:53da4abf7d557e2589aa76efd85c921469f44127a4035ec9f6c2f6361484ee76` |
 | `apps/worker/__main__.py` | 81 | `sha256:954eaddc192523ee47f44769ae571e58baf451c0e67d752edd3874b6393600d0` |
@@ -1226,7 +1226,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `docs/workflows/README.md` | 217 | `sha256:b5669edc2191f6b372a613724dfca501f25f27895f95dc03b8a9e1abdb520432` |
 | `docs/平台发布接口调研与小红书迁移方案.md` | 10293 | `sha256:d4cf9e8f20f8b347214c169eff57d059d780948d9087796be08d51476d1b81c1` |
 | `docs/真实账号自动化运营操作手册.md` | 14702 | `sha256:fcba651176a88c902eb006413bf70f9c6fb0e4091e1b7523ae29c8e3475eaac6` |
-| `docs/网页管理后台测试说明.md` | 11067 | `sha256:f94ac71fbb4a6ea54a7433638823d0c40442c3964e73738b9b75a31b135c4a4b` |
+| `docs/网页管理后台测试说明.md` | 11448 | `sha256:0f6eb579d748c3dc72e288c7d9023c50fa6b8122b892073113743a5e554d2d75` |
 | `docs/项目开发进度汇报.html` | 24364 | `sha256:5884106a194f7a581b6a42674a14f315602aa7630736d0704384b3de2aa88d2d` |
 | `infra/__init__.py` | 47 | `sha256:8517a486e9a61a8d1e10284f75abe76808de8d787a0422021f07ba28d935cc82` |
 | `infra/compose/README.md` | 434 | `sha256:1e161168885e43eef8aa36e0db56f7c3efeb1017f724da61d6ff2dd4889f20e7` |
@@ -1435,7 +1435,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `modules/model_gateway/projections/.gitkeep` | 1 | `sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b` |
 | `modules/model_gateway/service.py` | 17409 | `sha256:7f242d7c949105e0184e9603ce1c2c291b67428feaf320cbec4f2ecae09f5a3b` |
 | `modules/platforms/__init__.py` | 270 | `sha256:71a2509edfe48203d04286d4c79efc2c544bd78acdea4af4c38d7d41a89adec7` |
-| `modules/platforms/routing.py` | 2540 | `sha256:4445f1c619b007f3e303603ca5b230fbda5b6e59d875756e62849b81f9df42e5` |
+| `modules/platforms/routing.py` | 2636 | `sha256:e351d481aefe4619b139333a0cfbd2bc0d1868b2a1a0811cb60f74c416b6606c` |
 | `modules/policy/README.md` | 975 | `sha256:954bd9759bdc72358078bfaada95d1abc3ca7de4e4844eb865808379e01ee55a` |
 | `modules/policy/__init__.py` | 132 | `sha256:28504aaa39143f70752288a9ffc05d41c9638c5953f7d09e48672619317da930` |
 | `modules/policy/application/.gitkeep` | 1 | `sha256:01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b` |
@@ -2233,7 +2233,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `tests/integration/test_iam_core_001_api.py` | 1363 | `sha256:c3283404357af43840ae92229afb6be3dd697231ee7b906e9efe968077a8fc82` |
 | `tests/integration/test_knowledge_api.py` | 3904 | `sha256:de3313811517038a210eb93fae4e782fadd8878721d1ce6ebcea2c83873716b7` |
 | `tests/integration/test_knowledge_core_api.py` | 4321 | `sha256:a36ada0937a51554ff631ede84a41f52a677f1f8733a6ac0b5d455ecc1d4f699` |
-| `tests/integration/test_local_draft_api.py` | 3973 | `sha256:5ec6379ba93d0b76e477f7c3094d8e401e0d26b90dd128e5b02a1a6184c93814` |
+| `tests/integration/test_local_draft_api.py` | 4059 | `sha256:ee303b31a37821ce8d5281d4438b778701b11d725ab982f54c2bb58b105e0fe9` |
 | `tests/integration/test_local_recovery_drill.py` | 3886 | `sha256:1569e5e166abcc5256ad4484d42ac24440917313f19063679cbb108736110f61` |
 | `tests/integration/test_media_001.py` | 6752 | `sha256:29f7feaaa7ee8c0f1b036b1a8f81eaf80a7578658fb604c04c7a6abf8d51bf34` |
 | `tests/integration/test_media_001_migration.py` | 8617 | `sha256:17bab71f8fc760ec9c56c4bbaec08da605b86cce643525b879ae798c121b1033` |
@@ -2399,7 +2399,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `tests/unit/test_found_010_platform_registry.py` | 1433 | `sha256:aa39396db54dbf2327f768a738d9c484cfe3a9f06275c23df0d769d62504cb5a` |
 | `tests/unit/test_local_demo_generator.py` | 452 | `sha256:03399cd990e1304cef74c04d173f60d7c27295fe60a1d16fc5751d4bb79e467d` |
 | `tests/unit/test_local_reply_generator.py` | 520 | `sha256:aa4ba41006621a91799e2f0e89ecbdda8ec66cf1165e8d3ca5e5bdcec9e3ad70` |
-| `tests/unit/test_platform_routing.py` | 765 | `sha256:2cee8c5d7c5288b8ffb576c7182b31ec1db376e1d2130635b06a8d12d5b121c9` |
+| `tests/unit/test_platform_routing.py` | 1522 | `sha256:e2453a1b3290de1112e5e10e7557ba65325141f3a1df418213927cadbf9c050d` |
 | `tests/unit/topic/__init__.py` | 0 | `sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855` |
 | `tests/unit/topic/test_brief.py` | 11826 | `sha256:34f0f2db830db78af6618a36e5685c8926a685d56251e870c8c479257f18539b` |
 | `tests/unit/topic/test_calendar.py` | 5723 | `sha256:2dc90de7a09aa2a8dec861998f3b6edeffe6a7cd8794f9a64d9e2e8e14b15abf` |
