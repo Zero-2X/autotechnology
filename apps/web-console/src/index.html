@@ -153,7 +153,16 @@ async function pollXhsSession(){const accounts=state.accounts.filter(a=>a.platfo
            if(job.status==='browser_closed'){toast('小红书窗口已关闭，未确认发布结果');return}
          }}
          toast('仍在处理中，请查看小红书窗口；尚未确认填稿或发布成功');
-      }catch(error){toast(`无法启动小红书：${error.message}`)}
+      }catch(error){
+        const detail=error instanceof Error?error.message:String(error||'未知错误');
+        try{
+          const check=await fetch(`${base}/internal/xhs/accounts/${encodeURIComponent(accountKey)}/session`);
+          const session=check.ok?((await check.json()).data||{}).status:null;
+          if(session==='connected')return toast(`小红书账号已连接，但${target==='inbox'?'客服':target==='publish'?'发布':'账号窗口'}操作失败：${detail}`);
+          if(session==='login_required')return toast('小红书专用登录会话已失效，请在“管理连接”打开的窗口重新扫码。');
+        }catch{}
+        toast(`无法确认小红书连接状态，请检查本机 API 服务。操作信息：${detail}`);
+      }
     }
     async function showXhsDiagnostics(accountKey){
       const base=state.settings.apiBase.replace(/\/$/,'');
