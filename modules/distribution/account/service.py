@@ -162,6 +162,16 @@ class InMemoryAccountService:
         self.profiles[profile.id] = profile
         return profile
 
+    def list_profiles(self, *, org_id: UUID | str) -> list[dict[str, Any]]:
+        """Return redacted account profiles belonging to one organization."""
+        tenant = UUID(_uuid(org_id, "org_id"))
+        return [profile.as_contract() for profile in self.profiles.values() if profile.org_id == tenant]
+
+    def list_connections(self, *, org_id: UUID | str) -> list[dict[str, Any]]:
+        """Return secret-free connection state for one organization."""
+        tenant = UUID(_uuid(org_id, "org_id"))
+        return [connection.as_contract() for (scope, _), connection in self.connections.items() if scope == tenant]
+
     def create_target(self, *, org_id: UUID, account_profile_id: UUID, channel: str) -> DistributionTarget:
         profile = self.profiles.get(account_profile_id)
         if profile is None or profile.org_id != org_id:

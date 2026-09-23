@@ -130,7 +130,11 @@ async function pollXhsSession(){const accounts=state.accounts.filter(a=>a.platfo
     });
      async function syncState(){try{const base=state.settings.apiBase.replace(/\/$/,'');await fetch(`${base}/internal/console/state`,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({state})})}catch{}}
      async function hydrateServerState(){for(const base of apiBaseCandidates()){try{const response=await fetch(`${base}/internal/console/state`);if(!response.ok)continue;const payload=(await response.json()).data||{};if(payload.state){state=migrate({...seed,...payload.state});currentThread=state.inbox[0]?.id||null;const serverBase=(state.settings.apiBase||'').replace(/\/$/,'');state.settings.apiBase=base;localStorage.setItem(KEY,JSON.stringify(state));renderAll();loadSettings();if(serverBase!==base){clearTimeout(window.__syncTimer);window.__syncTimer=setTimeout(syncState,180)}}else{adoptApiBase(base,false);await syncState()}return}catch{}}}async function openXhsBrowser(target,content,accountKey=XHS_ACCOUNT.id,autoPublish=false){
-      const base=state.settings.apiBase.replace(/\/$/,'');
+       if((target==='publish'||(target==='inbox'&&content?.send))&&typeof window.__guardOperations==='function'){
+         const guard=await window.__guardOperations(target==='publish'?(autoPublish?'publish':'prepare_publish'):'reply',accountKey);
+         if(!guard?.allowed)return;
+       }
+       const base=state.settings.apiBase.replace(/\/$/,'');
       toast(content?.scan_current?'正在扫描小红书当前客服页面…':target==='publish'?'正在打开小红书并准备草稿…':'正在打开小红书账号会话…');
       try{
          const response=await fetch(`${base}/internal/xhs/accounts/${encodeURIComponent(accountKey)}/browser:open`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target,content,auto_publish:autoPublish})});
@@ -572,6 +576,102 @@ async function pollXhsSession(){const accounts=state.accounts.filter(a=>a.platfo
     state=migrate(state);
     document.addEventListener('DOMContentLoaded',()=>{ensureStrategyPanel();renderStrategyPanel();refreshXhsCapabilitySummary();});
     ensureStrategyPanel(); renderStrategyPanel();
+  })();
+  </script>
+  <script>
+  (() => {
+    // A small, provider-agnostic safety layer. It controls local operator
+    // actions only; it never reads credentials and never polls a platform.
+    let policy = null;
+    const policyBase = () => (state.settings.apiBase || 'http://127.0.0.1:8000').replace(/\/$/, '');
+    async function policyRequest(path, options = {}) {
+      const response = await fetch(`${policyBase()}${path}`, {headers:{'Content-Type':'application/json', ...(options.headers||{})}, ...options});
+      let payload = {};
+      try { payload = await response.json(); } catch {}
+      if (!response.ok) throw new Error(payload?.detail?.message || '运营规则服务不可用');
+      return payload?.data;
+    }
+    function ensureOperationsPolicyCard() {
+      const grid = $('#view-settings .settings-grid');
+      if (!grid || $('#operationsPolicyCard')) return;
+      const card = document.createElement('div');
+      card.className = 'setting-card'; card.id = 'operationsPolicyCard'; card.style.gridColumn = '1 / -1';
+      card.innerHTML = `<h3>运营规则与紧急停止</h3><p>统一限制所有平台的发布动作。默认只允许人工确认；紧急停止会阻止后台准备发布和回复动作，但不会删除草稿或消息记录。</p><div class="field-row"><div class="field"><label for="policyStop">运行状态</label><select id="policyStop"><option value="false">正常运行</option><option value="true">已停止发布与回复</option></select></div><div class="field"><label for="policyTimezone">统计时区</label><input id="policyTimezone" value="Asia/Shanghai" maxlength="80" /></div></div><div class="field-row"><div class="field"><label for="policyDaily">默认每日发布上限</label><input id="policyDaily" type="number" min="0" max="1000" value="3" /></div><div class="field"><label for="policyWeekly">默认每周发布上限</label><input id="policyWeekly" type="number" min="0" max="1000" value="15" /></div></div><div class="field"><label for="policyReason">停止原因（可选）</label><input id="policyReason" maxlength="512" placeholder="例如：平台规则变化，先人工排查" /></div><div id="operationsPolicyStatus" class="notice">正在读取本机运营规则…</div><div class="row-actions" style="justify-content:flex-start"><button class="ghost-btn" id="saveOperationsPolicy">保存运营规则</button><button class="ghost-btn danger" id="toggleOperationsStop">立即停止</button></div>`;
+      grid.appendChild(card);
+      $('#saveOperationsPolicy').addEventListener('click', saveOperationsPolicy);
+      $('#toggleOperationsStop').addEventListener('click', toggleOperationsStop);
+    }
+    function renderOperationsPolicy() {
+      if (!policy) return;
+      const stop = $('#policyStop'), timezone = $('#policyTimezone'), daily = $('#policyDaily'), weekly = $('#policyWeekly'), reason = $('#policyReason'), statusBox = $('#operationsPolicyStatus'), button = $('#toggleOperationsStop');
+      if (!stop || !statusBox) return;
+      stop.value = String(Boolean(policy.emergency_stop));
+      timezone.value = policy.timezone || 'Asia/Shanghai';
+      daily.value = policy.default_limits?.daily_publish ?? 3;
+      weekly.value = policy.default_limits?.weekly_publish ?? 15;
+      reason.value = policy.emergency_stop_reason || '';
+      stop.classList.toggle('danger', Boolean(policy.emergency_stop));
+      button.textContent = policy.emergency_stop ? '恢复发布入口' : '立即停止';
+      button.classList.toggle('danger', !policy.emergency_stop);
+      statusBox.className = policy.emergency_stop ? 'alert danger' : 'alert';
+      statusBox.innerHTML = `<div class="alert-icon">${policy.emergency_stop ? '!' : '✓'}</div><div><strong>${policy.emergency_stop ? '紧急停止已生效' : '运营规则正常'}</strong><p>${esc(policy.emergency_stop ? (policy.emergency_stop_reason || '没有填写原因') : `默认每日 ${policy.default_limits?.daily_publish ?? 3} 条、每周 ${policy.default_limits?.weekly_publish ?? 15} 条；当前不会自动扫描网页`)}</p></div>`;
+    }
+    async function loadOperationsPolicy(showError = false) {
+      ensureOperationsPolicyCard();
+      try {
+        policy = await policyRequest('/internal/operations/policy');
+        state.settings.operationsPolicy = policy;
+        localStorage.setItem(KEY, JSON.stringify(state));
+        renderOperationsPolicy();
+        refreshPublishGuardBanner();
+      } catch (error) {
+        if (showError) toast(error.message || '运营规则读取失败');
+        const box = $('#operationsPolicyStatus');
+        if (box) { box.className = 'alert warn'; box.innerHTML = '<div class="alert-icon">!</div><div><strong>无法读取运营规则</strong><p>本机 API 不可用时，发布准备会被安全阻止；请先启动 API。</p></div>'; }
+      }
+    }
+    async function saveOperationsPolicy() {
+      const current = policy || {schema_version:1, emergency_stop:false, accounts:{}};
+      const daily = Number($('#policyDaily')?.value), weekly = Number($('#policyWeekly')?.value);
+      if (!Number.isInteger(daily) || !Number.isInteger(weekly) || daily < 0 || weekly < daily) return toast('每日/每周上限必须是有效整数，且每周不能小于每日');
+      const next = {...current, schema_version:1, timezone:($('#policyTimezone')?.value||'Asia/Shanghai').trim(), emergency_stop:$('#policyStop')?.value==='true', emergency_stop_reason:($('#policyReason')?.value||'').trim(), default_limits:{daily_publish:daily, weekly_publish:weekly}};
+      try { policy = await policyRequest('/internal/operations/policy', {method:'PUT', body:JSON.stringify(next)}); state.settings.operationsPolicy=policy; save(); renderOperationsPolicy(); refreshPublishGuardBanner(); toast('运营规则已保存'); }
+      catch(error) { toast(error.message || '运营规则保存失败'); }
+    }
+    async function toggleOperationsStop() {
+      const paused = !Boolean(policy?.emergency_stop), reason = paused ? (($('#policyReason')?.value||'').trim() || '运营人员手动停止') : '';
+      try { policy = await policyRequest('/internal/operations/emergency-stop', {method:'POST', body:JSON.stringify({paused, reason})}); state.settings.operationsPolicy=policy; save(); renderOperationsPolicy(); refreshPublishGuardBanner(); toast(paused ? '发布与回复入口已停止' : '发布与回复入口已恢复'); }
+      catch(error) { toast(error.message || '紧急停止操作失败'); }
+    }
+    window.__guardOperations = async function(action, accountKey, quiet = false) {
+      try {
+        const result = await policyRequest('/internal/operations/guard', {method:'POST', body:JSON.stringify({action, account_key:accountKey})});
+        if (!result.allowed && !quiet) toast((result.reasons||[]).join('；') || '运营规则阻止了本次操作');
+        return result;
+      } catch (error) {
+        if (!quiet) toast(error.message || '无法读取运营规则，本次操作已安全阻止');
+        return {allowed:false, code:'POLICY_UNAVAILABLE', reasons:[error.message || '运营规则服务不可用']};
+      }
+    };
+    function ensurePublishGuardBanner() {
+      const head = $('#view-publishing .page-head');
+      if (head && !$('#operationsPublishBanner')) { const banner=document.createElement('div'); banner.id='operationsPublishBanner'; banner.className='notice'; banner.style.marginTop='10px'; head.appendChild(banner); }
+    }
+    async function refreshPublishGuardBanner() {
+      ensurePublishGuardBanner();
+      const box=$('#operationsPublishBanner'); if(!box)return;
+      const account=state.accounts.find(item=>item.id===state.settings?.publishAccountId) || state.accounts.find(item=>item.platform==='小红书');
+      if(!account){box.textContent='请先登记目标账号；发布规则会在选择账号后检查。';return;}
+      const result=await window.__guardOperations('prepare_publish',account.id,true);
+      box.className=result.allowed?'notice':'alert warn';
+      box.textContent=result.allowed?`发布规则允许继续：今日 ${result.counts?.today||0}/${result.limits?.daily_publish||0}，本周 ${result.counts?.this_week||0}/${result.limits?.weekly_publish||0}。实际发送仍需平台官方页面确认。`:`发布准备已被规则拦截：${(result.reasons||[]).join('；')}`;
+    }
+    const oldShowView = window.showView;
+    if (typeof oldShowView === 'function') {
+      window.showView = function(view) { const result=oldShowView(view); if(view==='settings') { ensureOperationsPolicyCard(); loadOperationsPolicy(); } if(view==='publishing') refreshPublishGuardBanner(); return result; };
+    }
+    document.addEventListener('DOMContentLoaded',()=>{ensureOperationsPolicyCard();ensurePublishGuardBanner();loadOperationsPolicy();});
+    ensureOperationsPolicyCard(); ensurePublishGuardBanner();
   })();
   </script>
 </body>

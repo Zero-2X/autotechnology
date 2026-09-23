@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 import subprocess
 import time
-from typing import Any
+from typing import Any, Mapping
 from uuid import UUID, uuid4
 
 from fastapi import FastAPI, Header, HTTPException, Request, Response
@@ -50,12 +50,14 @@ from modules.media.local_demo_generator import generate_cover_svg, generate_demo
 from modules.support.local_reply_generator import generate_local_reply
 from modules.model_gateway.console_provider import ModelError, generate_structured, model_config
 from modules.platforms.routing import platform_catalog, profile_for, resolve_delivery_route
+from modules.operations import OperationsPolicyError, OperationsPolicyStore
 
 
 SERVICE_NAME = "api"
 RUNTIME_NAME = "modular-monolith"
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CONSOLE_STATE_PATH = PROJECT_ROOT / ".local" / "workflow-state.json"
+OPERATIONS_POLICY_PATH = PROJECT_ROOT / ".local" / "operations-policy.json"
 
 
 def dependency_status(registry: HealthRegistry) -> dict[str, Any]:
@@ -101,6 +103,7 @@ def create_app(
     knowledge_service: KnowledgeService | None = None,
     knowledge_core_service: KnowledgeCoreService | None = None,
     canonical_content_service: CanonicalContentService | None = None,
+    operations_policy_store: OperationsPolicyStore | None = None,
 ) -> FastAPI:
     health_checks = health_registry or default_health_registry()
     metrics = metric_registry or default_metric_registry()
@@ -147,6 +150,7 @@ def create_app(
         connection=app.state.provenance_service._connection,
         topic_brief_service=app.state.topic_brief_service,
     )
+    app.state.operations_policy = operations_policy_store or OperationsPolicyStore(OPERATIONS_POLICY_PATH)
 
     def correlation_fields() -> dict[str, str | None]:
         context = get_tenant_context()
@@ -241,6 +245,63 @@ def create_app(
         except OSError as exc:
             raise HTTPException(status_code=500, detail={"code": "CONSOLE_STATE_WRITE_FAILED", "message": str(exc)}) from exc
         return success_response(record)
+
+    @app.get("/internal/operations/policy", tags=["internal"], include_in_schema=False)
+    def get_operations_policy() -> dict[str, Any]:
+        """Return the local, credential-free publishing safety policy."""
+        try:
+            return success_response(app.state.operations_policy.get())
+        except OperationsPolicyError as exc:
+            raise HTTPException(status_code=500, detail={"code": exc.code, "message": str(exc)}) from exc
+
+    @app.put("/internal/operations/policy", tags=["internal"], include_in_schema=False)
+    async def put_operations_policy(request: Request) -> dict[str, Any]:
+        try:
+            payload = await request.json()
+        except json.JSONDecodeError as exc:
+            raise HTTPException(status_code=400, detail={"code": "POLICY_INVALID", "message": "请求内容不是有效 JSON"}) from exc
+        try:
+            return success_response(app.state.operations_policy.replace(payload))
+        except OperationsPolicyError as exc:
+            raise HTTPException(status_code=400, detail={"code": exc.code, "message": str(exc)}) from exc
+
+    @app.post("/internal/operations/emergency-stop", tags=["internal"], include_in_schema=False)
+    async def set_operations_emergency_stop(request: Request) -> dict[str, Any]:
+        try:
+            payload = await request.json()
+        except json.JSONDecodeError as exc:
+            raise HTTPException(status_code=400, detail={"code": "POLICY_INVALID", "message": "请求内容不是有效 JSON"}) from exc
+        paused = payload.get("paused") if isinstance(payload, dict) else None
+        reason = payload.get("reason", "") if isinstance(payload, dict) else ""
+        try:
+            return success_response(app.state.operations_policy.update_stop(paused=paused, reason=reason))
+        except OperationsPolicyError as exc:
+            raise HTTPException(status_code=400, detail={"code": exc.code, "message": str(exc)}) from exc
+
+    @app.post("/internal/operations/guard", tags=["internal"], include_in_schema=False)
+    async def guard_operations(request: Request) -> dict[str, Any]:
+        try:
+            payload = await request.json()
+        except json.JSONDecodeError as exc:
+            raise HTTPException(status_code=400, detail={"code": "POLICY_INVALID", "message": "请求内容不是有效 JSON"}) from exc
+        if not isinstance(payload, dict):
+            raise HTTPException(status_code=400, detail={"code": "POLICY_INVALID", "message": "请求内容必须是对象"})
+        state: Mapping[str, Any] | None = None
+        if CONSOLE_STATE_PATH.exists():
+            try:
+                stored = json.loads(CONSOLE_STATE_PATH.read_text(encoding="utf-8"))
+                state = stored.get("state") if isinstance(stored, dict) else None
+            except (OSError, json.JSONDecodeError) as exc:
+                raise HTTPException(status_code=500, detail={"code": "CONSOLE_STATE_READ_FAILED", "message": str(exc)}) from exc
+        try:
+            result = app.state.operations_policy.guard(
+                action=str(payload.get("action", "")),
+                account_key=payload.get("account_key"),
+                state=state,
+            )
+        except OperationsPolicyError as exc:
+            raise HTTPException(status_code=400, detail={"code": exc.code, "message": str(exc)}) from exc
+        return success_response(result)
 
     @app.get("/internal/model/status", tags=["internal"], include_in_schema=False)
     def model_status() -> dict[str, Any]:
@@ -389,6 +450,30 @@ def create_app(
             raise HTTPException(status_code=400, detail={"code": "INVALID_XHS_SCAN_MODE", "message": "content.scan_current must be a boolean"})
         if not isinstance(auto_publish, bool):
             raise HTTPException(status_code=400, detail={"code": "INVALID_XHS_PUBLISH_MODE", "message": "auto_publish must be a boolean"})
+        guard_action = None
+        if str(payload.get("target", "home")) == "publish":
+            guard_action = "publish" if auto_publish else "prepare_publish"
+        elif str(payload.get("target", "home")) == "inbox" and isinstance(content, dict) and content.get("send"):
+            guard_action = "reply"
+        if guard_action:
+            stored_state: Mapping[str, Any] | None = None
+            if CONSOLE_STATE_PATH.exists():
+                try:
+                    raw_state = json.loads(CONSOLE_STATE_PATH.read_text(encoding="utf-8"))
+                    stored_state = raw_state.get("state") if isinstance(raw_state, dict) else None
+                except (OSError, json.JSONDecodeError) as exc:
+                    raise HTTPException(status_code=500, detail={"code": "CONSOLE_STATE_READ_FAILED", "message": str(exc)}) from exc
+            try:
+                guard = app.state.operations_policy.guard(
+                    action=guard_action, account_key=account_key, state=stored_state,
+                )
+            except OperationsPolicyError as exc:
+                raise HTTPException(status_code=400, detail={"code": exc.code, "message": str(exc)}) from exc
+            if not guard["allowed"]:
+                raise HTTPException(
+                    status_code=409,
+                    detail={"code": "OPERATIONS_POLICY_BLOCKED", "message": "；".join(guard["reasons"]), "guard": guard},
+                )
         try:
             result = launch_operator_session(
                 account_key,
@@ -1829,6 +1914,111 @@ def create_app(
         except AccountError as exc:
             raise account_error(exc) from exc
         return success_response(profile.as_contract())
+
+    @app.get("/internal/account-profiles", tags=["internal"], include_in_schema=False)
+    def list_account_profiles(x_org_id: str | None = Header(default=None, alias="X-Org-Id")) -> dict[str, Any]:
+        try:
+            return success_response(app.state.account_service.list_profiles(org_id=header_uuid(x_org_id, "X-Org-Id")))
+        except AccountError as exc:
+            raise account_error(exc) from exc
+
+    @app.post("/internal/account-profiles/{profile_id}/targets", tags=["internal"], include_in_schema=False)
+    def create_distribution_target(profile_id: str, command: dict[str, Any], x_org_id: str | None = Header(default=None, alias="X-Org-Id")) -> dict[str, Any]:
+        try:
+            target = app.state.account_service.create_target(
+                org_id=header_uuid(x_org_id, "X-Org-Id"), account_profile_id=UUID(profile_id),
+                channel=str(command.get("channel", "")),
+            )
+        except (ValueError, AccountError) as exc:
+            if isinstance(exc, AccountError):
+                raise account_error(exc) from exc
+            raise HTTPException(status_code=400, detail={"code": "INVALID_PROFILE_ID", "message": str(exc)}) from exc
+        return success_response(target.as_contract())
+
+    @app.post("/internal/account-connections", tags=["internal"], include_in_schema=False)
+    def create_account_connection(
+        command: dict[str, Any],
+        x_org_id: str | None = Header(default=None, alias="X-Org-Id"),
+        x_actor_id: str | None = Header(default=None, alias="X-Actor-Id"),
+        x_trace_id: str | None = Header(default=None, alias="X-Trace-Id"),
+        idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    ) -> dict[str, Any]:
+        try:
+            connection = app.state.account_service.create_connection(
+                org_id=header_uuid(x_org_id, "X-Org-Id"),
+                account_profile_id=command.get("account_profile_id"),
+                platform_id=command.get("platform_id"),
+                external_account_id=str(command.get("external_account_id", "")),
+                environment=str(command.get("environment", "sandbox")),
+                scope_snapshot=command.get("scope_snapshot", {}),
+                actor_id=x_actor_id,
+                trace_id=x_trace_id or str(uuid4()),
+                idempotency_key=idempotency_key,
+            )
+        except AccountError as exc:
+            raise account_error(exc) from exc
+        return success_response(connection.as_contract())
+
+    @app.get("/internal/account-connections", tags=["internal"], include_in_schema=False)
+    def list_account_connections(x_org_id: str | None = Header(default=None, alias="X-Org-Id")) -> dict[str, Any]:
+        try:
+            return success_response(app.state.account_service.list_connections(org_id=header_uuid(x_org_id, "X-Org-Id")))
+        except AccountError as exc:
+            raise account_error(exc) from exc
+
+    @app.get("/internal/account-connections/{connection_id}/passport", tags=["internal"], include_in_schema=False)
+    def get_account_passport(connection_id: str, x_org_id: str | None = Header(default=None, alias="X-Org-Id")) -> dict[str, Any]:
+        try:
+            passport = app.state.account_service.account_passport(
+                org_id=header_uuid(x_org_id, "X-Org-Id"), connection_id=UUID(connection_id),
+            )
+        except (ValueError, AccountError) as exc:
+            if isinstance(exc, AccountError):
+                raise account_error(exc) from exc
+            raise HTTPException(status_code=400, detail={"code": "INVALID_CONNECTION_ID", "message": str(exc)}) from exc
+        return success_response(passport)
+
+    @app.post("/internal/account-connections/{connection_id}/evidence", tags=["internal"], include_in_schema=False)
+    def attach_account_evidence(
+        connection_id: str, command: dict[str, Any],
+        x_org_id: str | None = Header(default=None, alias="X-Org-Id"),
+        x_actor_id: str | None = Header(default=None, alias="X-Actor-Id"),
+        x_trace_id: str | None = Header(default=None, alias="X-Trace-Id"),
+        idempotency_key: str | None = Header(default=None, alias="Idempotency-Key"),
+    ) -> dict[str, Any]:
+        try:
+            evidence = app.state.account_service.attach_authorization_evidence(
+                org_id=header_uuid(x_org_id, "X-Org-Id"), connection_id=UUID(connection_id),
+                evidence_type=str(command.get("evidence_type", "")),
+                external_reference=command.get("external_reference"), scope_snapshot=command.get("scope_snapshot", {}),
+                status=str(command.get("status", "verified")), valid_until=command.get("valid_until"),
+                actor_id=x_actor_id, trace_id=x_trace_id or str(uuid4()), idempotency_key=idempotency_key,
+            )
+        except (ValueError, AccountError) as exc:
+            if isinstance(exc, AccountError):
+                raise account_error(exc) from exc
+            raise HTTPException(status_code=400, detail={"code": "INVALID_CONNECTION_ID", "message": str(exc)}) from exc
+        return success_response(evidence.as_contract())
+
+    @app.post("/internal/account-connections/{connection_id}/health", tags=["internal"], include_in_schema=False)
+    def check_account_health(
+        connection_id: str, command: dict[str, Any] | None = None,
+        x_org_id: str | None = Header(default=None, alias="X-Org-Id"),
+        x_actor_id: str | None = Header(default=None, alias="X-Actor-Id"),
+    ) -> dict[str, Any]:
+        payload = command or {}
+        try:
+            connection = app.state.account_service.check_health(
+                org_id=header_uuid(x_org_id, "X-Org-Id"), connection_id=UUID(connection_id), actor_id=x_actor_id,
+                provider_status=str(payload.get("provider_status", "healthy")),
+                owner_present=payload.get("owner_present", True), policy_allowed=payload.get("policy_allowed", True),
+                token_expires_at=payload.get("token_expires_at"), now=payload.get("now"),
+            )
+        except (ValueError, AccountError) as exc:
+            if isinstance(exc, AccountError):
+                raise account_error(exc) from exc
+            raise HTTPException(status_code=400, detail={"code": "INVALID_CONNECTION_ID", "message": str(exc)}) from exc
+        return success_response(connection.as_contract())
 
     @app.post("/internal/distribution-targets/{target_id}/versions", tags=["internal"], include_in_schema=False)
     def create_distribution_target_version(target_id: str, command: dict[str, Any], x_org_id: str | None = Header(default=None, alias="X-Org-Id"), x_actor_id: str | None = Header(default=None, alias="X-Actor-Id")) -> dict[str, Any]:
