@@ -79,7 +79,7 @@
       <div class="verdict-main">
         <span class="tag blue">目前可交付</span>
         <strong>“AI 生成 + 质量治理 + 人工审批 + 人工导出发布”闭环</strong>
-        <p>系统已经能组织选题、内容生成、来源与版权检查、质量检查、审批、版本、审计和导出，并能用真实 LangGraph 编排这些步骤。文本模型已接入 zpproxy Responses，内容草稿和低风险客服回复均完成真实请求验证，后台现在可以实际检测连接；Seedance 视频生成尚未接入。小红书已接入本机独立浏览器工作流；当前账号会话需要账号持有人重新登录后才能继续。</p>
+        <p>系统已经能组织选题、内容生成、来源与版权检查、质量检查、审批、版本、审计和导出，并能用真实 LangGraph 编排这些步骤。文本模型已接入 zpproxy Responses，内容草稿和低风险客服回复均完成真实请求验证，后台现在可以实际检测连接；Seedance 视频生成尚未接入。小红书已接入本机独立浏览器工作流，本轮修复了连接误报、发稿任务排队和草稿状态回传；只读检查进入消息区时被平台要求重新登录，账号持有人完成扫码前，真实客服和发布流程不能继续验收。</p>
       </div>
       <div class="verdict-side">
         <span class="tag red">尚未开放</span>
@@ -115,7 +115,7 @@
         <tr><td><b>内容生产</b></td><td>文本模型调用、选题、研究、改写、多语言变体、质量检查、结构化输出</td><td>生成可审核的内容包；失败时使用本地模板</td><td>模型供应商条款与费用审核、视频生成服务</td></tr>
         <tr><td><b>来源与版权</b></td><td>来源、证据、声明、版权和新鲜度记录</td><td>每条内容保留可追溯依据</td><td>生产对象存储和真实素材权限流程</td></tr>
         <tr><td><b>政策与审批</b></td><td>Policy 快照、风险门禁、人工审批、职责分离</td><td>真实发布前先人工审核</td><td>真实组织 IAM/MFA 与持久化授权</td></tr>
-        <tr><td><b>分发</b></td><td>人工导出、Fake 平台、幂等、回查、Kill Switch；小红书浏览器填稿与客服任务队列</td><td>小红书可打开独立账号会话并准备图文草稿；发送和发布仍需平台页面确认</td><td>其它平台官方适配器或浏览器适配器、Sandbox、真实回查</td></tr>
+        <tr><td><b>分发</b></td><td>人工导出、Fake 平台、幂等、回查、Kill Switch；小红书浏览器填稿与客服任务队列</td><td>小红书草稿可排队填入，发布需用户主动确认；编辑器有未保存内容或运行器过旧时会停止并提示</td><td>账号重新登录后真实页面验收、发布回执与客服发送回查；其它平台官方/浏览器适配器</td></tr>
         <tr><td><b>账号与 OAuth</b></td><td>账号壳、Scope、PKCE、State、Secret 引用、租约和撤销</td><td>完成无凭证开发和契约验证</td><td>官方 OAuth 应用、Vault 与真实授权证据</td></tr>
         <tr><td><b>分析与反馈</b></td><td>内容、互动、成本、线索质量等 Observation</td><td>接收合法来源的数据并形成反馈</td><td>真实平台指标权限和持续运行证据</td></tr>
         <tr><td><b>自动化编排</b></td><td>LangGraph、状态、Checkpoint、人工中断、重放和评测</td><td>稳定编排完整内容流水线</td><td>托管 PostgreSQL 的生产组合验证</td></tr>
@@ -131,7 +131,7 @@
       <div class="step"><span class="n">2</span><strong>研究与生成</strong><p>基于来源和证据生成可编辑草稿。</p></div>
       <div class="step"><span class="n">3</span><strong>质量与合规</strong><p>检查事实、版权、政策、格式和风险。</p></div>
       <div class="step"><span class="n">4</span><strong>人工审批</strong><p>审核内容、目标账号、媒体和发布时间。</p></div>
-      <div class="step"><span class="n">5</span><strong>导出或发布</strong><p>当前人工导出；后续由官方 API 执行。</p></div>
+      <div class="step"><span class="n">5</span><strong>导出或发布</strong><p>小红书可用浏览器准备草稿并在人工确认后尝试提交；其它平台按已批准的 API 能力或人工导出处理。</p></div>
       <div class="step"><span class="n">6</span><strong>回查与反馈</strong><p>登记平台对象、指标、投诉和改进建议。</p></div>
     </div>
   </section>
@@ -148,7 +148,7 @@
   <section id="quality">
     <div class="section-head"><div><h2>为什么可以认为主体研发质量可靠</h2><p class="lead">项目不是靠演示页面判断完成，而是通过机器注册表、契约和可重复测试验证。</p></div><span class="tag amber"><i class="dot"></i>工作流门禁通过</span></div>
     <div class="checklist">
-      <div class="check"><b>✓</b><span><strong>31 项工作流测试通过</strong><br>小红书会话、发布路由、客服任务和后台启动检查通过；全量仓库回归仍需单独处理历史基础设施门禁。</span></div>
+      <div class="check"><b>✓</b><span><strong>小红书专项检查 21 项通过</strong><br>覆盖草稿排队、完成状态、旧运行器拦截、未保存编辑保护和会话路由。只读真实页面检查发现消息区要求重新登录；本轮未发布内容、未读取或发送客服消息。</span></div>
       <div class="check"><b>✓</b><span><strong>架构检查通过</strong><br>领域逻辑不直接依赖平台 SDK。</span></div>
       <div class="check"><b>✓</b><span><strong>密钥扫描通过</strong><br>仓库未发现生产凭据。</span></div>
       <div class="check"><b>✓</b><span><strong>数据库迁移有效</strong><br>125 个 revision，迁移图只有一个合法 head。</span></div>

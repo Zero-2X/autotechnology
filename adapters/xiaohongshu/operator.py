@@ -56,6 +56,26 @@ def _existing_profile_pid(profile: Path) -> int | None:
     return None
 
 
+def _publish_runner_is_current(pid: int, script_path: Path) -> bool:
+    """Avoid queuing publish work to a browser worker that loaded older code."""
+    if psutil is None:
+        return False
+    try:
+        marker = str(script_path.resolve()).lower().replace("/", "\\")
+        modified_at = script_path.stat().st_mtime
+        process = psutil.Process(pid)
+        for candidate in [process, *process.parents()]:
+            try:
+                command = " ".join(candidate.cmdline()).lower().replace("/", "\\")
+                if marker in command:
+                    return candidate.create_time() > modified_at
+            except (OSError, psutil.Error):
+                continue
+    except (OSError, psutil.Error):
+        pass
+    return False
+
+
 def launch_status_path(job_id: str, root: Path | None = None) -> Path:
     if not job_id or any(ch in job_id for ch in '\\/:*?"<>|'):
         raise ValueError("invalid launch job id")
@@ -89,8 +109,9 @@ def launch_operator_session(
         raise ValueError("publish preview requires title and body")
 
     existing_pid = _existing_profile_pid(profile)
-    if existing_pid and target == "publish":
-        raise ValueError("该账号的小红书窗口已打开。请先保存未完成的内容并关闭该窗口，再准备新草稿；本次尚未填稿或发布。")
+    script_path = project_root / "scripts" / "open-xhs-session.py"
+    if existing_pid and target == "publish" and not _publish_runner_is_current(existing_pid, script_path):
+        raise ValueError("该账号窗口仍运行旧版发稿流程。请先保存未完成内容、关闭该窗口后再点“打开账号”更新会话；本次尚未填稿或发布。")
 
     job_id = f"xhs-{uuid4().hex[:12]}"
     job_path: Path | None = None
@@ -127,29 +148,13 @@ def launch_operator_session(
     if os.name == "nt":
         creation_flags = subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW
     process = None
-    command_queued = False
-    if existing_pid is None:
-        process = subprocess.Popen(
-            command,
-            cwd=project_root,
-            stdin=subprocess.DEVNULL,
-            stdout=subprocess.DEVNULL,
-            stderr=subprocess.DEVNULL,
-            creationflags=creation_flags,
-        )
-    else:
-        enqueue_command(account_key, {
-            "job_id": job_id, "target": target,
-            "job_path": str(job_path.resolve()) if job_path is not None else None,
-            "auto_publish": bool(auto_publish),
-        }, project_root)
-        command_queued = True
+    command_queued = existing_pid is not None
     result = {
         "job_id": job_id,
         "account_key": account_key,
         "target": target,
         "status": "command_queued" if command_queued else "browser_starting",
-        "pid": existing_pid or process.pid,
+        "pid": existing_pid,
         "started_at": datetime.now(timezone.utc).isoformat(),
         "publishes_automatically": False,
         "auto_publish_requested": bool(auto_publish),
@@ -167,4 +172,20 @@ def launch_operator_session(
     launch_status_path(job_id, project_root).write_text(
         json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
     )
+    if existing_pid is None:
+        process = subprocess.Popen(
+            command,
+            cwd=project_root,
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL,
+            creationflags=creation_flags,
+        )
+        result["pid"] = process.pid
+    else:
+        enqueue_command(account_key, {
+            "job_id": job_id, "target": target,
+            "job_path": str(job_path.resolve()) if job_path is not None else None,
+            "auto_publish": bool(auto_publish),
+        }, project_root)
     return result

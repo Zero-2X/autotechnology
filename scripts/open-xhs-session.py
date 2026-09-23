@@ -144,6 +144,90 @@ async def handle_inbox(page, root: Path, account_key: str, job_path: str | None,
     return scan["status"]
 
 
+async def has_unsaved_publish_content(page) -> bool:
+    """Do not navigate away from text or images already in the creator editor."""
+    if "publish" not in page.url.lower():
+        return False
+    selectors = (
+        'input[placeholder*="标题"]', 'input.title', 'input.d-text',
+        '.ql-editor', '[data-placeholder="添加正文"]', '#post-textarea',
+        '.post-content', 'div[contenteditable="true"]', '[role="textbox"]',
+    )
+    for selector in selectors:
+        locator = page.locator(selector)
+        count = await locator.count()
+        for index in range(count):
+            candidate = locator.nth(index) if count > 1 else locator
+            try:
+                if not await candidate.is_visible():
+                    continue
+                value = await candidate.input_value() if selector.startswith("input") else await candidate.inner_text()
+                if value.strip():
+                    return True
+            except Exception:
+                continue
+    uploads = page.locator('input[type="file"]')
+    for index in range(await uploads.count()):
+        candidate = uploads.nth(index) if await uploads.count() > 1 else uploads
+        try:
+            if await candidate.evaluate("node => Boolean(node.files && node.files.length)"):
+                return True
+        except Exception:
+            continue
+    return False
+
+
+async def prepare_publish(page, root: Path, account_key: str, job_path: str,
+                          job_id: str | None, auto_publish: bool) -> str:
+    """Fill one queued image note and report workflow status separately from page status."""
+    job = json.loads(Path(job_path).read_text(encoding="utf-8"))
+    if str(job.get("account_key", "")) != account_key:
+        update_job(root, job_id, status="failed", error="ACCOUNT_BINDING_MISMATCH")
+        return "failed"
+    current = await session_url(page)
+    if "/login" in current:
+        write_session_status(account_key, url=current)
+        update_job(root, job_id, status="login_required", url=current,
+                   error="请先在小红书窗口完成登录")
+        return "login_required"
+    update_job(root, job_id, status="preparing", url=page.url)
+    try:
+        await select_image_note(page)
+        note = ImageNote(
+            account_key=account_key,
+            title=job["title"],
+            body=job["body"] + ("\n\n" + " ".join(job["hashtags"]) if job["hashtags"] else ""),
+            images=(Path(job["cover_path"]),),
+        )
+        result = await XiaohongshuDraftPreparer().prepare(
+            page=page, note=note, bound_account_key=account_key
+        )
+        if auto_publish:
+            update_job(root, job_id, status="submitting_publish", url=page.url)
+            result.update(await XiaohongshuDraftPreparer().submit_publish(page=page))
+        workflow_status = result.get("status", "awaiting_operator_review")
+        if workflow_status == "awaiting_operator_review":
+            workflow_status = "draft_prepared"
+        result["workflow_status"] = workflow_status
+        Path(job_path).with_name("result.json").write_text(
+            json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        update_job(root, job_id, status=workflow_status,
+                   preparation_status=result.get("status"),
+                   publish_submitted=bool(auto_publish), error=None, url=page.url)
+        return str(workflow_status)
+    except BrowserPreparationError as exc:
+        status = "login_required" if str(exc) == "LOGIN_REQUIRED" else "operator_action_required"
+        if status == "login_required":
+            write_session_status(account_key, url="https://creator.xiaohongshu.com/login")
+        update_job(root, job_id, status=status, error=str(exc), url=page.url)
+        Path(job_path).with_name("result.json").write_text(
+            json.dumps({"status": status, "error": str(exc), "url": page.url},
+                       ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        return status
+
+
 async def handle_command(page, root: Path, account_key: str, command: dict) -> str | None:
     target = str(command.get("target", "home"))
     job_id = str(command.get("job_id", "")) or None
@@ -151,6 +235,29 @@ async def handle_command(page, root: Path, account_key: str, command: dict) -> s
     if target not in URLS:
         update_job(root, job_id, status="failed", error="invalid queued target")
         return "failed"
+    if target == "publish":
+        if not job_path or not Path(str(job_path)).is_file():
+            update_job(root, job_id, status="failed", error="publish job payload is missing")
+            return "failed"
+        job = json.loads(Path(str(job_path)).read_text(encoding="utf-8"))
+        if str(job.get("account_key", "")) != account_key:
+            update_job(root, job_id, status="failed", error="ACCOUNT_BINDING_MISMATCH")
+            return "failed"
+        current = await session_url(page)
+        if "/login" in current:
+            write_session_status(account_key, url=current)
+            update_job(root, job_id, status="login_required", url=current,
+                       error="请先在小红书窗口完成登录")
+            return "login_required"
+        if await has_unsaved_publish_content(page):
+            update_job(root, job_id, status="operator_action_required",
+                       error="当前编辑器已有未保存内容，请先保存或清空后再准备新草稿。", url=page.url)
+            return "operator_action_required"
+        await page.goto(URLS[target], wait_until="domcontentloaded")
+        return await prepare_publish(
+            page, root, account_key, str(job_path), job_id,
+            bool(command.get("auto_publish", False)),
+        )
     await page.goto(URLS[target], wait_until="domcontentloaded")
     if target == "inbox":
         return await handle_inbox(page, root, account_key, job_path, job_id)
@@ -199,32 +306,7 @@ async def run(account_key: str, target: str, job_path: str | None, job_id: str |
             session_requires_login = (await handle_inbox(page, root, account_key, job_path, job_id)) == "login_required"
 
         if target == "publish" and job_path:
-            job = json.loads(Path(job_path).read_text(encoding="utf-8"))
-            await select_image_note(page)
-            note = ImageNote(
-                account_key=account_key,
-                title=job["title"],
-                body=job["body"] + ("\n\n" + " ".join(job["hashtags"]) if job["hashtags"] else ""),
-                images=(Path(job["cover_path"]),),
-            )
-            try:
-                result = await XiaohongshuDraftPreparer().prepare(
-                    page=page, note=note, bound_account_key=account_key
-                )
-                if auto_publish:
-                    result.update(await XiaohongshuDraftPreparer().submit_publish(page=page))
-                Path(job_path).with_name("result.json").write_text(
-                    json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
-                )
-                update_job(root, job_id, status=result.get("status", "draft_prepared"),
-                           publish_submitted=bool(auto_publish))
-            except BrowserPreparationError as exc:
-                update_job(root, job_id, status="operator_action_required", error=str(exc))
-                Path(job_path).with_name("result.json").write_text(
-                    json.dumps({"status": "operator_action_required", "error": str(exc), "url": page.url},
-                               ensure_ascii=False, indent=2),
-                    encoding="utf-8",
-                )
+            await prepare_publish(page, root, account_key, job_path, job_id, auto_publish)
 
         while context.pages:
             current_url = page.url

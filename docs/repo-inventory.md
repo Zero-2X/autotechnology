@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-23T02:37:16+00:00`
-- Source fingerprint: `sha256:2d2a5f51d77b255e70433c75fc2e05b2420d04ce60d4e1163ed253cf2f0b36e0`
+- Generated at (UTC): `2026-09-23T03:24:27+00:00`
+- Source fingerprint: `sha256:f7c84198c6b1e8d387ae80f32ec56c51fe569a2cbf0809cd08ff909ecc57e47f`
 - Repository root: `D:/akagent`
 - Scanned files: `1646`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `a4b71166ff9c52c6c0308efd92b6ab125a77c86c`
+- HEAD: `1f5fb70276804a7704d2d364f4a0bdf4bb54ee88`
 
 ## Top-level directories
 
@@ -590,9 +590,12 @@ Recommended repository gate: `python -m pytest tests --maxfail=1 -q`
 - ` M "docs/\347\234\237\345\256\236\350\264\246\345\217\267\350\207\252\345\212\250\345\214\226\350\277\220\350\220\245\346\223\215\344\275\234\346\211\213\345\206\214.md"`
 - ` M "docs/\347\275\221\351\241\265\347\256\241\347\220\206\345\220\216\345\217\260\346\265\213\350\257\225\350\257\264\346\230\216.md"`
 - ` M "docs/\351\241\271\347\233\256\345\274\200\345\217\221\350\277\233\345\272\246\346\261\207\346\212\245.html"`
-- ` M apps/api/main.py`
-- ` M apps/web-console/src/index.html`
-- ` M scripts/start-workflow.ps1`
+- ` M README.md`
+- ` M adapters/xiaohongshu/operator.py`
+- ` M docs/repo-inventory.md`
+- ` M scripts/open-xhs-session.py`
+- ` M tests/integration/test_xhs_inbox_navigation.py`
+- ` M tests/integration/test_xhs_launch_status.py`
 
 ## Repository classification
 
@@ -778,7 +781,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `AI跨境技术内容自动化工作流开发清单_审计与优化版.md` | 178643 | `sha256:779643afe11e18fc62beae09576f2df517675349a02b78129ec42aecfdf7ed87` |
 | `CODEOWNERS` | 514 | `sha256:152da1963e31d07517b9c4cafaa9b8b497111d7c9df309345a96f9c63e7c0052` |
 | `CONTRIBUTING.md` | 2036 | `sha256:0621ce2d1d50a30c19d34d3ebf62b763ca80abe0dcaf4d348998b98d8a265469` |
-| `README.md` | 3917 | `sha256:cc23b9a3adde388a35160e30d4d925a06ffc197bee268cda54441522634e87d2` |
+| `README.md` | 4120 | `sha256:a5f17503754652b2abe59e1b92a3370435b6a5dc2393f7f48d73b8f805bf488f` |
 | `adapters/contract/README.md` | 275 | `sha256:4ff153566dfec036aa7e80ee022c5c4ac7e0581b30cb93bffadf877940a3d27c` |
 | `adapters/fake/README.md` | 283 | `sha256:ba31e050c12680d184143138f37e6095db03bef747afb09483d946f3e39c5ab3` |
 | `adapters/fake/__init__.py` | 181 | `sha256:700998fe8f70d81fee803803aac25cd0b3b325b390f237056325331fd826364c` |
@@ -787,8 +790,8 @@ Formal runtime source was detected under apps/modules/services/src:
 | `adapters/xiaohongshu/__init__.py` | 75 | `sha256:bf99d42faa7c125384db75b10d0f90c78a4f212c45b18eb9df7d94f0aee7f39c` |
 | `adapters/xiaohongshu/browser.py` | 6263 | `sha256:be18963a5eb9ebfa7ac18d07763743f676cbe69e2c21d5cfa809816b075ca959` |
 | `adapters/xiaohongshu/inbox.py` | 4601 | `sha256:ed627e7406bb679045c97cf8cacb1758f78f17156a0931811c3a70f1fcf205a5` |
-| `adapters/xiaohongshu/operator.py` | 7066 | `sha256:82fce0963b03107100683482187407613ba30b0c0416ff4182b1a0e2a83713b5` |
-| `adapters/xiaohongshu/session.py` | 4289 | `sha256:237a942bf838ef53433308f7b8bd5813e2ede273e7af4d2fc36d03b7da057aad` |
+| `adapters/xiaohongshu/operator.py` | 8124 | `sha256:6e76559a08c2d2b58d243699b5b7f528e27973eac28a9e5eaeb7b30c6379811d` |
+| `adapters/xiaohongshu/session.py` | 4666 | `sha256:d109293b5ece1856038ed098e0ba548653dc62d5c66f2808e397d8643b2b9b46` |
 | `alembic.ini` | 576 | `sha256:43cb71b556fae313d03aea59033aab50e46b03d00c5e6857bfd90a920b508247` |
 | `apps/__init__.py` | 62 | `sha256:1cdc47f24c4d8980cd92e816bb63a156ef30cad06aa12d1af84d407bb740c579` |
 | `apps/api/README.md` | 446 | `sha256:00ee4c3fb0d3bdf46ad5086e7ebd73e9b2da477d860283c09b90cbfb92c0ba51` |
@@ -1230,9 +1233,9 @@ Formal runtime source was detected under apps/modules/services/src:
 | `docs/tasks/WORKFLOW-CORE-003.md` | 4559 | `sha256:5151941eb2fe23b6585f097c3992692a9bee91f2943a8111b2e04c15d1c92a3b` |
 | `docs/workflows/README.md` | 217 | `sha256:b5669edc2191f6b372a613724dfca501f25f27895f95dc03b8a9e1abdb520432` |
 | `docs/平台发布接口调研与小红书迁移方案.md` | 10293 | `sha256:d4cf9e8f20f8b347214c169eff57d059d780948d9087796be08d51476d1b81c1` |
-| `docs/真实账号自动化运营操作手册.md` | 13434 | `sha256:a9eb78861faeaf51d9e6aa8d2da80358a020ad8d029a24e0b4599bef4724849f` |
-| `docs/网页管理后台测试说明.md` | 8764 | `sha256:e2c65ccbf1555c09059f32f245c03452e7d1b6e37fcb88632dbd066f7a7d9f0b` |
-| `docs/项目开发进度汇报.html` | 23536 | `sha256:57c5cd8f0fc94dce5ecb889bcd5edc13d8c8901b2f27fb0f2ae6b6fc54371f08` |
+| `docs/真实账号自动化运营操作手册.md` | 13817 | `sha256:070a9871a3d8dc996c3af9d67d119f31b99a7eb6d1b4421722ab72d6d8820fdd` |
+| `docs/网页管理后台测试说明.md` | 9578 | `sha256:6bd376c2cb200e5537693ba6f7e11d070529e1ef918ade1735f7ac5798565375` |
+| `docs/项目开发进度汇报.html` | 23918 | `sha256:178eb41f056c1cad69b3264355c4757263b5a428bdc4f0ce1ff49d542a3e0411` |
 | `infra/__init__.py` | 47 | `sha256:8517a486e9a61a8d1e10284f75abe76808de8d787a0422021f07ba28d935cc82` |
 | `infra/compose/README.md` | 434 | `sha256:1e161168885e43eef8aa36e0db56f7c3efeb1017f724da61d6ff2dd4889f20e7` |
 | `infra/compose/postgresql.dev.yaml` | 327 | `sha256:de8bbf10639bb4d2e0d84fc0c4bc5d3c00a35bc28c006fe1c9c1c218833342bf` |
@@ -2098,7 +2101,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `scripts/generate_state_registry.py` | 1959 | `sha256:853590fcb2159809a39bc09dd7ae3d8541ded167e8722f387292ed4e0d5b7b73` |
 | `scripts/generate_task_cards.py` | 3336 | `sha256:c1a41746312aba12ce1130d839dc02f406385a550a37cb9101873a3be770a3f9` |
 | `scripts/generate_task_registry.py` | 58473 | `sha256:ca307184e7be636e690103f7ea6702d761bded25009fbb0a21e7cb8b84321539` |
-| `scripts/open-xhs-session.py` | 12363 | `sha256:8533d70e4e50c82debfeaa2564ad90817d32fd2ea845cba030cfe376ae867c8d` |
+| `scripts/open-xhs-session.py` | 16340 | `sha256:ecae1807ad764d4282ec25f976718e56e17edd9886fd68bf8ef453b721afeb32` |
 | `scripts/prepare-xhs-draft.py` | 4479 | `sha256:3801de621f5d06af87f4353d06f7a110dfcd87d09e2e4691e5a2d8d5040737d8` |
 | `scripts/repo_inventory.py` | 18479 | `sha256:f2a469a06c788a4449c7db7257c59a6dbaf828aa9cd9989365d8f01690cb56ad` |
 | `scripts/restart-web-console.ps1` | 627 | `sha256:20ab63ddb90f1043036389e8d0df3828352e38b2e6039847b3510545466c1202` |
@@ -2278,9 +2281,9 @@ Formal runtime source was detected under apps/modules/services/src:
 | `tests/integration/test_variant_store.py` | 8927 | `sha256:c235503edf6ac7f37e1401c1d6357772a36e14e3e8767ae6bf287530cf256149` |
 | `tests/integration/test_workflow_core_002_api.py` | 3084 | `sha256:685caa20237ee7b0becaa99c8189ec0f30ba2b1188cda9f54687ed32e903334b` |
 | `tests/integration/test_xhs_browser_preparation.py` | 3228 | `sha256:c03a62ec49b0daded5913576cd929947895ebb703914963b460e77725b7a592f` |
-| `tests/integration/test_xhs_inbox_navigation.py` | 1419 | `sha256:cb8c6f46a8b976696ef27f7f6719d566d0b0463863dc1dab4c23643d366273c1` |
+| `tests/integration/test_xhs_inbox_navigation.py` | 3921 | `sha256:7e92ae47ae6e4847c36ff82c800709b5d92ae222ed08675da943087c3716373f` |
 | `tests/integration/test_xhs_inbox_operator.py` | 2266 | `sha256:440e5b0db201e895f6de5bfc86a44ca6289e7854c5490a812e6d39a98c3a1cc5` |
-| `tests/integration/test_xhs_launch_status.py` | 3327 | `sha256:a54488fcd4307ff42cf0954ed2b2d36609873b26344bb76ff26d2d1cfeeb41c6` |
+| `tests/integration/test_xhs_launch_status.py` | 4183 | `sha256:eaaf67db5fa52560b35677bc62afe9be17338c13b774fdaf0b5cac8d30120c2a` |
 | `tests/integration/test_zpproxy_responses.py` | 2646 | `sha256:91e661372132a009574244cb0fdeb41a231093fb36e88106c06235b3a102eb4e` |
 | `tests/replay/README.md` | 265 | `sha256:9fee8beefbef9dfa662759a30f00e82177fe2ff53de5b737fb74c64ec7e4bcd3` |
 | `tests/security/README.md` | 233 | `sha256:885531c96c32b9f721256f9aec8f4c4ca0f0b21d257ac46cd4f5bc7c59902fb8` |

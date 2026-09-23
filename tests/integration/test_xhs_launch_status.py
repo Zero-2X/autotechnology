@@ -8,6 +8,7 @@ from adapters.xiaohongshu.session import diagnose_session, read_session_status, 
 
 def test_busy_profile_does_not_claim_to_prepare_a_draft(monkeypatch, tmp_path):
     monkeypatch.setattr(operator, "_existing_profile_pid", lambda profile: 123)
+    monkeypatch.setattr(operator, "_publish_runner_is_current", lambda pid, script_path: False)
     spawn = Mock()
     monkeypatch.setattr(operator.subprocess, "Popen", spawn)
     with pytest.raises(ValueError, match="尚未填稿"):
@@ -17,6 +18,21 @@ def test_busy_profile_does_not_claim_to_prepare_a_draft(monkeypatch, tmp_path):
         )
     spawn.assert_not_called()
     assert not (tmp_path / ".local" / "xhs-jobs").exists()
+
+
+def test_current_busy_profile_queues_publish_job(monkeypatch, tmp_path):
+    monkeypatch.setattr(operator, "_existing_profile_pid", lambda profile: 123)
+    monkeypatch.setattr(operator, "_publish_runner_is_current", lambda pid, script_path: True)
+    result = operator.launch_operator_session(
+        "account-1", target="publish",
+        content={"title": "标题", "body": "正文"}, root=tmp_path,
+    )
+    assert result["status"] == "command_queued"
+    assert result["reused_existing"] is True
+    assert operator.read_launch_status(result["job_id"], tmp_path) == result
+    queue = (tmp_path / ".local" / "xhs-commands" / "account-1.jsonl").read_text(encoding="utf-8")
+    assert '"target": "publish"' in queue
+    assert result["job_id"] in queue
 
 
 def test_busy_profile_queues_reply_command(monkeypatch, tmp_path):

@@ -11,11 +11,11 @@ Account/OAuth、MFA、平台 Fake 与 Live Feedback 有本地准备性实现，�
 V3 的 account-free 编排、状态、LangChain 端口和内容图已完成本地验收，真实 LangGraph
 组合入口为 `orchestration/langgraph_adapter.py`；后续只推进外部账号门禁及部署环境验证。
 
-当前边界：小红书首个账号已使用本机独立浏览器会话接入，支持打开账号、准备图文草稿和主动确认后尝试提交发布；发布结果仍需平台回查，评论/私信读取与回复仍需账号持有人在平台窗口确认。没有真实 S3 或平台 API 发布；PostgreSQL 专有的
+当前边界：小红书首个账号已使用本机独立浏览器会话接入，支持打开账号、排队准备图文草稿和主动确认后尝试提交发布；新版运行器会保护未保存草稿，发布结果仍需平台回查。2026-09-23 的只读消息区检查被平台重定向到登录页，当前会话需账号持有人重新扫码；评论/私信自动读取与回复尚未完成真实验收。没有真实 S3 或平台 API 发布；PostgreSQL 专有的
 双 Worker 并发、隔离级别、连接中断和锁超时仍需在独立的真实 PostgreSQL 环境中
 完成上线前验证。仓库内验证不得把 SQLite 结果描述为生产并发证据。
 
-最新进度见 `docs/foundation/development-progress-2026-09-21.md`；历史 Foundation 审计见
+最新业务运行说明见 `docs/网页管理后台测试说明.md` 和 `docs/真实账号自动化运营操作手册.md`；历史 Foundation 审计见
 `docs/audits/foundation-overall-audit-2026-09-16.md`。机器状态分别以两份任务注册表为准。
 
 ## 机器真源
