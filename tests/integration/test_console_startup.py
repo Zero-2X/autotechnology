@@ -6,7 +6,7 @@ from pathlib import Path
 import pytest
 
 
-def test_dashboard_bootstraps_storage_and_session_checks():
+def test_dashboard_recovers_from_stale_local_api_url_before_loading_state():
     node = shutil.which("node")
     if not node:
         pytest.skip("Node is needed for dashboard execution checks")
@@ -14,6 +14,7 @@ def test_dashboard_bootstraps_storage_and_session_checks():
     script = r"""
 const vm = require('node:vm'), fs = require('node:fs'), assert = require('node:assert/strict');
 const listeners = {}, calls = [], intervals = [], elements = new Map();
+let persisted = JSON.stringify({settings:{apiBase:'http://127.0.0.1:65534'}});
 function element(key) {
   if (!elements.has(key)) elements.set(key, {
     value:'', innerHTML:'', textContent:'', className:'',
@@ -29,10 +30,12 @@ const sandbox = {
     querySelector:element, querySelectorAll:()=>[],
     addEventListener(type, fn){(listeners[type] ??= []).push(fn)}
   },
-  localStorage:{getItem:()=>null,setItem(){}},
+  location:{protocol:'http:',hostname:'127.0.0.1'},
+  localStorage:{getItem:()=>persisted,setItem(_key,value){persisted=value}},
   setTimeout:()=>1, clearTimeout(){}, setInterval(fn){intervals.push(fn)},
   fetch:async(url, options={})=>{
     calls.push([url,options.method||'GET']);
+    if(url.startsWith('http://127.0.0.1:65534')) throw new Error('stale local API URL');
     return {ok:true,json:async()=>({data:url.endsWith('/session')?{status:'connected'}:{state:null}})};
   }
 };
@@ -43,10 +46,13 @@ for(const match of html.matchAll(/<script>([\s\S]*?)<\/script>/g)) vm.runInConte
 (async()=>{
   for(const fn of listeners.DOMContentLoaded||[]) await fn();
   assert(calls.some(([url])=>url.endsWith('/health/live')));
+  assert(calls.some(([url])=>url.startsWith('http://127.0.0.1:65534')));
+  assert(calls.some(([url])=>url.startsWith('http://127.0.0.1:8000')));
   assert(calls.some(([url,method])=>url.endsWith('/internal/console/state')&&method==='GET'));
   assert(calls.some(([url,method])=>url.endsWith('/internal/console/state')&&method==='PUT'));
   assert(calls.some(([url])=>url.endsWith('/session')));
   assert.equal(intervals.length,2);
+  assert.equal(vm.runInContext('state.settings.apiBase',sandbox),'http://127.0.0.1:8000');
   assert.equal(vm.runInContext('state.accounts[0].status',sandbox),'connected');
   assert.equal(vm.runInContext("migrate({...seed,accounts:[{...XHS_ACCOUNT,name:'已修改名称'}]}).accounts[0].name",sandbox),'已修改名称');
 })().catch(error=>{console.error(error);process.exitCode=1});
