@@ -5,8 +5,8 @@ This report contains repository structure and metadata only. Sensitive filename 
 ## Scan metadata
 
 - Inventory version: `found-000-v1`
-- Generated at (UTC): `2026-09-23T17:40:37+00:00`
-- Source fingerprint: `sha256:ec58b9c641aca2f959598244e8f9e21f6ba39b66f6247fa54f85858d0e56c4f8`
+- Generated at (UTC): `2026-09-24T04:40:10+00:00`
+- Source fingerprint: `sha256:ab4dab3024d2c68face03e1157024dc6b01fc1c4f4e87b623a3b6bd81d6e2042`
 - Repository root: `D:/akagent`
 - Scanned files: `1656`
 - Secret contents read: `false`
@@ -16,7 +16,7 @@ This report contains repository structure and metadata only. Sensitive filename 
 
 - Availability: `git worktree`
 - Branch: `master`
-- HEAD: `a150f671bf5e75c889de5d5ffeb4eb86db420f15`
+- HEAD: `695a2cda46af09b2dbec5689e9284f354f461a5b`
 
 ## Top-level directories
 
@@ -594,15 +594,7 @@ Recommended repository gate: `python -m pytest tests --maxfail=1 -q`
 
 ## Uncommitted changes
 
-- ` M "docs/\350\277\220\350\220\245\350\247\204\345\210\231\344\270\216\350\267\250\345\271\263\345\217\260\344\275\216\351\243\216\351\231\251\346\223\215\344\275\234.md"`
-- ` M README.md`
-- ` M apps/api/main.py`
-- ` M apps/web-console/src/index.html`
-- ` M docs/repo-inventory.md`
-- ` M modules/operations/__init__.py`
-- `?? modules/operations/pilot.py`
-- `?? tests/integration/test_pilot_operations_api.py`
-- `?? tests/unit/operations/test_pilot.py`
+Clean worktree.
 
 ## Repository classification
 
@@ -828,7 +820,7 @@ Formal runtime source was detected under apps/modules/services/src:
 | `apps/web-console/package.json` | 167 | `sha256:9b5d3d2153ac4164c691902f80b75a3911a4be54f82b3579b9f6f39e078f3066` |
 | `apps/web-console/pnpm-lock.yaml` | 114 | `sha256:17c814b167307942d3609c7b9d916ceddb85839573ab39baa114e30edb132a1a` |
 | `apps/web-console/scripts/build.mjs` | 851 | `sha256:eae2a2b621e5162dde56ffc02b716fc21c71146456cb69cf7bfdd23727030609` |
-| `apps/web-console/src/index.html` | 160218 | `sha256:6621e4373495a28faed61df0e45beac30dc113e5e20a9b9fe06e9dedddb57b85` |
+| `apps/web-console/src/index.html` | 171173 | `sha256:f1cdd75853becfa1fc05b748c075cd9a9dfbc594725e39ca100d8a8cc592ec2b` |
 | `apps/worker/README.md` | 843 | `sha256:585eb3815e3271923e72d2c66325ce36be5af3c66135774cb734008315742021` |
 | `apps/worker/__init__.py` | 31 | `sha256:53da4abf7d557e2589aa76efd85c921469f44127a4035ec9f6c2f6361484ee76` |
 | `apps/worker/__main__.py` | 81 | `sha256:954eaddc192523ee47f44769ae571e58baf451c0e67d752edd3874b6393600d0` |
